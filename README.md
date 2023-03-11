@@ -1,9 +1,9 @@
 # CMPE352 Fundamentals of Software Engineering Spring - 2023 - GROUP 6 💻
 
-Hi! This is the README page of Group 6 🫂.
+Hi! This is the README page of Group 6.
 
-# Project Description Down Here 👇
-A video game review platform where users discuss video games, create related events and find friends
+# What We Will Be Doing👇
+>A video game review platform where users discuss video games, create related events and find friends
 to play together and share their achievements. Variety of this platform can be extended from console
 and PC games to board games. Besides discussing, reviewing and rating games, players can make use of
 this platform similar to group finders in MMORPGs to match people. Players can create both offline
@@ -22,3 +22,6 @@ and online meetings, dive into game related discussions, convention parties and 
    * [Beyzanur Bektan](https://github.com/bounswe/bounswe2023group6/wiki/Beyzanur-Bektan)
    * [Ömer Talip Akalın](https://github.com/bounswe/bounswe2023group6/wiki/%C3%96mer-Talip-Akal%C4%B1n)
    * [Emre Sin](https://github.com/bounswe/bounswe2023group6/wiki/Emre-Sin)
+## Learn More 🕵️
+
+Visit our [Wiki page](https://github.com/bounswe/bounswe2023group6/wiki) to learn about us in detail!
