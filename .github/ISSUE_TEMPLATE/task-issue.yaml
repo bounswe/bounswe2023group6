@@ -1,0 +1,48 @@
+name: Task Template
+description: This issue template is used for creating tasks for group members.
+assignees: []
+labels: []
+body:
+- type: textarea
+  id: problem
+  attributes:
+    placeholder: A clear and concise description of what the problem is
+    label: Problem
+    description: "Describe the problem and why wee need it. "
+  validations:
+    required: true
+- type: textarea
+  id: solution
+  attributes:
+    placeholder: A clear and concise description of what you want to happen
+    label: Solution
+    description: "Describe the solution you'd like. "
+  validations:
+    required: false
+- type: input
+  id: documentation
+  attributes:
+    placeholder: A link reaching the solution
+    label: Documentation
+    description: "Place to put the documentation: "
+  validations:
+    required: false
+- type: textarea
+  id: additional-notes
+  attributes:
+    placeholder: Any other notes or screenshots about the feature request here
+    label: Additional notes
+  validations:
+    required: false
+- type: input
+  id: deadline
+  attributes:
+    label: Deadline
+    description: "Please provide a deadline for the issue."
+    placeholder: "01.01.2023 - Monday - 23:59"
+  validations:
+    required: true
+- type : markdown
+  attributes:
+    value: |
+      _CAUTION: if you chose the Assigness and Labels, kindly remove this line._ 
