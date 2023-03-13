@@ -45,4 +45,4 @@ body:
 - type : markdown
   attributes:
     value: |
-      _CAUTION: if you chose the Assigness and Labels, kindly remove this line._ 
+      _CAUTION: Don't forget adding assigness and labels!._ 
