@@ -34,6 +34,27 @@ body:
     label: Additional notes
   validations:
     required: false
+- type: dropdown
+  id: reviewers
+  attributes:
+    label: Reviewers
+    description: "Select the reviewers of the issue"
+    multiple: true
+    options:
+      - Ahmet Kudu
+      - Beyzanur Bektan
+      - Emre Sin
+      - Emre Türker
+      - Erkam Kavak
+      - Halis Ayberk Erdem
+      - Hüseyin Çivi
+      - Ömer Bahadıroğlu
+      - Ömer Talip Akalın
+      - Sena Özpınar
+      - Süleyman Melih Portakal
+      - Umut Demir
+  validations:
+    required: false
 - type: input
   id: deadline
   attributes:
