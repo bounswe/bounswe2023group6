@@ -10,18 +10,18 @@ this platform similar to group finders in MMORPGs to match people. Players can c
 and online meetings, dive into game related discussions, convention parties and so on.
 
 # Team Members 🙌
-   * [Umut Demir](https://github.com/bounswe/bounswe2023group6/wiki/Umut-Demir)
-   * [Ömer Bahadıroğlu](https://github.com/bounswe/bounswe2023group6/wiki/%C3%96mer-Bahad%C4%B1ro%C4%9Flu)
-   * [Süleyman Melih Portakal](https://github.com/bounswe/bounswe2023group6/wiki/S%C3%BCleyman-Melih-Portakal)
+   * [Ahmet Kudu](https://github.com/bounswe/bounswe2023group6/wiki/About-Ahmet-Kudu)
+   * [Beyzanur Bektan](https://github.com/bounswe/bounswe2023group6/wiki/Beyzanur-Bektan)
+   * [Emre Sin](https://github.com/bounswe/bounswe2023group6/wiki/Emre-Sin)
    * [Emre Türker](https://github.com/bounswe/bounswe2023group6/wiki/Emre-T%C3%BCrker)
    * [Erkam Kavak](https://github.com/bounswe/bounswe2023group6/wiki/Erkam-Kavak)
-   * [Ahmet Kudu](https://github.com/bounswe/bounswe2023group6/wiki/About-Ahmet-Kudu)
-   * [Sena Özpınar](https://github.com/bounswe/bounswe2023group6/wiki/Sena-%C3%96zp%C4%B1nar)
-   * [Hüseyin Çivi](https://github.com/bounswe/bounswe2023group6/wiki/H%C3%BCseyin-%C3%87ivi)
    * [Halis Ayberk Erdem](https://github.com/bounswe/bounswe2023group6/wiki/Halis-Ayberk-Erdem)
-   * [Beyzanur Bektan](https://github.com/bounswe/bounswe2023group6/wiki/Beyzanur-Bektan)
+   * [Hüseyin Çivi](https://github.com/bounswe/bounswe2023group6/wiki/H%C3%BCseyin-%C3%87ivi)
+   * [Ömer Bahadıroğlu](https://github.com/bounswe/bounswe2023group6/wiki/%C3%96mer-Bahad%C4%B1ro%C4%9Flu)
    * [Ömer Talip Akalın](https://github.com/bounswe/bounswe2023group6/wiki/%C3%96mer-Talip-Akal%C4%B1n)
-   * [Emre Sin](https://github.com/bounswe/bounswe2023group6/wiki/Emre-Sin)
+   * [Sena Özpınar](https://github.com/bounswe/bounswe2023group6/wiki/Sena-%C3%96zp%C4%B1nar)
+   * [Süleyman Melih Portakal](https://github.com/bounswe/bounswe2023group6/wiki/S%C3%BCleyman-Melih-Portakal)
+   * [Umut Demir](https://github.com/bounswe/bounswe2023group6/wiki/Umut-Demir)
 ## Learn More 🕵️
 
 Visit our [Wiki page](https://github.com/bounswe/bounswe2023group6/wiki) to learn about us in detail!
