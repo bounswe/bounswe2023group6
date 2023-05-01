@@ -1,7 +1,9 @@
+# Jetbrains IDE
 .idea
-practice-app/.idea
-
 *.iml
 
 .DS_Store
-practice-app/.DS_Store
+
+# Python 
+__pycache__
+*.py[cod]
