@@ -1,0 +1,9 @@
+# Jetbrains IDE
+.idea
+*.iml
+
+.DS_Store
+
+# Python 
+__pycache__
+*.py[cod]
