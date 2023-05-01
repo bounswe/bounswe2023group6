@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+<section id="main" class="wrapper">
+    <div class="inner">
+        <header class="align-center">
+            <h1>Game Information</h1>
+            <p> Get information of any game which is available at Steam. </p>
+        </header>
+
+        {% if error %}
+            <div class="row uniform">
+                <div class="9u 12u$(small)">
+                    <input type="text" name="time" id="time" value="{{ error }}"/>
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="12u">
+            <hr/>
+            <form method="post">
+                <label for="title">Game Name</label>
+                <br>
+                <input type="text" name="game_name"
+                       placeholder="Enter the name of the game you want to search(Ex: Stardew Valley)"
+                       value="{{ request.form['game_name'] }}"></input>
+                <br>
+        
+                <button type="submit">Get Game Information</button>
+            </form>
+        </div>
+    </div>
+</section>
+{%  endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+<section id="main" class="wrapper">
+    <div class="inner">
+        <header class="align-center">
+            <h1>Game Information</h1>
+            <p> Get information of any game which is available at Steam. </p>
+        </header>
+
+
+        <div class="12u">
+
+            <hr/>
+            {% if response %}
+
+            <div class="game_information">
+                Game Name: {{ response.name }}
+                <br>
+                Is free: {{ response.is_free }}
+                <br>
+                Short Description: 
+                <div>
+                    {{ response.short_description|safe }}
+                </div>
+                <br>
+                Detailed Description:
+                <div>
+                    {{ response.detailed_description|safe }}
+                </div>
+                <br>
+
+                Screenshots: 
+                <br>
+                {% for screenshot in response.screenshots %}
+                    <img src="{{ screenshot.path_thumbnail }}" />
+                    <br>
+                {% endfor %}
+
+                Categories: 
+                <br>
+                {% for category in response.categories %}
+                    {{ category.description }}
+                    <br>
+                {% endfor %}
+
+                <!-- TODO: Maybe show reviews and minimum requirements -->
+
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
+</section>
+{%  endblock %}
