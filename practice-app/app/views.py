@@ -1,13 +1,14 @@
+from typing import List
 from flask import Flask, render_template, url_for, request, redirect
 import requests
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Length
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import sessionmaker, scoped_session, relationship, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declarative_base
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
 
 db_username = os.environ['DB_USERNAME'] # write 'activate' file in the bin under venv like export DB_USERNAME="yourdbname"
@@ -29,10 +30,16 @@ login_manager.login_view = 'login'
 
 class User(Base, UserMixin):
     __tablename__ = 'User'
-    id = Column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     username = Column(String(15), unique=True)
     password = Column(String(15))
-
+    world_time: Mapped[List["WorldTimeTable"]] = relationship()
+class WorldTimeTable(Base, UserMixin):
+    __tablename__ = 'WorldTimeTable'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    timezone = Column(String(15))
+    languageCode = Column(String(5))
+    user_id: Mapped[int] = mapped_column(ForeignKey('User.id'))
 
 Base.metadata.create_all(engine)
 
@@ -41,17 +48,14 @@ class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
 
-
 class RegisterForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
     password_confirm = PasswordField('confirm password', validators=[InputRequired(), Length(min=8, max=80)])
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
 
 @app.route('/logout')
 @login_required
@@ -100,6 +104,7 @@ def signup():
 @app.route("/worldtime", methods=["GET", "POST"])  # it is a decorator we have to put a function under of it
 @login_required
 def WorldTime():
+    world_time = session.query(WorldTimeTable).filter(WorldTimeTable.user_id == current_user.id).order_by(WorldTimeTable.id.desc()).first()
     if request.method == "POST":
         timezone = request.form.get("query")
         if timezone == "":
@@ -144,6 +149,12 @@ def WorldTime():
             response = response.json()
             if response == "Couldn't find a language with that code":
                 return render_template("worldtime.html", error="Language code is not found!")
-            return render_template("worldtime.html", response=response)
+            else:
+                new_world_time = WorldTimeTable(timezone=timezone, languageCode=languageCode, user_id=current_user.id)
+                session.add(new_world_time)
+                session.commit()
+                return render_template("worldtime.html", response=response)
     else:
+        if world_time:
+            return render_template("worldtime.html", timezone=world_time.timezone, languageCode=world_time.languageCode)
         return render_template("worldtime.html")
