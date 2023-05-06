@@ -8,14 +8,19 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
+import os
 
-engine = create_engine('postgresql://postgres:Practice1.@localhost:5432/postgres', echo=False)
+db_username = os.environ['DB_USERNAME'] # write 'activate' file in the bin under venv like export DB_USERNAME="yourdbname"
+db_password = os.environ['DB_PASSWORD'] # write 'activate' file in the bin under venv like export DB_PASSWORD="yourdbpassword"
+session_secret_key = os.environ['SECRET_KEY'] # write 'activate' file in the bin under venv like export SECRET_KEY="anyalfanumeric"
+
+engine = create_engine(f'postgresql://{db_username}:{db_password}@localhost:5432/postgres', echo=False)
 Session = sessionmaker(bind=engine)
 session = scoped_session(Session)
 Base = declarative_base()
 Base.query = session.query_property()
 app = Flask(__name__)  # name is global variable returning program name which is app
-app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+app.config['SECRET_KEY'] = session_secret_key # for session
 Bootstrap(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
