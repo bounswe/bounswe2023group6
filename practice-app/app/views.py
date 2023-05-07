@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request
 import requests
+from .util_functions import *
 
 app = Flask(__name__)   # name is global variable returning program name which is app
 
@@ -60,3 +61,25 @@ def WorldTime():
         return render_template("worldtime.html")
 
 
+
+@app.route('/weather', methods =['POST', 'GET'])
+def Weather():
+    if request.method == "POST":
+        city = request.form.get("city")
+        if city == "":
+            return render_template("weather.html", error="City cannot be empty!")
+        else:
+            try:
+                
+                weather_info = get_weather_info(city)
+                #print(weather_info)
+                return render_template("weather.html", response=weather_info)
+            
+            except:
+                
+                return render_template("weather.html", error="Not found! Try with a different city name.")
+            
+
+                
+    else:
+        return render_template("weather.html")

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+
+<!-- Banner -->
+<!DOCTYPE HTML>
+<!--
+	Intensify by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+<head>
+    <title>Elements - Intensify by TEMPLATED</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+</head>
+<body class="subpage">
+
+
+<!-- Main -->
+<section id="main" class="wrapper">
+    <div class="inner">
+        <header class="align-center">
+            <h1>Weather App</h1>
+			<p>Ready for calling a web service which returns the content of weather condition for a given city.</p>
+        </header>
+
+
+        <div class="12u">
+
+            <hr/>
+
+            <form method="post" action="{{ url_for('Weather') }}">
+                <p>To see the list of cities, visit the <a href="https://en.wikipedia.org/wiki/Lists_of_cities_by_country" target=”_blank”> <i>link.</i></a></p>
+                <div class="row uniform">
+                    <div class="6u 12u$(small)">
+                        <input type="text" name="city" id="city" value="" placeholder="type city like Istanbul"/>
+                    </div>
+                    <div class="3u$ 12u$(small)">
+                        <input type="submit" value="Search" class="fit"/>
+                    </div>
+                </div>
+                
+                {% if error %}
+
+                <div class="row uniform">
+                    <div class="9u 12u$(small)">
+                        <input type="text" name="time" id="time" value="{{ error }}"/>
+                    </div>
+                </div>
+
+                {% endif %}
+                
+                {% if response %}
+
+                <div class="row uniform">
+                    <div class="9u 12u$(small)">
+                        <input type="text" name="response" id="response" value="City: {{ response["city"] }}" readonly/>
+                        <input type="text" name="response" id="response" value="Condition: {{ response["condition"] }}" readonly/>
+                        <input type="text" name="response" id="response" value="Temperature: {{ response["temp"] }}" readonly/>
+                        <input type="text" name="response" id="response" value="Pressure: {{ response["pressure"] }}" readonly/>
+                        <input type="text" name="response" id="response" value="Humidity: {{ response["humidity"] }}" readonly/>
+                    </div>
+                </div>
+
+                {% endif %}
+
+                
+            </form>
+
+
+        </div>
+    </div>
+
+    </div>
+</section>
+
+
+</body>
+</html>
+
+{%  endblock %}
