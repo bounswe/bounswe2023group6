@@ -2,82 +2,89 @@
 
 {% block body_content %}
 
-<!-- Banner -->
-<!DOCTYPE HTML>
-<!--
-	Intensify by TEMPLATED
-	templated.co @templatedco
-	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
--->
-<html>
-<head>
-    <title>Elements - Intensify by TEMPLATED</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="assets/css/main.css"/>
-</head>
-<body class="subpage">
+    <!-- Banner -->
+    <!DOCTYPE HTML>
+    <!--
+        Intensify by TEMPLATED
+        templated.co @templatedco
+        Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+    -->
+    <html>
+    <head>
+        <title>Elements - Intensify by TEMPLATED</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="assets/css/main.css"/>
+    </head>
+    <body class="subpage">
 
 
-<!-- Main -->
-<section id="main" class="wrapper">
-    <div class="inner">
-        <header class="align-center">
-            <h1>World Time</h1>
-            <p> Ready for calling a simple web service which returns the current local time for a given timezone. </p>
-        </header>
+    <!-- Main -->
+    <section id="main" class="wrapper">
+        <div class="inner">
+            <header class="align-center">
+                <h1>World Time</h1>
+                <p> Ready for calling a simple web service which returns the current local time for a given
+                    timezone. </p>
+            </header>
 
 
-        <div class="12u">
+            <div class="12u">
 
-            <hr/>
+                <hr/>
 
-            <form method="post" action="{{ url_for('WorldTime') }}">
-                <p>To see timezones, visit the <a href="https://timezonedb.com/time-zones" target=”_blank”> <i>link.</i></a>
-                    Copy the any time zone from there, and then paste below box, and then click the search button. </p>
-                <p>You can use languages codes like <b>tr</b> for Turkish, <b>en</b> for English, <b>de</b> for German, <b>fr</b> for French, <b>it</b> for Italian, <b>es</b> for Spain</p>
+                <form method="post" action="{{ url_for('WorldTime') }}">
+                    <p>To see timezones, visit the <a href="https://timezonedb.com/time-zones" target=”_blank”>
+                        <i>link.</i></a>
+                        Copy the any time zone from there, and then paste below box, and then click the search button.
+                    </p>
+                    <p>You can use languages codes like <b>tr</b> for Turkish, <b>en</b> for English, <b>de</b> for
+                        German, <b>fr</b> for French, <b>it</b> for Italian, <b>es</b> for Spain</p>
 
-                <div class="row uniform">
-                    <div class="6u 12u$(small)">
-                        <input type="text" name="query" id="query" value="" placeholder="type timezone like Europe/Berlin"/>
+                    <div class="row uniform">
+                        <div class="6u 12u$(small)">
+                            <input type="text" name="query" id="query" value=""
+                                   placeholder="type timezone like Europe/Berlin"/>
+                        </div>
+                        <div class="3u 12u$(small)">
+                            <input type="text" name="languageCode" id="languageCode" value=""
+                                   placeholder="type language code like tr"/>
+                        </div>
+                        <div class="3u$ 12u$(small)">
+                            <input type="submit" value="Search" class="fit"/>
+                        </div>
                     </div>
-                    <div class="3u 12u$(small)">
-                        <input type="text" name="languageCode" id="languageCode" value="" placeholder="type language code like tr"/>
-                    </div>
-                    <div class="3u$ 12u$(small)">
-                        <input type="submit" value="Search" class="fit"/>
-                    </div>
-                </div>
-                {% if response %}
+                    {% if response %}
 
-                <div class="row uniform">
-                    <div class="9u 12u$(small)">
-                        <input type="text" name="time" id="time" value="{{ response.friendlyDateTime }}" readonly/>
-                    </div>
-                </div>
+                        <div class="row uniform">
+                            <div class="9u 12u$(small)">
+                                <input type="text" name="time" id="time" value="{{ response.friendlyDateTime }}"
+                                       readonly/>
+                            </div>
+                        </div>
 
-                {% endif %}
+                    {% endif %}
 
-                {% if error %}
+                    {% if error %}
 
-                <div class="row uniform">
-                    <div class="9u 12u$(small)">
-                        <input type="text" name="time" id="time" value="{{ error }}"/>
-                    </div>
-                </div>
+                        <div class="row uniform">
+                            <div class="9u 12u$(small)">
+                                <input type="text" name="time" id="time" value="{{ error }}"/>
+                            </div>
+                        </div>
 
-                {% endif %}
-            </form>
+                    {% endif %}
+                </form>
 
+
+            </div>
+        </div>
 
         </div>
-    </div>
-
-    </div>
-</section>
+    </section>
 
 
-</body>
-</html>
+    </body>
+    </html>
 
-{%  endblock %}
+{% endblock %}
