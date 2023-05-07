@@ -8,13 +8,20 @@
             <p> Get information of any game which is available at Steam. </p>
         </header>
 
-        {% if error %}
+        {% if log %}
             <div class="row uniform">
                 <div class="9u 12u$(small)">
-                    <input type="text" name="time" id="time" value="{{ error }}"/>
+                    <input type="text" name="time" id="time" value="{{ log }}"/>
+                    <br>
                 </div>
             </div>
         {% endif %}
+
+        <div class="12u" id="show_favorites_form">
+            <form method="post" action="{{ url_for('show_all_favorites') }}">
+                <button type="Submit">Show all favorite games</button>
+             </form>
+        </div>
 
 
         <div class="12u">
@@ -23,8 +30,7 @@
                 <label for="title">Game Name</label>
                 <br>
                 <input type="text" name="game_name"
-                       placeholder="Enter the name of the game you want to search(Ex: Stardew Valley)"
-                       value="{{ request.form['game_name'] }}"></input>
+                       placeholder="Enter the name of the game you want to search(Ex: Stardew Valley)">
                 <br>
         
                 <button type="submit">Get Game Information</button>

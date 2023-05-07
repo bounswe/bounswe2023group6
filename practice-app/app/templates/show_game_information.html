@@ -14,6 +14,22 @@
             <hr/>
             {% if response %}
 
+            {% if log %}
+                <div class="row uniform">
+                    <div class="9u 12u$(small)">
+                        <input type="text" name="log" id="log" value="{{ log }}"/>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="12u" id="add_favorite_form">
+                <form method="post" action="{{ url_for('add_game_to_favorites') }}">
+                    <input type="hidden" name="game_id" value="{{ response.steam_appid }}">
+                    <input type="hidden" name="game_name" value="{{ response.name }}">
+                    <button type="Submit">Add the game to favorites</button>
+                 </form>
+            </div>
+
             <div class="game_information">
                 Game Name: {{ response.name }}
                 <br>
