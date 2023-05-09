@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
 
+{% block head_content %}
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        document.getElementById("log").style.visibility = 'hidden'; 
+        var $add_favorites_form = $('#add_game_to_favorites');
+        $add_favorites_form.submit(function (event) {
+            event.preventDefault(); 
+            $.ajax({
+                url : $add_favorites_form.attr('action'), 
+                type : 'POST',
+                dataType : 'json',
+                data: $add_favorites_form.serialize(),
+            }).done(function (response) {
+                document.getElementById("log").value = response["log"];
+                document.getElementById("log").style.visibility = 'visible'; 
+            });
+        });
+    });
+</script>
+{% endblock %}
+
 {% block body_content %}
 <section id="main" class="wrapper">
     <div class="inner">
@@ -14,18 +35,16 @@
             <hr/>
             {% if response %}
 
-            {% if log %}
-                <div class="row uniform">
-                    <div class="9u 12u$(small)">
-                        <input type="text" name="log" id="log" value="{{ log }}"/>
-                    </div>
+            <div class="row uniform">
+                <div class="9u 12u$(small)">
+                    <input type="text" name="log" id="log" />
                 </div>
-            {% endif %}
+            </div>
 
             <div class="12u" id="add_favorite_form">
-                <form method="post" action="{{ url_for('add_game_to_favorites') }}">
+                <form id="add_game_to_favorites" method="post" action="{{ url_for('add_game_to_favorites') }}">
                     <input type="hidden" name="game_id" value="{{ response.steam_appid }}">
-                    <input type="hidden" name="game_name" value="{{ response.name }}">
+                    <input type="hidden" name="game_name" value="{{ response.game_name }}">
                     <button type="Submit">Add the game to favorites</button>
                  </form>
             </div>

@@ -1,6 +1,6 @@
 import requests
 from flask import render_template, request, redirect
-from sqlalchemy import Column, String, Integer, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy import Column, String, Integer, ForeignKey, PrimaryKeyConstraint, Sequence
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import login_required, current_user
 
@@ -8,7 +8,8 @@ from .views import app, Base, session
 
 class FavoriteGame(Base):
     __tablename__ = 'FavoriteGameTable'
-    id = Column(Integer, autoincrement=True)
+    id_sec = Sequence(__tablename__ + "_id_seq")
+    id = Column(Integer, id_sec, server_default=id_sec.next_value(), nullable=False)
     game_id = Column(Integer)
     game_name = Column(String(50))
     user_id: Mapped[int] = mapped_column(ForeignKey('User.id'), nullable=True)
@@ -54,6 +55,7 @@ def get_game_information(log=None):
             if game_information == None: 
                 log = "Game can not be found! Try with a different name"
             else: 
+                game_information["game_name"] = game_name
                 return render_template('show_game_information.html', response=game_information) 
     return render_template("get_game_information.html", log=log)
 
@@ -66,24 +68,22 @@ def show_all_favorites():
 @app.route("/add_to_favorites", methods=["POST"])
 @login_required
 def add_game_to_favorites(): 
-    if request.method == "POST": 
-        game_name = request.form.get("game_name")
-        game_id = int(request.form.get("game_id"))
-        log = None
-        if not game_name or not game_id: 
-            log = "Problems occurred! Game could not be added to favorites."
+    game_name = request.form.get("game_name")
+    game_id = int(request.form.get("game_id"))
+    log = None
+    if not game_name or not game_id: 
+        log = "Problems occurred! Game could not be added to favorites."
+    else: 
+        previously_added = FavoriteGame.query.filter_by(user_id=current_user.id, game_id=game_id).all()
+        if len(previously_added) != 0: 
+            log = "Game already added to favorites for this user!"
         else: 
-            previously_added = FavoriteGame.query.filter_by(user_id=current_user.id, game_id=game_id).all()
-            if len(previously_added) != 0: 
-                log = "Game already added to favorites for this user!"
-            else: 
-                favorite_game = FavoriteGame(
-                    user_id=current_user.id,
-                    game_id=game_id,
-                    game_name=game_name
-                )
-                session.add(favorite_game)
-                session.commit()
-                log = "Game added to favorites!"
-        print(log)
-        return redirect(request.referrer)
+            favorite_game = FavoriteGame(
+                user_id=current_user.id,
+                game_id=game_id,
+                game_name=game_name
+            )
+            session.add(favorite_game)
+            session.commit()
+            log = "Game added to favorites!"
+    return {"log": log}
