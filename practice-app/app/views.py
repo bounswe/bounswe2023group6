@@ -24,15 +24,9 @@ from flask_login import (
 )
 import os
 
-db_username = os.environ[
-    "DB_USERNAME"
-]
-db_password = os.environ[
-    "DB_PASSWORD"
-]
-session_secret_key = os.environ[
-    "SECRET_KEY"
-]
+db_username = os.environ["DB_USERNAME"]
+db_password = os.environ["DB_PASSWORD"]
+session_secret_key = os.environ["SECRET_KEY"]
 
 engine = create_engine(
     f"postgresql://{db_username}:{db_password}@localhost:5432/postgres", echo=False
