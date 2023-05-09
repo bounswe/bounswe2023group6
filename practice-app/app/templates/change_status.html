@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head_styles %}
+<style>
+    .status-update {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .status-update form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .status-update button {
+        margin-top: 1em;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    @media screen and (min-width: 768px) {
+        .status-update {
+            height: auto;
+        }
+
+        .status-update form {
+            flex-direction: row;
+        }
+
+        .select-wrapper {
+            margin: 2em;
+        }
+
+        .status-update button {
+            margin-top: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body_content %}
+<section id="main" class="wrapper">
+    <div class="inner">
+        <div class="row">
+            <div class="6u 12u$(medium)">
+                <iframe src="https://tcorp.instatus.com/" width="100%" height="800" frameborder="0"></iframe>
+            </div>
+            <div class="6u$ 12u$(medium)" style="display: flex; justify-content: center; align-items: center;">
+                <div class="status-update">
+                    <div style="display: flex; justify-content: center; align-items: center;"> 
+                        <h2>Status Update</h2>
+                    </div>    
+                    <form action="/change_status" method="post">
+                        <div class="select-wrapper">
+                            <select name="status">
+                                <option value="resolved">Resolved</option>
+                                <option value="investigating">Investigating</option>
+                            </select>
+                        </div>
+                        <button type="submit" style="margin: 2em">Update Status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

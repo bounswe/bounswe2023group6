@@ -1,4 +1,4 @@
-from .tcorp import change_status
+from .tcorp import change_status_page
 from .views import app
 from dotenv import load_dotenv
 
