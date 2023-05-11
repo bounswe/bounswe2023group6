@@ -14,7 +14,7 @@
         <title>Elements - Intensify by TEMPLATED</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="assets/css/main.css"/>
+        <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/main.css') }}"/>
     </head>
     <body class="subpage">
 
@@ -39,6 +39,21 @@
                         </div>
                     </div>
                 </form>
+                {% if kamela %}
+
+                    <form method="post" action="{{ url_for('BoredSave') }}">
+                        <div class="row uniform">
+                            <div class="6u 12u$(small)">
+                                <input type="text" name="activity" value="{{ kamela.activity}}"  readonly/>
+                            </div>
+                            <div class="3u$ 12u$(small)">
+                                <input type="submit" value="Save" />
+                            </div>
+                        </div>
+                    </form>
+                
+                {% endif %}
+
                 <form method="get" action="{{ url_for('GetBoredSaved') }}">
                     <div class="row uniform">
                         <div class="6u$ 12u$(small)">
@@ -46,21 +61,11 @@
                         </div>
                     </div>
                 </form>
-                    {% if kamela %}
-
-                        <form method="post" action="{{ url_for('BoredSave') }}">
-                            <div class="row uniform">
-                                <div class="6u 12u$(small)">
-                                    <input type="text" name="activity" value="{{ kamela.activity}}"  readonly/>
-                                </div>
-                                <div class="3u$ 12u$(small)">
-                                    <input type="submit" value="Save" />
-                                </div>
-                            </div>
-                        </form>
-                    
-                        {% endif %}
-
+                <ol>
+                {% for activity in activities %}
+                    <li>{{activity.activity_name}}</li>
+                {% endfor %}
+                </ol>
                     {% if error %}
 
                         <div class="row uniform">

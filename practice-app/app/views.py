@@ -271,6 +271,6 @@ def BoredSave():
 )  # it is a decorator we have to put a function under of it
 @login_required
 def GetBoredSaved():
-    response = make_response("")
-    response.status_code = 200
-    return "GETTING THE SAVED ONES!"
+    activities = session.query(Activities).filter(Activities.user_id == current_user.id)
+
+    return render_template("bored.html", activities=activities)
