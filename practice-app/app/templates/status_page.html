@@ -48,6 +48,40 @@
 {% endblock %}
 
 {% block body_content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#resolved").click(function(){
+            $(this).html("Loading...");
+            $.post("/change_status/resolved", function(data){
+                if (data.error) {
+                    alert(data.error);
+                }
+                else if (data.message) {
+                    location.reload();
+                }
+            });
+            setTimeout(() => {
+                $(this).html("Mark as Resolved");
+            }, 2000);
+        });
+
+        $("#investigating").click(function(){
+            $(this).html("Loading...");
+            $.post("/change_status/investigating", function(data){
+                if (data.error) {
+                    alert(data.error);
+                }
+                else if (data.message) {
+                    location.reload();
+                }
+            });
+            setTimeout(() => {
+                $(this).html("Mark as Investigating");
+            }, 2000);
+        });
+    });
+</script>
 <section id="main" class="wrapper">
     <div class="inner">
         <div class="row">
@@ -57,21 +91,13 @@
             <div class="6u$ 12u$(medium)" style="display: flex; justify-content: center; align-items: center;">
                 <div class="status-update">
                     <div style="display: flex; justify-content: center; align-items: center;"> 
-                        <h2>Status Update</h2>
-                    </div>    
-                    <form action="/change_status" method="post">
-                        <div class="select-wrapper">
-                            <select name="status">
-                                <option value="resolved">Resolved</option>
-                                <option value="investigating">Investigating</option>
-                            </select>
-                        </div>
-                        <button type="submit" style="margin: 2em">Update Status</button>
-                    </form>
+                        <h2>Current Status: {{ status }}</h2>
+                    </div>
+                    <button id="resolved" type="button">Mark as Resolved</button>
+                    <button id="investigating" type="button">Mark as Investigating</button>
                 </div>
             </div>
         </div>
     </div>
-
 </section>
 {% endblock %}

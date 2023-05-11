@@ -21,10 +21,8 @@ def get_all_incidents(header):
     ).json()
     return all_incidents
 
-@app.route("/change_status", methods=["POST"])
-def change_status():
-    new_status = request.form.get('status')
-
+@app.route("/change_status/<new_status>", methods=["POST"])
+def change_status(new_status):
     instatus_api_key = os.environ.get("INSTATUS_API_KEY")
     header = {"Authorization": f"Bearer {instatus_api_key}"}
 
@@ -43,7 +41,7 @@ def change_status():
 
     if new_status.lower() == curr_inc_status.lower():
         print("Status already set to " + curr_inc_status)
-        return redirect(url_for('change_status_page'))
+        return redirect(url_for('get_status_page'))
 
     update_incident = requests.post(
         f"{INSTATUS_URL}/v2/{PAGE_ID}/incidents/{curr_inc_id}/incident-updates/{template_id}",
@@ -53,9 +51,8 @@ def change_status():
     print(update_incident.text)
     print("Status changed to " + new_status)
 
-    return redirect(url_for('change_status_page'))
+    return redirect(url_for('get_status_page'))
 
-
-@app.route("/change_status")
-def change_status_page():
-    return render_template("change_status.html")
+@app.route("/status_page")
+def get_status_page():
+    return render_template("status_page.html")
