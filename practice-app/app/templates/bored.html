@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+
+    <!-- Banner -->
+    <!DOCTYPE HTML>
+    <!--
+        Intensify by TEMPLATED
+        templated.co @templatedco
+        Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+    -->
+    <html>
+    <head>
+        <title>Elements - Intensify by TEMPLATED</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="assets/css/main.css"/>
+    </head>
+    <body class="subpage">
+
+
+    <!-- Main -->
+    <section id="main" class="wrapper">
+        <div class="inner">
+            <header class="align-center">
+                <h1>Bored API</h1>
+                <p> I shall provide you with fun! </p>
+            </header>
+
+
+            <div class="12u">
+
+                <hr/>
+
+                <form method="get" action="{{ url_for('Bored') }}">
+                    <div class="row uniform">
+                        <div class="6u$ 12u$(small)">
+                            <input type="submit" value="Search" class="fit"/>
+                        </div>
+                    </div>
+                </form>
+                <form method="get" action="{{ url_for('GetBoredSaved') }}">
+                    <div class="row uniform">
+                        <div class="6u$ 12u$(small)">
+                            <input type="submit" value="Get Saved Activities!" class="fit"/>
+                        </div>
+                    </div>
+                </form>
+                    {% if kamela %}
+
+                        <form method="post" action="{{ url_for('BoredSave') }}">
+                            <div class="row uniform">
+                                <div class="6u 12u$(small)">
+                                    <input type="text" value="{{ kamela.activity}}"  readonly/>
+                                </div>
+                                <div class="3u$ 12u$(small)">
+                                    <input type="submit" value="Save" />
+                                </div>
+                            </div>
+                        </form>
+                    
+                        {% endif %}
+
+                    {% if error %}
+
+                        <div class="row uniform">
+                            <div class="9u 12u$(small)">
+                                <input type="text" name="time" id="time" value="{{ error }}"/>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+
+            </div>
+        </div>
+
+        </div>
+    </section>
+
+
+    </body>
+    </html>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from typing import List
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, make_response
 import requests
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
@@ -24,15 +24,9 @@ from flask_login import (
 )
 import os
 
-db_username = os.environ[
-    "DB_USERNAME"
-]
-db_password = os.environ[
-    "DB_PASSWORD"
-]
-session_secret_key = os.environ[
-    "SECRET_KEY"
-]
+db_username = os.environ["DB_USERNAME"]
+db_password = os.environ["DB_PASSWORD"]
+session_secret_key = os.environ["SECRET_KEY"]
 
 engine = create_engine(
     f"postgresql://{db_username}:{db_password}@localhost:5432/postgres", echo=False
@@ -239,3 +233,33 @@ def WorldTime():
                 languageCode=world_time.languageCode,
             )
         return render_template("worldtime.html")
+
+
+@app.route(
+    "/bored", methods=["GET", "POST"]
+)  # it is a decorator we have to put a function under of it
+@login_required
+def Bored():
+    response = requests.get("http://www.boredapi.com/api/activity/")
+    response = response.json()
+    return render_template("bored.html", kamela=response)
+
+
+@app.route(
+    "/bored/save", methods=["GET", "POST"]
+)  # it is a decorator we have to put a function under of it
+@login_required
+def BoredSave():
+    response = make_response("")
+    response.status_code = 200
+    return "SAVED!"
+
+
+@app.route(
+    "/bored/getSaved", methods=["GET", "POST"]
+)  # it is a decorator we have to put a function under of it
+@login_required
+def GetBoredSaved():
+    response = make_response("")
+    response.status_code = 200
+    return "GETTING THE SAVED ONES!"
