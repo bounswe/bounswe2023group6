@@ -51,7 +51,7 @@
                         <form method="post" action="{{ url_for('BoredSave') }}">
                             <div class="row uniform">
                                 <div class="6u 12u$(small)">
-                                    <input type="text" value="{{ kamela.activity}}"  readonly/>
+                                    <input type="text" name="activity" value="{{ kamela.activity}}"  readonly/>
                                 </div>
                                 <div class="3u$ 12u$(small)">
                                     <input type="submit" value="Save" />

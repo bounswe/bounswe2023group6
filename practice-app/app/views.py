@@ -59,6 +59,14 @@ class WorldTimeTable(Base, UserMixin):
     user_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
 
 
+class Activities(Base, UserMixin):
+    __tablename__ = "Activities"
+
+    id = Column(Integer, primary_key=True)
+    activity_name = Column(String)
+    user_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
+
+
 Base.metadata.create_all(engine)
 
 
@@ -250,8 +258,11 @@ def Bored():
 )  # it is a decorator we have to put a function under of it
 @login_required
 def BoredSave():
-    response = make_response("")
-    response.status_code = 200
+    activityName = request.form.get("activity")
+
+    session.add(Activities(activity_name=activityName, user_id=current_user.id))
+    session.commit()
+
     return "SAVED!"
 
 
