@@ -26,7 +26,7 @@
         </header>
       </div>
       <div class="inner">
-        <form method="post" action="{{ url_for('PokemonPage') }}">
+        <form method="post" action="{{ url_for('pokemon_page') }}">
           <div class="row uniform">
             <div class="9u 12u$(small)">
               <input
@@ -47,7 +47,7 @@
 
         <div class="row uniform">
           <div class="9u 12u$(small)">
-            <form method="POST" action="{{ url_for('AddPokeFavourites') }}">
+            <form method="POST" action="{{ url_for('save_pokemon') }}">
               <table>
                 <tr>
                   <th>Pokemon Name</th>

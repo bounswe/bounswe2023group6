@@ -50,6 +50,7 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .pokemon_api import pokemon_page, save_pokemon
 
 class User(Base, UserMixin):
     __tablename__ = "User"
@@ -57,7 +58,6 @@ class User(Base, UserMixin):
     username = Column(String(15), unique=True)
     password = Column(String(120))
     world_time: Mapped[List["WorldTimeTable"]] = relationship()
-    pokemon: Mapped[List["Pokemon"]] = relationship()
 
 
 
@@ -67,15 +67,6 @@ class WorldTimeTable(Base, UserMixin):
     timezone = Column(String(30))
     languageCode = Column(String(15))
     user_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
-
-class Pokemon(Base):
-    __tablename__ = "Pokemon"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name = Column(String(100), nullable=False)
-    height = Column(Integer, nullable=False)
-    weight = Column(Integer, nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
-
 
 Base.metadata.create_all(engine)
 
@@ -252,48 +243,3 @@ def worldTime():
                 languageCode=world_time.languageCode,
             )
         return render_template("worldtime.html")
-
-@app.route("/pokemon", methods=["GET", "POST"])
-def PokemonPage():
-    if request.method == "GET":
-        return render_template("pokemon.html")
-    else:
-        pokemon_name = request.form.get("poke_name")
-        url = f"https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}"
-
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            pokemon = Pokemon(
-                name=data["name"], height=data["height"], weight=data["weight"]
-            )
-            return render_template("pokemon.html", response=pokemon)
-        else:
-            return render_template(
-                "pokemon.html", error="Something went wrong. (Maybe wrong poke name) "
-            )
-
-
-@app.route(f"/pokesave", methods=["POST"])
-def AddPokeFavourites():
-    poke_name = request.form.get("name")
-    poke_weight = request.form.get("weight")
-    poke_height = request.form.get("height")
-
-    pokemon = Pokemon.query.filter_by(name=poke_name).first()
-    if pokemon:
-        return render_template(
-            "pokemon.html",
-            error="This pokemon is already owned by you or someone else!",
-        )
-
-    temp_poke = Pokemon(
-        name=poke_name, height=poke_height, weight=poke_weight, user_id=current_user.id
-    )
-    session.add(temp_poke)
-    session.commit()
-    return render_template(
-        "pokemon.html",
-        response=temp_poke,
-        succeed_message="Congrats! This pokemon is now yours.",
-    )
