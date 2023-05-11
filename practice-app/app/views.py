@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length
-from sqlalchemy import create_engine, Column, String, ForeignKey
+from sqlalchemy import create_engine, Column, String, ForeignKey, Integer
 from sqlalchemy.orm import (
     sessionmaker,
     scoped_session,
