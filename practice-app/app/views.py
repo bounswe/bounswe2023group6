@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length
-from sqlalchemy import create_engine, Column, String, ForeignKey
+from sqlalchemy import create_engine, Column, String, ForeignKey, Integer
 from sqlalchemy.orm import (
     sessionmaker,
     scoped_session,
@@ -52,6 +52,7 @@ login_manager.login_view = "login"
 
 from .worldtime import worldTime
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .pokemon_api import pokemon_page, save_pokemon
 
 class User(Base, UserMixin):
     __tablename__ = "User"
@@ -59,6 +60,7 @@ class User(Base, UserMixin):
     username = Column(String(15), unique=True)
     password = Column(String(120))
     world_time: Mapped[List["WorldTimeTable"]] = relationship()
+
 
 Base.metadata.create_all(engine)
 
