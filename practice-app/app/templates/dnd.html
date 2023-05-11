@@ -1,5 +1,27 @@
 {% extends 'base.html' %}
 
+{% block head_content %}
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        document.getElementById("log").style.visibility = 'hidden'; 
+        var $add_favorites_form = $('#like_combination');
+        $add_favorites_form.submit(function (event) {
+            event.preventDefault(); 
+            $.ajax({
+                url : $add_favorites_form.attr('action'), 
+                type : 'POST',
+                dataType : 'json',
+                data: $add_favorites_form.serialize(),
+            }).done(function (response) {
+                document.getElementById("log").value = response["log"];
+                document.getElementById("log").style.visibility = 'visible'; 
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+
 {% block body_content %}
 
 <!-- Banner -->
@@ -61,6 +83,12 @@
                 {% endif %}
             </form>
 
+            <div class="row uniform">
+                <div class="9u 12u$(small)">
+                    <input type="text" name="log" id="log" />
+                </div>
+            </div>
+
             <div class="12u">
                 <form id="show_most_liked_form" method="post" action="{{ url_for('show_most_liked_combinations') }}">
                     <button type="Submit">Show most liked combinations</button>
@@ -73,7 +101,6 @@
                     <br>
                 {% endfor %}
             {% endif %}
-
 
             {% if response %}
 
