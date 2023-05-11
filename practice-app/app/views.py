@@ -25,15 +25,9 @@ from flask_login import (
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
-db_username = os.environ[
-    "DB_USERNAME"
-]
-db_password = os.environ[
-    "DB_PASSWORD"
-]
-session_secret_key = os.environ[
-    "SECRET_KEY"
-]
+db_username = os.environ["DB_USERNAME"]
+db_password = os.environ["DB_PASSWORD"]
+session_secret_key = os.environ["SECRET_KEY"]
 
 engine = create_engine(
     f"postgresql://{db_username}:{db_password}@localhost:5432/postgres", echo=False
@@ -49,8 +43,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
-from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
-from .dnd_information_api import Dnd,like_combination,show_most_liked_combinations
+from .game_information_api import (
+    get_game_information,
+    add_game_to_favorites,
+    show_all_favorites,
+)
+from .dnd_information_api import Dnd, like_combination, show_most_liked_combinations
+
 
 class User(Base, UserMixin):
     __tablename__ = "User"

@@ -7,7 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     PrimaryKeyConstraint,
     Sequence,
-    func
+    func,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import login_required, current_user
@@ -30,7 +30,7 @@ def get_race_information(race_name):
     response = requests.get(f"https://www.dnd5eapi.co/api/races/{race_name}")
     if response.status_code != 200:
         return None
-    
+
     race_information = response.json()
 
     abilities = race_information["ability_bonuses"]
@@ -42,17 +42,19 @@ def get_race_information(race_name):
 
     return race_information
 
+
 def get_class_information(class_name):
     class_name = class_name.lower().strip()
     response = requests.get(f"https://www.dnd5eapi.co/api/classes/{class_name}")
     if response.status_code != 200:
         return None
-    
+
     class_information = response.json()
 
     return class_information
 
-def get_dnd_information(race_name,class_name):
+
+def get_dnd_information(race_name, class_name):
     dnd_info = get_race_information(race_name)
     class_info = get_class_information(class_name)
     if (class_info == None) or (dnd_info == None):
@@ -60,10 +62,10 @@ def get_dnd_information(race_name,class_name):
     dnd_info["hit_die"] = class_info["hit_die"]
     dnd_info["class_name"] = class_info["name"]
     return dnd_info
-    
 
-@app.route("/dnd", methods= ["GET", "POST"]) 
-def Dnd(log = None):
+
+@app.route("/dnd", methods=["GET", "POST"])
+def Dnd(log=None):
     if request.method == "POST":
         race_name = request.form.get("race")
         if not race_name:
@@ -74,25 +76,35 @@ def Dnd(log = None):
         liked_race_name = request.form.get("race_name")
         liked_class_name = request.form.get("class_name")
         if liked_race_name and liked_class_name:
-            like_combination(liked_race_name,liked_class_name)
+            like_combination(liked_race_name, liked_class_name)
         else:
-            dnd_information = get_dnd_information(race_name,class_name)
+            dnd_information = get_dnd_information(race_name, class_name)
             if dnd_information == None:
                 log = "Information can not be found! Try with a different race or class"
             else:
-                return render_template('dnd.html', response=dnd_information)
-              
-    return render_template('dnd.html', log = log)
+                return render_template("dnd.html", response=dnd_information)
+
+    return render_template("dnd.html", log=log)
+
 
 @app.route("/show_most_liked_combinations", methods=["POST"])
 def show_most_liked_combinations():
-    counts = FavoriteRCCombination.query.with_entities(FavoriteRCCombination.race_name,FavoriteRCCombination.class_name, func.count(FavoriteRCCombination.id).label("count")).group_by(FavoriteRCCombination.race_name,FavoriteRCCombination.class_name).all()
-    
+    counts = (
+        FavoriteRCCombination.query.with_entities(
+            FavoriteRCCombination.race_name,
+            FavoriteRCCombination.class_name,
+            func.count(FavoriteRCCombination.id).label("count"),
+        )
+        .group_by(FavoriteRCCombination.race_name, FavoriteRCCombination.class_name)
+        .all()
+    )
+
     counts.sort(key=lambda a: a[2])
     print(counts)
     for row in counts:
-        print("Deneme",row.race_name, row.class_name, row.count)    
-    return render_template('dnd.html', combinations = counts)
+        print("Deneme", row.race_name, row.class_name, row.count)
+    return render_template("dnd.html", combinations=counts)
+
 
 @app.route("/like_combination", methods=["POST"])
 def like_combination():
@@ -103,15 +115,15 @@ def like_combination():
         log = "Problems occured!"
     else:
         previously_added = FavoriteRCCombination.query.filter_by(
-            user_id=current_user.id, race_name=race_name, class_name = class_name
+            user_id=current_user.id, race_name=race_name, class_name=class_name
         ).all()
         if len(previously_added) != 0:
             log = "Combination already liked!"
         else:
-            combination = FavoriteRCCombination(user_id=current_user.id, race_name=race_name, class_name=class_name)
+            combination = FavoriteRCCombination(
+                user_id=current_user.id, race_name=race_name, class_name=class_name
+            )
             session.add(combination)
             session.commit()
             log = "Combination added!"
     return {"log": log}
-
-
