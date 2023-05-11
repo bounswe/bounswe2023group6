@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Length
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, delete
 from sqlalchemy.orm import (
     sessionmaker,
     scoped_session,
@@ -244,7 +244,7 @@ def WorldTime():
 
 
 @app.route(
-    "/bored", methods=["GET", "POST"]
+    "/bored", methods=["GET"]
 )  # it is a decorator we have to put a function under of it
 @login_required
 def Bored():
@@ -261,23 +261,44 @@ def Bored():
 
 
 @app.route(
-    "/bored/save", methods=["GET", "POST"]
+    "/bored/save", methods=["POST"]
 )  # it is a decorator we have to put a function under of it
 @login_required
 def BoredSave():
-    activityName = request.form.get("activity")
+    if request.method == "POST":
+        activityName = request.form.get("activity")
 
-    session.add(Activities(activity_name=activityName, user_id=current_user.id))
-    session.commit()
+        session.add(Activities(activity_name=activityName, user_id=current_user.id))
+        session.commit()
 
-    return "SAVED!", 201
+        return "SAVED!", 201
+    else:
+        return render_template("bored.html", error=405)
 
 
 @app.route(
-    "/bored/getSaved", methods=["GET", "POST"]
+    "/bored/getSaved", methods=["GET"]
 )  # it is a decorator we have to put a function under of it
 @login_required
 def GetBoredSaved():
-    activities = session.query(Activities).filter(Activities.user_id == current_user.id)
+    if request.method == "GET":
+        activities = session.query(Activities).filter(
+            Activities.user_id == current_user.id
+        )
 
-    return render_template("bored.html", activities=activities), 200
+        return render_template("bored.html", activities=activities), 200
+    else:
+        return render_template("bored.html", error=405)
+
+
+@app.route(
+    "/bored/delete", methods=["POST"]
+)  # it is a decorator we have to put a function under of it
+@login_required
+def DeleteBoredSaved():
+    if request.method == "POST":
+        Activities.query.filter(Activities.user_id == current_user.id).delete()
+        session.commit()
+        return render_template("bored.html", activities=None), 204
+    else:
+        return render_template("bored.html", error=405)

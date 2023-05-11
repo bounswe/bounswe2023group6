@@ -51,7 +51,7 @@
                             </div>
                         </div>
                     </form>
-                
+                    
                 {% endif %}
 
                 <form method="get" action="{{ url_for('GetBoredSaved') }}">
@@ -61,11 +61,24 @@
                         </div>
                     </div>
                 </form>
+                
+                {%if activities != None %}
+                
                 <ol>
                 {% for activity in activities %}
                     <li>{{activity.activity_name}}</li>
                 {% endfor %}
                 </ol>
+
+                {% endif %}
+
+                <form method="post" action="{{ url_for('DeleteBoredSaved') }}">
+                    <div class="row uniform">
+                        <div class="6u$ 12u$(small)">
+                            <input type="submit" value="Delete Records" class="fit"/>
+                        </div>
+                    </div>
+                </form>
                     {% if error %}
 
                         <div class="row uniform">
