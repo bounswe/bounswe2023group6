@@ -40,7 +40,7 @@ def pokemon_page():
             )
 
 
-@app.route(f"/pokesave", methods=["POST"])
+@app.route("/pokesave", methods=["POST"])
 def save_pokemon():
     poke_name = request.form.get("name")
     poke_weight = request.form.get("weight")
