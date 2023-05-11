@@ -248,9 +248,16 @@ def WorldTime():
 )  # it is a decorator we have to put a function under of it
 @login_required
 def Bored():
-    response = requests.get("http://www.boredapi.com/api/activity/")
-    response = response.json()
-    return render_template("bored.html", kamela=response)
+    if request.method == "GET":
+        response = requests.get("http://www.boredapi.com/api/activity/")
+
+        if response.status_code != 200:
+            return render_template("bored.html", error=response.status_code)
+
+        response = response.json()
+        return render_template("bored.html", kamela=response)
+    else:
+        return render_template("bored.html", error=405)
 
 
 @app.route(
@@ -263,7 +270,7 @@ def BoredSave():
     session.add(Activities(activity_name=activityName, user_id=current_user.id))
     session.commit()
 
-    return "SAVED!"
+    return "SAVED!", 201
 
 
 @app.route(
@@ -273,4 +280,4 @@ def BoredSave():
 def GetBoredSaved():
     activities = session.query(Activities).filter(Activities.user_id == current_user.id)
 
-    return render_template("bored.html", activities=activities)
+    return render_template("bored.html", activities=activities), 200
