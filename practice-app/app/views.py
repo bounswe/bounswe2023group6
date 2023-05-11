@@ -250,62 +250,47 @@ def WorldTime():
             )
         return render_template("worldtime.html")
 
-
-@app.route('/pokemon', methods=['GET','POST'])
+@app.route("/pokemon", methods=["GET", "POST"])
 def PokemonPage():
     if request.method == "GET":
         return render_template("pokemon.html")
     else:
         pokemon_name = request.form.get("poke_name")
-        url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}'
+        url = f"https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}"
 
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
             pokemon = Pokemon(
-                name=data['name'],
-                height=data['height'],
-                weight=data['weight']
-        )
-        return render_template("pokemon.html", response = pokemon)
-@app.route(f'/pokesave', methods=['POST'])
-def AddPokeFavourites():
-    poke_name = request.form.get('name')
-    poke_weight = request.form.get('weight')
-    poke_height = request.form.get('height')
-    print(poke_name)
-    pokemon = Pokemon.query.filter_by(name=poke_name).first()
+                name=data["name"], height=data["height"], weight=data["weight"]
+            )
+            return render_template("pokemon.html", response=pokemon)
+        else:
+            return render_template(
+                "pokemon.html", error="Something went wrong. (Maybe wrong poke name) "
+            )
 
+
+@app.route(f"/pokesave", methods=["POST"])
+def AddPokeFavourites():
+    poke_name = request.form.get("name")
+    poke_weight = request.form.get("weight")
+    poke_height = request.form.get("height")
+
+    pokemon = Pokemon.query.filter_by(name=poke_name).first()
     if pokemon:
-        return render_template("pokemon.html", error="errorrr")
-    
+        return render_template(
+            "pokemon.html",
+            error="This pokemon is already owned by you or someone else!",
+        )
 
     temp_poke = Pokemon(
-                name=poke_name,
-                height=poke_height,
-                weight= poke_weight,
-                user_id= current_user.id
-                )
+        name=poke_name, height=poke_height, weight=poke_weight, user_id=current_user.id
+    )
     session.add(temp_poke)
     session.commit()
-    return render_template("pokemon.html", response=temp_poke, succeed_message= "Succesfully Saved")
-   
-
-"""@app.route('/pokemon', methods=['POST'])
-def add_pokemon():
-    data = request.get_json()
-    pokemon_name = data.get('name')
-    pokemon = Pokemon.query.filter_by(name=pokemon_name).first()
-
-    if pokemon:
-        return jsonify({'error': 'Pokemon already exists in database'})
-
-    url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_name.lower()}'
-    response = requests.get(url)
-
-   
-        db.session.add(new_pokemon)
-        db.session.commit()
-        return jsonify({'message': 'Pokemon added to database'})
-    else:
-        return jsonify({'error': 'Pokemon not found'})"""
+    return render_template(
+        "pokemon.html",
+        response=temp_poke,
+        succeed_message="Congrats! This pokemon is now yours.",
+    )
