@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+<section id="main" class="wrapper">
+    <div class="inner">
+        <header class="align-center">
+            <h1>Game Information</h1>
+            <p> Get information of any game which is available at Steam. </p>
+        </header>
+
+
+        <div class="12u">
+            <hr/>
+            {% if user_games %}
+
+                {% for game in user_games %}
+                    <div class="12u">
+                        <form method="post" action="{{ url_for('get_game_information') }}">
+                            <input type="hidden" name="game_name" value="{{ game.game_name }}">
+                            <button type="Submit">{{ game.game_name }}</button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+        </div>
+    </div>
+</section>
+{%  endblock %}
