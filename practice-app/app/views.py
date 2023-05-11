@@ -3,9 +3,9 @@ from flask import Flask, render_template, url_for, request, redirect
 import requests
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, String, ForeignKey
 from sqlalchemy.orm import (
     sessionmaker,
     scoped_session,
@@ -23,6 +23,7 @@ from flask_login import (
     current_user,
 )
 import os
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db_username = os.environ[
     "DB_USERNAME"
@@ -48,12 +49,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
 
 class User(Base, UserMixin):
     __tablename__ = "User"
     id: Mapped[int] = mapped_column(primary_key=True)
     username = Column(String(15), unique=True)
-    password = Column(String(15))
+    password = Column(String(120))
     world_time: Mapped[List["WorldTimeTable"]] = relationship()
     pokemon: Mapped[List["Pokemon"]] = relationship()
 
@@ -62,8 +64,8 @@ class User(Base, UserMixin):
 class WorldTimeTable(Base, UserMixin):
     __tablename__ = "WorldTimeTable"
     id: Mapped[int] = mapped_column(primary_key=True)
-    timezone = Column(String(15))
-    languageCode = Column(String(5))
+    timezone = Column(String(30))
+    languageCode = Column(String(15))
     user_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
 
 class Pokemon(Base):
@@ -113,7 +115,7 @@ def logout():
 
 @app.route("/")  # it is a decorator we have to put a function under of it
 @login_required
-def Index():
+def index():
     return render_template("index.html")
 
 
@@ -125,9 +127,9 @@ def login():
     if form.validate_on_submit():
         user = session.query(User).filter(User.username == form.username.data).first()
         if user:
-            if user.password == form.password.data:
+            if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for("Index"))
+                return redirect(url_for("index"))
             else:
                 return render_template(
                     "login.html", form=form, error_password="Your password is wrong!"
@@ -145,7 +147,8 @@ def signup():
     form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data == form.password_confirm.data:
-            new_user = User(username=form.username.data, password=form.password.data)
+            hash_password = generate_password_hash(form.password.data, method="sha256")
+            new_user = User(username=form.username.data, password=hash_password)
             session.add(new_user)
             session.commit()
             return redirect(url_for("login"))
@@ -162,7 +165,7 @@ def signup():
     "/worldtime", methods=["GET", "POST"]
 )  # it is a decorator we have to put a function under of it
 @login_required
-def WorldTime():
+def worldTime():
     world_time = (
         session.query(WorldTimeTable)
         .filter(WorldTimeTable.user_id == current_user.id)
@@ -173,8 +176,8 @@ def WorldTime():
         timezone = request.form.get("query")
         if timezone == "":
             return render_template("worldtime.html", error="Timezone cannot be empty!")
-        languageCode = request.form.get("languageCode")
-        if languageCode == "":
+        language_code = request.form.get("languageCode")
+        if language_code == "":
             return render_template(
                 "worldtime.html", error="Language code cannot be empty!"
             )
@@ -235,7 +238,7 @@ def WorldTime():
             else:
                 new_world_time = WorldTimeTable(
                     timezone=timezone,
-                    languageCode=languageCode,
+                    languageCode=language_code,
                     user_id=current_user.id,
                 )
                 session.add(new_world_time)
