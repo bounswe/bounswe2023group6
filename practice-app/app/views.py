@@ -26,6 +26,7 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+
 db_username = os.environ[
     "DB_USERNAME"
 ]
@@ -50,8 +51,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+from .game_information_api import (
+    get_game_information,
+    add_game_to_favorites,
+    show_all_favorites,
+)
+from .dnd_information_api import Dnd, like_combination, show_most_liked_combinations
 from .worldtime import worldTime
-from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
 from .pokemon_api import pokemon_page, save_pokemon
 
 class User(Base, UserMixin):
