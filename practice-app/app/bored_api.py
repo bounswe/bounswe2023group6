@@ -47,7 +47,7 @@ def bored_save():
     session.add(Activities(activity_name=activityName, user_id=current_user.id))
     session.commit()
 
-    return redirect("/bored"), 201
+    return redirect("/bored"), 200
    
 
 
@@ -73,4 +73,4 @@ def delete_bored_saved():
     
     Activities.query.filter(Activities.user_id == current_user.id).delete()
     session.commit()
-    return render_template("bored.html", activities=None), 204
+    return render_template("bored.html", activities=None), 200
