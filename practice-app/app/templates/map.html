@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+<head>
+    <title>Elements - Intensify by TEMPLATED</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+</head>
+
+<section id="main" class="wrapper">
+    <div class="inner">
+        <header class="align-center">
+            <h1>Location Information</h1>
+            <p> Get information of location which is available at Google Maps. </p>
+        </header>
+
+        {% if error %}
+            <div class="row uniform">
+                <div class="9u 12u$(small)">
+                    <input type="text" name="time" id="time" value="{{ error }}"/>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+
+        {% if all_user_locations %}
+            {% for user_location in all_user_locations %}
+                <div class="12u">
+                    <form method="post" action="{{ url_for('show_map') }}">
+                        <input type="hidden" name="address" value="{{ user_location.address }}">
+                        <button type="Submit">{{ user_location.address }}</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="12u" id="show_favorites_form">
+                <form method="post" action="{{ url_for('show_all_favorite_location') }}">
+                    <button type="Submit">Show all favorite locations</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="12u">
+            <hr/>
+            <form method="post" action="{{ url_for('show_map') }}">
+                <label for="address">Enter an address:</label>
+                <input type="text" id="address" name="address" required>
+                <button type="submit">Show Map</button>
+            </form>
+            
+        </div>
+
+        <div class="12u">
+            {% if latitude and longitude %}
+                <form method="post" action="{{ url_for('add_location_to_favorites') }}">
+                    <input type="hidden" name="location_name" value="{{ address }}">
+                    <input type="hidden" name="latitude" value="{{ latitude }}">
+                    <input type="hidden" name="longitude" value="{{ longitude }}">
+                    <button type="submit">Add the location to favorites</button>
+                </form>
+            {% endif %}
+            <div id="map-container"></div>
+        </div>
+    </div>
+</section>
+
+{% if latitude and longitude %}
+    <style>
+        #map-container {
+            height: 300px;
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLEMAPS_API_KEY }}"></script>
+    <script>
+        function initMap() {
+            var latitude = {{ latitude }};
+            var longitude = {{ longitude }};
+            var map = new google.maps.Map(document.getElementById('map-container'), {
+                center: {lat: latitude, lng: longitude},
+                zoom: 15
+            });
+            var marker = new google.maps.Marker({
+                position: {lat: latitude, lng: longitude},
+                map: map,
+                title: 'Your Location'
+            });
+        }
+        initMap();
+    </script>
+{% endif %}
+{%  endblock %}
