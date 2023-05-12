@@ -20,7 +20,7 @@ class FavoriteGame(Base):
     id = Column(Integer, id_sec, server_default=id_sec.next_value(), nullable=False)
     game_id = Column(Integer)
     game_name = Column(String(50))
-    user_id: Mapped[int] = mapped_column(ForeignKey("User.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("User.id", ondelete='CASCADE'))
     __table_args__ = (PrimaryKeyConstraint(user_id, game_id),)
 
 

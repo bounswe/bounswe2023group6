@@ -1,19 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block body_content %}
 
-{% block body_content %}
+<!-- Banner -->
+<section id="banner">
+  <div class="content">
+    <h1>welcome to our website</h1>
 
-    <!-- Banner -->
-    <section id="banner">
-        <div class="content">
-            <h1>welcome to our website</h1>
-
-            <p>We are glad you have taken the time to visit us and we hope you find<br/>the information and resources
-                here to be helpful and informative. </p>
-            <ul class="actions">
-                <li><a href="#three" class="button scrolly">Get Started</a></li>
-            </ul>
-        </div>
-    </section>
+    <p>
+      We are glad you have taken the time to visit us and we hope you find<br />the
+      information and resources here to be helpful and informative.
+    </p>
+    <ul class="actions">
+      <li><a href="#three" class="button scrolly">Get Started</a></li>
+    </ul>
+  </div>
+</section>
 
     <!-- Three -->
     <section id="three" class="wrapper">
@@ -56,15 +56,15 @@
                     <p>This API will something that won't bore you!</p>
                 </div>
             </div>
-			<div class="flex-item box">
-				<div class="image fit">
-					<img src="static/images/DnD-Symbol.png" alt="" />
-				</div>
-				<div class="content">
-					<h3><a href="{{ url_for('dnd') }}">Dungeons and Dragons Race-Class Information - Melih Portakal</a></h3>
-					<p>Get information about races and classes of Dungeons and Dragons.</p>
-				</div>
-			</div>
+        <div class="flex-item box">
+          <div class="image fit">
+            <img src="static/images/DnD-Symbol.png" alt="" />
+          </div>
+          <div class="content">
+            <h3><a href="{{ url_for('dnd') }}">Dungeons and Dragons Race-Class Information - Melih Portakal</a></h3>
+            <p>Get information about races and classes of Dungeons and Dragons.</p>
+          </div>
+  			</div>
             <div class="flex-item box">
                 <div class="image fit">
                     <img src="static/images/maps-logo.jpg" alt="" />
@@ -87,22 +87,25 @@
             </div>
             <div class="flex-item box">
                 <div class="image fit">
-                    <img src="static/images/pic03.jpg" alt=""/>
+                    <img src="static/images/warning.jpg" alt="warning icon"/>
                 </div>
                 <div class="content">
-                    <h3>Adipiscing</h3>
-                    <p>Morbi in sem quis dui placerat Pellentesque odio nisi, euismod pharetra lorem ipsum.</p>
+                    <h3><a href="{{ url_for('get_status_page') }}">Mental Status - Omer Talip Akalin</a></h3>
+                    <p>You can change the mental status of a Boun Cmpe student, here...</p>
                 </div>
             </div>
             <div class="flex-item box">
-                <div class="image fit">
-                    <img src="static/images/pic04.jpg" alt=""/>
-                </div>
-                <div class="content">
-                    <h3>Malesuada</h3>
-                    <p>Nam dui mi, tincidunt quis, accu an porttitor, facilisis luctus que metus vulputate sem
-                        magna.</p>
-                </div>
+              <div class="image fit">
+                <img src="static/images/rawg.png" alt="" />
+              </div>
+              <div class="content">
+                <h3>
+                  <a href="{{ url_for('get_genres') }}"
+                    >Get Genre Information - Ayberk Erdem</a
+                  >
+                </h3>
+                <p>Get information about any genres and select your favorite genre.</p>
+              </div>
             </div>
         </div>
         <div class="inner flex flex-3">
@@ -113,6 +116,12 @@
                 <div class="content">
                     <h3><a href="{{ url_for('find_free_games') }}">Find Free Games - Beyzanur Bektan</a></h3>
                     <p>Search free games by their tags and like or dislike them.</p>
+
+                    <img src="static/images/worldcountries.jpg" alt="worldcountries"/>
+                </div>
+                <div class="content">
+                    <h3><a href="{{ url_for('GetWorldCountries') }}"> WorldCountries - Emre Sin </a></h3>
+                    <p>Access any information about any country of the world!</p>
                 </div>
             </div>
             <div class="flex-item box">

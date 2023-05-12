@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block body_content %}
+
+<section id="main" class="wrapper">
+  <div class="inner">
+    <head>
+      <title>Genres</title>
+    </head>
+    <body class="12u">
+      <h1 style="text-align: center">Select Favorite Genre</h1>
+      <form
+        style="
+          display: inline-flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
+        "
+        ,
+        method="post"
+      >
+        {% for genre in genres %}
+        <div style="margin-left: 3rem">
+          <input
+            type="radio"
+            id="{{ genre.id }}"
+            name="genre"
+            value="{{ genre.id }}"
+          />
+          <label for="{{ genre.id }}"
+            >{{ genre.name }} ({% if genre_count_dict.get(genre.name) %}{{
+            genre_count_dict.get(genre.name) }}{% else %}0{% endif %})</label
+          ><br />
+          <input type="hidden" name="genre_name" value="{{ genre.id }}" />
+          <a href="/get_genres/{{ genre.id }}"
+            ><img
+              src="{{ genre.image_background}}"
+              alt="{{ genre.name }}"
+              style="width: 10rem; height: 10rem"
+          /></a>
+        </div>
+        {% endfor %}
+        <button type="submit" style="width: 52rem; margin-top: 2rem">
+          Add Genre To Favorites
+        </button>
+      </form>
+    </body>
+  </div>
+</section>
+{% endblock %}
