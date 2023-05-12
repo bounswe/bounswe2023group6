@@ -27,13 +27,20 @@ def test_invalid_login(client):
 
 
 def test_worldtime_post(client):
+    client.post("/login", data=dict(
+        username=TEST_USER, password=TEST_USERPASS
+    ), follow_redirects=True)
+    user = User.query.filter_by(username=TEST_USER).first()
     response = client.post("/worldtime", data=dict(
-        query="Europe/London", languageCode="en"
+        query="Europe/London", languageCode="en", user_id=user.id
     ), follow_redirects=True)
     assert response.status_code == 200
 
 
 def test_worldtime_post_invalid(client):
+    client.post("/login", data=dict(
+        username=TEST_USER, password=TEST_USERPASS
+    ), follow_redirects=True)
     response = client.post("/worldtime", data=dict(
         query="Europe/London", languageCode=""
     ), follow_redirects=True)
@@ -41,6 +48,9 @@ def test_worldtime_post_invalid(client):
 
 
 def test_worldtime_post_invalid_timezone(client):
+    client.post("/login", data=dict(
+        username=TEST_USER, password=TEST_USERPASS
+    ), follow_redirects=True)
     response = client.post("/worldtime", data=dict(
         query="", languageCode="en"
     ), follow_redirects=True)
@@ -48,6 +58,9 @@ def test_worldtime_post_invalid_timezone(client):
 
 
 def test_worldtime_post_invalid_timezone_and_language(client):
+    client.post("/login", data=dict(
+        username=TEST_USER, password=TEST_USERPASS
+    ), follow_redirects=True)
     response = client.post("/worldtime", data=dict(
         timezone="", languageCode=""
     ), follow_redirects=True)
@@ -76,7 +89,3 @@ def test_clean(session):
     if user:
         session.delete(user)
         session.commit()
-
-
-
-
