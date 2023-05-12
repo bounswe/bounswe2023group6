@@ -2,6 +2,7 @@ from flask import  render_template, request, redirect
 import xml.etree.ElementTree
 import requests, time, os 
 from .views import app, Base, session
+from flasgger import swag_from
 from sqlalchemy import (
     Column,
     String,
@@ -24,6 +25,41 @@ class FavoriteGenre(Base):
     __table_args__ = (PrimaryKeyConstraint(time_id),)
 
 @app.route('/get_genres', methods=['GET','POST'])
+@swag_from({
+    'tags': ['Genres'],
+    'methods': ['GET', 'POST'],
+    'responses': {
+        200: {
+            'description': 'Returns a list of genres and their respective favorite count',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'genres': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'id': {'type': 'integer'},
+                                'name': {'type': 'string'}
+                            }
+                        }
+                    },
+                    'genre_count_dict': {
+                        'type': 'object',
+                        'additionalProperties': {'type': 'integer'}
+                    }
+                }
+            },
+            'examples': {
+                'application/json': {
+                    'genres': [{'id': 1, 'name': 'Action'}, {'id': 4, 'name': 'Action'}],
+                    'genre_count_dict': {'Action': 5, 'Adventure': 2}
+                }
+            }
+        },
+        404: {'description': 'Invalid request'},
+    }
+})
 def get_genres():
     if request.method == 'GET':
         url = f"https://api.rawg.io/api/genres?key={api_key}"
@@ -55,6 +91,36 @@ def get_genre_name_from_id(genre_id):
     else:
         return None
 @app.route('/get_genres/<int:id>')
+@swag_from({
+    'tags': ['Genres'],
+    'methods': ['GET'],
+    'parameters': [
+        {
+            'in': 'path',
+            'name': 'id',
+            'description': 'The ID of the genre to retrieve information about',
+            'required': True,
+            'type': 'integer'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Returns the genre information in an HTML template',
+            'examples': {
+                'text/html': '<!DOCTYPE html>\n<html>\n<head>\n<title>Genre Info</title>\n</head>\n<body>\n<h1>Genre Info</h1>\n<h2>{{ genre.name }}</h2>\n<p>{{ genre.description }}</p>\n<p>Games count: {{ genre.games_count }}</p>\n<p>Image:<br/><img src="{{ genre.image_background }}" /></p>\n</body>\n</html>'
+            }
+        },
+        404: {
+            'description': 'The requested genre was not found',
+            'examples': {
+                'application/json': {
+                    'status': 404,
+                    'message': 'Genre not found'
+                }
+            }
+        }
+    }
+})
 def get_genre_info(id):
     url = f"https://api.rawg.io/api/genres/{id}?key={api_key}"
     response = requests.get(url)
