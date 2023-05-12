@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block body_content %}
+
+<!-- Main -->
+<section id="main" class="wrapper">
+    <div class="inner">
+        <header class="align-center">
+            <h2>Liked Games</h2>
+            <p>Games you have liked</p>
+        </header>
+
+        <!-- Liked Game Results -->
+        {% if liked_games %}
+        <section>
+            {% for game in liked_games %}
+            <div style="padding: 16px;" class="box">
+                <header class="align-center">
+                    <h3 style="color: mediumvioletred;">{{ game.game_name }}</h3>
+                </header>
+                
+            </div>
+            {% endfor %}
+        </section>
+        {% else %}
+        <p>No liked games found.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

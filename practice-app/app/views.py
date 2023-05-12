@@ -62,6 +62,7 @@ from .pokemon_api import pokemon_page, save_pokemon
 from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
 from .weather import weather, save_weather
 from .dnd_information_api import dnd, like_combination, show_most_liked_combinations
+from .free_games_api import find_free_games, like_game, dislike_game, see_liked_games, see_disliked_games
 from .worldcountries import GetWorldCountries,PostWorldCountries
 from .rawg_api import get_genres, get_genre_info
 

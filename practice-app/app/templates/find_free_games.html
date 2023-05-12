@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block body_content %}
+
+<!-- Main -->
+<section id="main" class="wrapper">
+    <div class="inner">
+        <h2 class="align-center">Find Games</h2>
+        <p class="align-center">Search for games based on tag</p>
+        <form method="post" action="{{ url_for('find_free_games') }}">
+    <div class="row uniform">
+        <div class="6u 9u$(xsmall)">
+            <input type="text" name="tag" id="tag" value="" placeholder="Enter a tag like horror, moba or 3d" />
+        </div>
+        <div class="2.3u 3u$(xsmall)">
+            <input type="submit" value="Search" class="special" />
+        </div>
+        <div class="3u 3u$(xsmall)">
+            <input type="reset" value="Reset" />
+        </div>
+    </div>
+</form>
+        <hr />
+
+        <ul class="actions special">
+    <li style="margin: 5px">
+        <form method="get" action="{{ url_for('see_liked_games') }}">
+            <button type="submit" class="special">Liked Games</button>
+        </form>
+    </li>
+    <li style="margin: 5px">
+        <form method="get" action="{{ url_for('see_disliked_games') }}">
+            <button type="submit" class="special">Disliked Games</button>
+        </form>
+    </li>
+</ul>
+
+        <!-- Game Results -->
+        {% if games %}
+        <section>
+            {% for game in games %}
+            <div style="padding: 8px;" class="box">
+                <header class="align-center">
+                    <h3>{{ game.title }}</h3>
+                    <p>{{ game.short_description }}</p>
+                </header>
+                <div class="row">
+                    <div class="6u 12u$(medium)">
+                        <p><b>Genre:</b> {{ game.genre }}</p>
+                        <p><b>Platform:</b> {{ game.platform }}</p>
+                    </div>
+                    <div class="6u$ 12u$(medium)">
+                        <img src="{{ game.thumbnail }}" alt="{{ game.title }}" class="image fit" />
+                    </div>
+                </div>
+                <footer class="align-center">
+                    <ul class="actions" style="display: flex; justify-content: center;">
+                        <li style="margin: 5px"><a href="{{ game.game_url }}" class="button special">Play Now!</a></li>
+                        <li style="margin: 5px">
+                            <form method="post" action="{{ url_for('like_game') }}">
+                                <input type="hidden" name="game_id" value="{{ game.id }}">
+                                <input type="hidden" name="game_name" value="{{ game.title }}">
+                                <button style="background-color:forestgreen;" type="submit" class="button special">Like</button>
+                            </form>
+                        </li>
+                        <li style="margin: 5px">
+                            <form method="post" action="{{ url_for('dislike_game') }}">
+                                <input type="hidden" name="game_id" value="{{ game.id }}">
+                                <input type="hidden" name="game_name" value="{{ game.title }}">
+                                <button style="background-color: darkred;" type="submit" class="button special">Dislike</button>
+                            </form>
+                        </li>
+                    </ul>
+                </footer>
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <!-- Liked Games Button -->
+        
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="row">
+            <div class="12u">
+                <div class="alert" style="font-weight: bold; font-size: 18px">{{ error }}</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
