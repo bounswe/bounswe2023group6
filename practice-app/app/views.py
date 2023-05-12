@@ -49,6 +49,7 @@ from .game_information_api import get_game_information, add_game_to_favorites, s
 from .location import show_map, show_all_favorite_location, add_location_to_favorites 
 from .pokemon_api import pokemon_page, save_pokemon
 from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
+from .worldcountries import GetWorldCountries, PostWorldCountries
 
 class User(Base, UserMixin):
     __tablename__ = "User"
