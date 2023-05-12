@@ -3,12 +3,24 @@
 {% block body_content %}
 
 <body>
-   
-    <form action="{{url_for('PostWorldCountries')}}" method="post">
-        <input type="text" name="country" id="country" placeholder="görmek istediğiniz ülkeyi giriniz" />
+    
 
+    
 
-    </form>
+    <div>
+        <form action="{{url_for('PostWorldCountries')}}" method="post" style="display: flex;">
+            <input type="text" name="country" id="country" placeholder="görmek istediğiniz ülkeyi giriniz"/>
+            <button type="submit" id="submitBtn" style="height:auto;margin-left:0.7em">Submit</button>
+        </form>
+        
+
+    </div>
+    
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
     <table>
         <thead>
             <tr>
