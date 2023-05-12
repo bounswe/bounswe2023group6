@@ -252,16 +252,15 @@ def worldTime():
 )  # it is a decorator we have to put a function under of it
 @login_required
 def Bored():
-    if request.method == "GET":
-        response = requests.get("http://www.boredapi.com/api/activity/")
+    
+    response = requests.get("http://www.boredapi.com/api/activity/")
 
-        if response.status_code != 200:
-            return render_template("bored.html", error=response.status_code)
+    if response.status_code != 200:
+        return render_template("bored.html", error=response.status_code)
 
-        response = response.json()
-        return render_template("bored.html", kamela=response)
-    else:
-        return render_template("bored.html", error=405)
+    response = response.json()
+    return render_template("bored.html", kamela=response)
+
 
 
 @app.route(
@@ -269,15 +268,14 @@ def Bored():
 )  # it is a decorator we have to put a function under of it
 @login_required
 def BoredSave():
-    if request.method == "POST":
-        activityName = request.form.get("activity")
+    
+    activityName = request.form.get("activity")
 
-        session.add(Activities(activity_name=activityName, user_id=current_user.id))
-        session.commit()
+    session.add(Activities(activity_name=activityName, user_id=current_user.id))
+    session.commit()
 
-        return "SAVED!", 201
-    else:
-        return render_template("bored.html", error=405)
+    return "SAVED!", 201
+   
 
 
 @app.route(
@@ -285,14 +283,13 @@ def BoredSave():
 )  # it is a decorator we have to put a function under of it
 @login_required
 def GetBoredSaved():
-    if request.method == "GET":
-        activities = session.query(Activities).filter(
-            Activities.user_id == current_user.id
-        )
+    
+    activities = session.query(Activities).filter(
+        Activities.user_id == current_user.id
+    )
 
-        return render_template("bored.html", activities=activities), 200
-    else:
-        return render_template("bored.html", error=405)
+    return render_template("bored.html", activities=activities), 200
+
 
 
 @app.route(
@@ -300,9 +297,8 @@ def GetBoredSaved():
 )  # it is a decorator we have to put a function under of it
 @login_required
 def DeleteBoredSaved():
-    if request.method == "POST":
-        Activities.query.filter(Activities.user_id == current_user.id).delete()
-        session.commit()
-        return render_template("bored.html", activities=None), 204
-    else:
-        return render_template("bored.html", error=405)
+    
+    Activities.query.filter(Activities.user_id == current_user.id).delete()
+    session.commit()
+    return render_template("bored.html", activities=None), 204
+
