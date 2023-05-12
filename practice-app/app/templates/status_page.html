@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block head_styles %}
+<style>
+    .status-update {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .status-update form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .status-update button {
+        margin-top: 1em;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    @media screen and (min-width: 768px) {
+        .status-update {
+            height: auto;
+        }
+
+        .status-update form {
+            flex-direction: row;
+        }
+
+        .select-wrapper {
+            margin: 2em;
+        }
+
+        .status-update button {
+            margin-top: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body_content %}
+<script>
+    $(document).ready(function(){
+        $("#resolved").click(function(){
+            updateStatus("resolved");
+        });
+
+        $("#investigating").click(function(){
+            updateStatus("investigating");
+        });
+
+        function updateStatus(status) {
+            var button = $("#" + status);
+            button.html("Loading...");
+            $.ajax({
+                url: "/change_status/" + status,
+                method: "POST",
+                success: function(data) {
+                    if (data.status == 200) {
+                        alert(data.message);
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('An error occurred.');
+                },
+                complete: function() {
+                    button.html("Mark as " + status.charAt(0).toUpperCase() + status.slice(1));
+                } // I'm wayyyy to lazy to fix the re-rendering of the button text right now, sorry
+            });
+        }
+    });
+</script>
+<section id="main" class="wrapper">
+    <div class="inner">
+        <div class="row">
+            <div class="6u 12u$(medium)">
+                <iframe src="https://tcorp.instatus.com/" width="100%" height="800" frameborder="0"></iframe>
+            </div>
+            <div class="6u$ 12u$(medium)" style="display: flex; justify-content: center; align-items: center;">
+                <div class="status-update">
+                    <div style="display: flex; justify-content: center; align-items: center;"> 
+                        <h2>Current Status: {{ "STABLE" if curr_status == "RESOLVED" else "CHAOS" }}</h2>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center;"> 
+                        <button id="resolved" type="button", style="margin: 1em; background-color: deepskyblue !important">Fix Mental Status</button>
+                        <button id="investigating" type="button">It's Chaos Time</button>
+                    </div>
+                    <br>
+                    <div style="display: flex; justify-content: center; align-items: center;"> 
+                        <p>If the embedded page does not get updated, refresh the page.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -47,8 +47,7 @@ def bored_save():
     session.add(Activities(activity_name=activityName, user_id=current_user.id))
     session.commit()
 
-    return redirect("/bored"), 200
-   
+    return redirect("/bored"), 200   
 
 
 @app.route(
