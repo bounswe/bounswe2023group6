@@ -30,7 +30,8 @@ def test_post_genre(client,session):
     numberofaction2 = genre_count_dict2['Action']
     assert numberofaction2 == numberofaction + 1
     assert response.status_code == 200
-
+def test_genre_name_from_id(client):
+    assert "Sports" == get_genre_name_from_id(15)
     
 
 
