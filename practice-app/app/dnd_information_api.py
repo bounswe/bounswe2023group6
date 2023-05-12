@@ -99,10 +99,7 @@ def show_most_liked_combinations():
         .all()
     )
 
-    counts.sort(key=lambda a: a[2])
-    print(counts)
-    for row in counts:
-        print("Deneme", row.race_name, row.class_name, row.count)
+    counts.sort(key=lambda a: a.count, reverse = True)
     return render_template("dnd.html", combinations=counts)
 
 
