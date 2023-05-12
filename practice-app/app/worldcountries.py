@@ -33,7 +33,7 @@ def GetWorldCountries():
 def PostWorldCountries():
 
     data = request.form["country"]
-    
+    print(request)
 
     response = requests.get("https://restcountries.com/v3.1/name/" + data)
     
@@ -42,16 +42,12 @@ def PostWorldCountries():
     official_name = parsed_data[0]['name']['official']
     currencies_dict = parsed_data[0]["currencies"]
     currencies = list()
-    print(currencies_dict)
+
     for k, v in currencies_dict.items():
 
         currencies.append(v['name'])
-        print(v)
-        print(v['name'])
 
     cur_string = " ".join(currencies)
-    print(cur_string)
-    print(currencies)
     capital = parsed_data[0]["capital"][0]
     region = parsed_data[0]["region"]
     population = parsed_data[0]["population"]
