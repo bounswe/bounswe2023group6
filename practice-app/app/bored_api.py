@@ -10,7 +10,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import login_required, current_user
-
+from flasgger import swag_from
 from .views import app, Base, session, UserMixin
 
 class Activities(Base, UserMixin):
@@ -24,6 +24,19 @@ class Activities(Base, UserMixin):
     "/bored", methods=["GET"]
 )  # it is a decorator we have to put a function under of it
 @login_required
+@swag_from({
+    'tags': ['Bored'],
+    'responses': {
+        '200': {
+            'description': 'The request was successfully sent to the Bored API',
+            'examples': {
+                'application/json': {
+                    "NOTE":"MY API DOES NOT RETURN ANY JSON BUT RENDERS AN HTML"
+                }
+            }
+        }
+    }
+})
 def bored():
     
     response = requests.get("http://www.boredapi.com/api/activity/")
@@ -40,6 +53,25 @@ def bored():
     "/bored/save", methods=["POST"]
 )  # it is a decorator we have to put a function under of it
 @login_required
+@swag_from({
+    'tags': ['Bored'],
+    'parameters': [
+        {
+            'activity_name':'go to the gym'
+        }
+    ],
+    'responses': {
+        '200': {
+            'description': 'The activity successfully saved to the database',
+            'examples': {
+                'application/json': {
+                    "NOTE":"MY API DOES NOT RETURN ANY JSON BUT RENDERS AN HTML",
+                    "status":200
+                }
+            }
+        }
+    }
+})
 def bored_save():
     
     activityName = request.form.get("activity")
@@ -54,6 +86,20 @@ def bored_save():
     "/bored/getSaved", methods=["GET"]
 )  # it is a decorator we have to put a function under of it
 @login_required
+@swag_from({
+    'tags': ['Bored'],
+    'responses': {
+        '200': {
+            'description': 'The activity successfully saved to the database',
+            'examples': {
+                'application/json': {
+                    "NOTE":"MY API DOES NOT RETURN ANY JSON BUT RENDERS AN HTML",
+                    "status":200
+                }
+            }
+        }
+    }
+})
 def get_bored_saved():
     
     activities = session.query(Activities).filter(
@@ -68,6 +114,20 @@ def get_bored_saved():
     "/bored/delete", methods=["POST"]
 )  # it is a decorator we have to put a function under of it
 @login_required
+@swag_from({
+    'tags': ['Bored'],
+    'responses': {
+        '200': {
+            'description': 'The activity successfully saved to the database',
+            'examples': {
+                'application/json': {
+                    "NOTE":"MY API DOES NOT RETURN ANY JSON BUT RENDERS AN HTML",
+                    "status":200
+                }
+            }
+        }
+    }
+})
 def delete_bored_saved():
     
     Activities.query.filter(Activities.user_id == current_user.id).delete()
