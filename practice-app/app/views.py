@@ -26,6 +26,7 @@ from flask_login import (
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 db_username = os.environ[
     "DB_USERNAME"
 ]
@@ -54,11 +55,13 @@ login_manager.login_view = "login"
 
 from .worldtime import worldTime
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .tcorp import get_status_page, change_status, get_all_incidents, get_current_status
 from .location import show_map, show_all_favorite_location, add_location_to_favorites 
 from .pokemon_api import pokemon_page, save_pokemon
 from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
 from .weather import weather, save_weather
 from .dnd_information_api import dnd, like_combination, show_most_liked_combinations
+from .worldcountries import GetWorldCountries,PostWorldCountries
 from .rawg_api import get_genres, get_genre_info
 
 class User(Base, UserMixin):
@@ -69,8 +72,8 @@ class User(Base, UserMixin):
     world_time: Mapped[List["WorldTimeTable"]] = relationship()
 
 
-
 Base.metadata.create_all(engine)
+
 
 class LoginForm(FlaskForm):
     username = StringField(
@@ -120,7 +123,7 @@ def login():
         user = session.query(User).filter(User.username == form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
-            #if user.password == form.password.data:
+                # if user.password == form.password.data:
                 login_user(user)
                 return redirect(url_for("index"))
             else:
@@ -152,4 +155,3 @@ def signup():
                 error_confirmation="Password confirmation is wrong!",
             )
     return render_template("signup.html", form=form)
-
