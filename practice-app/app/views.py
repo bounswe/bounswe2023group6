@@ -5,7 +5,8 @@ from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length
-from sqlalchemy import create_engine, Column, String, ForeignKey, Integer
+from sqlalchemy import create_engine, Column, Integer, Float, String, ForeignKey
+
 from sqlalchemy.orm import (
     sessionmaker,
     scoped_session,
@@ -24,7 +25,6 @@ from flask_login import (
 )
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 db_username = os.environ[
     "DB_USERNAME"
@@ -52,6 +52,7 @@ login_manager.login_view = "login"
 
 from .worldtime import worldTime
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .location import show_map, show_all_favorite_location, add_location_to_favorites 
 from .pokemon_api import pokemon_page, save_pokemon
 
 class User(Base, UserMixin):
@@ -69,7 +70,7 @@ class LoginForm(FlaskForm):
         "username", validators=[InputRequired(), Length(min=4, max=15)]
     )
     password = PasswordField(
-        "password", validators=[InputRequired(), Length(min=8, max=80)]
+        "password", validators=[InputRequired(), Length(min=8, max=160)]
     )
 
 
@@ -78,10 +79,10 @@ class RegisterForm(FlaskForm):
         "username", validators=[InputRequired(), Length(min=4, max=15)]
     )
     password = PasswordField(
-        "password", validators=[InputRequired(), Length(min=8, max=80)]
+        "password", validators=[InputRequired(), Length(min=8, max=160)]
     )
     password_confirm = PasswordField(
-        "confirm password", validators=[InputRequired(), Length(min=8, max=80)]
+        "confirm password", validators=[InputRequired(), Length(min=8, max=160)]
     )
 
 
@@ -112,6 +113,7 @@ def login():
         user = session.query(User).filter(User.username == form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
+            #if user.password == form.password.data:
                 login_user(user)
                 return redirect(url_for("index"))
             else:
