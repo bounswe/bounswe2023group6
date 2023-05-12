@@ -1,19 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block body_content %}
 
-{% block body_content %}
+<!-- Banner -->
+<section id="banner">
+  <div class="content">
+    <h1>welcome to our website</h1>
 
-    <!-- Banner -->
-    <section id="banner">
-        <div class="content">
-            <h1>welcome to our website</h1>
-
-            <p>We are glad you have taken the time to visit us and we hope you find<br/>the information and resources
-                here to be helpful and informative. </p>
-            <ul class="actions">
-                <li><a href="#three" class="button scrolly">Get Started</a></li>
-            </ul>
-        </div>
-    </section>
+    <p>
+      We are glad you have taken the time to visit us and we hope you find<br />the
+      information and resources here to be helpful and informative.
+    </p>
+    <ul class="actions">
+      <li><a href="#three" class="button scrolly">Get Started</a></li>
+    </ul>
+  </div>
+</section>
 
     <!-- Three -->
     <section id="three" class="wrapper">
@@ -95,23 +95,27 @@
                 </div>
             </div>
             <div class="flex-item box">
+              <div class="image fit">
+                <img src="static/images/rawg.png" alt="" />
+              </div>
+              <div class="content">
+                <h3>
+                  <a href="{{ url_for('get_genres') }}"
+                    >Get Genre Information - Ayberk Erdem</a
+                  >
+                </h3>
+                <p>Get information about any genres and select your favorite genre.</p>
+              </div>
+            </div>
+        </div>
+        <div class="inner flex flex-3">
+            <div class="flex-item box">
                 <div class="image fit">
                     <img src="static/images/worldcountries.jpg" alt="worldcountries"/>
                 </div>
                 <div class="content">
                     <h3><a href="{{ url_for('GetWorldCountries') }}"> WorldCountries - Emre Sin </a></h3>
                     <p>Access any information about any country of the world!</p>
-                </div>
-            </div>
-        </div>
-        <div class="inner flex flex-3">
-            <div class="flex-item box">
-                <div class="image fit">
-                    <img src="static/images/pic02.jpg" alt=""/>
-                </div>
-                <div class="content">
-                    <h3>Consequat</h3>
-                    <p>Placerat ornare. Pellentesque od sed euismod in, pharetra ltricies edarcu cas consequat.</p>
                 </div>
             </div>
             <div class="flex-item box">

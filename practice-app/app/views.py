@@ -62,6 +62,7 @@ from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, 
 from .weather import weather, save_weather
 from .dnd_information_api import dnd, like_combination, show_most_liked_combinations
 from .worldcountries import GetWorldCountries,PostWorldCountries
+from .rawg_api import get_genres, get_genre_info
 
 class User(Base, UserMixin):
     __tablename__ = "User"
