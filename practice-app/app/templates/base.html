@@ -9,13 +9,16 @@
 		<title>Group6 Practice-App</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="static/assets/css/main.css" />
+		<link rel="stylesheet" href="{{ url_for('static',filename='assets/css/main.css') }}" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+		{% block head_content %}
+		{%  endblock %}
 	</head>
 	<body>
 
 		<!-- Header -->
 			<header id="header">
-				<a href="{{ url_for('Index') }}" class="logo">Group6 Practice-App</a>
+				<a href="{{ url_for('index') }}" class="logo">Group6 Practice-App</a>
                 <nav class="right">
 					<a href="{{ url_for('logout') }}" class="button alt">Log out</a>
 				</nav>
