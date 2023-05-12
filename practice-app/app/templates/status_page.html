@@ -48,38 +48,36 @@
 {% endblock %}
 
 {% block body_content %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function(){
         $("#resolved").click(function(){
-            $(this).html("Loading...");
-            $.post("/change_status/resolved", function(data){
-                if (data.error) {
-                    alert(data.error);
-                }
-                else if (data.message) {
-                    location.reload();
-                }
-            });
-            setTimeout(() => {
-                $(this).html("Mark as Resolved");
-            }, 2000);
+            updateStatus("resolved");
         });
 
         $("#investigating").click(function(){
-            $(this).html("Loading...");
-            $.post("/change_status/investigating", function(data){
-                if (data.error) {
-                    alert(data.error);
-                }
-                else if (data.message) {
-                    location.reload();
+            updateStatus("investigating");
+        });
+
+        function updateStatus(status) {
+            var button = $("#" + status);
+            button.html("Loading...");
+            $.ajax({
+                url: "/change_status/" + status,
+                method: "POST",
+                success: function(data) {
+                    if (data.status == 200) {
+                        alert(data.message);
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('An error occurred.');
+                },
+                complete: function() {
+                    button.html("Mark as " + status.charAt(0).toUpperCase() + status.slice(1));
                 }
             });
-            setTimeout(() => {
-                $(this).html("Mark as Investigating");
-            }, 2000);
-        });
+        }
     });
 </script>
 <section id="main" class="wrapper">

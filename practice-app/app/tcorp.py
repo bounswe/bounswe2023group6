@@ -1,4 +1,4 @@
-from flask import app, render_template, request, redirect, url_for
+from flask import app, render_template, request, redirect, url_for, jsonify
 
 from .views import app, Base, session
 
@@ -41,7 +41,8 @@ def change_status(new_status):
 
     if new_status.lower() == curr_inc_status.lower():
         print("Status already set to " + curr_inc_status)
-        return redirect(url_for('get_status_page'))
+        return jsonify({'status': 200, 'message': 'Status already set to ' + curr_inc_status})
+
 
     update_incident = requests.post(
         f"{INSTATUS_URL}/v2/{PAGE_ID}/incidents/{curr_inc_id}/incident-updates/{template_id}",
@@ -51,7 +52,7 @@ def change_status(new_status):
     print(update_incident.text)
     print("Status changed to " + new_status)
 
-    return redirect(url_for('get_status_page'))
+    return jsonify({'status': 200, 'message': 'Status changed to ' + new_status})
 
 @app.route("/status_page")
 def get_status_page():
