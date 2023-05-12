@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect
 import xml.etree.ElementTree
 import requests, time, os
 from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
 from .views import app, Base, session
 from sqlalchemy import (
     Column,
@@ -14,7 +13,6 @@ from sqlalchemy import (
     BigInteger,
     func,
 )
-
 
 def remove_tags(text):
     return ''.join(xml.etree.ElementTree.fromstring(text).itertext())
