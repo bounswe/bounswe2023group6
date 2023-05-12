@@ -1,0 +1,111 @@
+{% extends 'base.html' %} {% block body_content %}
+
+<!-- Banner -->
+<!DOCTYPE html>
+<!--
+        Intensify by TEMPLATED
+        templated.co @templatedco
+        Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+    -->
+<html>
+  <head>
+    <title>Elements - Intensify by TEMPLATED</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+  </head>
+  <body class="subpage">
+    <!-- Main -->
+    <section id="main" class="wrapper">
+      <div class="inner">
+        <header class="align-center">
+          <h1>Pokemon</h1>
+          <p>
+            Can you find an unclaimed pokemon? Try it. Find it first and own it.
+          </p>
+        </header>
+      </div>
+      <div class="inner">
+        <form method="post" action="{{ url_for('pokemon_page') }}">
+          <div class="row uniform">
+            <div class="9u 12u$(small)">
+              <input
+                type="text"
+                name="poke_name"
+                id="poke_name"
+                value="{{ poke_name }}"
+                placeholder="Enter a poke name"
+              />
+            </div>
+            <div class="3u$ 12u$(small)">
+              <input type="submit" value="Find Pokemon" class="align-center" />
+            </div>
+          </div>
+        </form>
+
+        {% if response %}
+
+        <div class="row uniform">
+          <div class="9u 12u$(small)">
+            <form method="POST" action="{{ url_for('save_pokemon') }}">
+              <table>
+                <tr>
+                  <th>Pokemon Name</th>
+                  <th>Height</th>
+                  <th>Weight</th>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      name="name"
+                      id="name"
+                      value="{{ response.name }}"
+                      readonly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="height"
+                      id="height"
+                      value="{{ response.height }}"
+                      readonly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="weight"
+                      id="weight"
+                      value="{{ response.weight }}"
+                      readonly
+                    />
+                  </td>
+                </tr>
+              </table>
+
+              <button type="submit">Try to own this pokemon</button>
+            </form>
+          </div>
+        </div>
+
+        {% endif %} {% if succeed_message %}
+        <div class="row uniform">
+          <div class="9u 12u$(small)">
+            <h3>{{succeed_message}}</h3>
+          </div>
+        </div>
+        {% endif %} {% if error %}
+        <div class="row uniform">
+          <div class="9u 12u$(small)">
+            <h3>{{error}}</h3>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+  </body>
+</html>
+
+{% endblock %}
