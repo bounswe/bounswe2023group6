@@ -61,6 +61,7 @@ from .pokemon_api import pokemon_page, save_pokemon
 from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
 from .weather import weather, save_weather
 from .dnd_information_api import dnd, like_combination, show_most_liked_combinations
+from .worldcountries import GetWorldCountries,PostWorldCountries
 
 class User(Base, UserMixin):
     __tablename__ = "User"
@@ -70,8 +71,8 @@ class User(Base, UserMixin):
     world_time: Mapped[List["WorldTimeTable"]] = relationship()
 
 
-
 Base.metadata.create_all(engine)
+
 
 class LoginForm(FlaskForm):
     username = StringField(
@@ -121,7 +122,7 @@ def login():
         user = session.query(User).filter(User.username == form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
-            #if user.password == form.password.data:
+                # if user.password == form.password.data:
                 login_user(user)
                 return redirect(url_for("index"))
             else:
@@ -153,4 +154,3 @@ def signup():
                 error_confirmation="Password confirmation is wrong!",
             )
     return render_template("signup.html", form=form)
-

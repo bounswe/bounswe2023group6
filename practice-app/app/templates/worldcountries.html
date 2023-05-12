@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+
+<body>
+    
+
+    
+
+    <div>
+        <form action="{{url_for('PostWorldCountries')}}" method="post" style="display: flex;">
+            <input type="text" name="country" id="country" placeholder="görmek istediğiniz ülkeyi giriniz"/>
+            <button type="submit" id="submitBtn" style="height:auto;margin-left:0.7em">Submit</button>
+        </form>
+        
+
+    </div>
+    
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Official Name</th>
+                <th>Currency</th>
+                <th>Region</th>
+                <th>Capital</th>
+                <th>Population</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.id }}</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.official_name }}</td>
+                    <td>{{ entry.currency }}</td>
+                    <td>{{ entry.region }}</td>
+                    <td>{{ entry.capital }}</td>
+                    <td>{{ entry.population }}</td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+{% endblock %}
