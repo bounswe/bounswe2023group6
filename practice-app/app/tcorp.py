@@ -43,7 +43,7 @@ def change_status(new_status):
 
     if new_status.lower() == curr_inc_status.lower():
         return jsonify(
-            {"status": 200, "message": "Status already set to " + curr_inc_status}
+            {"status": 200, "message": "Status " + curr_inc_status + " already"}
         )
 
     update_incident = requests.post(
@@ -59,7 +59,7 @@ def change_status(new_status):
             }
         )
 
-    return jsonify({"status": 200, "message": "Status changed to " + new_status})
+    return jsonify({"status": 200, "message": "Status changed - " + new_status})
 
 
 @app.route("/get_current_status", methods=["GET"])

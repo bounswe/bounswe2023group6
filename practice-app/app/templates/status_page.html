@@ -89,11 +89,11 @@
             <div class="6u$ 12u$(medium)" style="display: flex; justify-content: center; align-items: center;">
                 <div class="status-update">
                     <div style="display: flex; justify-content: center; align-items: center;"> 
-                        <h2>Current Status: {{ curr_status }}</h2>
+                        <h2>Current Status: {{ "STABLE" if curr_status == "RESOLVED" else "CHAOS" }}</h2>
                     </div>
                     <div style="display: flex; justify-content: center; align-items: center;"> 
-                        <button id="resolved" type="button", style="margin: 1em">Mark as Resolved</button>
-                        <button id="investigating" type="button">Mark as Investigating</button>
+                        <button id="resolved" type="button", style="margin: 1em; background-color: deepskyblue !important">Fix Mental Status</button>
+                        <button id="investigating" type="button">It's Chaos Time</button>
                     </div>
                     <br>
                     <div style="display: flex; justify-content: center; align-items: center;"> 
