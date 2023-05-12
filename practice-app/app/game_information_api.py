@@ -12,6 +12,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import login_required, current_user
 
 from .views import app, Base, session
+from flasgger import swag_from
 
 
 class FavoriteGame(Base):
@@ -57,6 +58,29 @@ def get_game_information_from_name(game_name):
 
 
 @app.route("/get_game_information", methods=["GET", "POST"])
+@swag_from({
+    'tags': ['Game Information'],
+    'parameters': [
+        {
+            'name': 'game_name',
+            'description': 'The name of the game to get information for.',
+            'in': 'query',
+            'type': 'string',
+            'required': 'true',
+        }
+    ],
+    'responses': {
+        '200': {
+            'description': 'Returns game information if the game is found.',
+        },
+        '400': {
+            'description': 'Returns an error message if game name is missing in POST request.',
+        },
+        '404': {
+            'description': 'Returns an error message if the game is not found.',
+        }
+    }
+})
 def get_game_information(log=None):
     if request.method == "POST":
         game_name = request.form.get("game_name")
@@ -76,6 +100,14 @@ def get_game_information(log=None):
 
 @app.route("/show_all_favorites", methods=["POST"])
 @login_required
+@swag_from({
+    'tags': ['Game Information'],
+    'responses': {
+        '200': {
+            'description': 'Returns all the favorite games of the logged-in user.',
+        },
+    }
+})
 def show_all_favorites():
     all_user_games = FavoriteGame.query.filter_by(user_id=current_user.id).all()
     return render_template("show_all_games.html", user_games=all_user_games)
@@ -83,6 +115,36 @@ def show_all_favorites():
 
 @app.route("/add_to_favorites", methods=["POST"])
 @login_required
+@swag_from({
+    'tags': ['Game Information'],
+    'parameters': [
+        {
+            'name': 'game_name',
+            'description': 'The name of the game to add to favorites.',
+            'in': 'formData',
+            'type': 'string',
+            'required': 'true',
+        },
+        {
+            'name': 'game_id',
+            'description': 'The ID of the game to add to favorites.',
+            'in': 'formData',
+            'type': 'integer',
+            'required': 'true',
+        },
+    ],
+    'responses': {
+        '200': {
+            'description': 'Returns a message indicating whether the game was successfully added to favorites.',
+        },
+        '400': {
+            'description': 'Returns an error message if the request is missing required parameters.',
+        },
+        '404': {
+            'description': 'Returns an error message if the game is not found in the favorites of the logged-in user.',
+        }
+    }
+})
 def add_game_to_favorites():
     game_name = request.form.get("game_name")
     game_id = int(request.form.get("game_id"))
