@@ -7,6 +7,7 @@ from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, delete
 
+
 from sqlalchemy.orm import (
     sessionmaker,
     scoped_session,
@@ -45,6 +46,7 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
 
 class User(Base, UserMixin):
     __tablename__ = "User"
@@ -62,12 +64,7 @@ class WorldTimeTable(Base, UserMixin):
     user_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
 
 
-class Activities(Base, UserMixin):
-    __tablename__ = "Activities"
 
-    id = Column(Integer, primary_key=True)
-    activity_name = Column(String)
-    user_id: Mapped[int] = mapped_column(ForeignKey("User.id"))
 
 
 Base.metadata.create_all(engine)
@@ -247,58 +244,5 @@ def worldTime():
         return render_template("worldtime.html")
 
 
-@app.route(
-    "/bored", methods=["GET"]
-)  # it is a decorator we have to put a function under of it
-@login_required
-def bored():
-    
-    response = requests.get("http://www.boredapi.com/api/activity/")
 
-    if response.status_code != 200:
-        return render_template("bored.html", error=response.status_code)
-
-    response = response.json()
-    return render_template("bored.html", kamela=response)
-
-
-
-@app.route(
-    "/bored/save", methods=["POST"]
-)  # it is a decorator we have to put a function under of it
-@login_required
-def bored_save():
-    
-    activityName = request.form.get("activity")
-
-    session.add(Activities(activity_name=activityName, user_id=current_user.id))
-    session.commit()
-
-    return redirect("/bored"), 201
-   
-
-
-@app.route(
-    "/bored/getSaved", methods=["GET"]
-)  # it is a decorator we have to put a function under of it
-@login_required
-def get_bored_saved():
-    
-    activities = session.query(Activities).filter(
-        Activities.user_id == current_user.id
-    )
-
-    return render_template("bored.html", activities=activities), 200
-
-
-
-@app.route(
-    "/bored/delete", methods=["POST"]
-)  # it is a decorator we have to put a function under of it
-@login_required
-def delete_bored_saved():
-    
-    Activities.query.filter(Activities.user_id == current_user.id).delete()
-    session.commit()
-    return render_template("bored.html", activities=None), 204
 
