@@ -53,6 +53,8 @@ login_manager.login_view = "login"
 from .worldtime import worldTime
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
 from .pokemon_api import pokemon_page, save_pokemon
+from .weather import weather, save_weather
+
 
 class User(Base, UserMixin):
     __tablename__ = "User"
