@@ -63,6 +63,7 @@ from .pokemon_api import pokemon_page, save_pokemon
 from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
 from .weather import weather, save_weather
 from .dnd_information_api import dnd, like_combination, show_most_liked_combinations
+from .worldcountries import GetWorldCountries,PostWorldCountries
 
 class User(Base, UserMixin):
     __tablename__ = "User"
