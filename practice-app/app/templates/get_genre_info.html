@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block body_content %}
+<!DOCTYPE html>
+<html>
+  <section id="main" class="wrapper">
+    <div class="inner">
+      <head>
+        <title>{{ genre.name }}</title>
+      </head>
+      <body>
+        <h1 style="text-align: center">{{ genre.name }}</h1>
+        <div class="align-center">
+          <img
+            src="{{ genre.image_background}}"
+            alt="{{ genre.name }}"
+            style="max-width: 50rem"
+          />
+        </div>
+        <p
+          style="
+            font-size: large;
+            font-family: 'Times New Roman', Times, serif;
+            margin-top: 2rem;
+          "
+        >
+          {{ genre.description}}
+        </p>
+      </body>
+    </div>
+  </section>
+</html>
+{% endblock %}

@@ -50,6 +50,7 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .rawg_api import get_genres, get_genre_info
 
 class User(Base, UserMixin):
     __tablename__ = "User"
