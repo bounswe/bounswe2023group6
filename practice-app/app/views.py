@@ -25,7 +25,7 @@ from flask_login import (
 )
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flasgger import Swagger
 
 db_username = os.environ[
     "DB_USERNAME"
@@ -47,6 +47,7 @@ session = scoped_session(Session)
 Base = declarative_base()
 Base.query = session.query_property()
 app = Flask(__name__)  # name is global variable returning program name which is app
+swagger = Swagger(app)
 app.config["SECRET_KEY"] = session_secret_key  # for session
 Bootstrap(app)
 login_manager = LoginManager()

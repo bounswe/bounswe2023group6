@@ -1,6 +1,8 @@
 from flask import app, render_template, jsonify
 
 from .views import app
+from flasgger import swag_from
+
 
 import json
 import os
@@ -24,6 +26,38 @@ def get_all_incidents(header):
 
 
 @app.route("/change_status/<new_status>", methods=["POST"])
+@swag_from({
+    'tags': ['Change Status'],
+    'parameters': [
+        {
+            'name': 'new_status',
+            'description': 'New status to change to. This can be either "resolved" or "investigating".',
+            'in': 'path',
+            'type': 'string',
+            'required': 'true',
+        }
+    ],
+    'responses': {
+        '200': {
+            'description': 'Status changed successfully or status was already in the desired state. Returns a message detailing the result.',
+            'examples': {
+                'application/json': {
+                    "status": 200,
+                    "message": "Status changed - resolved"
+                }
+            }
+        },
+        '404': {
+            'description': 'Invalid status provided. Returns a message indicating the status was not found.',
+            'examples': {
+                'application/json': {
+                    "status": 404,
+                    "message": "Page not found"
+                }
+            }
+        }
+    }
+})
 def change_status(new_status):
     instatus_api_key = os.environ.get("INSTATUS_API_KEY")
     header = {"Authorization": f"Bearer {instatus_api_key}"}
@@ -63,6 +97,20 @@ def change_status(new_status):
 
 
 @app.route("/get_current_status", methods=["GET"])
+@swag_from({
+    'tags': ['Change Status'],
+    'responses': {
+        '200': {
+            'description': 'Current status of the page. Can be either "investigating" or "resolved"',
+            'examples': {
+                'application/json': {
+                    "status": 200,
+                    "message": "investigating"
+                }
+            }
+        }
+    }
+})
 def get_current_status():
     instatus_api_key = os.environ.get("INSTATUS_API_KEY")
     header = {"Authorization": f"Bearer {instatus_api_key}"}
@@ -74,6 +122,14 @@ def get_current_status():
 
 
 @app.route("/status_page")
+@swag_from({
+    'tags': ['Change Status'],
+    'responses': {
+        '200': {
+            'description': 'Renders the status page with the current status.',
+        }
+    }
+})
 def get_status_page():
     curr_status_response = get_current_status()
     curr_status_dict = json.loads(curr_status_response.response[0])
