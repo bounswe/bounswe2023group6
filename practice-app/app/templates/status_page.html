@@ -89,10 +89,16 @@
             <div class="6u$ 12u$(medium)" style="display: flex; justify-content: center; align-items: center;">
                 <div class="status-update">
                     <div style="display: flex; justify-content: center; align-items: center;"> 
-                        <h2>Current Status: {{ status }}</h2>
+                        <h2>Current Status: {{ curr_status }}</h2>
                     </div>
-                    <button id="resolved" type="button">Mark as Resolved</button>
-                    <button id="investigating" type="button">Mark as Investigating</button>
+                    <div style="display: flex; justify-content: center; align-items: center;"> 
+                        <button id="resolved" type="button", style="margin: 1em">Mark as Resolved</button>
+                        <button id="investigating" type="button">Mark as Investigating</button>
+                    </div>
+                    <br>
+                    <div style="display: flex; justify-content: center; align-items: center;"> 
+                        <p>If the embedded page does not get updated, refresh the page.</p>
+                    </div>
                 </div>
             </div>
         </div>

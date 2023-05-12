@@ -2,6 +2,7 @@ from flask import app, render_template, request, redirect, url_for, jsonify
 
 from .views import app, Base, session
 
+import json
 import os
 import requests
 
@@ -33,14 +34,14 @@ def change_status(new_status):
     elif new_status.lower() == "investigating":
         template_id = NO_TEMPLATE
     else:
-        return "Invalid status - bad request", 400
+        return jsonify({'status': 404, 'message': 'Page not found'})
 
     curr_inc = incidents[0]
     curr_inc_id = curr_inc["id"]
     curr_inc_status = curr_inc["status"]
 
     if new_status.lower() == curr_inc_status.lower():
-        print("Status already set to " + curr_inc_status)
+        # print("Status already set to " + curr_inc_status)
         return jsonify({'status': 200, 'message': 'Status already set to ' + curr_inc_status})
 
 
@@ -48,12 +49,25 @@ def change_status(new_status):
         f"{INSTATUS_URL}/v2/{PAGE_ID}/incidents/{curr_inc_id}/incident-updates/{template_id}",
         headers=header,
     )
-    print(update_incident.status_code)
-    print(update_incident.text)
-    print("Status changed to " + new_status)
+    # print(update_incident.status_code)
+    # print(update_incident.text)
+    # print("Status changed to " + new_status)
 
     return jsonify({'status': 200, 'message': 'Status changed to ' + new_status})
 
+@app.route("/get_current_status", methods=["GET"])
+def get_current_status():
+    instatus_api_key = os.environ.get("INSTATUS_API_KEY")
+    header = {"Authorization": f"Bearer {instatus_api_key}"}
+
+    incidents = get_all_incidents(header)[0]
+    curr_status = incidents["status"]
+
+    # print(jsonify({'status': 200, 'message': curr_status}))
+    return jsonify({'status': 200, 'message': curr_status})
+
 @app.route("/status_page")
 def get_status_page():
-    return render_template("status_page.html")
+    curr_status_response = get_current_status()
+    curr_status_dict = json.loads(curr_status_response.response[0])
+    return render_template("status_page.html", curr_status=curr_status_dict['message'])
