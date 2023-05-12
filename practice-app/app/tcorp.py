@@ -1,6 +1,6 @@
-from flask import app, render_template, request, redirect, url_for, jsonify
+from flask import app, render_template, jsonify
 
-from .views import app, Base, session
+from .views import app
 
 import json
 import os
@@ -41,7 +41,6 @@ def change_status(new_status):
     curr_inc_status = curr_inc["status"]
 
     if new_status.lower() == curr_inc_status.lower():
-        # print("Status already set to " + curr_inc_status)
         return jsonify({'status': 200, 'message': 'Status already set to ' + curr_inc_status})
 
 
@@ -49,9 +48,9 @@ def change_status(new_status):
         f"{INSTATUS_URL}/v2/{PAGE_ID}/incidents/{curr_inc_id}/incident-updates/{template_id}",
         headers=header,
     )
-    # print(update_incident.status_code)
-    # print(update_incident.text)
-    # print("Status changed to " + new_status)
+    if update_incident.status_code != 200:
+        # returning 200 to show error of the external api successfully on the front end
+        return jsonify({'status': 200, 'message': f'Something went wrong while updating the status: {update_incident.text}'})
 
     return jsonify({'status': 200, 'message': 'Status changed to ' + new_status})
 
@@ -63,7 +62,6 @@ def get_current_status():
     incidents = get_all_incidents(header)[0]
     curr_status = incidents["status"]
 
-    # print(jsonify({'status': 200, 'message': curr_status}))
     return jsonify({'status': 200, 'message': curr_status})
 
 @app.route("/status_page")
