@@ -6,8 +6,8 @@ services:
     environment:
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_HOST=localhost
-      - POSTGRES_DB=postgres
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=${DB_NAME}
     ports:
       - 5432:5432
     volumes:
@@ -19,6 +19,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - FLASK_ENV=docker
+      - DB_HOST=postgres
     ports: 
       - 5000:5000
     depends_on:

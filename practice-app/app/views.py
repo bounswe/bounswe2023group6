@@ -33,9 +33,11 @@ db_password = os.environ[
 session_secret_key = os.environ[
     "SECRET_KEY"
 ]
+db_host = os.environ.get("DB_HOST", "localhost:5432")
+db_name = os.environ.get("DB_NAME", "postgres")
 
 engine = create_engine(
-    f"postgresql://{db_username}:{db_password}@localhost:5432/postgres", echo=False
+    f"postgresql://{db_username}:{db_password}@{db_host}/{db_name}", echo=False
 )
 Session = sessionmaker(bind=engine)
 session = scoped_session(Session)
