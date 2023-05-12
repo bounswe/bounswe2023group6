@@ -274,7 +274,7 @@ def bored_save():
     session.add(Activities(activity_name=activityName, user_id=current_user.id))
     session.commit()
 
-    return "SAVED!", 201
+    return redirect("/bored"), 201
    
 
 
