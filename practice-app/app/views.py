@@ -251,7 +251,7 @@ def worldTime():
     "/bored", methods=["GET"]
 )  # it is a decorator we have to put a function under of it
 @login_required
-def Bored():
+def bored():
     
     response = requests.get("http://www.boredapi.com/api/activity/")
 
@@ -267,7 +267,7 @@ def Bored():
     "/bored/save", methods=["POST"]
 )  # it is a decorator we have to put a function under of it
 @login_required
-def BoredSave():
+def bored_save():
     
     activityName = request.form.get("activity")
 
@@ -282,7 +282,7 @@ def BoredSave():
     "/bored/getSaved", methods=["GET"]
 )  # it is a decorator we have to put a function under of it
 @login_required
-def GetBoredSaved():
+def get_bored_saved():
     
     activities = session.query(Activities).filter(
         Activities.user_id == current_user.id
@@ -296,7 +296,7 @@ def GetBoredSaved():
     "/bored/delete", methods=["POST"]
 )  # it is a decorator we have to put a function under of it
 @login_required
-def DeleteBoredSaved():
+def delete_bored_saved():
     
     Activities.query.filter(Activities.user_id == current_user.id).delete()
     session.commit()

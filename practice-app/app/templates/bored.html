@@ -32,7 +32,7 @@
 
                 <hr/>
 
-                <form method="get" action="{{ url_for('Bored') }}">
+                <form method="get" action="{{ url_for('bored') }}">
                     <div class="row uniform">
                         <div class="6u$ 12u$(small)">
                             <input type="submit" value="Search" class="fit"/>
@@ -41,7 +41,7 @@
                 </form>
                 {% if kamela %}
 
-                    <form method="post" action="{{ url_for('BoredSave') }}">
+                    <form method="post" action="{{ url_for('bored_save') }}">
                         <div class="row uniform">
                             <div class="6u 12u$(small)">
                                 <input type="text" name="activity" value="{{ kamela.activity}}"  readonly/>
@@ -54,7 +54,7 @@
                     
                 {% endif %}
 
-                <form method="get" action="{{ url_for('GetBoredSaved') }}">
+                <form method="get" action="{{ url_for('get_bored_saved') }}">
                     <div class="row uniform">
                         <div class="6u$ 12u$(small)">
                             <input type="submit" value="Get Saved Activities!" class="fit"/>
@@ -72,7 +72,7 @@
 
                 {% endif %}
 
-                <form method="post" action="{{ url_for('DeleteBoredSaved') }}">
+                <form method="post" action="{{ url_for('delete_bored_saved') }}">
                     <div class="row uniform">
                         <div class="6u$ 12u$(small)">
                             <input type="submit" value="Delete Records" class="fit"/>
