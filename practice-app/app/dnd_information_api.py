@@ -13,6 +13,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import login_required, current_user
 
 from .views import app, Base, session
+from flasgger import swag_from
 
 
 class FavoriteRCCombination(Base):
@@ -65,6 +66,36 @@ def get_dnd_information(race_name, class_name):
 
 
 @app.route("/dnd", methods=["GET", "POST"])
+@swag_from({
+    'tags': ['DND'],
+    'methods': ['GET', 'POST'],
+    'responses': {
+        '200': {
+            'description': 'Renders the dnd page with the race and class information. But rendering is not correct format it should be like this. I learned that so late',
+            'examples': {
+                'application/json': {
+                    "log": "Race and class information received"
+                }
+            }    
+        },
+        '400': {
+            'description': 'Invalid request. Returns a message indicating the required fields are missing.',
+            'examples': {
+                'application/json': {
+                    "log": "Race name is required!"
+                }
+            }
+        },
+        '404': {
+            'description': 'Invalid race or class. Returns a message indicating that the information could not be found.',
+            'examples': {
+                'application/json': {
+                    "log": "Information can not be found! Try with a different race or class"
+                }
+            }
+        }        
+    }
+})
 def dnd(log=None):
     if request.method == "POST":
         race_name = request.form.get("race")
@@ -84,6 +115,21 @@ def dnd(log=None):
 
 
 @app.route("/show_most_liked_combinations", methods=["POST"])
+@swag_from({
+    'tags': ['DND'],
+    'methods': ['POST'],
+    'responses': {
+        '200': {
+            'description': 'Renders the dnd page with liked combinations and their like counts.But rendering is not correct format it should be like this. I learned that so late',
+            'examples': {
+                'application/json': {
+                    "status": 200,
+                    "message": "Race-class combinations and like counts received"
+                }
+            }    
+        }
+    }
+})
 def show_most_liked_combinations():
     counts = (
         FavoriteRCCombination.query.with_entities(
@@ -100,6 +146,39 @@ def show_most_liked_combinations():
 
 
 @app.route("/like_combination", methods=["POST"])
+@swag_from({
+    'tags': ['DND'],
+    'methods': ['POST'],
+    'responses': {
+
+        '200': {
+            'description': 'Like a race and class combination and return log message.',
+            'examples': {
+                'application/json': {
+                    "log": "Combination added!"
+                }
+            }    
+        },
+        '400': {
+            'description': 'Invalid request. Returns a message indicating the required fields are missing.',
+            'examples': {
+                'application/json': {
+                   
+                    "log": "Problems occured!"
+                }
+            }    
+        },
+        '404': {
+            'description': 'Already exist',
+            'examples': {
+                'application/json': {
+                    
+                    "log": "Combination already liked!"
+                }
+            }    
+        },        
+    }
+})
 def like_combination():
     race_name = request.form.get("race_name")
     class_name = request.form.get("class_name")
