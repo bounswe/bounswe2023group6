@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block head_content %}
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        document.getElementById("log").style.visibility = 'hidden'; 
+        var $add_favorites_form = $('#like_combination');
+        $add_favorites_form.submit(function (event) {
+            event.preventDefault(); 
+            $.ajax({
+                url : $add_favorites_form.attr('action'), 
+                type : 'POST',
+                dataType : 'json',
+                data: $add_favorites_form.serialize(),
+            }).done(function (response) {
+                document.getElementById("log").value = response["log"];
+                document.getElementById("log").style.visibility = 'visible'; 
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+
+{% block body_content %}
+
+<!-- Banner -->
+<!DOCTYPE HTML>
+<!--
+	Intensify by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+<head>
+    <title>Elements - Intensify by TEMPLATED</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+</head>
+<body class="subpage">
+
+
+<!-- Main -->
+<section id="main" class="wrapper">
+    <div class="inner">
+        <header class="align-center">
+            <h1>Dungeons and Dragons Race-Class Description</h1>
+            <p> Show description of your race and class. </p>
+            
+        </header>
+
+
+        <div class="12u">
+
+            <hr/>
+
+            <form method="post" action="{{ url_for('dnd') }}">
+                <p>Allowed races are dragonborn ┃ dwarf ┃ elf ┃ gnome ┃ half-elf ┃ half-orc ┃ halfling ┃ human ┃ tiefling</p>
+                <p>Allowed classes are barbarian ┃ bard ┃ cleric ┃ druid ┃ fighter ┃ monk ┃ paladin ┃ ranger ┃ rogue ┃ sorcerer ┃ warlock ┃ wizard </p>
+                <div class="row uniform">
+                    <div class="3u 12u$(small)">
+                        <input type="text" name="race" id="race" value="" placeholder="type race like elf"/>
+                    </div>
+                    <div class="3u 12u$(small)">
+                        <input type="text" name="class" id="class" value=""
+                               placeholder="type class like ranger"/>
+                    </div>
+                    <div class="3u$ 12u$(small)">
+                        <input type="submit" value="Search" class="fit"/>
+                    </div>
+                </div>
+
+
+                {% if error %}
+
+                <div class="row uniform">
+                    <div class="9u 12u$(small)">
+                        <input type="text" name="time" id="time" value="{{ error }}"/>
+                    </div>
+                </div>
+
+                {% endif %}
+            </form>
+
+            <div class="row uniform">
+                <div class="9u 12u$(small)">
+                    <input type="text" name="log" id="log" />
+                </div>
+            </div>
+
+            <div class="12u">
+                <form id="show_most_liked_form" method="post" action="{{ url_for('show_most_liked_combinations') }}">
+                    <button type="Submit">Show most liked combinations</button>
+                 </form>
+            </div>
+            
+            {% if combinations %}
+                {% for combo in combinations %}   
+                    Combination : {{ combo.race_name }} - {{ combo.class_name }}  Count : {{ combo.count }}
+                    <br>
+                {% endfor %}
+            {% endif %}
+
+            {% if response %}
+
+            <div class="12u" id="add_favorite_combo_form">
+                <form id="like_combination" method="post" action="{{ url_for('like_combination') }}">
+                    <input type="hidden" name="race_name" value="{{ response.name }}">
+                    <input type="hidden" name="class_name" value="{{ response.class_name }}">
+                    <button type="Submit">Like the race-class combination</button>
+                    </form>
+            </div>
+
+            {% endif %}
+
+            {% if response %}
+
+
+            <div class="12u">
+    
+
+            <div class="race_information">
+                <br>
+                Race: {{ response.name }}
+                <br>
+                Class: {{ response.class_name }}
+                <br>
+                Hit Die: {{ response.hit_die }}
+                <br>
+                Speed: {{ response.speed }}
+                <br>
+                Bonus: {{ response.ability_text }}
+                <br>
+                Age: 
+                <div>
+                    {{ response.age }}
+                </div>
+                <br>
+                Alignment :
+                <div>
+                    {{ response.alignment }}
+                </div>
+                <br>
+                Language Description :
+                <div>
+                    {{ response.language_desc }}
+                </div>
+                <br>
+                Size Description :
+                <div>
+                    {{ response.size_description }}
+                </div>
+            </div>
+            
+
+            {% endif %}
+
+
+        </div>
+        </div>
+    </div>
+
+    </div>
+</section>
+
+
+</body>
+</html>
+
+{%  endblock %}

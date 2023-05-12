@@ -25,7 +25,7 @@
             <header class="align-center">
                 <h1>World Time</h1>
                 <p> Ready for calling a simple web service which returns the current local time for a given
-                    timezone. </p>
+                    timezone with the recommended language. </p>
             </header>
 
 
@@ -34,12 +34,13 @@
                 <hr/>
 
                 <form method="post" action="{{ url_for('worldTime') }}">
-                    <p>To see timezones, visit the <a href="https://timezonedb.com/time-zones" target=”_blank”>
+                    <p>Firstly, to see timezones, visit the <a href="https://timezonedb.com/time-zones" target=”_blank”>
                         <i>link.</i></a>
-                        Copy the any time zone from there, and then paste below box, and then click the search button.
+                        Copy the any time zone from there, and then paste relevant below box.
                     </p>
-                    <p>You can use languages codes like <b>tr</b> for Turkish, <b>en</b> for English, <b>de</b> for
-                        German, <b>fr</b> for French, <b>it</b> for Italian, <b>es</b> for Spain</p>
+                    <p>Secondly, type languages codes like <b>tr</b> for Turkish, <b>en</b> for English, <b>de</b> for
+                        German, <b>fr</b> for French, <b>it</b> for Italian, <b>es</b> for Spain.</p>
+                    <p>Finally, click the search button.</p>
 
                     <div class="row uniform">
                         <div class="6u 12u$(small)">

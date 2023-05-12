@@ -26,12 +26,20 @@ from flask_login import (
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
-db_username = os.environ["DB_USERNAME"]
-db_password = os.environ["DB_PASSWORD"]
-session_secret_key = os.environ["SECRET_KEY"]
+db_username = os.environ[
+    "DB_USERNAME"
+]
+db_password = os.environ[
+    "DB_PASSWORD"
+]
+session_secret_key = os.environ[
+    "SECRET_KEY"
+]
+db_host = os.environ.get("DB_HOST", "localhost:5432")
+db_name = os.environ.get("DB_NAME", "postgres")
 
 engine = create_engine(
-    f"postgresql://{db_username}:{db_password}@localhost:5432/postgres", echo=False
+    f"postgresql://{db_username}:{db_password}@{db_host}/{db_name}", echo=False
 )
 Session = sessionmaker(bind=engine)
 session = scoped_session(Session)
@@ -52,15 +60,9 @@ from .game_information_api import (
 )
 from .location import show_map, show_all_favorite_location, add_location_to_favorites
 from .pokemon_api import pokemon_page, save_pokemon
-from .bored_api import (
-    bored,
-    get_bored_saved,
-    delete_bored_saved,
-    Activities,
-    bored_save,
-)
-from .worldcountries import GetWorldCountries, PostWorldCountries
-
+from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
+from .weather import weather, save_weather
+from .dnd_information_api import dnd, like_combination, show_most_liked_combinations
 
 class User(Base, UserMixin):
     __tablename__ = "User"
