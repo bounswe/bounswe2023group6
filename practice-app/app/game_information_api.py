@@ -73,10 +73,10 @@ def get_game_information_from_name(game_name):
         '200': {
             'description': 'Returns game information if the game is found.',
         },
-        '200': {
+        '400': {
             'description': 'Returns an error message if game name is missing in POST request.',
         },
-        '200': {
+        '404': {
             'description': 'Returns an error message if the game is not found.',
         }
     }
@@ -137,10 +137,10 @@ def show_all_favorites():
         '200': {
             'description': 'Returns a message indicating whether the game was successfully added to favorites.',
         },
-        '200': {
+        '400': {
             'description': 'Returns an error message if the request is missing required parameters.',
         },
-        '200': {
+        '404': {
             'description': 'Returns an error message if the game is not found in the favorites of the logged-in user.',
         }
     }
