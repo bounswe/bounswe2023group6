@@ -54,6 +54,7 @@ login_manager.login_view = "login"
 
 from .worldtime import worldTime
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .tcorp import get_status_page, change_status, get_all_incidents, get_current_status
 from .location import show_map, show_all_favorite_location, add_location_to_favorites 
 from .pokemon_api import pokemon_page, save_pokemon
 from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
