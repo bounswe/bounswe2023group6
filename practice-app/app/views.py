@@ -26,6 +26,7 @@ from flask_login import (
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 db_username = os.environ[
     "DB_USERNAME"
 ]
