@@ -58,6 +58,7 @@ from .tcorp import get_status_page, change_status, get_all_incidents, get_curren
 from .location import show_map, show_all_favorite_location, add_location_to_favorites 
 from .pokemon_api import pokemon_page, save_pokemon
 from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
+from .weather import weather, save_weather
 from .dnd_information_api import dnd, like_combination, show_most_liked_combinations
 
 class User(Base, UserMixin):
