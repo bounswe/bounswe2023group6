@@ -1,11 +1,12 @@
 from typing import List
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, make_response
 import requests
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Length
-from sqlalchemy import create_engine, Column, String, ForeignKey, Integer
+from sqlalchemy import create_engine, Column, Integer, Float, String, ForeignKey, delete
+
 from sqlalchemy.orm import (
     sessionmaker,
     scoped_session,
@@ -25,16 +26,9 @@ from flask_login import (
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-db_username = os.environ[
-    "DB_USERNAME"
-]
-db_password = os.environ[
-    "DB_PASSWORD"
-]
-session_secret_key = os.environ[
-    "SECRET_KEY"
-]
+db_username = os.environ["DB_USERNAME"]
+db_password = os.environ["DB_PASSWORD"]
+session_secret_key = os.environ["SECRET_KEY"]
 
 engine = create_engine(
     f"postgresql://{db_username}:{db_password}@localhost:5432/postgres", echo=False
@@ -52,9 +46,10 @@ login_manager.login_view = "login"
 
 from .worldtime import worldTime
 from .game_information_api import get_game_information, add_game_to_favorites, show_all_favorites
+from .location import show_map, show_all_favorite_location, add_location_to_favorites 
 from .pokemon_api import pokemon_page, save_pokemon
+from .bored_api import bored, get_bored_saved,  delete_bored_saved, Activities, bored_save
 from .weather import weather, save_weather
-
 
 class User(Base, UserMixin):
     __tablename__ = "User"
@@ -64,6 +59,7 @@ class User(Base, UserMixin):
     world_time: Mapped[List["WorldTimeTable"]] = relationship()
 
 
+
 Base.metadata.create_all(engine)
 
 class LoginForm(FlaskForm):
@@ -71,7 +67,7 @@ class LoginForm(FlaskForm):
         "username", validators=[InputRequired(), Length(min=4, max=15)]
     )
     password = PasswordField(
-        "password", validators=[InputRequired(), Length(min=8, max=80)]
+        "password", validators=[InputRequired(), Length(min=8, max=160)]
     )
 
 
@@ -80,10 +76,10 @@ class RegisterForm(FlaskForm):
         "username", validators=[InputRequired(), Length(min=4, max=15)]
     )
     password = PasswordField(
-        "password", validators=[InputRequired(), Length(min=8, max=80)]
+        "password", validators=[InputRequired(), Length(min=8, max=160)]
     )
     password_confirm = PasswordField(
-        "confirm password", validators=[InputRequired(), Length(min=8, max=80)]
+        "confirm password", validators=[InputRequired(), Length(min=8, max=160)]
     )
 
 
@@ -114,6 +110,7 @@ def login():
         user = session.query(User).filter(User.username == form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
+            #if user.password == form.password.data:
                 login_user(user)
                 return redirect(url_for("index"))
             else:
