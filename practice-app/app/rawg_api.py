@@ -1,15 +1,12 @@
-from flask import Flask, render_template, request, redirect
+from flask import  render_template, request, redirect
 import xml.etree.ElementTree
-import requests, time, os
-from flask_sqlalchemy import SQLAlchemy
+import requests, time, os 
 from .views import app, Base, session
 from sqlalchemy import (
     Column,
     String,
     Integer,
-    ForeignKey,
     PrimaryKeyConstraint,
-    Sequence,
     BigInteger,
     func,
 )
@@ -35,8 +32,6 @@ def get_genres():
             genres = response.json().get('results')
             genre_counts = session.query(FavoriteGenre.genre_name, func.count(FavoriteGenre.genre_name)).group_by(FavoriteGenre.genre_name).all()
             genre_count_dict = {genre_name: count for genre_name, count in genre_counts}
-            print(genre_count_dict)
-
             return render_template('get_genres.html', genres=genres, genre_count_dict=genre_count_dict)
         else:
             return None
@@ -59,7 +54,7 @@ def get_genre_name_from_id(genre_id):
         return genre['name']
     else:
         return None
-@app.route('/get_genres<int:id>')
+@app.route('/get_genres/<int:id>')
 def get_genre_info(id):
     url = f"https://api.rawg.io/api/genres/{id}?key={api_key}"
     response = requests.get(url)

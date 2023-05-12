@@ -8,15 +8,15 @@ def test_get_genres(client):
     response = client.get('/get_genres')
     assert response.status_code == 200
 def test_get_genre_info(client):
-    response = client.get('/get_genres5')
+    response = client.get('/get_genres/5')
     assert response.status_code == 200
 def test_get_genre_name(client):
     # Mock the response from the API
-    response = client.get('/get_genres3')
+    response = client.get('/get_genres/3')
     assert "Adventure" in response.data.decode('utf-8')
     assert response.status_code == 200
 def test_get_genre_description(client):
-    response = client.get('/get_genres3')
+    response = client.get('/get_genres/3')
     assert "Adventure focus on story, many of them are designed for a single player." in response.data.decode('utf-8')
     assert response.status_code == 200
 

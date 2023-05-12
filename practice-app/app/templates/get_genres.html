@@ -31,7 +31,7 @@
             genre_count_dict.get(genre.name) }}{% else %}0{% endif %})</label
           ><br />
           <input type="hidden" name="genre_name" value="{{ genre.id }}" />
-          <a href="/get_genres{{ genre.id }}"
+          <a href="/get_genres/{{ genre.id }}"
             ><img
               src="{{ genre.image_background}}"
               alt="{{ genre.name }}"
