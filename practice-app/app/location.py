@@ -1,11 +1,9 @@
-from .views import app, session, Base, UserMixin
+from .views import app, session, Base
 from flask import render_template, request
 from flask_login import login_required, current_user
-import requests
 from sqlalchemy import Column, String, ForeignKey, Float, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 import os
-
 import googlemaps
 
 
@@ -17,6 +15,7 @@ class Location(Base):
     longitude = Column(Float)
     user_id: Mapped[int] = mapped_column(ForeignKey('User.id'), nullable=True)
 
+
 try: 
     GOOGLEMAPS_API_KEY = os.environ["GOOGLEMAPS_API_KEY"]
     app.config['GOOGLEMAPS_API_KEY'] = GOOGLEMAPS_API_KEY
@@ -24,6 +23,7 @@ try:
     is_google_api_key_valid = True
 except: 
     is_google_api_key_valid = False
+
 
 @app.route('/show_map', methods=['GET', 'POST'])
 def show_map():
@@ -42,11 +42,13 @@ def show_map():
             return render_template('map.html', error_message=error_message)
     return render_template('map.html') 
 
+
 @app.route("/show_all_favorite_location", methods=["POST"])
 @login_required
 def show_all_favorite_location():
     all_user_locations = Location.query.filter_by(user_id=current_user.id).all()
     return render_template("map.html", all_user_locations=all_user_locations)
+
 
 @app.route("/add_location_to_favorites", methods=["POST"])
 @login_required

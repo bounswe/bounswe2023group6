@@ -43,9 +43,7 @@ def test_location_post_invalid(client):
 
 def test_show_all_favorite_location(client):
      response = client.post("/show_all_favorite_location", follow_redirects=True)
-     assert response.status_code == 200
-     
-     
+     assert response.status_code == 200 
     
 
 def test_add_location_to_favorites(client):
@@ -55,19 +53,6 @@ def test_add_location_to_favorites(client):
     longitude = 234
     ), follow_redirects=True)
     assert response.status_code == 200
-    
-# def test_show_all_favorite_location(client):
-#      response = client.post("/show_all_favorite_location", follow_redirects=True)
-#      print(response.data)
-#      assert "Istanbul" in str(response.data)
-
-
-# def test_cleanworldtime(session):
-#     user = User.query.filter_by(username=TEST_USER).first()
-#     worldtime = WorldTimeTable.query.filter_by(user_id=user.id).first()
-#     if worldtime:
-#         session.delete(worldtime)
-#         session.commit()
 
 
 def test_logout(client):
@@ -84,7 +69,3 @@ def test_clean(session):
     if user:
         session.delete(user)
         session.commit()
-
-
-
-
