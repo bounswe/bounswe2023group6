@@ -7,6 +7,8 @@ from sqlalchemy.orm import (
     mapped_column,
 )
 from .views import app, Base, session
+from flasgger import swag_from
+
 
 
 class Country(Base):
@@ -21,13 +23,54 @@ class Country(Base):
 
 
 @app.get("/worldcountries")
+@swag_from({
+    'tags': ['World Countries'],
+    'responses': {
+        '200': {
+            'description': 'Returns a list of world countries on a webpage in a table', 
+        }
+        
+    }
+})
 def GetWorldCountries():
+
     ret = session.query(Country).all()
     return render_template("worldcountries.html", entries=ret)
 
 
 @app.post("/worldcountries")
+@swag_from({
+    'tags': ['World Countries'],
+    'parameters': [
+        {
+            'name': 'country',
+            'description': 'Name of the country',
+            'in': 'formData',
+            'required': True,
+            'type': 'string'
+        }
+    ],
+    'responses': {
+        '200': {
+            'description': 'Returns a webpage of the updated list of countries',
+            
+        },
+        '400': {
+            'description': 'Bad request',
+            
+        },
+        '404': {
+            'description': 'Country not found',
+            
+        },
+        '500': {
+            'description': 'Internal server error',
+           
+        }
+    }
+})
 def PostWorldCountries():
+    
     data = request.form["country"]
     error = ""
 
