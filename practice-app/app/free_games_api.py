@@ -57,7 +57,6 @@ def like_game():
         if liked_game:
             log = "Game already liked by this user!"
         else:
-            #game_name = Game.query.get(game_id).game_name
             liked_game = LikedGame(user_id=current_user.id, game_id=game_id, game_name=game_name)
             session.add(liked_game)
             session.commit()
@@ -68,7 +67,6 @@ def like_game():
 @login_required
 def see_liked_games():
     liked_games = LikedGame.query.filter_by(user_id=current_user.id).all()
-    game_names = [game.game_name for game in liked_games]
     return render_template("see_liked_games.html", liked_games=liked_games)
 
 
@@ -97,7 +95,6 @@ def dislike_game():
 @login_required
 def see_disliked_games():
     disliked_games = DislikedGame.query.filter_by(user_id=current_user.id).all()
-    game_names = [game.game_name for game in disliked_games]
     return render_template("see_disliked_games.html", disliked_games=disliked_games)
 
 
