@@ -56,8 +56,8 @@ def test_like_combination(client):
     username=TEST_USER, password=TEST_USERPASS
     ), follow_redirects=True)
     response = client.post("/like_combination", data={
-    "race_name" : "elf",
-    "class_name" : "barbarian"
+    "race_name" : "Elf",
+    "class_name" : "Barbarian"
     }, follow_redirects=True)
 
     assert response.status_code == 200
