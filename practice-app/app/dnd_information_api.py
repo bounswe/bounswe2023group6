@@ -73,10 +73,6 @@ def dnd(log=None):
         class_name = request.form.get("class")
         if not class_name:
             log = "Class name is required!"
-        liked_race_name = request.form.get("race_name")
-        liked_class_name = request.form.get("class_name")
-        if liked_race_name and liked_class_name:
-            like_combination(liked_race_name, liked_class_name)
         else:
             dnd_information = get_dnd_information(race_name, class_name)
             if dnd_information == None:
