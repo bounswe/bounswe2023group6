@@ -22,6 +22,7 @@ and online meetings, dive into game related discussions, convention parties and 
    * [Sena Özpınar](https://github.com/bounswe/bounswe2023group6/wiki/Sena-%C3%96zp%C4%B1nar)
    * [Süleyman Melih Portakal](https://github.com/bounswe/bounswe2023group6/wiki/S%C3%BCleyman-Melih-Portakal)
    * [Umut Demir](https://github.com/bounswe/bounswe2023group6/wiki/Umut-Demir)
+   * [Muhammet Mustafa Küçük](https://github.com/bounswe/bounswe2023group6/wiki/Muhammet-Mustafa-K%C3%BC%C3%A7%C3%BCk)
 ## Learn More 🕵️
 
 Visit our [Wiki page](https://github.com/bounswe/bounswe2023group6/wiki) to learn about us in detail!
