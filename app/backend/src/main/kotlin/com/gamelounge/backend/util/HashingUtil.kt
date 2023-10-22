@@ -19,7 +19,6 @@ object HashingUtil {
     private fun ByteArray.toHexString(): String =
         HexFormat.of().formatHex(this)
 
-
     fun generateHash(password: String): Pair<ByteArray, ByteArray> {
         val salt = generateRandomSalt()
 

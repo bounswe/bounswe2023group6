@@ -5,21 +5,21 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class RegisterationRequest (
     @JsonProperty("username")
-    var username: String,
+    val username: String,
 
     @JsonProperty("password")
-    var password: String,
+    val password: String,
 
     @JsonProperty("email")
-    var email: String,
+    val email: String,
 
     @JsonProperty("name")
-    var name: String,
+    val name: String,
 
     @JsonProperty("surname")
-    var surname: String,
+    val surname: String,
 
     @JsonProperty("image")
-    var image: ByteArray
+    val image: ByteArray
 
 )
