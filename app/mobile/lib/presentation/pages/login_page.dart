@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/form_widget.dart'; // Import your FormWidget
+import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
 import '../../data/models/user_model.dart';
@@ -16,6 +16,9 @@ class _LoginPageState extends State<LoginPage> {
 
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
+
+  // Define controller names
+  final List<String> controllerNames = ['Email', 'Password'];
 
   void loginUser() {
     final String email = emailController.text;
@@ -46,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         child: FormWidget(
           title: 'Please enter your login credentials:',
           controllers: [emailController, passwordController],
+          controllerNames: controllerNames, // Pass controllerNames to FormWidget
           onSubmit: loginUser,
         ),
       ),

@@ -31,7 +31,7 @@ class MainApp extends StatelessWidget {
       // Set the CustomAppBar as the app bar for all pages
       builder: (context, child) {
         return Scaffold(
-          appBar: const CustomAppBar(title: TextConstants.titleText, showBackButton: true),
+          appBar: const CustomAppBar(title: TextConstants.titleText),
           body: child,
         );
       },

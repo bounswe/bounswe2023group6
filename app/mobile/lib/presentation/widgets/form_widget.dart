@@ -4,16 +4,18 @@ import 'package:mobile/presentation/widgets/button_widget.dart';
 class FormWidget extends StatelessWidget {
   final String title;
   final List<TextEditingController> controllers;
+  final List<String> controllerNames;
   final void Function()? onSubmit;
 
   const FormWidget({
     Key? key,
     required this.title,
     required this.controllers,
+    required this.controllerNames,
     this.onSubmit,
   }) : super(key: key);
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
@@ -26,12 +28,15 @@ class FormWidget extends StatelessWidget {
                 title,
                 style: TextStyle(fontSize: 18),
               ),
-              for (var controller in controllers)
+              for (int i = 0; i < controllers.length; i++)
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0), // Add bottom padding to form fields
                   child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(labelText: controller.text),
+                    controller: controllers[i],
+                    decoration: InputDecoration(
+                      labelText: controllerNames[i],
+                    ),
+                    obscureText: controllerNames[i].toLowerCase() == 'password', // Conditionally set obscureText
                   ),
                 ),
               Padding(
@@ -47,5 +52,4 @@ class FormWidget extends StatelessWidget {
       ),
     );
   }
-
 }

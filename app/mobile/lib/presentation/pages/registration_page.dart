@@ -19,6 +19,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
 
+  final List<String> controllerNames = ['Name', 'Surname', 'Email', 'Password']; // Add controller names
+
   void registerUser() {
     final String name = nameController.text;
     final String surname = surnameController.text;
@@ -35,7 +37,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     } else if (!ValidationUtils.isEmailValid(email)) {
       // Handle invalid email
       // You can show an error message or perform any other action here.
-    }else if (!ValidationUtils.isPasswordValid(password)) {
+    } else if (!ValidationUtils.isPasswordValid(password)) {
       // Handle invalid password
       // You can show an error message or perform any other action here.
     } else {
@@ -62,8 +64,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: FormWidget(
           title: 'Please fill the registration form:',
           controllers: [nameController, surnameController, emailController, passwordController],
+          controllerNames: controllerNames, // Pass the controller names to FormWidget
           onSubmit: registerUser,
-          ),
+        ),
       ),
     );
   }
