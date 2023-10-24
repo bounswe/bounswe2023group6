@@ -19,12 +19,10 @@ object HashingUtil {
     private fun ByteArray.toHexString(): String =
         HexFormat.of().formatHex(this)
 
-    fun generateHash(password: String): Pair<ByteArray, ByteArray> {
-        val salt = generateRandomSalt()
+    fun generateHash(password: String, salt: ByteArray = generateRandomSalt()): Pair<ByteArray, ByteArray> {
 
-        val combinedSalt = "$salt${HashingConstants.SECRET}".toByteArray()
         val factory: SecretKeyFactory = SecretKeyFactory.getInstance(HashingConstants.ALGORITHM)
-        val spec: KeySpec = PBEKeySpec(password.toCharArray(), combinedSalt, HashingConstants.ITERATIONS, HashingConstants.KEY_LENGTH)
+        val spec: KeySpec = PBEKeySpec(password.toCharArray(), salt, HashingConstants.ITERATIONS, HashingConstants.KEY_LENGTH)
         val key: SecretKey = factory.generateSecret(spec)
         val hash: ByteArray = key.encoded
 

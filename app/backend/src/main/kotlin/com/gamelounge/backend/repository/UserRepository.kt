@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository : CrudRepository<User, Long> {
     fun existsByUsername(username: String): Boolean
+
+    fun findByUsername(username: String): User?
+
 }
