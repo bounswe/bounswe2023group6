@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
+
 @RestController
 @RequestMapping()
 class AccessController(
@@ -15,10 +16,10 @@ class AccessController(
 ) {
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.OK)
-    fun register(@RequestBody request: RegisterationRequest){
+    @ResponseStatus(HttpStatus.CREATED)
+    fun register(@RequestBody request: RegisterationRequest): ResponseEntity<Map<String, String>> {
         accessService.register(request)
-    }
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("message" to "Registered successfully!"))
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Pair<String, String>> {
@@ -30,5 +31,6 @@ class AccessController(
     fun logout(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<Map<String, String>> {
         sessionId?.let { accessService.logout(it) }
         return ResponseEntity.ok().body(mapOf("message" to "Logged out successfully."))
+
     }
 }

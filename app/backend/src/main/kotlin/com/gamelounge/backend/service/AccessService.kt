@@ -63,4 +63,5 @@ class AccessService (
         val (hash, _) = generateHash(rawPassword, salt)
         return hash.contentEquals(passwordHash)
     }
+
 }
