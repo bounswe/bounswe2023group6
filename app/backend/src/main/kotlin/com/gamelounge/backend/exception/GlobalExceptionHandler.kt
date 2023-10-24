@@ -20,4 +20,18 @@ class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(UsernameNotFoundException::class)
+    fun handleUsernameNotFoundException(exception: UsernameNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+
+    @ExceptionHandler(WrongCredentialsException::class)
+    fun handleWrongCredentialsException(exception: WrongCredentialsException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+
 }
