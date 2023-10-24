@@ -1,6 +1,7 @@
 package com.gamelounge.backend.service
 
 
+import com.gamelounge.backend.constant.HashingConstants
 import com.gamelounge.backend.entity.Session
 import com.gamelounge.backend.model.RegisterationRequest
 import com.gamelounge.backend.repository.UserRepository
@@ -10,6 +11,7 @@ import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.SessionRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.*
 
 @Service
 class AccessService (
@@ -28,7 +30,7 @@ class AccessService (
         userRepository.save(User(request.username, request.email, request.name, request.surname, request.image, passwordHash, salt))
     }
 
-    fun login(username: String, password: String): String {
+    fun login(username: String, password: String): UUID {
         val user = userRepository.findByUsername(username)
             ?: throw UsernameNotFoundException("User not found.")
 
@@ -38,13 +40,13 @@ class AccessService (
         }
 
         // Create and save session
-        val session = Session("", user, LocalDateTime.now())
+        val session = Session(UUID.randomUUID(), user, LocalDateTime.now())
         sessionRepository.save(session)
 
         return session.id
     }
 
-    fun logout(sessionId: String) {
+    fun logout(sessionId: UUID) {
         val session = sessionRepository.findById(sessionId)
             .orElseThrow { SessionNotFoundException("Session not found.") }
 

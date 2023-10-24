@@ -6,6 +6,7 @@ import com.gamelounge.backend.service.AccessService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.UUID
 
 @RestController
 @RequestMapping()
@@ -20,14 +21,14 @@ class AccessController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<String> {
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<Pair<String, String>> {
         val sessionId = accessService.login(request.username, request.password)
-        return ResponseEntity.ok().header("Set-Cookie", "SESSIONID=$sessionId; HttpOnly").body("Logged in successfully.")
+        return ResponseEntity.ok().header("Set-Cookie", "SESSIONID=$sessionId; HttpOnly").body("message" to "Logged in successfully.")
     }
 
     @PostMapping("/logout")
-    fun logout(@CookieValue("SESSIONID") sessionId: String?): ResponseEntity<String> {
+    fun logout(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<Map<String, String>> {
         sessionId?.let { accessService.logout(it) }
-        return ResponseEntity.ok().body("Logged out successfully.")
+        return ResponseEntity.ok().body(mapOf("message" to "Logged out successfully."))
     }
 }

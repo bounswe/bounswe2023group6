@@ -9,7 +9,7 @@ import java.util.*
 
 @Repository
 interface SessionRepository : JpaRepository<Session, String> {
-    override fun findById(id: String): Optional<Session>
+    fun findById(id: UUID): Optional<Session>
     fun findByUser(user: User): Session?
 
 }
