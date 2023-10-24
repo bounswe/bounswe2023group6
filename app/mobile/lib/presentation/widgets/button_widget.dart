@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../constants/color_constants.dart';
 
-class BigButton extends StatelessWidget {
+class Button extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const BigButton({super.key, required this.label, required this.onPressed});
+  const Button({super.key, required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +13,8 @@ class BigButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: ColorConstants.buttonColor,
-        padding: const EdgeInsets.all(16.0),
-        textStyle: const TextStyle(fontSize: 24.0),
+        padding: const EdgeInsets.all(12.0),
+        textStyle: const TextStyle(fontSize: 18.0),
       ),
       child: Text(label),
     );

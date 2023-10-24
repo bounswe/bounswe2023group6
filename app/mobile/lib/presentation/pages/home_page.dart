@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/big_button_widget.dart';
-import '../widgets/medium_button_widget.dart';
-import '../widgets/small_button_widget.dart';
+import 'package:mobile/presentation/widgets/button_widget.dart';
+import '../../constants/text_constants.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -11,30 +10,53 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            BigButton(
-              label: 'Button',
-              onPressed: () {
-                // Handle big button press
-              },
+            // First Row: Logo
+            Container(
+              width: 600,
+              height: 200,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('lib/assets/logo.png'),
+                ),
+              ),
             ),
-            MediumButton(
-              label: 'Button',
-              onPressed: () {
-                // Handle medium button press
-              },
+
+            // Second Row: Description
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+              TextConstants.descriptionText,
+              style: TextStyle(fontSize: 16),
+              ),
             ),
-            SmallButton(
-              label: 'Button',
-              onPressed: () {
-                // Handle small button press
-              },
-            ),
+
+            // Third Row: Registration and Login Buttons
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50.0), // Adjust the value as needed
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Button(
+                    label: 'Registration',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/registration');
+                    },
+                  ),
+                  Button(
+                    label: 'Login',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/login');
+                    },
+                  ),
+                ],
+              ),
+            )
+
           ],
         ),
       ),
     );
   }
 }
-
