@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/presentation/widgets/button_widget.dart';
 
 class FormWidget extends StatelessWidget {
   final String title;
@@ -12,30 +13,39 @@ class FormWidget extends StatelessWidget {
     this.onSubmit,
   }) : super(key: key);
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            for (var controller in controllers)
-          TextField(
-                controller: controller,
-                decoration: InputDecoration(labelText: controller.text),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontSize: 18),
               ),
-            ElevatedButton(
-              onPressed: onSubmit,
-              child: const Text('Submit'),
-            ),
-          ],
+              for (var controller in controllers)
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0), // Add bottom padding to form fields
+                  child: TextField(
+                    controller: controller,
+                    decoration: InputDecoration(labelText: controller.text),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 70.0), // Add top padding to "Submit" button
+                child: Button(
+                  onPressed: onSubmit,
+                  label: "Submit",
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
 }

@@ -60,7 +60,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FormWidget(
-          title: 'Registration Form',
+          title: 'Please fill the registration form:',
           controllers: [nameController, surnameController, emailController, passwordController],
           onSubmit: registerUser,
           ),

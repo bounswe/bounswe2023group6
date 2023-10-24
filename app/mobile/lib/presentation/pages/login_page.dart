@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/presentation/widgets/button_widget.dart';
+import '../widgets/form_widget.dart'; // Import your FormWidget
+import '../../utils/validation_utils.dart';
+import '../../data/services/user_authentication_service.dart';
+import '../../data/models/user_model.dart';
+import '../widgets/app_bar_widget.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -12,41 +14,39 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  // Create an instance of UserAuthenticationService
+  final UserAuthenticationService authService = UserAuthenticationService();
+
+  void loginUser() {
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    // Validate user input using ValidationUtils
+    if (!ValidationUtils.isEmailValid(email)) {
+      // Handle invalid email
+      // You can show an error message or perform any other action here.
+    } else if (!ValidationUtils.isPasswordValid(password)) {
+      // Handle invalid password
+      // You can show an error message or perform any other action here.
+    } else {
+      // Proceed with user login using the UserAuthenticationService
+      authService.loginUser(email, password);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
+      appBar: CustomAppBar(
+        title: 'Login',
+        showBackButton: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            Button(
-              label: 'Login',
-              onPressed: () async {
-                final email = emailController.text;
-                final password = passwordController.text;
-                // final loginResult = await LoginUtil.loginUser(email, password);
-                // if (loginResult) {
-                //   // Login was successful, navigate to another page (e.g., home)
-                //   Navigator.pushReplacementNamed(context, '/home'); // Navigate to the home page
-                // } else {
-                //   // Login failed, handle the error (e.g., show an error message)
-                // }
-              },
-            ),
-          ],
+        child: FormWidget(
+          title: 'Please enter your login credentials:',
+          controllers: [emailController, passwordController],
+          onSubmit: loginUser,
         ),
       ),
     );

@@ -3,7 +3,7 @@ import '../../constants/color_constants.dart';
 
 class Button extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final void Function()? onPressed;
 
   const Button({super.key, required this.label, required this.onPressed});
 
