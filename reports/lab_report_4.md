@@ -70,6 +70,7 @@
 | Implementing login and register services | [#292](https://github.com/bounswe/bounswe2023group6/issues/292) | Umut Demir | 31.10.2023 | 2hr |
 | Separating validation and convertion into different layers in services | [#293](https://github.com/bounswe/bounswe2023group6/issues/293) | Erkam Kavak | 31.10.2023 | 2hr |
 | Implement forgot and reset password page | [#294](https://github.com/bounswe/bounswe2023group6/issues/294) | Umut Demir | 31.10.2023 | 2hr |
+| Preparing a Milestone Presentation to the Customer | [#297](https://github.com/bounswe/bounswe2023group6/issues/297) | Team | 31.10.2023 | 2hr |
 
 
 
