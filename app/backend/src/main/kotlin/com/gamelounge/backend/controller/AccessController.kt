@@ -20,6 +20,7 @@ class AccessController(
     fun register(@RequestBody request: RegisterationRequest): ResponseEntity<Map<String, String>> {
         accessService.register(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("message" to "Registered successfully!"))
+    }
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Pair<String, String>> {
