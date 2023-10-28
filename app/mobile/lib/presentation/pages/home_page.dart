@@ -65,7 +65,7 @@ class PostCard extends StatelessWidget {
   const PostCard({
     super.key, required this.content, required this.userdata, required this.likes,
   });
-  
+
 
   @override
   Widget build(BuildContext context) {

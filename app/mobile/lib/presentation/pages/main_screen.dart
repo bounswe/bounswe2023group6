@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const SearchPage(),
-    const GamePage(),
+    GamePage(),
     const LFGPage()
   ];
 
