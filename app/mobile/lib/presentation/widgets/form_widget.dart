@@ -34,6 +34,8 @@ class FormWidget extends StatelessWidget {
                   child: TextField(
                     controller: controllers[i],
                     decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).focusColor)),
+                      floatingLabelStyle: TextStyle( color: Theme.of(context).focusColor),
                       labelText: controllerNames[i],
                     ),
                     obscureText: controllerNames[i].toLowerCase() == 'password', // Conditionally set obscureText

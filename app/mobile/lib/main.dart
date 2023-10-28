@@ -27,6 +27,7 @@ class MainApp extends StatelessWidget {
         primaryColor: _color1,
         primaryColorLight: _color2,
         primaryColorDark: _color3,
+        focusColor: _color4,
         primaryIconTheme: IconThemeData(color: Theme.of(context).primaryColorLight),
         iconTheme: IconThemeData(color: _color1 ),
         scaffoldBackgroundColor: _color5,
