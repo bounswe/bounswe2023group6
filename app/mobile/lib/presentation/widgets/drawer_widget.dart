@@ -11,7 +11,7 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const LoggedDrawer();
+    return const GuestDrawer();
   }
 }
 
@@ -29,7 +29,7 @@ class LoggedDrawer extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Material(
-              color: Colors.black, // This will change
+              color: Theme.of(context).primaryColor, // This will change
               child: InkWell(
                 child: Container(
                   padding: EdgeInsets.only(
@@ -117,33 +117,32 @@ class GuestDrawer extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Material(
-              color: Colors.black, // This will change
+              color: Theme.of(context).primaryColor, // This will change
               child: InkWell(
                 child: Container(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top,
                     bottom: 24
                   ),
-                  child: const Column(
+                  child:  Column(
                     children: [
-                      SizedBox(height: 50 ,),
+                      const SizedBox(height: 50 ,),
                       CircleAvatar(
-                        backgroundColor: Colors.black,
+                        backgroundColor: Theme.of(context).primaryColor,
                         radius: 60,
-                        child: Icon(
+                        child: const Icon(
                           Icons.account_circle,
                           size: 130,
-                          color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 12,),
-                      Text('Guest',
+                      const SizedBox(height: 12,),
+                      const Text('Guest',
                         style: TextStyle(
                           fontSize: 28,
                           color: Colors.white
                         ),
                       ),
-                      Center(
+                      const Center(
                         child: SizedBox(
                           width: 250,
                           child: Center(

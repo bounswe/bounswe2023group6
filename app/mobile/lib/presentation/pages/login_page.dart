@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
-import '../../data/models/user_model.dart';
 import '../widgets/app_bar_widget.dart';
 
 class LoginPage extends StatefulWidget {

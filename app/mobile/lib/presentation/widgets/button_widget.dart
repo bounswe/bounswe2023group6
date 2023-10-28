@@ -12,7 +12,7 @@ class Button extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: ColorConstants.buttonColor,
+        backgroundColor: Theme.of(context).primaryColor,
         padding: const EdgeInsets.all(12.0),
         textStyle: const TextStyle(fontSize: 18.0),
       ),

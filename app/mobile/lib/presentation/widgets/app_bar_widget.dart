@@ -17,14 +17,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: AppBar(
         automaticallyImplyLeading: showBackButton, // Control back button visibility
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 20, // Customize the font size if needed
-          ),
-        ),
+        title: SizedBox(height: 150,child: Image.asset('lib/assets/logo.png', fit: BoxFit.contain)),
         centerTitle: true, // Center the title in the middle
-        backgroundColor: ColorConstants.primaryColor, // Use the theme's primary color
+        backgroundColor: Theme.of(context).primaryColor, // Use the theme's primary color
       ),
     );
   }
