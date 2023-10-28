@@ -64,4 +64,41 @@ class AccessService (
         return hash.contentEquals(passwordHash)
     }
 
+    // Function to check if a user is logged in with a valid session ID.
+    fun isLoggedIn(sessionId: UUID): Boolean {
+        val user = sessionRepository.findById(sessionId)
+                .map { it.user }
+                .orElse(null)
+
+        return user != null
+    }
+
+    // Function to change the user's password.
+    fun changePassword(sessionId: UUID, currentPassword: String, newPassword: String): Boolean {
+        // Find the session associated with the provided sessionId.
+        val sessionOptional = sessionRepository.findById(sessionId)
+
+        if (sessionOptional.isEmpty) {
+            throw SessionNotFoundException("Session not found.")
+        }
+
+        val session = sessionOptional.get()
+        val user = session.user ?: throw UsernameNotFoundException("User not found.")
+
+        // Check if the current password is correct.
+        if (!verifyPassword(currentPassword, user.passwordHash, user.salt)) {
+            throw WrongCredentialsException("Wrong credentials.")
+        }
+
+        // Generate a new password hash and salt for the user.
+        val (newPasswordHash, newSalt) = generateHash(newPassword)
+        user.passwordHash = newPasswordHash
+        user.salt = newSalt
+
+        // Save the updated user to the database.
+        userRepository.save(user)
+
+        return true
+    }
+
 }
