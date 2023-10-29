@@ -34,8 +34,8 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final _contentlist = [
-    "Hey, fellow gamers! Just stumbled upon the latest trailer for 'Epic Battles: The Saga,' and I'm mind-blown! The graphics are absolutely jaw-dropping ...",
-    "After weeks of traversing the cosmos, I've finally completed 'Galactic Explorers,' and I'm here to share my thoughts. This game is a true cosmic ...",
+    "Hey, fellow gamers! Just stumbled upon the latest trailer for 'Epic Battles: The Saga,' and I'm mind-blown! The graphics are absolutely jaw-dropping, and the gameplay looks like a total adrenaline rush. I can't wait to get my hands on this game and dive into epic battles of galactic proportions. What are your thoughts? Is",
+    "After weeks of traversing the cosmos, I've finally completed 'Galactic Explorers,' and I'm here to share my thoughts. This game is a true cosmic adventure with its vast open-world, stunning visuals, and a captivating storyline. From epic space battles to discovering new alien civilizations",
     "I heard a rumor that has it that a mysterious new game, 'Secrets of the Lost Realms,' is in the works. While details are scarce, the anticipation is building ...",
     "Heroes come in all forms, but today, let's talk about the charismatic and valiant Captain Thunderstrike from 'Heroes of Valor.' This knight in shining armor ... ",
     "Calling all mystic rune enthusiasts! If you're knee-deep in 'Mystic Runes: Enchanted Quest,' here's a pro tip for you. Combine the Fire Rune with the Wind ...",
@@ -94,18 +94,33 @@ class PostCard extends StatelessWidget {
               const Center(child: SizedBox()),
               Align(
                 alignment: Alignment.topLeft,
-                child: Text(content,style: const TextStyle(fontSize: 15)),
+                child: Text(content,style: const TextStyle(fontSize: 15),overflow: TextOverflow.ellipsis,maxLines: 3),
               ),
               const SizedBox(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(Icons.thumb_up_alt_rounded),
-                  Text(likes[0]),
-                  const Icon(Icons.thumb_down_alt_rounded),
-                  Text(likes[1]), 
-                  const Icon(Icons.comment),
-                  Text(likes[2]),
+                  Row(
+                    children: [
+                      const Icon(Icons.thumb_up_alt_rounded),
+                      const SizedBox(width: 10,),
+                      Text(likes[0]),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.thumb_down_alt_rounded),
+                      const SizedBox(width: 10,),
+                      Text(likes[1]),
+                    ],
+                  ), 
+                  Row(
+                    children: [
+                      const Icon(Icons.comment),
+                      const SizedBox(width: 10,),
+                      Text(likes[2]),
+                    ],
+                  ),
                 ],
               )
             ]

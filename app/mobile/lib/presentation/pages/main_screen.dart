@@ -18,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomePage(),
     const SearchPage(),
     GamePage(),
-    const LFGPage()
+    LFGPage()
   ];
 
   @override

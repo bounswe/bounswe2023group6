@@ -133,6 +133,7 @@ class GuestDrawer extends StatelessWidget {
                         child: const Icon(
                           Icons.account_circle,
                           size: 130,
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: 12,),
