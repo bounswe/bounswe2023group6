@@ -3,6 +3,7 @@ package com.gamelounge.backend.controller
 import com.gamelounge.backend.model.LoginRequest
 import com.gamelounge.backend.model.RegisterationRequest
 import com.gamelounge.backend.service.AccessService
+import com.gamelounge.backend.service.EmailService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -12,7 +13,8 @@ import java.util.UUID
 @RestController
 @RequestMapping()
 class AccessController(
-    val accessService: AccessService
+    val accessService: AccessService,
+    val emailService: EmailService
 ) {
 
     @PostMapping("/register")
@@ -34,4 +36,6 @@ class AccessController(
         return ResponseEntity.ok().body(mapOf("message" to "Logged out successfully."))
 
     }
+
+
 }
