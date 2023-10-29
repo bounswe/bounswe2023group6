@@ -4,26 +4,24 @@ import 'package:mobile/data/models/dto/login/login_response.dart';
 
 class LoginModel
     extends BaseModel<LoginModel, LoginDTORequest, LoginDTOResponse> {
-  String? email;
+  String? username;
   String? password;
 
-  String? resultMessage;
-  String? token;
+  String? message;
 
   LoginModel();
 
   @override
   LoginDTORequest convertToDTORequest() {
     return LoginDTORequest(
-      email: email,
+      username: username,
       password: password,
     );
   }
 
   @override
   void convertFromDTOResponse(LoginDTOResponse dtoResponse) {
-    resultMessage = dtoResponse.resultMessage;
-    token = dtoResponse.token;
+    message = dtoResponse.message;
   }
 
   @override

@@ -1,30 +1,31 @@
 import 'package:mobile/data/models/dto/base_dto_object.dart';
-import 'package:mobile/utils/validation_util.dart';
+import 'package:mobile/utils/service_validation_util.dart';
 
 class LoginDTORequest extends BaseDTOObject<LoginDTORequest> {
-  String? email;
+  String? username;
   String? password;
 
   LoginDTORequest({
-    required this.email,
+    required this.username,
     required this.password,
   });
 
   @override
   void validate() {
-    ValidationUtil.validate(email, ValidationPolicy.emailValidation());
+    ValidationUtil.validate(
+        username, ValidationPolicy.stringNotEmptyValidation());
     ValidationUtil.validate(password, ValidationPolicy.passwordValidation());
   }
 
   factory LoginDTORequest.fromJson(Map<String, dynamic> json) =>
       LoginDTORequest(
-        email: json["email"],
+        username: json["username"],
         password: json["password"],
       );
 
   @override
   Map<String, dynamic> toJson() => {
-        "email": email,
+        "username": username,
         "password": password,
       };
 

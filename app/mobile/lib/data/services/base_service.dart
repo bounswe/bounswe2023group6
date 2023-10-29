@@ -8,10 +8,12 @@ import 'package:dio/src/adapters/io_adapter.dart'
     if (dart.library.html) 'package:dio/src/adapters/browser_adapter.dart'
     as adapter;
 import 'package:flutter/foundation.dart';
+import 'package:mobile/constants/network_constants.dart';
 
 import 'package:mobile/data/models/dto/base_dto_object.dart';
 
 import 'package:mobile/data/models/base_model.dart';
+import 'package:mobile/data/models/service_response.dart';
 
 class BaseNetworkService
     with
@@ -19,7 +21,9 @@ class BaseNetworkService
         DioMixin
     implements
         Dio {
-  static const String _baseUrl = '';
+  static const String _baseUrl = kDebugMode
+      ? NetworkConstants.BASE_LOCAL_URL
+      : NetworkConstants.BASE_PROD_URL;
   static const Duration _connectionTimeout = Duration(milliseconds: 10000);
   static const Duration _receiveTimeout = Duration(milliseconds: 6000);
 
@@ -38,59 +42,102 @@ class BaseNetworkService
   factory BaseNetworkService() => _instance;
   static BaseNetworkService get instance => _instance;
 
-  Future<void> sendRequestSafe<
+  Future<ServiceResponse> sendRequestSafe<
       DTOReq extends BaseDTOObject<DTOReq>,
       DTORes extends BaseDTOObject<DTORes>,
       T extends BaseModel<T, DTOReq, DTORes>>(
     String path,
     T requestModel,
+    String requestType,
   ) async {
-    DTOReq request = requestModel.validateAndConvertRequest();
-
     try {
-      final Response<dynamic> response =
-          await sendRequest<DTOReq>(path, request);
+      DTOReq request = requestModel.validateAndConvertRequest();
 
-      parseResponse<DTOReq, DTORes, T>(response, requestModel);
+      final ServiceResponse serviceResponse =
+          await sendRequest<DTOReq>(path, request, requestType);
+
+      if (serviceResponse.success) {
+        parseResponse<DTOReq, DTORes, T>(
+          serviceResponse.response?.data,
+          requestModel,
+        );
+      }
+      return serviceResponse;
     } on Exception catch (error) {
       if (kDebugMode) {
         print('Exception is occurred on path $path: ${error.toString()}');
       }
-      rethrow;
+      return ServiceResponse(
+        success: false,
+        errorMessage: error.toString(),
+      );
     }
   }
 
-  Future<Response<dynamic>> sendRequest<DTOReq extends BaseDTOObject<DTOReq>>(
-      String path, DTOReq requestDTO) async {
-    final Response<dynamic> response =
-        await request(path, data: requestDTO.toJson());
+  Future<ServiceResponse> sendRequest<DTOReq extends BaseDTOObject<DTOReq>>(
+    String path,
+    DTOReq requestDTO,
+    String type,
+  ) async {
+    Options customOptions = Options();
+    customOptions
+      ..method = type
+      ..extra ??= <String, dynamic>{}
+      ..headers ??= <String, dynamic>{};
 
-    final dio.Response<Map<String, dynamic>> responseData =
-        dio.Response<Map<String, dynamic>>(
-      requestOptions: response.requestOptions,
-      extra: response.extra,
-      headers: response.headers,
-      isRedirect: response.isRedirect,
-      redirects: response.redirects,
-      statusCode: response.statusCode,
-      statusMessage: response.statusMessage,
-      data: response.data is Map<String, dynamic>
-          ? response.data
-          : jsonDecode(response.data),
-    );
-    return responseData;
+    try {
+      Map<String, dynamic> data = requestDTO.toJson();
+      final Response<dynamic> response = await request(
+        path,
+        data: data,
+        options: customOptions,
+      );
+
+      final dio.Response<Map<String, dynamic>> responseData =
+          dio.Response<Map<String, dynamic>>(
+        requestOptions: response.requestOptions,
+        extra: response.extra,
+        headers: response.headers,
+        isRedirect: response.isRedirect,
+        redirects: response.redirects,
+        statusCode: response.statusCode,
+        statusMessage: response.statusMessage,
+        data: response.data is Map<String, dynamic>
+            ? response.data
+            : jsonDecode(response.data),
+      );
+
+      ServiceResponse serviceResponse = ServiceResponse(
+        success: true,
+        response: responseData,
+      );
+      return serviceResponse;
+    } on DioException catch (error) {
+      if (kDebugMode) {
+        print('DioError is occurred on path $path: ${error.toString()}');
+      }
+      String? errorMessage = error.message;
+      if (error.response?.data is Map<String, dynamic>) {
+        errorMessage = error.response?.data['errorMessage'];
+      }
+      ServiceResponse serviceResponse = ServiceResponse(
+        success: false,
+        errorMessage: errorMessage,
+      );
+      return serviceResponse;
+    }
   }
 
   DTORes? parseResponse<
           DTOReq extends BaseDTOObject<DTOReq>,
           DTORes extends BaseDTOObject<DTORes>,
           T extends BaseModel<T, DTOReq, DTORes>>(
-      Response<dynamic> response, T requestModel) {
-    if (response.data == null) return null;
-    if (response.data is DTORes) return response.data;
+      dynamic responseData, T requestModel) {
+    if (responseData == null) return null;
+    if (responseData is DTORes) return responseData;
 
-    if (response.data is Map<String, dynamic>) {
-      requestModel.parseValidateAndConvertResponse(response.data);
+    if (responseData is Map<String, dynamic>) {
+      requestModel.parseValidateAndConvertResponse(responseData);
     }
     return null;
   }
