@@ -34,4 +34,20 @@ class GlobalExceptionHandler {
             .body(mapOf("errorMessage" to exception.message))
     }
 
+@ExceptionHandler(SessionNotFoundException::class)
+    fun handleSessionNotFoundException(exception: SessionNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+
+    @ExceptionHandler(LogoutFailedException::class)
+    fun handleLogoutFailedException(exception: LogoutFailedException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+
+
+
 }

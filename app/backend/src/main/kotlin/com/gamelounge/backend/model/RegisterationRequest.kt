@@ -20,6 +20,6 @@ data class RegisterationRequest (
     val surname: String,
 
     @JsonProperty("image")
-    val image: ByteArray
+    val image: ByteArray?
 
 )

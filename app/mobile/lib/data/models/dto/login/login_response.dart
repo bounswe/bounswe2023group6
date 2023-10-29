@@ -1,32 +1,27 @@
 import 'package:mobile/data/models/dto/base_dto_object.dart';
-import 'package:mobile/utils/validation_util.dart';
+import 'package:mobile/utils/service_validation_util.dart';
 
 class LoginDTOResponse extends BaseDTOObject<LoginDTOResponse> {
-  String? resultMessage;
-  String? token;
+  String? message;
 
   LoginDTOResponse({
-    required this.resultMessage,
-    required this.token,
+    required this.message,
   });
 
   @override
   void validate() {
     ValidationUtil.validate(
-        resultMessage, ValidationPolicy.stringNotEmptyValidation());
-    ValidationUtil.validate(token, ValidationPolicy.stringNotEmptyValidation());
+        message, ValidationPolicy.stringNotEmptyValidation());
   }
 
   factory LoginDTOResponse.fromJson(Map<String, dynamic> json) =>
       LoginDTOResponse(
-        resultMessage: json["resultMessage"],
-        token: json["token"],
+        message: json["message"],
       );
 
   @override
   Map<String, dynamic> toJson() => {
-        "resultMessage": resultMessage,
-        "token": token,
+        "message": message,
       };
 
   @override

@@ -2,6 +2,7 @@ package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.model.LoginRequest
 import com.gamelounge.backend.model.RegisterationRequest
+import com.gamelounge.backend.model.ChangePasswordRequest
 import com.gamelounge.backend.service.AccessService
 import com.gamelounge.backend.service.EmailService
 import org.springframework.http.HttpStatus
@@ -11,12 +12,10 @@ import java.util.UUID
 
 
 @RestController
-@RequestMapping()
 class AccessController(
     val accessService: AccessService,
     val emailService: EmailService
 ) {
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     fun register(@RequestBody request: RegisterationRequest): ResponseEntity<Map<String, String>> {
@@ -25,9 +24,9 @@ class AccessController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<Pair<String, String>> {
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<Map<String, String>> {
         val sessionId = accessService.login(request.username, request.password)
-        return ResponseEntity.ok().header("Set-Cookie", "SESSIONID=$sessionId; HttpOnly").body("message" to "Logged in successfully.")
+        return ResponseEntity.ok().header("Set-Cookie", "SESSIONID=$sessionId; HttpOnly").body(mapOf("message" to "Logged in successfully."))
     }
 
     @PostMapping("/logout")
@@ -37,5 +36,26 @@ class AccessController(
 
     }
 
+    @PostMapping("/change-password")
+    fun changePassword(
+            @CookieValue("SESSIONID") sessionId: UUID?,
+            @RequestBody request: ChangePasswordRequest
+    ): ResponseEntity<Map<String, String>> {
+        sessionId?.let { existingSessionId ->
+            // First, check if the user is logged in with the provided session ID.
+            if (accessService.isLoggedIn(existingSessionId)) {
+                if (request.newPassword == request.confirmPassword) {
+                    val passwordChangeResult = accessService.changePassword(existingSessionId, request.currentPassword, request.newPassword)
+                    if (passwordChangeResult) {
+                        return ResponseEntity.ok().body(mapOf("message" to "Password changed successfully."))
+                    }
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("error" to "Current password is incorrect."))
 
+                }
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("error" to "New password and confirmation password do not match."))
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "User is not logged in."))
+    }
 }
