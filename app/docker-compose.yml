@@ -1,0 +1,40 @@
+version: '3.9'
+volumes:
+  postgres-data:
+services:
+  database:
+    image: 'postgres:13.1-alpine'
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=verysecurepassword
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    hostname: backend
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=verysecurepassword
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - database
+
+  frontend:
+    hostname: frontend
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    ports:
+      - "9000:3000"
+    depends_on:
+      - backend

@@ -1,0 +1,10 @@
+FROM node:18-alpine
+WORKDIR /game-lounge-frontend/
+
+COPY public/ /game-lounge-frontend/public
+COPY src/ /game-lounge-frontend/src
+COPY package.json /game-lounge-frontend/
+
+RUN npm install
+EXPOSE 3000
+CMD ["npm", "start"]
