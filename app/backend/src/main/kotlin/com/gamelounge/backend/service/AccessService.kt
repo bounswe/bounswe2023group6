@@ -1,7 +1,6 @@
 package com.gamelounge.backend.service
 
 
-import com.gamelounge.backend.entity.PasswordResetToken
 import com.gamelounge.backend.entity.Session
 import com.gamelounge.backend.model.RegisterationRequest
 import com.gamelounge.backend.repository.UserRepository
@@ -11,7 +10,6 @@ import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.PasswordResetTokenRepository
 import com.gamelounge.backend.repository.SessionRepository
 import org.springframework.stereotype.Service
-import java.time.Instant
 import java.time.LocalDateTime
 import java.util.*
 

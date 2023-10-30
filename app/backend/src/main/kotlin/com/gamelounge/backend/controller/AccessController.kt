@@ -11,8 +11,7 @@ import java.util.UUID
 
 @RestController
 class AccessController(
-    val accessService: AccessService,
-    val emailService: EmailService
+    val accessService: AccessService
 ) {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
