@@ -182,17 +182,6 @@ class GuestDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.person_off_outlined),
-                  title: const Text('Forgot Password'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ForgotPage()),
-                    );
-                  },
-                ),
               ],
             ),
           )

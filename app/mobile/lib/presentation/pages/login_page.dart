@@ -45,11 +45,21 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: FormWidget(
-          title: 'Please enter your login credentials:',
-          controllers: [emailController, passwordController],
-          controllerNames: controllerNames, // Pass controllerNames to FormWidget
-          onSubmit: loginUser,
+        child: Column(
+          children: [
+            FormWidget(
+              title: 'Please enter your login credentials:',
+              controllers: [emailController, passwordController],
+              controllerNames: controllerNames, // Pass controllerNames to FormWidget
+              onSubmit: loginUser,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/forgot');
+              },
+              child: const Text("Forgot Password"),
+            ),
+          ],
         ),
       ),
     );
