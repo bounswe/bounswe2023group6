@@ -1,0 +1,28 @@
+name: Backend Docker Build
+
+on:
+  push:
+    branches: [ "develop" ]
+    paths: "app/frontend"
+
+jobs:
+
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        docker build -t erkamkavak/gamelounge-frontend:$(date +%s) app/frontend
+      working-directory: ${{ github.workspace }}
+
+    - name: Login to Docker Hub
+      run: echo "gameLounge2019" | docker login -u "erkamkavak" --password-stdin
+
+    - name: Push Docker image
+      run: |
+        docker push erkamkavak/gamelounge-frontend:latest
+      working-directory: ${{ github.workspace }}
