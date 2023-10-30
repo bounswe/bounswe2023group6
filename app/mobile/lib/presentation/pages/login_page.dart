@@ -35,11 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void updateSession() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('username', 'acaglayan');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
           title: 'Please enter your login credentials:',
           controllers: [emailController, passwordController],
           controllerNames: controllerNames, // Pass controllerNames to FormWidget
-          onSubmit: updateSession,
+          onSubmit: loginUser,
         ),
       ),
     );
