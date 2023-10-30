@@ -16,7 +16,7 @@ services:
 
   backend:
     hostname: backend
-    image: gamelounge-backend
+    image: erkamkavak/gamelounge-backend
     build:
       context: ./backend
       dockerfile: dockerfile
