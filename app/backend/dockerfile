@@ -1,4 +1,4 @@
-FROM openjdk:18-jdk-alpine3.14 AS TEMP_BUILD_IMAGE
+FROM amazoncorretto:17-alpine3.15 AS TEMP_BUILD_IMAGE
 ENV APP_HOME=/game-lounge-backend/
 WORKDIR $APP_HOME
 COPY . $APP_HOME
@@ -8,7 +8,7 @@ RUN ./gradlew build -x test || return 0
 COPY . .
 RUN ./gradlew build -x test
 
-FROM openjdk:18-jdk-alpine3.14
+FROM amazoncorretto:17-alpine3.15
 ENV ARTIFACT_NAME=backend-0.0.1-SNAPSHOT.jar
 ENV APP_HOME=/game-lounge-backend/
 WORKDIR $APP_HOME

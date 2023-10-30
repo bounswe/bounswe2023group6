@@ -7,4 +7,4 @@ COPY package.json /game-lounge-frontend/
 
 RUN npm install
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm", "run", "build"]
