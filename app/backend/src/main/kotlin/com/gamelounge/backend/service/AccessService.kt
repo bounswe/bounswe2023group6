@@ -1,23 +1,30 @@
 package com.gamelounge.backend.service
 
 
-import com.gamelounge.backend.constant.HashingConstants
+import com.gamelounge.backend.entity.PasswordResetToken
 import com.gamelounge.backend.entity.Session
 import com.gamelounge.backend.model.RegisterationRequest
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.HashingUtil.generateHash
 import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.exception.*
+import com.gamelounge.backend.repository.PasswordResetTokenRepository
 import com.gamelounge.backend.repository.SessionRepository
 import org.springframework.stereotype.Service
+import java.time.Instant
 import java.time.LocalDateTime
 import java.util.*
 
 @Service
-class AccessService (
+class AccessService(
     val userRepository: UserRepository,
-    val sessionRepository: SessionRepository
+    val sessionRepository: SessionRepository,
+    val emailService: EmailService,
+    val passwordResetTokenRepository: PasswordResetTokenRepository,
+    val passwordResetTokenService: PasswordResetTokenService
 ){
+
+
 
     fun register(request: RegisterationRequest){
         // Encrypt the password
@@ -100,5 +107,39 @@ class AccessService (
 
         return true
     }
+
+    fun forgotPassword(username: String,email: String) {
+        //validate username and email
+        val user = userRepository.findByUsername(username)
+            ?: throw UsernameNotFoundException("User not found.")
+        if (user.email != email){
+            throw EmailNotFoundException("Email not found.")
+        }
+        //generate token
+        val token = passwordResetTokenService.createToken(user)
+        //send email
+        emailService.sendSimpleMessage(email, "Password Reset", "Click the link to reset your password: http://localhost:8080/reset-password?token=$token")
+    }
+
+    fun resetPassword(token: String, newPassword: String, confirmNewPassword: String) {
+        //validate token
+
+        val passwordResetToken = passwordResetTokenService.validateToken(token)
+
+        //validate password
+        if (newPassword != confirmNewPassword){
+            throw PasswordMismatchException("Passwords do not match.")
+        }
+
+        //update password
+        val user = passwordResetToken.user
+        val (newPasswordHash, newSalt) = generateHash(newPassword)
+        user.passwordHash = newPasswordHash
+        user.salt = newSalt
+        userRepository.save(user)
+        //delete token
+        passwordResetTokenRepository.delete(passwordResetToken)
+    }
+
 
 }
