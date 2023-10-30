@@ -1,6 +1,8 @@
 package com.gamelounge.backend.service
 
 
+import com.gamelounge.backend.config.CustomProperties
+
 import com.gamelounge.backend.entity.Session
 import com.gamelounge.backend.model.RegisterationRequest
 import com.gamelounge.backend.repository.UserRepository
@@ -19,10 +21,9 @@ class AccessService(
     val sessionRepository: SessionRepository,
     val emailService: EmailService,
     val passwordResetTokenRepository: PasswordResetTokenRepository,
-    val passwordResetTokenService: PasswordResetTokenService
+    val passwordResetTokenService: PasswordResetTokenService,
+    val customProperties: CustomProperties
 ){
-
-
 
     fun register(request: RegisterationRequest){
         // Encrypt the password
@@ -115,8 +116,8 @@ class AccessService(
         }
         //generate token
         val token = passwordResetTokenService.createToken(user)
-        //send email
-        emailService.sendSimpleMessage(email, "Password Reset", "Click the link to reset your password: http://localhost:8080/reset-password?token=$token")
+        //send email ${mailLinkUrl}
+        emailService.sendSimpleMessage(email, "Password Reset", "Click the link to reset your password: ${customProperties.mailUrl}reset-password?token=$token")
     }
 
     fun resetPassword(token: String, newPassword: String, confirmNewPassword: String) {
