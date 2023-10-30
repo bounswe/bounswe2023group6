@@ -29,6 +29,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+
 
 }
 

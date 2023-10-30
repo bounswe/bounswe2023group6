@@ -1,9 +1,8 @@
 package com.gamelounge.backend.controller
 
-import com.gamelounge.backend.model.LoginRequest
-import com.gamelounge.backend.model.RegisterationRequest
-import com.gamelounge.backend.model.ChangePasswordRequest
+import com.gamelounge.backend.model.*
 import com.gamelounge.backend.service.AccessService
+import com.gamelounge.backend.service.EmailService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -56,4 +55,17 @@ class AccessController(
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "User is not logged in."))
     }
+
+    @PostMapping("/forgot-password")
+    fun forgotPassword(@RequestBody request: ForgotPasswordRequest): ResponseEntity<Map<String, String>> {
+        accessService.forgotPassword(username = request.username, email = request.email)
+        return ResponseEntity.ok().body(mapOf("message" to "Password reset token generated successfully."))
+    }
+
+    @PostMapping("/reset-password")
+    fun resetPassword(@RequestBody request: ResetPasswordRequest): ResponseEntity<Map<String, String>> {
+        accessService.resetPassword(token = request.token, newPassword = request.newPassword, confirmNewPassword = request.confirmNewPassword)
+        return ResponseEntity.ok().body(mapOf("message" to "Password reset successfully."))
+    }
+
 }
