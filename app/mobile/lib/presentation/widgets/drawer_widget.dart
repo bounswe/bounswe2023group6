@@ -1,23 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/presentation/pages/forgot_password_page.dart';
-
+import 'package:mobile/presentation/pages/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/registration_page.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({
     super.key,
   });
 
   @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  late String username = '';
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
+
+  void loadData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      username = prefs.getString('username') ?? '';
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    return const GuestDrawer();
+    if (username == '') {
+      return const GuestDrawer();
+    }
+    else {
+      return LoggedDrawer(username: username,);
+    }
+
   }
 }
 
 class LoggedDrawer extends StatelessWidget {
+  final String username;
   const LoggedDrawer({
-    super.key,
+    super.key, required this.username,
   });
 
   @override
@@ -52,41 +81,46 @@ class LoggedDrawer extends StatelessWidget {
                           height: 12,
                         ),
                         const Text(
-                          'Ayşe Çağlayan',
+                          'Welcome',
                           style: TextStyle(fontSize: 28, color: Colors.white),
                         ),
-                        const Text(
-                          'acaglayan',
-                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        Text(
+                          username,
+                          style: const TextStyle(fontSize: 14, color: Colors.white),
                         ),
                       ],
                     ),
                   ),
                 )),
           ),
-          const Expanded(
+          Expanded(
             flex: 5,
             child: Column(
               children: [
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.account_circle_outlined),
                   title: Text('My Profile'),
                 ),
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.bookmarks_outlined),
                   title: Text('Saved'),
                 ),
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.history),
                   title: Text('History'),
                 ),
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.settings_outlined),
                   title: Text('Settings'),
                 ),
                 ListTile(
-                  leading: Icon(Icons.logout_outlined),
-                  title: Text('Log Out'),
+                  leading: const Icon(Icons.logout_outlined),
+                  title: const Text('Log Out'),
+                  onTap:() {
+                    clearData();
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
+                  },
                 ),
               ],
             ),
@@ -94,6 +128,11 @@ class LoggedDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void clearData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }
 
@@ -166,7 +205,7 @@ class GuestDrawer extends StatelessWidget {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      MaterialPageRoute(builder: (context) =>  LoginPage()),
                     );
                   },
                 ),

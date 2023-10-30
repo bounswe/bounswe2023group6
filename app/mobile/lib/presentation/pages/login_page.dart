@@ -3,6 +3,8 @@ import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
 import '../widgets/app_bar_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
     // Validate user input using ValidationUtils
     if (!ValidationUtils.isEmailValid(email)) {
+      updateSession(email); // Silinmesi lazim. Giris yaparken kullanici adi ile girilecek
       // Handle invalid email
       // You can show an error message or perform any other action here.
     } else if (!ValidationUtils.isPasswordValid(password)) {
@@ -33,8 +36,15 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       // Proceed with user login using the UserAuthenticationService
       authService.loginUser(email, password);
+      updateSession(email);
     }
   }
+
+  void updateSession(String username) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
+  }
+
 
   @override
   Widget build(BuildContext context) {
