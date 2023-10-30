@@ -1,33 +1,43 @@
-import React, { useState } from 'react'
-import 'tailwindcss/tailwind.css'
-import logo from './images/logo.png' 
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import 'tailwindcss/tailwind.css';
+import axios from 'axios';
+import logo from './images/logo.png';
 
 const ForgotPassword = () => {
-	const [isSubmitted, setIsSubmitted] = useState(false)
-	const [email, setEmail] = useState('')
-	const [isLoading, setIsLoading] = useState(false)
-	const [error, setError] = useState(null)
+	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
 
 	const handleSubmit = async (event) => {
-		event.preventDefault()
-		if (!email) {
-			setError('Email is required')
-			return
-		}
+		event.preventDefault();
 
-		setIsLoading(true)
-		setError(null)
+		setIsLoading(true);
+		setError(null);
+
+		const data = {
+			username,
+			email
+		};
 
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2000))
-			setIsSubmitted(true)
+			const response = await axios.post('http://localhost:8080/forgot-password', data, {
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (response.status === 200) {
+				setIsSubmitted(true);
+			}
 		} catch (e) {
-			setError('An error occurred. Please try again.')
+			setError('An error occurred. Please try again.');
 		} finally {
-			setIsLoading(false)
+			setIsLoading(false);
 		}
-	}
+	};
 
 	return (
 		<div id='container' style={{ fontFamily: 'Jost, sans-serif', backgroundColor: '#B46060' }}>
@@ -59,11 +69,27 @@ const ForgotPassword = () => {
 								) : (
 									<form onSubmit={handleSubmit} className='space-y-5'>
 										<h1 style={{ color: '#FFF4E0', fontSize: '1.4rem' }}>Forgot Password</h1>
-										<h2 style={{ color: '#FFF4E0', fontSize: '1rem' }}>
-											If the email you enter matches an account, we will send a reset code to:
-										</h2>
 										<div>
-											<label htmlFor='email' className='block text-sm font-medium text-gray-600'>
+											<label htmlFor='username' className='block text-sm font-medium text-blue-500'>
+												Username
+											</label>
+											<input
+												type='text'
+												id='username'
+												name='username'
+												value={username}
+												onChange={(e) => setUsername(e.target.value)}
+												className='mt-1 p-2 w-full border rounded-md'
+												style={{
+													borderRadius: '3px',
+													outline: 'none',
+													fontSize: '1rem',
+													boxShadow: '0px 4px 15px rgba(0,0,0,0.6)'
+												}}
+											/>
+										</div>
+										<div>
+											<label htmlFor='email' className='block text-sm font-medium text-blue-500'>
 												Email
 											</label>
 											<input
@@ -96,13 +122,18 @@ const ForgotPassword = () => {
 										</button>
 									</form>
 								)}
+								<div className='mt-4 text-right'>
+									<Link to='/login' className='text-blue-500 hover:underline'>
+										Back to Sign In
+									</Link>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	)
+	);
 }
 
-export default ForgotPassword
+export default ForgotPassword;
