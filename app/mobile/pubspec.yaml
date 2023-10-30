@@ -27,6 +27,4 @@ flutter:
     - lib/assets/logo.png
     - lib/assets/aysecaglayan.png
 
-flutter_native_splash:
-  color: "B46060"
-  image: lib/assets/logo.png
+
