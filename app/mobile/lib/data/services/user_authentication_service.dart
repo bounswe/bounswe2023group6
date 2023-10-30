@@ -1,20 +1,33 @@
 import 'package:http/http.dart' as http;
+import 'package:mobile/constants/network_constants.dart';
+import 'package:mobile/data/models/dto/login/login_request.dart';
+import 'package:mobile/data/models/dto/login/login_response.dart';
+import 'package:mobile/data/models/login_model.dart';
+import 'package:mobile/data/models/service_response.dart';
+import 'package:mobile/data/services/base_service.dart';
 import 'dart:convert';
 import '../../data/models/user_model.dart';
 
 class UserAuthenticationService {
-  static const String serverUrl = 'https://your-api-endpoint.com'; // Replace with your server's URL
+  static const String serverUrl =
+      NetworkConstants.BASE_LOCAL_URL; // Replace with your server's URL
 
-  Future<bool> loginUser(String email, String password) async {
+  Future<bool> loginUser(String username, String password) async {
+    const loginUrl = '$serverUrl/login';
+
+    final body = jsonEncode({
+      'username': username,
+      'password': password,
+    });
+
+    print(loginUrl);
     try {
-      final Map<String, String> data = {
-        'email': email,
-        'password': password,
-      };
-
       final response = await http.post(
-        Uri.parse('$serverUrl/login'),
-        body: data,
+        Uri.parse(loginUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
       );
 
       if (response.statusCode == 200) {
@@ -35,15 +48,14 @@ class UserAuthenticationService {
 
   Future<bool> registerUser(User user) async {
     try {
-      final Map<String, String> data = {
-        'name': user.name,
-        'surname': user.surname,
-        'email': user.email,
-        'password': user.password,
-      };
+      final data = jsonEncode(user.toJson());
+      print(data);
 
       final response = await http.post(
         Uri.parse('$serverUrl/register'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: data,
       );
 
@@ -86,7 +98,12 @@ class UserAuthenticationService {
       // This might involve checking the user's session or token
       // and fetching user details from your API
       // If no user is logged in, return null
-      return User(name: 'John', surname: 'Doe', email: 'john.doe@example.com', password: '***');
+      return User(
+          name: 'John',
+          surname: 'Doe',
+          email: 'john.doe@example.com',
+          username: 'johndoe',
+          password: '***');
     } catch (e) {
       print('Error getting current user: $e');
       return null;
