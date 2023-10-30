@@ -16,6 +16,7 @@ services:
 
   backend:
     hostname: backend
+    image: gamelounge-backend
     build:
       context: ./backend
       dockerfile: dockerfile
@@ -31,6 +32,7 @@ services:
 
   frontend:
     hostname: frontend
+    image: erkamkavak/gamelounge-frontend
     build:
       context: ./frontend
       dockerfile: dockerfile
