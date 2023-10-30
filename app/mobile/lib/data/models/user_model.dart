@@ -2,13 +2,16 @@ class User {
   final String name;
   final String surname;
   final String email;
-  final String password; // Remember to securely hash and salt the password in a real application.
+  final String
+      password; // Remember to securely hash and salt the password in a real application.
+  final String username;
 
   User({
     required this.name,
     required this.surname,
     required this.email,
     required this.password,
+    required this.username,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -17,6 +20,7 @@ class User {
       surname: json['surname'],
       email: json['email'],
       password: json['password'],
+      username: json['username'],
     );
   }
 
@@ -26,6 +30,7 @@ class User {
       'surname': surname,
       'email': email,
       'password': password,
+      'username': username,
     };
   }
 }
