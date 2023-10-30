@@ -10,11 +10,16 @@ dependencies:
   dio: ^5.3.3
   flutter:
     sdk: flutter
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  test: ^1.24.3
 
 flutter:
   uses-material-design: true
+  assets:
+    - lib/assets/logo.png
+    - lib/assets/aysecaglayan.png
