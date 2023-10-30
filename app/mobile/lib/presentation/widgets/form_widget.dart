@@ -30,19 +30,25 @@ class FormWidget extends StatelessWidget {
               ),
               for (int i = 0; i < controllers.length; i++)
                 Padding(
-                  padding: const EdgeInsets.only(top: 20.0), // Add bottom padding to form fields
+                  padding: const EdgeInsets.only(
+                      top: 20.0), // Add bottom padding to form fields
                   child: TextField(
                     controller: controllers[i],
                     decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).focusColor)),
-                      floatingLabelStyle: TextStyle( color: Theme.of(context).focusColor),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).focusColor)),
+                      floatingLabelStyle:
+                          TextStyle(color: Theme.of(context).focusColor),
                       labelText: controllerNames[i],
                     ),
-                    obscureText: controllerNames[i].toLowerCase() == 'password', // Conditionally set obscureText
+                    obscureText: controllerNames[i].toLowerCase() ==
+                        'password', // Conditionally set obscureText
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.only(top: 70.0), // Add top padding to "Submit" button
+                padding: const EdgeInsets.only(
+                    top: 70.0), // Add top padding to "Submit" button
                 child: Button(
                   onPressed: onSubmit,
                   label: "Submit",
