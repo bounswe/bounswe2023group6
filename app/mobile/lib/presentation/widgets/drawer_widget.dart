@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/presentation/pages/forgot_password_page.dart';
 
 import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/registration_page.dart';
-
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
@@ -29,43 +29,40 @@ class LoggedDrawer extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Material(
-              color: Theme.of(context).primaryColor, // This will change
-              child: InkWell(
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top,
-                    bottom: 24
-                  ),
-                  child:  Column(
-                    children: [
-                      const SizedBox(height: 50 ,),
-                      CircleAvatar(
-                        radius: 70,
-                        child: ClipOval(
-                          child: Image.asset(
-                            "lib/assets/aysecaglayan.png",
-                            fit: BoxFit.cover,
+                color: Theme.of(context).primaryColor, // This will change
+                child: InkWell(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top, bottom: 24),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        CircleAvatar(
+                          radius: 70,
+                          child: ClipOval(
+                            child: Image.asset(
+                              "lib/assets/aysecaglayan.png",
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 12,),
-                      const Text('Ayşe Çağlayan',
-                        style: TextStyle(
-                          fontSize: 28,
-                          color: Colors.white
+                        const SizedBox(
+                          height: 12,
                         ),
-                      ),
-                      const Text('acaglayan',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white
+                        const Text(
+                          'Ayşe Çağlayan',
+                          style: TextStyle(fontSize: 28, color: Colors.white),
                         ),
-                      ),
-                    ],
+                        const Text(
+                          'acaglayan',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ),
+                )),
           ),
           const Expanded(
             flex: 5,
@@ -82,7 +79,6 @@ class LoggedDrawer extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.history),
                   title: Text('History'),
-          
                 ),
                 ListTile(
                   leading: Icon(Icons.settings_outlined),
@@ -101,8 +97,6 @@ class LoggedDrawer extends StatelessWidget {
   }
 }
 
-
-
 class GuestDrawer extends StatelessWidget {
   const GuestDrawer({
     super.key,
@@ -117,53 +111,49 @@ class GuestDrawer extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Material(
-              color: Theme.of(context).primaryColor, // This will change
-              child: InkWell(
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top,
-                    bottom: 24
-                  ),
-                  child:  Column(
-                    children: [
-                      const SizedBox(height: 50 ,),
-                      CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        radius: 60,
-                        child: const Icon(
-                          Icons.account_circle,
-                          size: 130,
-                          color: Colors.white,
+                color: Theme.of(context).primaryColor, // This will change
+                child: InkWell(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top, bottom: 24),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 50,
                         ),
-                      ),
-                      const SizedBox(height: 12,),
-                      const Text('Guest',
-                        style: TextStyle(
-                          fontSize: 28,
-                          color: Colors.white
+                        CircleAvatar(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          radius: 60,
+                          child: const Icon(
+                            Icons.account_circle,
+                            size: 130,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const Center(
-                        child: SizedBox(
-                          width: 250,
-                          child: Center(
-                            child: Text('Sign up to share your experience, customize your feed, edit game pages, find game friends, and more! ',
-                              style: TextStyle(
-                          
-                                  fontSize: 14,
-                                  color: Colors.white
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        const Text(
+                          'Guest',
+                          style: TextStyle(fontSize: 28, color: Colors.white),
+                        ),
+                        const Center(
+                          child: SizedBox(
+                            width: 250,
+                            child: Center(
+                              child: Text(
+                                'Sign up to share your experience, customize your feed, edit game pages, find game friends, and more! ',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
-                              
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ),
+                )),
           ),
           Expanded(
             flex: 5,
@@ -172,17 +162,24 @@ class GuestDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.person_outlined),
                   title: const Text('Login'),
-                  onTap: (){
+                  onTap: () {
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.person_add_alt_1_outlined),
                   title: const Text('Sign Up'),
-                  onTap: (){
+                  onTap: () {
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage()),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegistrationPage()),
+                    );
                   },
                 ),
               ],
