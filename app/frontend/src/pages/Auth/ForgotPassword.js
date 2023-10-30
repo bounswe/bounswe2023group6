@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import 'tailwindcss/tailwind.css'
-import logo from './images/logo.png' // Make sure to import your logo
+import logo from './images/logo.png' 
 
 const ForgotPassword = () => {
 	const [isSubmitted, setIsSubmitted] = useState(false)
