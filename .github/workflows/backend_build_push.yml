@@ -2,8 +2,10 @@ name: Backend Docker Build
 
 on:
   push:
-    branches: [ "develop" ]
-    paths: "app/backend"
+    branches: 
+      - develop
+    paths: 
+      - app/backend/**
 
 jobs:
 

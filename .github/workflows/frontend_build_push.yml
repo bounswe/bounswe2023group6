@@ -1,9 +1,11 @@
-name: Backend Docker Build
+name: Frontend Docker Build
 
 on:
   push:
-    branches: [ "develop" ]
-    paths: "app/frontend"
+    branches: 
+      - develop
+    paths: 
+      - app/frontend/**
 
 jobs:
 
