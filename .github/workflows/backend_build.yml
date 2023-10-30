@@ -1,11 +1,11 @@
 name: Backend Docker Build
 
 on:
-  # workflow_dispatch:
-  push:
-    branches: [ develop ]
-    paths: 
-      - 'app/backend/**'
+  workflow_dispatch:
+  # push:
+  #   branches: [ develop ]
+  #   paths: 
+  #     - 'app/backend/**'
 
 jobs:
 
