@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
-import '../../data/services/user_authentication_service.dart';
 import '../widgets/app_bar_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -14,8 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   // Create an instance of UserAuthenticationService
-  final UserAuthenticationService authService = UserAuthenticationService();
-
   // Define controller names
   final List<String> controllerNames = ['Email', 'Password'];
 
@@ -32,8 +32,12 @@ class _LoginPageState extends State<LoginPage> {
       // You can show an error message or perform any other action here.
     } else {
       // Proceed with user login using the UserAuthenticationService
-      authService.loginUser(email, password);
     }
+  }
+
+  void updateSession() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', 'acaglayan');
   }
 
   @override
@@ -49,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
           title: 'Please enter your login credentials:',
           controllers: [emailController, passwordController],
           controllerNames: controllerNames, // Pass controllerNames to FormWidget
-          onSubmit: loginUser,
+          onSubmit: updateSession,
         ),
       ),
     );

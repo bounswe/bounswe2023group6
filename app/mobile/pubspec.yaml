@@ -8,9 +8,10 @@ environment:
 
 dependencies:
   dio: ^5.3.3
+  shared_preferences: ^2.2.2
+  flutter_native_splash: ^2.3.5
   flutter:
     sdk: flutter
-  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -23,3 +24,7 @@ flutter:
   assets:
     - lib/assets/logo.png
     - lib/assets/aysecaglayan.png
+
+flutter_native_splash:
+  color: "B46060"
+  image: lib/assets/logo.png

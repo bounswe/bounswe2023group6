@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
-import '../../data/services/user_authentication_service.dart';
 import '../../data/models/user_model.dart';
 import '../widgets/app_bar_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -17,7 +17,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController passwordController = TextEditingController();
 
   // Create an instance of UserAuthenticationService
-  final UserAuthenticationService authService = UserAuthenticationService();
 
   final List<String> controllerNames = ['Name', 'Surname', 'Email', 'Password']; // Add controller names
 
@@ -48,7 +47,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         email: email,
         password: password,
       );
-      authService.registerUser(user);
     }
   }
 
