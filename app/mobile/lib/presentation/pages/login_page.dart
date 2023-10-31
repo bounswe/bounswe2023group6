@@ -28,21 +28,18 @@ class _LoginPageState extends State<LoginPage> {
     String content = "";
     // Validate user input using ValidationUtils
     if (!username.isEmpty && ValidationUtils.isPasswordValid(password)) {
-      try {
-        final loggedIn = await authService.loginUser(username, password);
+      
+      final loggedIn = await authService.loginUser(username, password);
 
-        if (loggedIn) {
-          // Navigate to the next screen or perform other actions for a successful login.
-          Navigator.pushNamed(context, '/');
-          return;
-        } else {
-          title = "Error";
-          content = "Wrong credentials.";
-        }
-      } catch (error) {
+      if (loggedIn) {
+        // Navigate to the next screen or perform other actions for a successful login.
+        Navigator.pushNamed(context, '/');
+        return;
+      } else {
         title = "Error";
-        content = "Network error.";
+        content = "Wrong credentials.";
       }
+
     } else {
       if (username.isEmpty) {
         // Handle invalid email
