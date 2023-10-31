@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:mobile/data/models/dto/base_dto_object.dart';
@@ -7,7 +8,6 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
   final String? name;
   final String? surname;
   final String? email;
-  final String? password;
   final String? username;
   final ByteData? profileImage;
 
@@ -15,7 +15,6 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
     this.name,
     this.surname,
     this.email,
-    this.password,
     this.username,
     this.profileImage,
   });
@@ -27,8 +26,6 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
         surname, ValidationPolicy.stringNotEmptyValidation());
     ValidationUtil.validate(email, ValidationPolicy.emailValidation());
     ValidationUtil.validate(
-        password, ValidationPolicy.stringNotEmptyValidation());
-    ValidationUtil.validate(
         username, ValidationPolicy.stringNotEmptyValidation());
   }
 
@@ -37,9 +34,8 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
         name: json["name"],
         surname: json["surname"],
         email: json["email"],
-        password: json["password"],
         username: json["username"],
-        profileImage: json["image"],
+        profileImage: ByteData.view(json['image']),
       );
 
   @override
@@ -47,7 +43,6 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
         "name": name,
         "surname": surname,
         "email": email,
-        "password": password,
         "username": username,
         "image": profileImage.toString(),
       };

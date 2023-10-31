@@ -141,7 +141,7 @@ class UserAuthenticationService {
   Future<User?> getCurrentUser(String? username) async {
     ServiceResponse response =
         await service.sendRequestSafe<UserDTOResponse, UserDTOResponse>(
-      _getUser,
+      "$_getUser/$username",
       null,
       UserDTOResponse(),
       'GET',
