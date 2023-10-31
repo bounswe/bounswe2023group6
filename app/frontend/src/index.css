@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 #app-container {
-    background-color: #FFF4E0;
-    background-size: cover;
     height: 100%;
     top: 70px;
     position: absolute;
@@ -77,7 +75,7 @@
     column-gap: 30px;
 }
 
-.post-container {
+/* .post-container {
     padding-bottom: 5px;
     margin: 20px;
     width: auto;
@@ -85,7 +83,7 @@
     background-color: #FFBF9B;
     border-radius: 20px;
     height: auto;
-}
+} */
 
 .profile-photo img {
     width: auto;

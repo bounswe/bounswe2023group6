@@ -71,10 +71,8 @@ export default function HomePage() {
         },
     ];
 
-
-
     return (
-        <div style={{margin: '20px', overflowY: 'hidden', padding: '10px'}} id="app-container">
+        <div className='bg-slate-50' style={{margin: '20px', overflowY: 'hidden', padding: '10px'}} id="app-container">
             <Sidebar/>
             <div>
                 <div className='suggestions'>
@@ -83,15 +81,14 @@ export default function HomePage() {
                     })}
                 </div>
                 <div className='container'>
-                    <div className='posts'>
+                    <div className=''>
                         {postData.map((item, key) => {
                             return <Post item={item} key={key}/>;
                         })}
                     </div>
-                    <div className='posts'>
+                    <div className=''>
                         {groupData.map((item, key) => {
                             return <Group item={item} key={key}/>;
-
                         })}
                     </div>
                 </div>
