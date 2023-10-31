@@ -27,8 +27,11 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+
 
 }
 

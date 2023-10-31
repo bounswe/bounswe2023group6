@@ -1,9 +1,8 @@
 package com.gamelounge.backend.controller
 
-import com.gamelounge.backend.model.LoginRequest
-import com.gamelounge.backend.model.RegisterationRequest
-import com.gamelounge.backend.model.ChangePasswordRequest
+import com.gamelounge.backend.model.*
 import com.gamelounge.backend.service.AccessService
+import com.gamelounge.backend.service.EmailService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,6 +14,7 @@ class AccessController(
     val accessService: AccessService
 ) {
     @PostMapping("/register")
+    @CrossOrigin(origins = ["*"])
     @ResponseStatus(HttpStatus.CREATED)
     fun register(@RequestBody request: RegisterationRequest): ResponseEntity<Map<String, String>> {
         accessService.register(request)
@@ -22,12 +22,14 @@ class AccessController(
     }
 
     @PostMapping("/login")
+    @CrossOrigin(origins = ["*"])
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Map<String, String>> {
         val sessionId = accessService.login(request.username, request.password)
         return ResponseEntity.ok().header("Set-Cookie", "SESSIONID=$sessionId; HttpOnly").body(mapOf("message" to "Logged in successfully."))
     }
 
     @PostMapping("/logout")
+    @CrossOrigin(origins = ["*"])
     fun logout(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<Map<String, String>> {
         sessionId?.let { accessService.logout(it) }
         return ResponseEntity.ok().body(mapOf("message" to "Logged out successfully."))
@@ -35,6 +37,7 @@ class AccessController(
     }
 
     @PostMapping("/change-password")
+    @CrossOrigin(origins = ["*"])
     fun changePassword(
             @CookieValue("SESSIONID") sessionId: UUID?,
             @RequestBody request: ChangePasswordRequest
@@ -56,4 +59,19 @@ class AccessController(
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "User is not logged in."))
     }
+
+    @PostMapping("/forgot-password")
+    @CrossOrigin(origins = ["*"])
+    fun forgotPassword(@RequestBody request: ForgotPasswordRequest): ResponseEntity<Map<String, String>> {
+        accessService.forgotPassword(username = request.username, email = request.email)
+        return ResponseEntity.ok().body(mapOf("message" to "Password reset token generated successfully."))
+    }
+
+    @PostMapping("/reset-password")
+    @CrossOrigin(origins = ["*"])
+    fun resetPassword(@RequestBody request: ResetPasswordRequest): ResponseEntity<Map<String, String>> {
+        accessService.resetPassword(token = request.token, newPassword = request.newPassword, confirmNewPassword = request.confirmNewPassword)
+        return ResponseEntity.ok().body(mapOf("message" to "Password reset successfully."))
+    }
+
 }

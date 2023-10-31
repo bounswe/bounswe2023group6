@@ -34,7 +34,7 @@ class GlobalExceptionHandler {
             .body(mapOf("errorMessage" to exception.message))
     }
 
-@ExceptionHandler(SessionNotFoundException::class)
+    @ExceptionHandler(SessionNotFoundException::class)
     fun handleSessionNotFoundException(exception: SessionNotFoundException): ResponseEntity<Map<String, String?>> {
         logger.info(exception.message)
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -43,6 +43,24 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(LogoutFailedException::class)
     fun handleLogoutFailedException(exception: LogoutFailedException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(EmailNotFoundException::class)
+    fun handleEmailNotFoundException(exception: EmailNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(TokenNotFoundException::class)
+    fun handleTokenNotFoundException(exception: TokenNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(PasswordMismatchException::class)
+    fun handlePasswordMismatchException(exception: PasswordMismatchException): ResponseEntity<Map<String, String?>> {
         logger.info(exception.message)
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(mapOf("errorMessage" to exception.message))
