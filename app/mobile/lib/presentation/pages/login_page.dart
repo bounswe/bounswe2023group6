@@ -36,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (loggedIn) {
         // Navigate to the next screen or perform other actions for a successful login.
+        updateSession(username);
         Navigator.pushNamed(context, '/');
         return;
       } else {
