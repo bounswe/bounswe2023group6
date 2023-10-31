@@ -116,8 +116,8 @@ class AccessService(
         }
         //generate token
         val token = passwordResetTokenService.createToken(user)
-        //send email ${mailLinkUrl}
-        emailService.sendSimpleMessage(email, "Password Reset", "Click the link to reset your password: ${customProperties.mailUrl}reset-password?token=$token")
+
+        emailService.sendSimpleMessage(email, "Password Reset", "Click the link to reset your password: ${customProperties.mailUrl}/reset-password?token=$token")
     }
 
     fun resetPassword(token: String, newPassword: String, confirmNewPassword: String) {
