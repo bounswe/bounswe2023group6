@@ -23,7 +23,7 @@ const ForgotPassword = () => {
 		};
 
 		try {
-			const response = await axios.post('http://localhost:8080/forgot-password', data, {
+			const response = await axios.post('http://167.99.242.175:8080/forgot-password', data, {
 				headers: {
 					'Content-Type': 'application/json'
 				}

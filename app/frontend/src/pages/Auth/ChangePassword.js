@@ -35,7 +35,7 @@ const ChangePassword = () => {
 
     try {
       // Replace this with your actual API endpoint
-      const response = await axios.post('http://localhost:3000/change-password', {
+      const response = await axios.post('http://167.99.242.175:8080/change-password', {
         token,
         newPassword,
         confirmNewPassword: validatePassword,
