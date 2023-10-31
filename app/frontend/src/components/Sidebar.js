@@ -10,10 +10,13 @@ const Sidebar = () => {
 
 	const [username, setUsername] = useState('') // Add this line
 
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 	useEffect(() => {
 		const storedUsername = localStorage.getItem('username')
 		if (storedUsername) {
 			setUsername(storedUsername)
+			setIsLoggedIn(true)
 		}
 	}, [])
 
@@ -30,8 +33,9 @@ const Sidebar = () => {
 			)
 
 			if (response.status === 200) {
-				localStorage.removeItem('username')
-				navigate('/login')
+				localStorage.removeItem('username');
+				setIsLoggedIn(false);
+				navigate('/login');
 			}
 		} catch (err) {
 			console.error(err)
@@ -40,9 +44,10 @@ const Sidebar = () => {
 
 	const SidebarData = [
 		{
-			label: 'My Profile',
-			icon: <IoIcons.IoIosCreate />
-		},
+			label: isLoggedIn ? "My Profile" : "Login", 
+			icon: <IoIcons.IoIosCreate />,
+			action: isLoggedIn ? undefined : () => navigate('/login')
+		  },
 		{
 			label: 'Account Settings',
 			icon: 'pi pi-fw pi-home'
@@ -59,12 +64,12 @@ const Sidebar = () => {
 			label: 'Groups',
 			icon: 'pi pi-fw pi-info'
 		},
-		{
+		isLoggedIn && {
 			label: 'Logout',
 			icon: 'pi pi-fw pi-home',
 			action: handleLogout
 		}
-	]
+	].filter(Boolean)
 
 	return (
 		<div>
