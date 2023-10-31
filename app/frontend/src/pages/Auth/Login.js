@@ -23,7 +23,8 @@ const Login = () => {
         try {
             const response = await axios.post('http://167.99.242.175:8080/login', data, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 }
             });
 
