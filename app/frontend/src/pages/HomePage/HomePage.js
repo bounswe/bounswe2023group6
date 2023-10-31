@@ -58,11 +58,11 @@ export default function HomePage() {
             date: '29.10.2023  00.00',
         },
         {
-            image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
-            header: 'Fallout 4: Post-Apocalyptic Adventure',
-            content: "world exploration are immersive. The character customization adds depth, and the game's atmosphere and details are impressive. What are your thoughts on the game? Enjoy!",
+            image: 'https://primefaces.org/cdn/primereact/images/product/game-controller.jpg',
+            header: 'Fifa',
+            content: "FIFA is one of the most popular football simulation games developed by EA Sports. It offers an immersive gaming experience with realistic graphics, player mechanics, and stadiums.",
             date: '29.10.2023  00.00',
-        },
+          },
         {
             image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
             header: 'The Witcher 3: Wild Hunt',
