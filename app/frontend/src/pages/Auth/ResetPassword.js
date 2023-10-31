@@ -34,14 +34,13 @@ const ResetPassword = () => {
     }
 
     try {
-      // Replace this with your actual API endpoint
-      const response = await axios.post('http://167.99.242.175:3000/change-password', {
+      const response = await axios.post('http://167.99.242.175:8080/reset-password', {
         token,
         newPassword,
         confirmNewPassword: validatePassword,
       });
 
-      if (response.status === 200) { // Adjust this based on your API's response
+      if (response.status === 200) {
         setIsSuccessful(true);
       }
     } catch (err) {
