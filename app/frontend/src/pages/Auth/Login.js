@@ -4,6 +4,8 @@ import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 
 const Login = () => {
+    const api_url = process.env.REACT_APP_API_URL;
+    console.log(api_url)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +23,7 @@ const Login = () => {
         };
 
         try {
-            const response = await axios.post('http://167.99.242.175:8080/login', data, {
+            const response = await axios.post(`${api_url}/login`, data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -29,6 +31,10 @@ const Login = () => {
 
             if (response.status === 200) {
                 localStorage.setItem('username', username);
+                const userResponse = await axios.get(`${api_url}/user/${username}`);
+                const userImage = userResponse.data.image;
+                localStorage.setItem('userImage', userImage);
+                
                 navigate('/home');
             }
         } catch (err) {
