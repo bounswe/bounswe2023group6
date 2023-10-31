@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios'; // Make sure to install this package
 
-const ChangePassword = () => {
+const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [validatePassword, setValidatePassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ const ChangePassword = () => {
     }
   }, [isSuccessful, navigate]);
 
-  const handleChangePassword = async (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
@@ -57,13 +57,13 @@ const ChangePassword = () => {
         <div className='md:flex'>
           <div className='w-full p-3 px-6 py-10'>
             <div className='w-full'>
-              <h1 className='text-xl text-gray-700 font-semibold mb-2'>Change Password</h1>
+              <h1 className='text-xl text-gray-700 font-semibold mb-2'>Reset Password</h1>
               {isSuccessful ? (
                 <div>
                   <p className='text-green-500'>Password successfully changed. Redirecting to homepage...</p>
                 </div>
               ) : (
-                <form onSubmit={handleChangePassword} className='space-y-5'>
+                <form onSubmit={handleResetPassword} className='space-y-5'>
                   <div>
                     <label className='block mb-1 font-semibold text-gray-500'>New Password</label>
                     <input
@@ -100,4 +100,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default ResetPassword;
