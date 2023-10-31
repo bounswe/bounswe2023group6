@@ -6,12 +6,12 @@ class GamePage extends StatelessWidget {
   GamePage({super.key});
 
   final _gameLinkList = [
-    "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
-    "https://cdn.ntvspor.net/047bed7cbad44a3dae8bdd7b643ab253.jpg?crop=158,0,782,624&w=800&h=800&mode=crop",
-    "https://upload.wikimedia.org/wikipedia/tr/8/85/Call_of_Duty_WIII_Kapak_Resmi.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png",
-    "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png",
-    "https://upload.wikimedia.org/wikipedia/en/9/94/Ori_and_the_Will_of_the_Wisps.jpg",
+    "lib/assets/witcher3.jpeg",
+    "lib/assets/lol.jpeg",
+    "lib/assets/cod.jpeg",
+    "lib/assets/celeste.webp",
+    "lib/assets/bg3.avif",
+    "lib/assets/ori.jpeg",
   ];
 
   final _gameNameList = [
@@ -60,9 +60,9 @@ class GameCard extends StatelessWidget {
                 child: Container(
                   decoration:  BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(gameLink),
-                      fit: BoxFit.fill,
-                    )
+                      image: AssetImage(gameLink),
+                      fit: BoxFit.cover,
+                   ),
                   ),
                 ) 
               ),

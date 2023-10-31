@@ -26,5 +26,6 @@ flutter:
   assets:
     - lib/assets/logo.png
     - lib/assets/aysecaglayan.png
+    - lib/assets/
 
 
