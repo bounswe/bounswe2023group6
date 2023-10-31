@@ -1,10 +1,10 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Available Scripts
 
 In the project directory, you can run:
+
+### npm install
+
+Installs the dependencies.
 
 ### `npm start`
 
@@ -24,11 +24,6 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
@@ -39,32 +34,24 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+### `make precommit`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To maintain code quality, we use ESLint and Prettier. Before committing any changes, run this command.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+When you run this command, 'npm run lint' and 'npm run format' commands are executed.
 
-### Code Splitting
+## Docker
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+If you prefer to run the application in a Docker container, you can use the following Docker commands inside the frontend folder:
 
-### Analyzing the Bundle Size
+### `docker build -t game-lounge .`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This command is used to create a Docker image and assign the name "game-lounge" to that image.
 
-### Making a Progressive Web App
+### `docker run -p 3000:3000 -d game-lounge`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The command "docker run -p 3000:3000 -d game-lounge" starts a Docker container from the "game-lounge" Docker image, mapping traffic from your local machine's port 3000 to the container's port 3000, and runs the container in the background.
 
-### Advanced Configuration
+Please note that one needs to setup a simple .env file before running it as the the backend url is defined by it. It's enough to define REACT_APP_API_URL (either localhost:8080 or some remote url).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
