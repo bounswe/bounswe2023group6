@@ -5,7 +5,7 @@ class LoginDTOResponse extends BaseDTOObject<LoginDTOResponse> {
   String? message;
 
   LoginDTOResponse({
-    required this.message,
+    this.message,
   });
 
   @override
