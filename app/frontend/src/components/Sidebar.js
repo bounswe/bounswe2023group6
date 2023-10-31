@@ -64,6 +64,10 @@ const Sidebar = () => {
 			label: 'Groups',
 			icon: 'pi pi-fw pi-info'
 		},
+		{
+			label: 'Games',
+			icon: 'pi pi-fw pi-info'
+		},
 		isLoggedIn && {
 			label: 'Logout',
 			icon: 'pi pi-fw pi-home',
