@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import SubMenu from './SubMenu'
 import * as IoIcons from 'react-icons/io'
 import Topbar from './Topbar'
@@ -7,6 +7,15 @@ import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
 	const navigate = useNavigate();
+
+	const [username, setUsername] = useState(''); // Add this line
+
+	useEffect(() => {
+		const storedUsername = localStorage.getItem('username');
+		if (storedUsername) {
+		  setUsername(storedUsername);
+		}
+	  }, []);
 
 	const handleLogout = async () => {
 		try {
@@ -17,7 +26,8 @@ const Sidebar = () => {
 		});
 
 		if (response.status === 200) {
-			navigate('/login'); // Redirect to login page
+			localStorage.removeItem('username');
+			navigate('/login'); 
 		}
 		} catch (err) {
 		console.error(err);
@@ -63,7 +73,16 @@ const Sidebar = () => {
 							alt={'Ayşe Çağlayan'}
 							style={{ width: '100px', height: '100px', borderRadius: '50%' }}
 						/>
-					</div>
+						<div style={{ 
+							display: 'flex', 
+							justifyContent: 'center', 
+							alignItems: 'center', 
+							// color: '#4169E1',
+							fontSize: '20px'
+							}}>
+							{username}
+							</div>
+						</div>
 					{SidebarData.map((item, key) => {
 						return <SubMenu item={item} key={key} />
 					})}
