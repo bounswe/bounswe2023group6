@@ -49,9 +49,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
     currentuser = (await authService.getCurrentUser(prefs.getString('username')))!;
     
     if (currentuser.profileImage != null){
-      byteData = currentuser.profileImage!;
-    }
+      
+      setState(() {
+        byteData = currentuser.profileImage!;
+        ispp = true;
+      });
 
+    }
   }
 
   CircleAvatar profilphoto(bool istrue){
