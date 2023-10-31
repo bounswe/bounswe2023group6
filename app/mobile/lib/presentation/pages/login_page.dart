@@ -5,6 +5,8 @@ import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
 import '../widgets/app_bar_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     String title = "";
     String content = "";
     // Validate user input using ValidationUtils
+
     if (!username.isEmpty && ValidationUtils.isPasswordValid(password)) {
       
       final loggedIn = await authService.loginUser(username, password);
@@ -52,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
         title = "Wrong Password";
         content = "Wrong Password Format";
       }
+
     }
     showDialog(
         context: context,
@@ -62,6 +66,12 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
   }
+
+  void updateSession(String username) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
+  }
+
 
   @override
   Widget build(BuildContext context) {
