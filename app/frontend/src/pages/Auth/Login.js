@@ -28,7 +28,8 @@ const Login = () => {
             });
 
             if (response.status === 200) {
-                navigate('/home'); // Redirect to /home page
+                localStorage.setItem('username', username);
+                navigate('/home');
             }
         } catch (err) {
             setError('Invalid credentials. Please try again.');
