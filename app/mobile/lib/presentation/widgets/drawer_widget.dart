@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/user_authentication_service.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/presentation/pages/login_page.dart';
@@ -15,10 +19,19 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   late String username = '';
+  bool ispp = false;
+  late ByteData byteData;
+  late User currentuser;
+
+  final UserAuthenticationService authService = UserAuthenticationService();
+
+
 
   @override
   void initState() {
+
     loadData();
+    getUser();
     super.initState();
   }
 
@@ -30,14 +43,56 @@ class _CustomDrawerState extends State<CustomDrawer> {
     });
   }
 
+  void getUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    currentuser = (await authService.getCurrentUser(prefs.getString('username')))!;
+    
+    if (currentuser.profileImage != null){
+      
+      setState(() {
+        byteData = currentuser.profileImage!;
+        ispp = true;
+      });
+
+    }
+  }
+
+  CircleAvatar profilphoto(bool istrue){
+    if (istrue) {
+      return  CircleAvatar(
+                    radius: 70,
+                    child: ClipOval(
+                      child: Image.memory(
+                        byteData.buffer.asUint8List(),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                );
+    } else {
+      return  CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                radius: 60,
+                child: const Icon(
+                  Icons.account_circle,
+                  size: 130,
+                  color: Colors.white,
+                ),
+              );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
+
     if (username == '') {
       return const GuestDrawer();
     }
     else {
-      return LoggedDrawer(username: username,);
+    
+      return LoggedDrawer(username: username, pp : profilphoto(ispp));
+
     }
 
   }
@@ -45,8 +100,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
 class LoggedDrawer extends StatelessWidget {
   final String username;
+  final CircleAvatar pp;
   const LoggedDrawer({
-    super.key, required this.username,
+    super.key, required this.username, required this.pp,
   });
 
   @override
@@ -68,15 +124,7 @@ class LoggedDrawer extends StatelessWidget {
                         const SizedBox(
                           height: 50,
                         ),
-                        CircleAvatar(
-                          radius: 70,
-                          child: ClipOval(
-                            child: Image.asset(
-                              "lib/assets/aysecaglayan.png",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                        pp,
                         const SizedBox(
                           height: 12,
                         ),

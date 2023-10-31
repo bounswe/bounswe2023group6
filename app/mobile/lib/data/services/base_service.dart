@@ -12,7 +12,6 @@ import 'package:mobile/constants/network_constants.dart';
 
 import 'package:mobile/data/models/dto/base_dto_object.dart';
 
-import 'package:mobile/data/models/base_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 
 class BaseNetworkService
@@ -42,25 +41,26 @@ class BaseNetworkService
   factory BaseNetworkService() => _instance;
   static BaseNetworkService get instance => _instance;
 
-  Future<ServiceResponse> sendRequestSafe<
+  Future<ServiceResponse<DTORes>> sendRequestSafe<
       DTOReq extends BaseDTOObject<DTOReq>,
-      DTORes extends BaseDTOObject<DTORes>,
-      T extends BaseModel<T, DTOReq, DTORes>>(
+      DTORes extends BaseDTOObject<DTORes>>(
     String path,
-    T requestModel,
+    DTOReq? request,
+    DTORes responseModel,
     String requestType,
   ) async {
     try {
-      DTOReq request = requestModel.validateAndConvertRequest();
+      if (requestType != "GET") {
+        request?.validate();
+      }
 
-      final ServiceResponse serviceResponse =
-          await sendRequest<DTOReq>(path, request, requestType);
+      final ServiceResponse<DTORes> serviceResponse =
+          await sendRequest<DTOReq, DTORes>(path, request, requestType);
 
       if (serviceResponse.success) {
-        parseResponse<DTOReq, DTORes, T>(
-          serviceResponse.response?.data,
-          requestModel,
-        );
+        DTORes? response = parseResponse<DTORes>(
+            serviceResponse.response?.data, responseModel);
+        serviceResponse.responseConverted = response;
       }
       return serviceResponse;
     } on Exception catch (error) {
@@ -74,9 +74,11 @@ class BaseNetworkService
     }
   }
 
-  Future<ServiceResponse> sendRequest<DTOReq extends BaseDTOObject<DTOReq>>(
+  Future<ServiceResponse<DTORes>> sendRequest<
+      DTOReq extends BaseDTOObject<DTOReq>,
+      DTORes extends BaseDTOObject<DTORes>>(
     String path,
-    DTOReq requestDTO,
+    DTOReq? requestDTO,
     String type,
   ) async {
     Options customOptions = Options();
@@ -86,7 +88,10 @@ class BaseNetworkService
       ..headers ??= <String, dynamic>{};
 
     try {
-      Map<String, dynamic> data = requestDTO.toJson();
+      Map<String, dynamic>? data;
+      if (type != "GET") {
+        data = requestDTO?.toJson();
+      }
       final Response<dynamic> response = await request(
         path,
         data: data,
@@ -107,7 +112,7 @@ class BaseNetworkService
             : jsonDecode(response.data),
       );
 
-      ServiceResponse serviceResponse = ServiceResponse(
+      ServiceResponse<DTORes> serviceResponse = ServiceResponse(
         success: true,
         response: responseData,
       );
@@ -120,7 +125,7 @@ class BaseNetworkService
       if (error.response?.data is Map<String, dynamic>) {
         errorMessage = error.response?.data['errorMessage'];
       }
-      ServiceResponse serviceResponse = ServiceResponse(
+      ServiceResponse<DTORes> serviceResponse = ServiceResponse(
         success: false,
         errorMessage: errorMessage,
       );
@@ -128,16 +133,16 @@ class BaseNetworkService
     }
   }
 
-  DTORes? parseResponse<
-          DTOReq extends BaseDTOObject<DTOReq>,
-          DTORes extends BaseDTOObject<DTORes>,
-          T extends BaseModel<T, DTOReq, DTORes>>(
-      dynamic responseData, T requestModel) {
+  DTORes? parseResponse<DTORes extends BaseDTOObject<DTORes>>(
+      dynamic responseData, DTORes responseModel) {
     if (responseData == null) return null;
     if (responseData is DTORes) return responseData;
 
     if (responseData is Map<String, dynamic>) {
-      requestModel.parseValidateAndConvertResponse(responseData);
+      DTORes response = responseModel.fromJson(responseData);
+      responseModel = response;
+      responseModel.validate();
+      return response;
     }
     return null;
   }

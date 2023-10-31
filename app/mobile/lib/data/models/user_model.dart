@@ -1,17 +1,21 @@
+import 'dart:typed_data';
+
 class User {
-  final String name;
-  final String surname;
-  final String email;
-  final String
-      password; // Remember to securely hash and salt the password in a real application.
-  final String username;
+  final String? name;
+  final String? surname;
+  final String? email;
+  final String? password;
+  final String? username;
+
+  ByteData? profileImage;
 
   User({
-    required this.name,
-    required this.surname,
-    required this.email,
-    required this.password,
-    required this.username,
+    this.name,
+    this.surname,
+    this.email,
+    this.password,
+    this.username,
+    this.profileImage,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -21,6 +25,7 @@ class User {
       email: json['email'],
       password: json['password'],
       username: json['username'],
+      profileImage: json['image'],
     );
   }
 
@@ -31,6 +36,7 @@ class User {
       'email': email,
       'password': password,
       'username': username,
+      'image': profileImage.toString(),
     };
   }
 }

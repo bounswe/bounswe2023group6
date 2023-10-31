@@ -56,9 +56,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
         if (registered) {
           // Navigate to the next screen or perform other actions for a successful login.
-
           title = "Success";
           content = "Registered";
+          Navigator.pushNamed(context, '/');
         } else {
           title = "Error";
           content = "Error in registration.";

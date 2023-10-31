@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 
-class ServiceResponse {
+class ServiceResponse<T> {
   bool success;
   Response<dynamic>? response;
+  T? responseConverted;
   String? errorMessage;
 
   ServiceResponse({
