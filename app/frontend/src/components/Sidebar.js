@@ -2,8 +2,28 @@ import React from 'react'
 import SubMenu from './SubMenu'
 import * as IoIcons from 'react-icons/io'
 import Topbar from './Topbar'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
+	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		try {
+		const response = await axios.post('http://167.99.242.175:8080/logout', {}, {
+			headers: {
+			'Content-Type': 'application/json'
+			}
+		});
+
+		if (response.status === 200) {
+			navigate('/login'); // Redirect to login page
+		}
+		} catch (err) {
+		console.error(err);
+		}
+	};
+
 	const SidebarData = [
 		{
 			label: 'My Profile',
@@ -11,10 +31,6 @@ const Sidebar = () => {
 		},
 		{
 			label: 'Account Settings',
-			icon: 'pi pi-fw pi-home'
-		},
-		{
-			label: 'Log out',
 			icon: 'pi pi-fw pi-home'
 		},
 		{
@@ -28,7 +44,12 @@ const Sidebar = () => {
 		{
 			label: 'Groups',
 			icon: 'pi pi-fw pi-info'
-		}
+		},
+		{
+			label: 'Logout',
+			icon: 'pi pi-fw pi-home',
+			action: handleLogout
+		},
 	]
 
 	return (

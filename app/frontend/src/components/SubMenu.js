@@ -21,20 +21,22 @@ const SidebarLink = styled(Link)`
 const SubMenu = ({ item }) => {
 	return (
 		<>
-			<SidebarLink to={item.path} className='submenu'>
-				<Button
-					style={{
-						width: '260px',
-						backgroundColor: '#FFBF9B',
-						color: '#4D4D4D',
-						border: 'none',
-						justifyContent: 'center',
-						height: '40px'
-					}}
-				>
-					{item.label}
-				</Button>
-			</SidebarLink>
+			<div onClick={item.action}>
+				<SidebarLink to={item.path} className='submenu'>
+					<Button
+						style={{
+							width: '260px',
+							backgroundColor: '#FFBF9B',
+							color: '#4D4D4D',
+							border: 'none',
+							justifyContent: 'center',
+							height: '40px'
+						}}
+					>
+						{item.label}
+					</Button>
+				</SidebarLink>
+			</div>
 		</>
 	)
 }
