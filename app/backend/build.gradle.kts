@@ -19,9 +19,20 @@ repositories {
 }
 
 dependencies {
+	compileOnly("org.projectlombok:lombok:1.18.24")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.springframework.boot:spring-boot-starter-web:3.1.5")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.1.5")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+
+
 }
 
 tasks.withType<KotlinCompile> {
