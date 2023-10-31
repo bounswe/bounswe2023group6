@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/presentation/widgets/alert_widget.dart';
+import 'package:mobile/presentation/widgets/button_widget.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
@@ -12,32 +14,57 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
 
   // Define controller names
-  final List<String> controllerNames = ['Email', 'Password'];
+  final List<String> controllerNames = ['Username', 'Password'];
 
-  void loginUser() {
-    final String email = emailController.text;
+  Future<void> loginUser() async {
+    final String username = userNameController.text;
     final String password = passwordController.text;
-
+    String title = "";
+    String content = "";
     // Validate user input using ValidationUtils
-    if (!ValidationUtils.isEmailValid(email)) {
-      updateSession(email); // Silinmesi lazim. Giris yaparken kullanici adi ile girilecek
-      // Handle invalid email
-      // You can show an error message or perform any other action here.
-    } else if (!ValidationUtils.isPasswordValid(password)) {
-      // Handle invalid password
-      // You can show an error message or perform any other action here.
+
+    if (!username.isEmpty && ValidationUtils.isPasswordValid(password)) {
+      
+      final loggedIn = await authService.loginUser(username, password);
+
+      if (loggedIn) {
+        // Navigate to the next screen or perform other actions for a successful login.
+        Navigator.pushNamed(context, '/');
+        return;
+      } else {
+        title = "Error";
+        content = "Wrong credentials.";
+      }
+
     } else {
-      // Proceed with user login using the UserAuthenticationService
-      authService.loginUser(email, password);
-      updateSession(email);
+      if (username.isEmpty) {
+        // Handle invalid email
+        // You can show an error message or perform any other action here.
+        title = "Wrong Username";
+        content = "Wrong Username Format";
+      } else {
+        // Handle invalid password
+        // You can show an error message or perform any other action here.
+        title = "Wrong Password";
+        content = "Wrong Password Format";
+      }
+
     }
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertWidget(
+            title: title,
+            content: content,
+          );
+        });
   }
 
   void updateSession(String username) async {
@@ -59,8 +86,9 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             FormWidget(
               title: 'Please enter your login credentials:',
-              controllers: [emailController, passwordController],
-              controllerNames: controllerNames, // Pass controllerNames to FormWidget
+              controllers: [userNameController, passwordController],
+              controllerNames:
+                  controllerNames, // Pass controllerNames to FormWidget
               onSubmit: loginUser,
             ),
             InkWell(

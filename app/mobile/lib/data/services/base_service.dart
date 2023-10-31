@@ -24,8 +24,8 @@ class BaseNetworkService
   static const String _baseUrl = kDebugMode
       ? NetworkConstants.BASE_LOCAL_URL
       : NetworkConstants.BASE_PROD_URL;
-  static const Duration _connectionTimeout = Duration(milliseconds: 10000);
-  static const Duration _receiveTimeout = Duration(milliseconds: 6000);
+  static const Duration _connectionTimeout = Duration(milliseconds: 100000);
+  static const Duration _receiveTimeout = Duration(milliseconds: 60000);
 
   BaseNetworkService._init() {
     options = BaseOptions(

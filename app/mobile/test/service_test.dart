@@ -18,8 +18,8 @@ void main() {
       final response = await dio.post(
         '${NetworkConstants.BASE_LOCAL_URL}/register',
         data: {
-          'username': 'erkam.kavakk',
-          'password': '123456',
+          'username': 'erkam.kavakkk',
+          'password': '123456789',
           'email': 'erkam@boun.edu.tr',
           'name': 'Erkam',
           'surname': 'Kavak',
