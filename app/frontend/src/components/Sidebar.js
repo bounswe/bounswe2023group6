@@ -4,6 +4,7 @@ import * as IoIcons from 'react-icons/io'
 import Topbar from './Topbar'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import aysecaglayan from '../aysecaglayan.png';
 
 const Sidebar = () => {
 	const navigate = useNavigate()
@@ -81,11 +82,11 @@ const Sidebar = () => {
 			<nav className='sidebar'>
 				<div style={{ width: '100%' }}>
 					<div style={{ display: 'grid', justifyContent: 'center', margin: '20px' }}>
-						<img
-							src={`https://primefaces.org/cdn/primereact/images/product/bamboo-watch.jpg}`}
+						{isLoggedIn && <img
+							src={aysecaglayan} // Here.
 							alt={'Ayşe Çağlayan'}
 							style={{ width: '100px', height: '100px', borderRadius: '50%' }}
-						/>
+						/>}
 						<div
 							style={{
 								display: 'flex',
