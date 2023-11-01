@@ -48,7 +48,7 @@ sudo systemctl stop postgres
 - After the database container is running, you can run the backend image as a container. Execute the following command:
 
 ```bash
-docker run --detach -p 8080:8080 -e SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/<postgres-database-name>" -e SPRING_DATASOURCE_USERNAME="<postgres-username>" -e SPRING_DATASOURCE_PASSWORD="<postgres-password>" game-lounge-backend
+docker run --detach -p 8080:8080 -e SPRING_DATASOURCE_URL="jdbc:postgresql://<your-local-ip>:5432/<postgres-database-name>" -e SPRING_DATASOURCE_USERNAME="<postgres-username>" -e SPRING_DATASOURCE_PASSWORD="<postgres-password>" game-lounge-backend
 ```
 
 This command runs the backend image that you previously built and allows it to accept requests on port 8080. Fill in the database details with the information you used when running the database container. Once the backend container is running, you can access your backend application via port 8080 on localhost.
