@@ -71,7 +71,7 @@ We utilized Visual Studio Code as our code editor for our project. VSCode proved
 React is not a framework but a JavaScript library, making it straightforward to learn and work with. This simplicity was particularly advantageous for our team, as we had unexperienced React developers. The library's approach based on UI components promotes reusability, allowing us to efficiently use components across different parts of our application. Another reason is its extensive popularity and strong community support, making it easier to learn and troubleshoot issues. React also improves the rendering efficiency using the concept of Virtual DOM, which reduces unnecessary updates. In addition to React itself, we integrated ESLint for code linting and Tailwind CSS for styling. ESLint helped maintain code quality by identifying and suggesting corrections for potential issues in our code, while Tailwind CSS streamlined the styling process.
 
 - **Mobil**
-  TODO TODO TODO
+  * TODO 
 - **CI/CD**
   - Digital Ocean: We selected Digital Ocean as our cloud service provider for our project, configuring a Ubuntu instance with 2 CPUs and 2 GB of RAM to efficiently run our Docker images. This decision was influenced by the limited resources in AWS's free tier, offering just a t2.micro instance with 1 CPU and 1 GB of RAM, as well as our access to $200 in free credits through the GitHub Global Campus program, making Digital Ocean a more cost-effective choice. Similar to AWS, Digital Ocean offers scalable computing capacity and simplifies networking, security, and storage configurations, all while eliminating the need for upfront hardware investments, allowing us to expedite application development and deployment.
 
