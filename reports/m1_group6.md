@@ -72,6 +72,11 @@ React is not a framework but a JavaScript library, making it straightforward to 
 
 - **Mobil**
 
+- **CI/CD**
+  - Digital Ocean: We selected Digital Ocean as our cloud service provider for our project, configuring a Ubuntu instance with 2 CPUs and 2 GB of RAM to efficiently run our Docker images. This decision was influenced by the limited resources in AWS's free tier, offering just a t2.micro instance with 1 CPU and 1 GB of RAM, as well as our access to $200 in free credits through the GitHub Global Campus program, making Digital Ocean a more cost-effective choice. Similar to AWS, Digital Ocean offers scalable computing capacity and simplifies networking, security, and storage configurations, all while eliminating the need for upfront hardware investments, allowing us to expedite application development and deployment.
+
+  - Docker: It is an open platform, is designed to streamline the development, deployment, and execution of applications by allowing you to decouple your applications from the underlying infrastructure, facilitating rapid software delivery. Docker offers the capability to encapsulate and execute applications within isolated environments known as containers. In our project, we utilized three containers: one for the frontend, one for the backend, and one for the PostgreSQL database. Additionally, we configured environment variables for each container to meet specific requirements.
+
 ### 6. The Requirements Addressed in Milestone 1
 - 1.1.1.1 Guests shall provide their full name, a valid username, an unregistered, a valid password to sign up.
 - 1.1.1.3 Users shall be able to login and logout to platform.
