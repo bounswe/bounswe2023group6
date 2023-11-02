@@ -24,7 +24,7 @@
 [Project Plan](https://github.com/bounswe/bounswe2023group6/wiki/Project-Plan)|Completed|
 [RAM](https://github.com/bounswe/bounswe2023group6/wiki/Responsibility-Assignment-Matrix-(RAM))|Completed|
 [Software](http://game-lounge.com/)|Completed|
-[Individual Contribution Reports](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-Reports-%E2%80%90-CmpE-451-%E2%80%90-Milestone-1)|Completed|
+Individual Contribution Reports|Completed|
 
 
 ### 4. Evaluation of the status of deliverables
@@ -84,4 +84,18 @@ React is not a framework but a JavaScript library, making it straightforward to 
 - 2.1.1 The platform shall use HTTPS protocol.
 - 2.1.3 All sensitive user data, such as passwords, shall be encrypted using a salted hashing algorithm(such as SHA-256).
 - 2.3.1 Language of the platform shall be English.
+
+### Individual Contribution Reports
+- [Ahmet Kudu](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-Report-Ahmet-Kudu)
+- [Beyzanur Bektan]
+- [Emre Sin]
+- [Emre Türker](https://github.com/bounswe/bounswe2023group6/wiki/Emre-T%C3%BCrker-%7C-Individual-Contribution-Page-%E2%80%90-Milestone-1)
+- [Erkam Kavak]
+- [Halis Ayberk Erdem]
+- [Hüseyin Çivi]
+- [Ömer Bahadıroğlu](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-Report-CMPE451-Milestone-1-%E2%80%90-%C3%96mer-Bahad%C4%B1ro%C4%9Flu)
+- [Ömer Talip Akalın]
+- [Süleyman Melih Portakal]
+- [Umut Demir]
+- [Muhammet Mustafa Küçük]
 
