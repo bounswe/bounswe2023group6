@@ -98,7 +98,7 @@ React is not a framework but a JavaScript library, making it straightforward to 
 - [Erkam Kavak]
 - [Halis Ayberk Erdem]
 - [Hüseyin Çivi]
-- [Ömer Bahadıroğlu](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-Report-CMPE451-Milestone-1-%E2%80%90-%C3%96mer-Bahad%C4%B1ro%C4%9Flu)
+- [Ömer Huzeyfe Bahadıroğlu](https://github.com/bounswe/bounswe2023group6/wiki/CMPE451-%E2%80%90-Individual-Contribution-Report-1-%E2%80%90-%C3%96mer-Bahad%C4%B1ro%C4%9Flu)
 - [Ömer Talip Akalın]
 - [Süleyman Melih Portakal]
 - [Umut Demir]
