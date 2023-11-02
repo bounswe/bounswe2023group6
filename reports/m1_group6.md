@@ -42,6 +42,36 @@
  
 - **Software:** We were asked to build two applications one for mobile and the other for the web. Therefore we divided into three equal teams: backend, mobile, and frontend to meet the expactations properly. We believe that our teams successfully met the requirements of the first milestone’s targets. Our backend team started the development first and exposed some endpoints for the other teams to develop their ends on them. After building the basis, all teams made some adjustments in their end for better integration among the teams. Finally, the application is successfully deployed and can be accessed through the [link]( http://game-lounge.com/home).
 
+### 5. Evaluation of tools and processes we used to manage our project.
+- **Backend**
+  - Communication: Discord
+Discord was an essential tool for our team's communication, giving us the ability to talk, video call, and message each other for both scheduled meetings and quick chats. We could make separate channels for different topics, which helped us stay organized. Since Discord doesn't have built-in tools for managing our projects, we added some extra tools to make everything work together. But overall, Discord was easy for everyone to use no matter what type of computer or phone they had.
+
+  - IDE: IntelliJ IDEA
+IntelliJ IDEA was our chosen software for writing and organizing our code, and it was particularly good because it had special features for Kotlin and Spring Boot, which are the main technologies we used. It could automatically complete parts of code for us and help us change large parts of it easily when needed. It also kept track of changes in our code. Although anyone could use the basic version for free, some of us used the paid version which had more helpful features for working with databases and code, but we had to consider the extra cost and effort to learn these features.
+
+  - Database: PostgreSQL
+PostgreSQL was very reliable for storing and handling our project's data, even when we had to do complicated things with it. It came with a lot of documentation, which helped us a lot, and there were many people using it who could help us when we got stuck. To really take advantage of everything PostgreSQL could do, we had to know a lot about databases, but it was worth it because it made our project's data management strong and able to grow.
+
+  - Programming Language & Framework: Kotlin and Spring
+Kotlin and Spring worked really well together for building the parts of our project that run on the server. Kotlin lets us write code that's easy to understand and shorter, which saves time. Spring has a lot of tools that do different things we needed, like making sure our app is secure and handles data properly. Even though it can take some time to learn how to set everything up with Spring, using Kotlin made it easier. So, they made a great combination for our project.
+
+  - Database Tool: DBeaver
+DBeaver was the tool we chose for working with our databases. It works with many different kinds of databases, which was perfect for us. The program's design made it simple to see our data, make changes, and do tests. It has a lot of different tools to use, and sometimes it was a bit too much, but it was really useful for managing our databases day to day.
+
+  - Project Management: GitHub Projects
+GitHub Projects helped us keep an eye on our work and organize our coding tasks. It's part of GitHub, so it worked well with the code we were already writing there. We used it like a board to move tasks around and see what we all were working on. It's not as full-featured as some other project management tools, but it was easy to use and helped us a lot.
+
+- **Frontend**
+
+  - Visual Studio Code (VSCode):
+We utilized Visual Studio Code as our code editor for our project. VSCode proved to be a good choice due to its extensive support for various programming languages through extensions. It not only helped us write code efficiently but also provided error messages and warnings for syntax issues, allowing us to make our developments faster and safer. Additionally, being familiar with VSCode from previous experiences made it a speedy and convenient choice for us. Its features, such as debugging, syntax highlighting, code completion, and embedded Git, played a crucial role in our development process. The Git integration made it simple for us to maintain version control by allowing us to easily commit and push our code to our repository.
+
+  - React:
+React is not a framework but a JavaScript library, making it straightforward to learn and work with. This simplicity was particularly advantageous for our team, as we had unexperienced React developers. The library's approach based on UI components promotes reusability, allowing us to efficiently use components across different parts of our application. Another reason is its extensive popularity and strong community support, making it easier to learn and troubleshoot issues. React also improves the rendering efficiency using the concept of Virtual DOM, which reduces unnecessary updates. In addition to React itself, we integrated ESLint for code linting and Tailwind CSS for styling. ESLint helped maintain code quality by identifying and suggesting corrections for potential issues in our code, while Tailwind CSS streamlined the styling process.
+
+- **Mobil**
+
 ### 6. The Requirements Addressed in Milestone 1
 - 1.1.1.1 Guests shall provide their full name, a valid username, an unregistered, a valid password to sign up.
 - 1.1.1.3 Users shall be able to login and logout to platform.
