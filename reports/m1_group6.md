@@ -1,3 +1,15 @@
+### 2. Summary of the Customer Feedback and Reflections
+
+- Icons and Logo Consistency: There is a consensus on the need for unique icons for each game and addressing issues related to consistent logo usage.
+- Rating System: It's suggested that the rating system should be reviewed and potentially redesigned to align with user expectations.
+- User Interaction and Communication: The importance of facilitating user interaction, especially post-group formation, has been highlighted, along with the need to clarify or redesign communication systems for LFG users.
+- Homepage and User Experience: Enhancing the homepage with detailed game information, potentially including specific post dates and game release dates, is recommended. Additionally, there is a call to provide more content on mock game pages and improve the overall user interface.
+- Competitive Advantage: Defining and articulating the platform's competitive edge is emphasized, with an additional focus on flexibility as a competitive strategy.
+- Character Recommendation and User Profiles: Exploring a character recommendation system based on character similarities is suggested, potentially tied to user profiles and avatars.
+- Games You May Like Section: The need to review and refine the algorithm and presentation of the "Games You May Like" section to enhance user recommendations is highlighted.
+- Optional Photo Upload: It's important to clarify that photo upload during registration is optional to avoid potential barriers or privacy concerns for users.
+
+
 
 ### 3. List and status of deliverables.
 
@@ -29,3 +41,12 @@
 - **Individual Contribution Reports: ** Although the RAM shows who contributed on building which parts of the project, it could be quite misleading. Some tasks might have required more effort than others, which cannot be concluded just by looking at the RAM, but additional information is required to assess the effort of individuals. ICRs serve exactly this purpose.
  
 - **Software:** We were asked to build two applications one for mobile and the other for the web. Therefore we divided into three equal teams: backend, mobile, and frontend to meet the expactations properly. We believe that our teams successfully met the requirements of the first milestone’s targets. Our backend team started the development first and exposed some endpoints for the other teams to develop their ends on them. After building the basis, all teams made some adjustments in their end for better integration among the teams. Finally, the application is successfully deployed and can be accessed through the [link]( http://game-lounge.com/home).
+
+### 6. The Requirements Addressed in Milestone 1
+- 1.1.1.1 Guests shall provide their full name, a valid username, an unregistered, a valid password to sign up.
+- 1.1.1.3 Users shall be able to login and logout to platform.
+- 1.1.1.4 Users shall be able to reset, and change their passwords.
+- 2.1.1 The platform shall use HTTPS protocol.
+- 2.1.3 All sensitive user data, such as passwords, shall be encrypted using a salted hashing algorithm(such as SHA-256).
+- 2.3.1 Language of the platform shall be English.
+
