@@ -85,7 +85,7 @@ React is not a framework but a JavaScript library, making it straightforward to 
 - 2.1.3 All sensitive user data, such as passwords, shall be encrypted using a salted hashing algorithm(such as SHA-256).
 - 2.3.1 Language of the platform shall be English.
 
-### Individual Contribution Reports
+### 7. Individual Contribution Reports
 - [Ahmet Kudu](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-Report-Ahmet-Kudu)
 - [Beyzanur Bektan]
 - [Emre Sin]
