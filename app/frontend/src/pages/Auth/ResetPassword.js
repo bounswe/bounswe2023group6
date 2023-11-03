@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css';
 import axios from 'axios'; // Make sure to install this package
 
 const ResetPassword = () => {
+  const api_url = process.env.API_URL
   const [newPassword, setNewPassword] = useState('');
   const [validatePassword, setValidatePassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +35,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post('http://167.99.242.175:8080/reset-password', {
+      const response = await axios.post(`${api_url}/auth/reset-password`, {
         token,
         newPassword,
         confirmNewPassword: validatePassword,

@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/login/login_request.dart';
 import 'package:mobile/data/models/dto/login/login_response.dart';
-import 'package:mobile/data/models/login_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:test/test.dart';
 
@@ -18,8 +17,8 @@ void main() {
       final response = await dio.post(
         '${NetworkConstants.BASE_LOCAL_URL}/register',
         data: {
-          'username': 'erkam.kavakkk',
-          'password': '123456789',
+          'username': 'erkam.kavak',
+          'password': '123456',
           'email': 'erkam@boun.edu.tr',
           'name': 'Erkam',
           'surname': 'Kavak',
@@ -40,17 +39,23 @@ void main() {
     expect(service, isNotNull);
 
     const String path = '/login';
-    final LoginModel loginModel = LoginModel();
-    loginModel.username = 'erkam.kavak';
-    loginModel.password = '123456';
-    ServiceResponse serviceResponse = await service
-        .sendRequestSafe<LoginDTORequest, LoginDTOResponse, LoginModel>(
-            path, loginModel, 'POST');
+    final LoginDTORequest loginRequest = LoginDTORequest(
+      username: "erkam.kavak",
+      password: "123456",
+    );
+    ServiceResponse serviceResponse =
+        await service.sendRequestSafe<LoginDTORequest, LoginDTOResponse>(
+      path,
+      loginRequest,
+      LoginDTOResponse(),
+      'POST',
+    );
 
     expect(serviceResponse, isNotNull);
     if (serviceResponse.success) {
-      expect(loginModel.message, isNotNull);
-      expect(loginModel.message, 'Logged in successfully.');
+      LoginDTOResponse loginResponse = serviceResponse.responseConverted;
+      expect(loginResponse.message, isNotNull);
+      expect(loginResponse.message, 'Logged in successfully.');
       // expect(loginModel.sessionId, isNotNull);
     } else {
       expect(serviceResponse.errorMessage, isNotNull);

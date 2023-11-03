@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/login/login_request.dart';
 import 'package:mobile/data/models/dto/login/login_response.dart';
-import 'package:mobile/data/models/login_model.dart';
+import 'package:mobile/data/models/dto/user/user_response.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
 import 'dart:convert';
@@ -13,15 +13,23 @@ class UserAuthenticationService {
       NetworkConstants.BASE_LOCAL_URL; // Replace with your server's URL
 
   final BaseNetworkService service = BaseNetworkService();
+
+  static const String _getUser = "/user";
+
   Future<bool> loginUser(String username, String password) async {
     const String path = '/login';
-    final LoginModel loginModel = LoginModel();
-    loginModel.username = username;
-    loginModel.password = password;
+    final LoginDTORequest loginRequest = LoginDTORequest(
+      username: username,
+      password: password,
+    );
 
-    ServiceResponse response = await service
-        .sendRequestSafe<LoginDTORequest, LoginDTOResponse, LoginModel>(
-            path, loginModel, 'POST');
+    ServiceResponse response =
+        await service.sendRequestSafe<LoginDTORequest, LoginDTOResponse>(
+      path,
+      loginRequest,
+      LoginDTOResponse(),
+      'POST',
+    );
 
     if (response.success) {
       return true;
@@ -130,20 +138,27 @@ class UserAuthenticationService {
   }
 
   // Get the current user
-  Future<User?> getCurrentUser() async {
-    try {
-      // Implement the logic for retrieving the current user
-      // This might involve checking the user's session or token
-      // and fetching user details from your API
-      // If no user is logged in, return null
-      return User(
-          name: 'John',
-          surname: 'Doe',
-          email: 'john.doe@example.com',
-          username: 'johndoe',
-          password: '***');
-    } catch (e) {
-      print('Error getting current user: $e');
+  Future<User?> getCurrentUser(String? username) async {
+    ServiceResponse response =
+        await service.sendRequestSafe<UserDTOResponse, UserDTOResponse>(
+      "$_getUser/$username",
+      null,
+      UserDTOResponse(),
+      'GET',
+    );
+
+    if (response.success) {
+      UserDTOResponse userResponse = response.responseConverted;
+      User user = User(
+        name: userResponse.name,
+        surname: userResponse.surname,
+        email: userResponse.email,
+        username: userResponse.username,
+        profileImage: userResponse.profileImage,
+      );
+      return user;
+    } else {
+      print('User not found - Status Code: ${response.errorMessage}');
       return null;
     }
   }

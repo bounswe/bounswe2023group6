@@ -5,6 +5,8 @@ import axios from 'axios';
 
 
 const Signup = () => {
+    const api_url = process.env.REACT_APP_API_URL;
+    // console.log(api_url);
 	const navigate = useNavigate();
     const [formData, setFormData] = useState({
 		username: '',
@@ -54,7 +56,7 @@ const Signup = () => {
 		};
 	  
 		try {
-			const response = await axios.post('http://167.99.242.175:8080/register', data, {
+			const response = await axios.post(`${api_url}/register`, data, {
 				headers: {
 					'Content-Type': 'application/json'
 				}

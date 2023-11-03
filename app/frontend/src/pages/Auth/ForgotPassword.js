@@ -7,6 +7,7 @@ import axios from 'axios';
 // import 'path/to/your/css/file.css'; // Import your CSS file
 
 const ForgotPassword = () => {
+	const API_URL = process.env.API_URL;
 	const [isSubmitted, setIsSubmitted] = useState(false);
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
@@ -25,7 +26,7 @@ const ForgotPassword = () => {
 		};
 
 		try {
-			const response = await axios.post('http://167.99.242.175:8080/forgot-password', data, {
+			const response = await axios.post(`${API_URL}/forgot-password`, data, {
 				headers: {
 					'Content-Type': 'application/json'
 				}

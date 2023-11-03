@@ -6,24 +6,25 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
+	const api_url = process.env.REACT_APP_API_URL;
 	const navigate = useNavigate()
 
-	const [username, setUsername] = useState('') // Add this line
-
-	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [username, setUsername] = useState('');
+	const userImage = localStorage.getItem('userImage');
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
 		const storedUsername = localStorage.getItem('username')
 		if (storedUsername) {
 			setUsername(storedUsername)
 			setIsLoggedIn(true)
-		}
+		}	
 	}, [])
 
 	const handleLogout = async () => {
 		try {
 			const response = await axios.post(
-				'http://167.99.242.175:8080/logout',
+				`${api_url}/logout`,
 				{},
 				{
 					headers: {
@@ -64,6 +65,10 @@ const Sidebar = () => {
 			label: 'Groups',
 			icon: 'pi pi-fw pi-info'
 		},
+		{
+			label: 'Games',
+			icon: 'pi pi-fw pi-info'
+		},
 		isLoggedIn && {
 			label: 'Logout',
 			icon: 'pi pi-fw pi-home',
@@ -77,11 +82,9 @@ const Sidebar = () => {
 			<nav className='sidebar'>
 				<div style={{ width: '100%' }}>
 					<div style={{ display: 'grid', justifyContent: 'center', margin: '20px' }}>
-						<img
-							src={`https://primefaces.org/cdn/primereact/images/product/bamboo-watch.jpg}`}
-							alt={'Ayşe Çağlayan'}
+						{userImage && <img src={`data:image/png;base64,${userImage}`} alt="Profile"
 							style={{ width: '100px', height: '100px', borderRadius: '50%' }}
-						/>
+						/>}
 						<div
 							style={{
 								display: 'flex',
