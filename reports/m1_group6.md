@@ -42,7 +42,7 @@ At the project's beginning, our client's insights led to an exciting evolution. 
  
 - **RAM:** RAMs are crucial in that they allow the team members to see who contributed to which tasks, and enable them to load balance the tasks on the individuals. Therefore, we paid special attention to having a proper responsibility assignment matrix.
  
-- **Individual Contribution Reports: ** Although the RAM shows who contributed on building which parts of the project, it could be quite misleading. Some tasks might have required more effort than others, which cannot be concluded just by looking at the RAM, but additional information is required to assess the effort of individuals. ICRs serve exactly this purpose.
+- **Individual Contribution Reports:** Although the RAM shows who contributed on building which parts of the project, it could be quite misleading. Some tasks might have required more effort than others, which cannot be concluded just by looking at the RAM, but additional information is required to assess the effort of individuals. ICRs serve exactly this purpose.
  
 - **Software:** We were asked to build two applications one for mobile and the other for the web. Therefore we divided into three equal teams: backend, mobile, and frontend to meet the expactations properly. We believe that our teams successfully met the requirements of the first milestone’s targets. Our backend team started the development first and exposed some endpoints for the other teams to develop their ends on them. After building the basis, all teams made some adjustments in their end for better integration among the teams. Finally, the application is successfully deployed and can be accessed through the [link]( http://game-lounge.com/home).
 
