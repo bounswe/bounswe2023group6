@@ -29,7 +29,6 @@ At the project's beginning, our client's insights led to an exciting evolution. 
 [Project Plan](https://github.com/bounswe/bounswe2023group6/wiki/Project-Plan)|Completed|
 [RAM](https://github.com/bounswe/bounswe2023group6/wiki/Responsibility-Assignment-Matrix-(RAM))|Completed|
 [Software](http://game-lounge.com/)|Completed|
-Individual Contribution Reports|Completed|
 
 
 ### 4. Evaluation of the status of deliverables
