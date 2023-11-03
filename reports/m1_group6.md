@@ -81,6 +81,8 @@ React is not a framework but a JavaScript library, making it straightforward to 
 
   - Docker: It is an open platform, is designed to streamline the development, deployment, and execution of applications by allowing you to decouple your applications from the underlying infrastructure, facilitating rapid software delivery. Docker offers the capability to encapsulate and execute applications within isolated environments known as containers. In our project, we utilized three containers: one for the frontend, one for the backend, and one for the PostgreSQL database. Additionally, we configured environment variables for each container to meet specific requirements.
 
+  - GitHub Actions: Workflows have been set up for both the frontend and backend with YAML configuration files to build and push Docker images to DockerHub. These workflows can be manually triggered through the GitHub Actions tab, allowing for monitoring of the status of each action step. This setup plays a crucial role in ensuring continuous integration. 
+
 ### 6. The Requirements Addressed in Milestone 1
 - 1.1.1.1 Guests shall provide their full name, a valid username, an unregistered, a valid password to sign up.
 - 1.1.1.3 Users shall be able to login and logout to platform.
