@@ -29,8 +29,6 @@ At the project's beginning, our client's insights led to an exciting evolution. 
 [Project Plan](https://github.com/bounswe/bounswe2023group6/wiki/Project-Plan)|Completed|
 [Mockup Web](https://github.com/bounswe/bounswe2023group6/wiki/Web-Mockups)|Completed|
 [Mockup Mobile](https://github.com/bounswe/bounswe2023group6/wiki/Mobile-Mockups)|Completed|
-
-
 [RAM](https://github.com/bounswe/bounswe2023group6/wiki/Responsibility-Assignment-Matrix-(RAM))|Completed|
 [Software](http://game-lounge.com/)|Completed|
 
