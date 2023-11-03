@@ -42,7 +42,7 @@ At the project's beginning, our client's insights led to an exciting evolution. 
  
 - **RAM:** RAMs are crucial in that they allow the team members to see who contributed to which tasks, and enable them to load balance the tasks on the individuals. Therefore, we paid special attention to having a proper responsibility assignment matrix.
  
-- **Individual Contribution Reports: ** Although the RAM shows who contributed on building which parts of the project, it could be quite misleading. Some tasks might have required more effort than others, which cannot be concluded just by looking at the RAM, but additional information is required to assess the effort of individuals. ICRs serve exactly this purpose.
+- **Individual Contribution Reports:** Although the RAM shows who contributed on building which parts of the project, it could be quite misleading. Some tasks might have required more effort than others, which cannot be concluded just by looking at the RAM, but additional information is required to assess the effort of individuals. ICRs serve exactly this purpose.
  
 - **Software:** We were asked to build two applications one for mobile and the other for the web. Therefore we divided into three equal teams: backend, mobile, and frontend to meet the expactations properly. We believe that our teams successfully met the requirements of the first milestone’s targets. Our backend team started the development first and exposed some endpoints for the other teams to develop their ends on them. After building the basis, all teams made some adjustments in their end for better integration among the teams. Finally, the application is successfully deployed and can be accessed through the [link]( http://game-lounge.com/home).
 
@@ -75,11 +75,20 @@ We utilized Visual Studio Code as our code editor for our project. VSCode proved
 React is not a framework but a JavaScript library, making it straightforward to learn and work with. This simplicity was particularly advantageous for our team, as we had unexperienced React developers. The library's approach based on UI components promotes reusability, allowing us to efficiently use components across different parts of our application. Another reason is its extensive popularity and strong community support, making it easier to learn and troubleshoot issues. React also improves the rendering efficiency using the concept of Virtual DOM, which reduces unnecessary updates. In addition to React itself, we integrated ESLint for code linting and Tailwind CSS for styling. ESLint helped maintain code quality by identifying and suggesting corrections for potential issues in our code, while Tailwind CSS streamlined the styling process.
 
 - **Mobil**
-  * TODO 
+  
+  - Dart: This language is employed to develop high-performance mobile and web applications. It adheres to an object-oriented, class-based paradigm, featuring garbage collection and a syntax reminiscent of C. It offers the flexibility to compile into machine code, JavaScript, or WebAssembly. Notable language features include support for interfaces, mixins, abstract classes, reified generics, and type inference. It serves as the foundational programming language for the Flutter framework.
+
+  - Flutter: This is a versatile UI toolkit designed for cross-platform development, facilitating code reuse across various operating systems like iOS and Android. It provides the capability for applications to directly interact with underlying platform services. The primary objective is to empower developers to create high-performance applications that offer a native experience on different platforms, accommodating platform-specific nuances while maximizing shared code. During the development process, Flutter apps operate in a virtual machine (VM) that enables a stateful hot reload, allowing for rapid changes without requiring a complete recompilation.
+   
+  - Android Emulators: These are software tools that generate virtual Android devices complete with both software and hardware components on your computing device. They serve as a critical resource for testing Android applications and are utilized to observe the output of our Flutter applications.
+   
 - **CI/CD**
+  
   - Digital Ocean: We selected Digital Ocean as our cloud service provider for our project, configuring a Ubuntu instance with 2 CPUs and 2 GB of RAM to efficiently run our Docker images. This decision was influenced by the limited resources in AWS's free tier, offering just a t2.micro instance with 1 CPU and 1 GB of RAM, as well as our access to $200 in free credits through the GitHub Global Campus program, making Digital Ocean a more cost-effective choice. Similar to AWS, Digital Ocean offers scalable computing capacity and simplifies networking, security, and storage configurations, all while eliminating the need for upfront hardware investments, allowing us to expedite application development and deployment.
 
   - Docker: It is an open platform, is designed to streamline the development, deployment, and execution of applications by allowing you to decouple your applications from the underlying infrastructure, facilitating rapid software delivery. Docker offers the capability to encapsulate and execute applications within isolated environments known as containers. In our project, we utilized three containers: one for the frontend, one for the backend, and one for the PostgreSQL database. Additionally, we configured environment variables for each container to meet specific requirements.
+
+  - GitHub Actions: Workflows have been set up for both the frontend and backend with YAML configuration files to build and push Docker images to DockerHub. These workflows can be manually triggered through the GitHub Actions tab, allowing for monitoring of the status of each action step. This setup plays a crucial role in ensuring continuous integration. 
 
 ### 6. The Requirements Addressed in Milestone 1
 - 1.1.1.1 Guests shall provide their full name, a valid username, an unregistered, a valid password to sign up.
@@ -91,15 +100,15 @@ React is not a framework but a JavaScript library, making it straightforward to 
 
 ### 7. Individual Contribution Reports
 - [Ahmet Kudu](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-for-451-Milestone-1-Report-%E2%80%90-Ahmet-Kudu)
-- [Beyzanur Bektan]
-- [Emre Sin]
+- [Beyzanur Bektan](https://github.com/bounswe/bounswe2023group6/wiki/CMPE451-%E2%80%90-Individual-Contribution-Report-1-%E2%80%90-Beyzanur-Bektan)
+- [Emre Sin](https://github.com/bounswe/bounswe2023group6/wiki/CMPE451-%E2%80%90-Individual-Contribution-Report-1-%E2%80%90-Emre-Sin)
 - [Emre Türker](https://github.com/bounswe/bounswe2023group6/wiki/Emre-T%C3%BCrker-%7C-Individual-Contribution-Page-%E2%80%90-Milestone-1)
 - [Erkam Kavak]
-- [Halis Ayberk Erdem]
+- [Halis Ayberk Erdem](https://github.com/bounswe/bounswe2023group6/wiki/Halis-Ayberk-Erdem-%7C-Individual-Contribution-Page-%E2%80%90-Milestone-1)
 - [Hüseyin Çivi]
 - [Ömer Huzeyfe Bahadıroğlu](https://github.com/bounswe/bounswe2023group6/wiki/CMPE451-%E2%80%90-Individual-Contribution-Report-1-%E2%80%90-%C3%96mer-Bahad%C4%B1ro%C4%9Flu)
-- [Ömer Talip Akalın]
-- [Süleyman Melih Portakal]
-- [Umut Demir]
-- [Muhammet Mustafa Küçük]
+- [Ömer Talip Akalın](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-Report-1-%7C-Omer-Talip-Akalin-%7C-CMPE451)
+- [Süleyman Melih Portakal](https://github.com/bounswe/bounswe2023group6/wiki/S%C3%BCleyman-Melih-Portakal-%7C-Individual-Contribution-Page-%E2%80%90-Milestone-1)
+- [Umut Demir](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-for-451-Milestone-1-Report-%E2%80%90-Umut-Demir)
+- [Muhammet Mustafa Küçük](https://github.com/bounswe/bounswe2023group6/wiki/Muhammet-Mustafa-K%C3%BC%C3%A7%C3%BCk-%7C-Individual-Contribution-Page-%E2%80%90-Milestone-1)
 
