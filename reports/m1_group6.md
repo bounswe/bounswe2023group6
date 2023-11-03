@@ -27,7 +27,7 @@ At the project's beginning, our client's insights led to an exciting evolution. 
 [Scenario 1](https://github.com/bounswe/bounswe2023group6/wiki/Create-Forum-Post-Scenario)|Completed|
 [Scenario 2](https://github.com/bounswe/bounswe2023group6/wiki/Scenario-About-Joining-a-Group)|Completed|
 [Project Plan](https://github.com/bounswe/bounswe2023group6/wiki/Project-Plan)|Completed|
-[RAM](https://github.com/bounswe/bounswe2023group6/wiki/Responsibility-Assignment-Matrix-(RAM))|Completed|
+[RAM](https://docs.google.com/spreadsheets/d/1TTC_MnJcbuhetxTDYepgyq6j4U04vXCMwoQQZIfuZfg/edit#gid=1831406299)|Completed|
 [Software](http://game-lounge.com/)|Completed|
 
 
