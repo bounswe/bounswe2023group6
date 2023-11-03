@@ -100,7 +100,7 @@ React is not a framework but a JavaScript library, making it straightforward to 
 
 ### 7. Individual Contribution Reports
 - [Ahmet Kudu](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-for-451-Milestone-1-Report-%E2%80%90-Ahmet-Kudu)
-- [Beyzanur Bektan]
+- [Beyzanur Bektan](https://github.com/bounswe/bounswe2023group6/wiki/CMPE451-%E2%80%90-Individual-Contribution-Report-1-%E2%80%90-Beyzanur-Bektan)
 - [Emre Sin]
 - [Emre Türker](https://github.com/bounswe/bounswe2023group6/wiki/Emre-T%C3%BCrker-%7C-Individual-Contribution-Page-%E2%80%90-Milestone-1)
 - [Erkam Kavak]
