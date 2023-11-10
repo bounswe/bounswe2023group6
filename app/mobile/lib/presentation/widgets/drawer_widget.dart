@@ -21,8 +21,6 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   late String username = '';
-  bool ispp = false;
-  late ByteData byteData;
   User? currentuser;
 
   final UserAuthenticationService authService = UserAuthenticationService();
@@ -56,41 +54,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     setState(() {
       currentuser = user; 
     });
-    
-    // if (currentuser?.profileImage != null){
-      
-    //   setState(() {
-    //     byteData = currentuser.profileImage!;
-    //     ispp = true;
-    //   });
-
-    // }
   }
-
-  CircleAvatar profilphoto(bool istrue){
-    if (istrue) {
-      return  CircleAvatar(
-                    radius: 70,
-                    child: ClipOval(
-                      child: Image.memory(
-                        byteData.buffer.asUint8List(),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                );
-    } else {
-      return  CircleAvatar(
-                backgroundColor: Theme.of(context).primaryColor,
-                radius: 60,
-                child: const Icon(
-                  Icons.account_circle,
-                  size: 130,
-                  color: Colors.white,
-                ),
-              );
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +124,16 @@ class LoggedDrawer extends StatelessWidget {
             flex: 5,
             child: Column(
               children: [
-                const ListTile(
-                  leading: Icon(Icons.account_circle_outlined),
-                  title: Text('My Profile'),
+                ListTile(
+                  leading: const Icon(Icons.account_circle_outlined),
+                  title: const Text('My Profile'),
+                  onTap:() {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ProfilePage()),
+                    );
+                  },
                 ),
                 const ListTile(
                   leading: Icon(Icons.bookmarks_outlined),

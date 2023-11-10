@@ -24,7 +24,7 @@ class DisplayAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: size.toDouble(),
       child: CircleAvatar(
-        radius: size.toDouble() - 5,
+        radius: size.toDouble(),
         child: byteData == null
             ? Icon(
                 Icons.account_circle,
@@ -32,7 +32,8 @@ class DisplayAvatar extends StatelessWidget {
                 size: 130,
               )
             : 
-            ClipOval(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(120),
               child: Image.memory(
                 byteData!.buffer.asUint8List(),
                 fit: BoxFit.cover,
