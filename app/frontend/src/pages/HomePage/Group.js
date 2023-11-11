@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 const Group = ({item}) => {
 
     return (
-        <div className="pb-4 bg-slate-100 px-2 py-2 rounded">
+        <div className="pb-4 bg-slate-200 px-2 py-2 rounded">
             <div className="flex flex-row gap-4">
                 <div className='w-[180px]'>
                     <img src={item.image}  alt="Resim" className="max-w-full" />
