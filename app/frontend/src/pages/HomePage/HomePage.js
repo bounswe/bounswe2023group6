@@ -73,18 +73,18 @@ export default function HomePage() {
 
     return (
         <div className='flex flex-row grow bg-gray-50'>
-            <div className='w-1/5'>
+            <div className='w-1/5 flex flex-col gap-4'>
                 <Sidebar />
             </div>
-            <div className='w-4/5 flex flex-col'>
+            <div className='w-4/5 flex flex-col gap-4'>
                 <div className='flex w-full justify-center'>
                     {suggestionData.map((item, key) => <Suggestion item={item} key={key} />)}
                 </div>
-                <div className='flex flex-row'>
-                    <div className='flex flex-col w-1/2'>
+                <div className='flex flex-row mx-4'>
+                    <div className='flex flex-col w-1/2 ml-4 mr-2'>
                         {postData.map((item, key) => <Post item={item} key={key} />)}
                     </div>
-                    <div className='w-1/2 gap-4'>
+                    <div className='flex flex-col w-1/2 mr-4 ml-2'>
                         {groupData.map((item, key) => <Group item={item} key={key} />)}
                     </div>
                 </div>

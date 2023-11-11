@@ -1,8 +1,8 @@
 import React from 'react';
 
 const Suggestion = ({ item }) => {
-    return (
-        <div className="card compact bg-blue-100 shadow-xl m-2">
+    return ( // TODO: Fix repsponsive design
+        <div className="card compact bg-green-100 text-sky-800 shadow-xl m-2">
             <figure className="px-4 pt-4">
                 <img src={item.image} alt={item.username} className="rounded-full h-20 w-20 object-cover" />
             </figure> 
