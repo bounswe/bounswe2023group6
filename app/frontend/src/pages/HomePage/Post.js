@@ -1,26 +1,23 @@
-import React from 'react'
-import { Button } from 'primereact/button';
+import React from 'react';
 
-const Post = ({item}) => {
-
+const Post = ({ item }) => {
     return (
-        <div className="pb-4 bg-slate-100 px-2 py-2 rounded">
-            <div className="flex flex-row gap-4">
-                <div className='w-[180px]'>
-                    <img src={item.image} width={180} alt="Resim" className="max-w-full" />
-                </div>
-                <div className='mb-1'>
-                    <h2 className="text" style={{top:'5px'}}>{item.header}</h2>
-                    <p style={{fontSize:'12px'}}>{item.content}</p>
+        <div className="card compact bg-blue-500 shadow-xl m-2">
+            <figure className="px-4 pt-4">
+                <img src={item.image} alt="Post" className="rounded-lg h-20 w-20 object-cover" />
+            </figure>
+            <div className="card-body">
+                <h2 className="card-title text-base">{item.header}</h2>
+                <p className="text-xs">{item.content}</p>
+                <div className="card-actions justify-end">
+                    <button className="btn btn-circle btn-sm btn-secondary">
+                        <i className="i pi pi-thumbs-up" />
+                    </button>
+                    <button className="btn btn-circle btn-sm btn-secondary">
+                        <i className="i pi pi-thumbs-down" />
+                    </button>
                 </div>
             </div>
-            <div className="flex flex-row justify-between px-4 py-2">
-                <div className="date">{item.date}</div>
-                <div className='flex flex-row gap-1.5'>
-                    <Button size='small' icon="pi pi-thumbs-up" className="p-button-text" style={{width: '30px',height:'30px', backgroundColor:'#B46060', color:'#FFF4E0', borderRadius:'50%'}}/>
-                    <Button size='small' icon="pi pi-thumbs-down" className="p-button-text" style={{width: '30px',height:'30px', backgroundColor:'#B46060', color:'#FFF4E0', borderRadius:'50%'}}/>
-                </div>
-        </div>
         </div>
     );
 }

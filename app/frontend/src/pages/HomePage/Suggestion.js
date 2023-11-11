@@ -1,16 +1,17 @@
-import React from 'react'
-import { Button } from "primereact/button";
+import React from 'react';
 
-const Suggestion = ({item}) => {
+const Suggestion = ({ item }) => {
     return (
-        <div className="suggestion-container">
-            <div className="profile-photo">
-                <img src={item.image} />
-            </div>
-            <div style={{marginBottom:'5px'}}>
-                <h2 className="text">{item.username}</h2>
-                <p style={{fontSize:'12px'}}>{item.tag}</p>
-                <Button style={{ backgroundColor:'#B46060', color:'#FFF4E0', width:'70px', justifyContent:'center'}}>Follow</Button>
+        <div className="card compact bg-blue-100 shadow-xl m-2">
+            <figure className="px-4 pt-4">
+                <img src={item.image} alt={item.username} className="rounded-full h-20 w-20 object-cover" />
+            </figure> 
+            <div className="card-body items-center text-center">
+                <h2 className="card-title text-base">{item.username}</h2>
+                <p className="text-xs">{item.tag}</p>
+                <div className="card-actions">
+                    <button className="btn btn-secondary btn-sm">Follow</button>
+                </div>
             </div>
         </div>
     );
