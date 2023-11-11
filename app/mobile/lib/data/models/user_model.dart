@@ -1,11 +1,25 @@
 import 'dart:typed_data';
 
+import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/post_model.dart';
+
 class User {
   final String? name;
   final String? surname;
   final String? email;
   final String? password;
   final String? username;
+
+  String? about;
+  List<Post> likedPosts = [];
+  List<Post> savedPosts = [];
+  List<Post> createdPosts = [];
+  List<Post> commentedPosts = [];
+  List<Post> reportedPosts = [];
+  List<Post> blockedPosts = [];
+
+  List<Game> likedGames = [];
+  List<Game> savedGames = [];
 
   ByteData? profileImage;
 
