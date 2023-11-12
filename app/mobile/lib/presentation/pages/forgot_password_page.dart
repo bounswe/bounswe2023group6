@@ -73,6 +73,10 @@ class _ForgotPageState extends State<ForgotPage> {
           controllerNames:
               controllerNames, // Pass controllerNames to FormWidget
           onSubmit: forgotPassword,
+          validators: [
+                ValidationUtils.dummyValidation,
+                ValidationUtils.dummyValidation
+          ],
         ),
       ),
     );
