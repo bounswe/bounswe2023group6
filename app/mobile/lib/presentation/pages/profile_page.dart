@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/constants/text_constants.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_authentication_service.dart';
@@ -17,138 +18,151 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late User currentuser;
   final UserAuthenticationService authService = UserAuthenticationService();
 
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      loadUser();
-    });
-  }
-
-  void loadUser() async {
+  Future<User?> loadUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (prefs.getString('username') == null) {
-      return;
+      return null;
     }
 
     User user =
         (await authService.getCurrentUser(prefs.getString('username')))!;
     await authService.getUserDetails(user);
 
-    setState(() {
-      currentuser = user;
-    });
+    return user;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: const CustomAppBar(title: TextConstants.titleText),
-        drawer: const CustomDrawer(),
-        body: ListView(
-          physics: const BouncingScrollPhysics(),
+    return FutureBuilder(
+        future: loadUser(),
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return const Center(child: CircularProgressIndicator());
+            default:
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                if (snapshot.hasData) {
+                  User user = snapshot.data!;
+                  return buildProfilePage(user);
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              }
+          }
+        });
+  }
+}
+
+Widget buildProfilePage(User user) => Scaffold(
+      appBar: const CustomAppBar(title: TextConstants.titleText),
+      drawer: const CustomDrawer(),
+      body: SingleChildScrollView(
+        child: Column(
           children: [
             DisplayAvatar(
-                byteData: currentuser.profileImage,
-                onPressed: () {},
-                size: 50),
+                byteData: user.profileImage, onPressed: () {}, size: 50),
             Text(
-              currentuser.name!,
+              user.name ?? 'Name',
               style: const TextStyle(fontSize: 15),
               textAlign: TextAlign.center,
             ),
             Text(
-              currentuser.username!,
+              "@${user.username}",
               style: const TextStyle(fontSize: 15),
               textAlign: TextAlign.center,
             ),
             buildProfileSection(
                 "About Me",
                 Text(
-                  currentuser.about ?? 'About Me',
+                  user.about ?? 'About Me',
                   style: const TextStyle(
                     fontSize: 14,
                     height: 1.4,
                     fontFamily: 'Roboto Mono',
                     color: Colors.white,
                   ),
-                )),
-            // buildProfileSection(
-            //   "Liked Posts",
-            //   currentuser.likedPosts.isEmpty
-            //       ? const Text("No Liked Posts")
-            //       : ListView(
-            //           children: [
-            //             for (var i = 0; i < currentuser.likedPosts.length; i++)
-            //               PostCard(post: currentuser.likedPosts[i]),
-            //           ],
-            //         ),
-            // ),
-            // buildProfileSection("Games",
-            //   currentuser!.likedGames.isEmpty 
-            //     ? const Text("No Games")
-            //     : ListView(
-            //       children:  [
-            //         for (var i = 0; i < currentuser!.likedGames.length; i++) 
-            //           GameCard(game: currentuser!.likedGames[i]),
-            //       ],
-            //     ),
-            // ),
+                ), 
+                () {},
+              ),
+            buildProfileSection(
+              "Liked Posts",
+              user.likedPosts.isEmpty
+                  ? const Text("No Liked Posts")
+                  : ListView(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                      children: [
+                        for (var i = 0; i < user.likedPosts.length; i++)
+                          PostCard(post: user.likedPosts[i]),
+                      ],
+                    ),
+            ),
+            buildProfileSection(
+              "Games",
+              user.likedGames.isEmpty
+                ? const Text("No Games")
+                : ListView(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,                  
+                  children:  [
+                    for (var i = 0; i < user.likedGames.length; i++)
+                      GameCard(game: user.likedGames[i]),
+                  ],
+                ),
+            ),
           ],
-        ));
-  }
-}
-
-Widget buildUserInfoDisplay(String text, String title) => Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Text(
-            text,
-            style: const TextStyle(fontSize: 15),
-          ),
-        ],
+        ),
       ),
     );
 
-Widget buildProfileSection(String sectionName, Widget child) => Padding(
-    padding: const EdgeInsets.only(bottom: 10),
-    child: Column(
-      // crossAxisAlignment: CrossAxisAlignment.start,
+Widget buildProfileSection(String sectionName, Widget child, [VoidCallback? editCallback]) => Padding(
+    padding: const EdgeInsets.only(top: 10, bottom: 10),
+    child: Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
       children: [
-        Positioned(right: -25, top: 0, child: textAsButton(sectionName)),
-        const SizedBox(height: 1),
-        Container(
-            padding: const EdgeInsets.all(10),
-            width: 400,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: const Color(0xff010101),
-              boxShadow: const [
-                BoxShadow(color: Colors.grey, spreadRadius: 1),
-              ],
-            ),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Stack(children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                      child: Align(alignment: Alignment.topLeft, child: child),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: buildEditIcon(
-                          Colors.white, () {}, const Color(0xff5D281B)),
-                    ),
-                  ])
-                ]))
+        Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: ColorConstants.color3,
+                boxShadow: const [
+                  BoxShadow(color: Colors.grey, spreadRadius: 1),
+                ],
+              ),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Stack(children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(3, 15, 3, 15),
+                        child: Align(alignment: Alignment.topLeft, child: child),
+                      ),
+                      editCallback != null ? 
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: buildEditIcon(Colors.white, editCallback, ColorConstants.color1),
+                        )
+                        : 
+                        Container(),
+                    ])
+                  ]))
+          ],
+        ),
+        Positioned(
+          left: 0,
+          top: -10,
+          child: textAsButton(sectionName)
+        ),
       ],
     ));
 
@@ -156,16 +170,17 @@ Widget textAsButton(String text) => TextButton(
       onPressed: () {},
       child: Container(
         width: 150,
-        height: 20,
+        height: 30,
+        padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom:5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: const Color(0xffF4F6FC),
+          color: ColorConstants.color2,
         ),
         child: Text(
           text,
           style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
             color: Colors.black,
           ),
         ),
