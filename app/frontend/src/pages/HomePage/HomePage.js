@@ -72,19 +72,19 @@ export default function HomePage() {
     ];
 
     return (
-        <div className='flex flex-row grow bg-gray-50'>
-            <div className='w-1/5 flex flex-col gap-4'>
+        <div className='flex flex-row grow bg-gray-50'> // Make elements flex, these will be in a row
+            <div className='w-1/5 flex flex-col gap-4'>  // Take 1/5 width of the screen, flex elements in a column, add gap between elements
                 <Sidebar />
             </div>
-            <div className='w-4/5 flex flex-col gap-4'>
-                <div className='flex w-full justify-center'>
+            <div className='w-4/5 flex flex-col gap-4'> // Take 4/5 width of the screen, flex elements in a column, add gap between elements
+                <div className='flex w-full justify-center'> // In the full width you can take (i.e. 4/5), flex elements in a row, center them
                     {suggestionData.map((item, key) => <Suggestion item={item} key={key} />)}
                 </div>
-                <div className='flex flex-row mx-4'>
-                    <div className='flex flex-col w-1/2 ml-4 mr-2'>
+                <div className='flex flex-row mx-4'> // Flex elements in a row, add margin on the left and right
+                    <div className='flex flex-col w-1/2 ml-4 mr-2'> // Take 1/2 width of the screen, flex elements in a column, add margin on the left and right
                         {postData.map((item, key) => <Post item={item} key={key} />)}
                     </div>
-                    <div className='flex flex-col w-1/2 mr-4 ml-2'>
+                    <div className='flex flex-col w-1/2 mr-4 ml-2'> // Take 1/2 width of the screen, flex elements in a column, add margin on the left and right
                         {groupData.map((item, key) => <Group item={item} key={key} />)}
                     </div>
                 </div>
