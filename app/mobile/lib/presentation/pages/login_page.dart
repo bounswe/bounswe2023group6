@@ -56,7 +56,6 @@ class _LoginPageState extends State<LoginPage> {
         title = "Wrong Password";
         content = "Wrong Password Format";
       }
-
     }
     showDialog(
         context: context,
@@ -72,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +89,10 @@ class _LoginPageState extends State<LoginPage> {
               controllerNames:
                   controllerNames, // Pass controllerNames to FormWidget
               onSubmit: loginUser,
+              validators: [
+                ValidationUtils.dummyValidation,
+                ValidationUtils.dummyValidation
+              ],
             ),
             InkWell(
               onTap: () {

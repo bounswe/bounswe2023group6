@@ -2,6 +2,8 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/login/login_request.dart';
 import 'package:mobile/data/models/dto/login/login_response.dart';
+import 'package:mobile/data/models/dto/register/register_request.dart';
+import 'package:mobile/data/models/dto/register/register_response.dart';
 import 'package:mobile/data/models/dto/user/user_detailed_response.dart';
 import 'package:mobile/data/models/dto/user/user_response.dart';
 import 'package:mobile/data/models/game_model.dart';
@@ -19,9 +21,11 @@ class UserAuthenticationService {
 
   static const String _getUser = "/user";
   static const String _getUserDetails = "/user_details";
+  static const String _login = "/login";
+  static const String _register = "/register";
 
   Future<bool> loginUser(String username, String password) async {
-    const String path = '/login';
+
     final LoginDTORequest loginRequest = LoginDTORequest(
       username: username,
       password: password,
@@ -29,7 +33,7 @@ class UserAuthenticationService {
 
     ServiceResponse response =
         await service.sendRequestSafe<LoginDTORequest, LoginDTOResponse>(
-      path,
+      _login,
       loginRequest,
       LoginDTOResponse(),
       'POST',
@@ -41,58 +45,29 @@ class UserAuthenticationService {
       print('Login failed - Status Code: ${response.errorMessage}');
       return false;
     }
-
-    const loginUrl = '$serverUrl/login';
-
-    final body = jsonEncode({
-      'username': username,
-      'password': password,
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse(loginUrl),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final User user = User.fromJson(responseData);
-        return true;
-      } else {
-        print('Login failed - Status Code: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('Login failed: $e');
-      return false;
-    }
   }
 
-  Future<bool> registerUser(User user) async {
-    try {
-      final data = jsonEncode(user.toJson());
+  Future<bool> registerUser(String username, String password, String email) async {
+    final RegisterDTORequest registerRequest = RegisterDTORequest(
+      username: username,
+      password: password,
+      email: email,
+      name: "dummy",
+      surname: "dummy"
+    );
 
-      final response = await http.post(
-        Uri.parse('$serverUrl/register'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: data,
-      );
+    ServiceResponse response =
+        await service.sendRequestSafe<RegisterDTORequest, RegisterDTOResponse>(
+      _register,
+      registerRequest,
+      RegisterDTOResponse(),
+      'POST',
+    );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print('Registration successful');
-        return true;
-      } else {
-        print('Registration failed - Status Code: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('Registration failed: $e');
+    if (response.success) {
+      return true;
+    } else {
+      print('register failed - Status Code: ${response.errorMessage}');
       return false;
     }
   }
