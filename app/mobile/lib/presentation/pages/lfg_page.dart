@@ -6,11 +6,11 @@ class LFGPage extends StatelessWidget {
   LFGPage({super.key});
 
   final _likes = [
-    ["World of Warcraft","3/4","8"],
-    ["Apex Legends","2/5","3"],
-    ["Borderlands 3","1/3","1"],
-    ["Destiny 2","'2/3","7"],
-    ["Fortnite","1/3","2"],
+    ["World of Warcraft", "3/4", "8"],
+    ["Apex Legends", "2/5", "3"],
+    ["Borderlands 3", "1/3", "1"],
+    ["Destiny 2", "'2/3", "7"],
+    ["Fortnite", "1/3", "2"],
   ];
 
   final _userlist = [
@@ -29,78 +29,92 @@ class LFGPage extends StatelessWidget {
     "Ready to secure that Victory Royale in Fortnite? I'm searching for a skilled partner for some epic duos. If you can build, shoot, and adapt on the fly, we'll make an unbeatable duo. Let's drop into the action and conquer the battlefield.",
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Game Lounge") ,
-      drawer: const CustomDrawer(),
-      body:ListView(
-        children:  [
-          for (var i = 0; i < 5; i++) LFGCard(content: _contentlist[i], userdata: _userlist[i],likes: _likes[i],),
-        ],
-      )
-    );
+        appBar: const CustomAppBar(title: "Game Lounge"),
+        drawer: const CustomDrawer(),
+        body: ListView(
+          children: [
+            for (var i = 0; i < 5; i++)
+              LFGCard(
+                content: _contentlist[i],
+                userdata: _userlist[i],
+                likes: _likes[i],
+              ),
+          ],
+        ));
   }
 }
-
 
 class LFGCard extends StatelessWidget {
   final String content;
   final String userdata;
   final List likes;
-  
-  const LFGCard({
-    super.key, required this.content, required this.userdata, required this.likes,
-  });
 
+  const LFGCard({
+    super.key,
+    required this.content,
+    required this.userdata,
+    required this.likes,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child:   SizedBox(
+      child: SizedBox(
         height: 130,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.account_circle),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(userdata, style: const TextStyle(fontSize: 13)),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.account_circle),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(userdata,
+                            style: const TextStyle(fontSize: 13)),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const Center(child: SizedBox()),
-              Text(content,style: const TextStyle(fontSize: 15),overflow: TextOverflow.ellipsis,maxLines: 3),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Text(likes[0], style: const TextStyle(fontWeight: FontWeight.w700),)
-                  ),
-                  Text(likes[1], style: const TextStyle(fontWeight: FontWeight.w700)),
-                  Row(
-                    children: [
-                      const Icon(Icons.comment),
-                      const SizedBox(width: 10,),
-                      Text(likes[2], style: const TextStyle(fontWeight: FontWeight.w700)),
-                    ],
-                  ),
-                ],
-              ),
-            ]
-          ),
-        ) ,
+                  ],
+                ),
+                const Center(child: SizedBox()),
+                Text(content,
+                    style: const TextStyle(fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                        width: 150,
+                        child: Text(
+                          likes[0],
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        )),
+                    Text(likes[1],
+                        style: const TextStyle(fontWeight: FontWeight.w700)),
+                    Row(
+                      children: [
+                        const Icon(Icons.comment),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(likes[2],
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ],
+                ),
+              ]),
+        ),
       ),
     );
   }
