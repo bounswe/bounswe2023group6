@@ -88,7 +88,7 @@ class _ForumPageState extends State<ForumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(title: TextConstants.titleText),
+        appBar: CustomAppBar(title: TextConstants.titleText),
         drawer: const CustomDrawer(),
         body: ListView(
           children: [
