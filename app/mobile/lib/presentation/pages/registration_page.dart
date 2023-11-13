@@ -11,11 +11,11 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmpasswordController = TextEditingController();
+  final TextEditingController confirmpasswordController =
+      TextEditingController();
 
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
@@ -28,7 +28,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   ]; // Add controller names
 
   void registerUser() async {
-
     final String username = usernameController.text;
     final String email = emailController.text;
     final String password = passwordController.text;
@@ -41,9 +40,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ValidationUtils.isEmailValid(email) &&
         ValidationUtils.isPasswordValid(password) &&
         password == confirmPassword) {
-
       try {
-        final registered = await authService.registerUser(username, password, email);
+        final registered =
+            await authService.registerUser(username, password, email);
 
         if (registered) {
           // Navigate to the next screen or perform other actions for a successful login.
@@ -76,10 +75,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         title = "Wrong Password";
         content = "Wrong Password Format";
       } else if (password != confirmPassword) {
-
         title = "Confirm Password";
         content = "Password does not match";
-
       }
     }
 
@@ -106,7 +103,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Registration',
         showBackButton: true,
       ),
