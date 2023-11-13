@@ -62,7 +62,7 @@ class _ForgotPageState extends State<ForgotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Forgot Password',
       ),
       body: Padding(
@@ -74,8 +74,8 @@ class _ForgotPageState extends State<ForgotPage> {
               controllerNames, // Pass controllerNames to FormWidget
           onSubmit: forgotPassword,
           validators: [
-                ValidationUtils.dummyValidation,
-                ValidationUtils.dummyValidation
+            ValidationUtils.dummyValidation,
+            ValidationUtils.dummyValidation
           ],
         ),
       ),

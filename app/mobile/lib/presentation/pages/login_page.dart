@@ -7,7 +7,6 @@ import '../../data/services/user_authentication_service.dart';
 import '../widgets/app_bar_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -31,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
     // Validate user input using ValidationUtils
 
     if (!username.isEmpty && ValidationUtils.isPasswordValid(password)) {
-      
       final loggedIn = await authService.loginUser(username, password);
 
       if (loggedIn) {
@@ -43,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
         title = "Error";
         content = "Wrong credentials.";
       }
-
     } else {
       if (username.isEmpty) {
         // Handle invalid email
@@ -75,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Login',
         showBackButton: true,
       ),

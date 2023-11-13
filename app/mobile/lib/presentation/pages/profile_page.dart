@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 Widget buildProfilePage(User user) => Scaffold(
-      appBar: const CustomAppBar(title: TextConstants.titleText),
+      appBar: CustomAppBar(title: TextConstants.titleText),
       drawer: const CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(
@@ -78,25 +78,25 @@ Widget buildProfilePage(User user) => Scaffold(
               textAlign: TextAlign.center,
             ),
             buildProfileSection(
-                "About Me",
-                Text(
-                  user.about ?? 'About Me',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    height: 1.4,
-                    fontFamily: 'Roboto Mono',
-                    color: Colors.white,
-                  ),
-                ), 
-                () {},
+              "About Me",
+              Text(
+                user.about ?? 'About Me',
+                style: const TextStyle(
+                  fontSize: 14,
+                  height: 1.4,
+                  fontFamily: 'Roboto Mono',
+                  color: Colors.white,
+                ),
               ),
+              () {},
+            ),
             buildProfileSection(
               "Liked Posts",
               user.likedPosts.isEmpty
                   ? const Text("No Liked Posts")
                   : ListView(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
                       children: [
                         for (var i = 0; i < user.likedPosts.length; i++)
                           PostCard(post: user.likedPosts[i]),
@@ -106,72 +106,71 @@ Widget buildProfilePage(User user) => Scaffold(
             buildProfileSection(
               "Games",
               user.likedGames.isEmpty
-                ? const Text("No Games")
-                : ListView(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,                  
-                  children:  [
-                    for (var i = 0; i < user.likedGames.length; i++)
-                      GameCard(game: user.likedGames[i]),
-                  ],
-                ),
+                  ? const Text("No Games")
+                  : ListView(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      children: [
+                        for (var i = 0; i < user.likedGames.length; i++)
+                          GameCard(game: user.likedGames[i]),
+                      ],
+                    ),
             ),
           ],
         ),
       ),
     );
 
-Widget buildProfileSection(String sectionName, Widget child, [VoidCallback? editCallback]) => Padding(
-    padding: const EdgeInsets.only(top: 10, bottom: 10),
-    child: Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Column(
+Widget buildProfileSection(String sectionName, Widget child,
+        [VoidCallback? editCallback]) =>
+    Padding(
+        padding: const EdgeInsets.only(top: 10, bottom: 10),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: ColorConstants.color3,
-                boxShadow: const [
-                  BoxShadow(color: Colors.grey, spreadRadius: 1),
-                ],
-              ),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Stack(children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(3, 15, 3, 15),
-                        child: Align(alignment: Alignment.topLeft, child: child),
-                      ),
-                      editCallback != null ? 
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: buildEditIcon(Colors.white, editCallback, ColorConstants.color1),
-                        )
-                        : 
-                        Container(),
-                    ])
-                  ]))
+            Column(
+              children: [
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: ColorConstants.color3,
+                      boxShadow: const [
+                        BoxShadow(color: Colors.grey, spreadRadius: 1),
+                      ],
+                    ),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Stack(children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(3, 15, 3, 15),
+                              child: Align(
+                                  alignment: Alignment.topLeft, child: child),
+                            ),
+                            editCallback != null
+                                ? Align(
+                                    alignment: Alignment.topRight,
+                                    child: buildEditIcon(Colors.white,
+                                        editCallback, ColorConstants.color1),
+                                  )
+                                : Container(),
+                          ])
+                        ]))
+              ],
+            ),
+            Positioned(left: 0, top: -10, child: textAsButton(sectionName)),
           ],
-        ),
-        Positioned(
-          left: 0,
-          top: -10,
-          child: textAsButton(sectionName)
-        ),
-      ],
-    ));
+        ));
 
 Widget textAsButton(String text) => TextButton(
       onPressed: () {},
       child: Container(
         width: 150,
         height: 30,
-        padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom:5),
+        padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: ColorConstants.color2,
