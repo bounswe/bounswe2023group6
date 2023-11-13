@@ -12,8 +12,8 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomAppBar(title: "Game Lounge") ,
+    return Scaffold(
+      appBar: CustomAppBar(title: "Game Lounge"),
       drawer: CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(8.0),
