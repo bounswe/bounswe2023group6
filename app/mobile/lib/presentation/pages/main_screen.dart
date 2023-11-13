@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/presentation/pages/lfg_page.dart';
-import 'package:mobile/presentation/pages/search_page.dart';
+import 'package:mobile/presentation/pages/forum_page.dart';
 import 'package:mobile/presentation/pages/game_page.dart';
 import 'package:mobile/presentation/pages/home_page.dart';
 
@@ -16,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
-    const SearchPage(),
+    const ForumPage(),
     GamePage(),
     LFGPage()
   ];
@@ -25,20 +25,23 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-          BottomNavigationBarItem(icon: Icon(Icons.library_books), label: "Wiki"),
-          BottomNavigationBarItem(icon: Icon(Icons.group_add), label: "LFG"),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        }
-      ),
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.forum), label: "Forum"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.library_books), label: "Wiki"),
+            BottomNavigationBarItem(icon: Icon(Icons.group_add), label: "LFG"),
+          ],
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }),
       body: _widgetOptions.elementAt(_selectedIndex),
     );
   }
