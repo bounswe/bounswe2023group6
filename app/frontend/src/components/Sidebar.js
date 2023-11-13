@@ -28,7 +28,7 @@ const Sidebar = () => {
     };
 
     const SidebarData = [
-        { label: 'My Profile', icon: <IoIosCreate />, path: '/profile' },
+        { label: 'My Profile', icon: <IoIosCreate />, path: '/profile-page' },
         { label: 'Account Settings', icon: <IoMdHome />, path: '/settings' },
         { label: 'Homepage', icon: <IoMdHome />, path: '/' },
         { label: 'Forum', icon: <IoMdHome />, path: '/forum' },
