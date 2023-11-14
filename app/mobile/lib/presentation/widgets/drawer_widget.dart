@@ -6,6 +6,8 @@ import 'package:mobile/data/services/user_authentication_service.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
 import 'package:mobile/presentation/widgets/avatar_widget.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/utils/user_cache_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/registration_page.dart';
@@ -25,14 +27,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   final UserAuthenticationService authService = UserAuthenticationService();
 
+  late final UserCacheManager userCacheManager;
 
 
   @override
   void initState() {
-
     loadData();
     getUser();
     super.initState();
+    initializeCache();
+  }
+
+  Future<void> initializeCache() async {
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    userCacheManager = UserCacheManager(manager);
+    currentuser = userCacheManager.getUser();
   }
 
   void loadData() async {

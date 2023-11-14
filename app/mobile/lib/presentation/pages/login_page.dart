@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/presentation/widgets/alert_widget.dart';
-import 'package:mobile/presentation/widgets/button_widget.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/utils/user_cache_manager.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
@@ -17,11 +19,25 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  late final UserCacheManager userCacheManager;
+
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
 
   // Define controller names
   final List<String> controllerNames = ['Username', 'Password'];
+  
+  @override
+  void initState() {
+    super.initState();
+    initializeCache();
+  }
+
+  Future<void> initializeCache() async {
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    userCacheManager = UserCacheManager(manager);
+  }
 
   Future<void> loginUser() async {
     final String username = userNameController.text;
@@ -30,13 +46,15 @@ class _LoginPageState extends State<LoginPage> {
     String content = "";
     // Validate user input using ValidationUtils
 
-    if (!username.isEmpty && ValidationUtils.isPasswordValid(password)) {
+    if (!username.isEmpty && password.isNotEmpty) {
       
       final loggedIn = await authService.loginUser(username, password);
 
       if (loggedIn) {
         // Navigate to the next screen or perform other actions for a successful login.
         updateSession(username);
+        User user= (await authService.getCurrentUser(username))!;
+        await userCacheManager.saveUser(user);
         Navigator.pushNamed(context, '/');
         return;
       } else {
