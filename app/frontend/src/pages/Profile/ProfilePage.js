@@ -38,7 +38,7 @@ const ProfilePage = () => {
                 <Sidebar/>
             </div>
             <div className='w-4/5 flex flex-col p-5 justify-center items-center'>
-                <div className="compact text-[#FFF4E0] bg-[#4D4D4D]  text-sky-800 shadow-xl  p-4 flex w-4/5 h-1/4 mb-2 rounded-xl">
+                <div className="compact text-[#FFF4E0] bg-[#4D4D4D]   shadow-xl  p-4 flex w-4/5 h-1/4 mb-2 rounded-xl">
                     <div className="w-1/3 flex justify-center items-center">
                         <img src={images.mahmutdemir} className="rounded-full h-3/5 w-3/5"/>
                     </div>
@@ -67,12 +67,12 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="compact text-[#FFF4E0] bg-[#4D4D4D] text-sky-800 shadow-xl  p-4  w-4/5  h-1/6 mb-2 rounded-xl">
+                <div className="compact text-[#FFF4E0] bg-[#4D4D4D]  shadow-xl  p-4  w-4/5  h-1/6 mb-2 rounded-xl">
                     <h2 className="flex justify-center text-xl mb-3">About Me</h2>
                     <p>{user.about}
                     </p>
                 </div>
-                <div className="compact text-[#FFF4E0] bg-[#4D4D4D] text-sky-800 shadow-xl  p-4  w-4/5 rounded-xl">
+                <div className="compact text-[#FFF4E0] bg-[#4D4D4D]  shadow-xl  p-4  w-4/5 rounded-xl">
                     <h2 className="flex justify-center text-xl mb-3">Liked Posts</h2>
                     <div className='flex flex-col justify-center ml-12 w-4/5 '>
                         {postData.map((item, key) => <LikedPosts item={item} key={key} />)}
