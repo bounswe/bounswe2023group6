@@ -40,9 +40,7 @@ class User {
       email: json['email'],
       password: json['password'],
       username: json['username'],
-      profileImage: ByteData.view(Uint8List.fromList(
-        base64Decode(json['image']),
-      ).buffer),
+      profileImage: null,
     );
   }
 
@@ -53,7 +51,7 @@ class User {
       'email': email,
       'password': password,
       'username': username,
-      'image': profileImage.toString(),
+      'image': null,
     };
   }
 }

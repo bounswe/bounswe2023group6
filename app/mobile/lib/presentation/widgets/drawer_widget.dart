@@ -32,8 +32,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   void initState() {
-    loadData();
-    getUser();
+    //loadData();
+    //getUser();
     super.initState();
     initializeCache();
   }
@@ -42,8 +42,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
     final SharedManager manager = SharedManager();
     await manager.init();
     userCacheManager = UserCacheManager(manager);
-    currentuser = userCacheManager.getUser();
+    setState(() {
+      currentuser = userCacheManager.getUser();
+      username = currentuser!.username!;
+    });
   }
+
 
   void loadData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
