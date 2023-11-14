@@ -9,7 +9,7 @@ const GamePage = () => {
   return (
     <>
       <div className='w-full flex flex-col'>
-        <div className='flex justify-center items-center p-1'>
+        <div className='flex justify-center items-center p-1 bg-black'>
           <img src={gamelounge} alt='Site Logo' className='h-24' />
         </div>
         <div className='flex flex-row grow bg-gray-100'>
