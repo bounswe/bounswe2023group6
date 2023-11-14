@@ -2,7 +2,7 @@ import React from 'react'
 import Suggestion from './Suggestion'
 import Post from './Post'
 import Group from './Group'
-import Navbarx from '../../Navbar'
+import Navbarx from '../../components/navbar/Navbar'
 
 export default function HomePage() {
 	const groupData = [

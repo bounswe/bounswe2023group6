@@ -13,7 +13,7 @@ import {
 	Avatar
 } from '@nextui-org/react'
 import { AcmeLogo } from './AcmeLogo.js'
-import { SearchIcon } from './SearchIcon.js'
+import { SearchIcon } from '../../SearchIcon.js'
 import './Navbar.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -95,12 +95,12 @@ const Navbarx = () => {
 				</NavbarBrand>
 				<NavbarContent className='smx:flex gap-3'>
 					<NavbarItem>
-						<Link color='foreground' href='#'>
+						<Link color='foreground' href='home'>
 							Home
 						</Link>
 					</NavbarItem>
 					<NavbarItem isActive>
-						<Link href='#' aria-current='page' color='secondary'>
+						<Link href='/game/fifa' aria-current='page' color='secondary'>
 							Game
 						</Link>
 					</NavbarItem>
