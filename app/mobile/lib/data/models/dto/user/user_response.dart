@@ -35,9 +35,10 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
         surname: json["surname"],
         email: json["email"],
         username: json["username"],
-        profileImage: ByteData.view(Uint8List.fromList(
-        base64Decode(json['image']),
-      ).buffer),
+        profileImage: json['image'] != null ? 
+          ByteData.view(Uint8List.fromList(
+            base64Decode(json['image']),
+          ).buffer) : null,
       );
 
   @override

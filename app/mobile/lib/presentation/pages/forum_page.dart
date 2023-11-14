@@ -6,14 +6,14 @@ import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class ForumPage extends StatefulWidget {
+  const ForumPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ForumPage> createState() => _ForumPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ForumPageState extends State<ForumPage> {
   var isLoggedIn = true;
 
   List<Post> posts = [
