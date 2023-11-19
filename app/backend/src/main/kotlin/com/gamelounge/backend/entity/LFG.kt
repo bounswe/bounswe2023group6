@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor
 import java.time.Instant
 
 @Entity
-@Table(name = "lfg")
+@Table(name = "lfgs")
 @NoArgsConstructor
 class LFG(
     @Id
@@ -26,5 +26,9 @@ class LFG(
     val user: User? = null,
 
     @OneToMany(mappedBy = "lfg", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val comments: List<Comment> = mutableListOf()
+    val comments: List<Comment> = mutableListOf(),
+
+    @ManyToOne
+    @JoinColumn(name = "gameId")
+    val relatedGame: Game? = null
 )

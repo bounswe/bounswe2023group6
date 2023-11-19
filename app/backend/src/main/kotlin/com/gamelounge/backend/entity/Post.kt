@@ -17,7 +17,6 @@ class Post(
     val downvotes: Int = 0,
 
     val category: String = "",
-    val relatedGamePage: String? = "",
     val annotations: String? = "",
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,5 +24,9 @@ class Post(
     val user: User? = null,
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val comments: List<Comment> = mutableListOf()
+    val comments: List<Comment> = mutableListOf(),
+
+    @ManyToOne
+    @JoinColumn(name = "gameId")
+    val relatedGame: Game? = null
 )

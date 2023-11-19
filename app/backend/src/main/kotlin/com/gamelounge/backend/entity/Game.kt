@@ -30,5 +30,11 @@ class Game (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    val user: User? = null
+    val user: User? = null,
+
+    @OneToMany(mappedBy = "relatedGame")
+    val lfgs: List<LFG> =  mutableListOf(),
+
+    @OneToMany(mappedBy = "relatedGame")
+    val posts: List<Post> = mutableListOf()
 )
