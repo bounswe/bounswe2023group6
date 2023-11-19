@@ -2,6 +2,7 @@ package com.gamelounge.backend.model
 
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.net.URL
 
 data class RegisterationRequest (
     @JsonProperty("username")
@@ -12,12 +13,6 @@ data class RegisterationRequest (
 
     @JsonProperty("email")
     val email: String,
-
-    @JsonProperty("name")
-    val name: String,
-
-    @JsonProperty("surname")
-    val surname: String,
 
     @JsonProperty("image")
     val image: ByteArray?
