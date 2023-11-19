@@ -6,13 +6,15 @@ import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
 
 import jakarta.persistence.*
+import lombok.NoArgsConstructor
 
 @Entity
 @Table(name = "games")
+@NoArgsConstructor
 class Game (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val gameId: Long? = null,
+    val gameId: Long = 0,
 
     val title: String = "",
     val description: String = "",

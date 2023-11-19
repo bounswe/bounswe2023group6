@@ -1,14 +1,16 @@
 package com.gamelounge.backend.entity
 
 import jakarta.persistence.*
+import lombok.NoArgsConstructor
 import java.time.Instant
 
 @Entity
 @Table(name = "lfg")
+@NoArgsConstructor
 class LFG(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val lfgId: Long? = null,
+    val lfgId: Long = 0,
 
     val title: String = "",
     val description: String = "",
@@ -23,6 +25,6 @@ class LFG(
     @JoinColumn(name = "userId")
     val user: User? = null,
 
-    @OneToMany(mappedBy = "lfg", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+    @OneToMany(mappedBy = "lfg", cascade = [CascadeType.ALL], orphanRemoval = true)
     val comments: List<Comment> = mutableListOf()
 )

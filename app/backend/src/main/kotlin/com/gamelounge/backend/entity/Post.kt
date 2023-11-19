@@ -5,16 +5,17 @@ import java.time.Instant
 
 @Entity
 @Table(name = "posts")
+@NoArgsConstructor
 class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val postId: Long? = null,
+    val postId: Long = 0,
 
     val content: String = "",
     val creationDate: Instant = Instant.now(),
     val upvotes: Int = 0,
     val downvotes: Int = 0,
-    val tags: String? = "",
+
     val category: String = "",
     val relatedGamePage: String? = "",
     val annotations: String? = "",
@@ -23,6 +24,6 @@ class Post(
     @JoinColumn(name = "userId")
     val user: User? = null,
 
-    @OneToMany(mappedBy = "post", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true)
     val comments: List<Comment> = mutableListOf()
 )

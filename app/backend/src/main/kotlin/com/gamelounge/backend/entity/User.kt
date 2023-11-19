@@ -5,7 +5,7 @@ import lombok.Data
 import lombok.NoArgsConstructor
 
 @Entity
-@Data
+@Table(name = "users")
 @NoArgsConstructor
 class User(
     @Id
@@ -21,14 +21,12 @@ class User(
     var salt: ByteArray = ByteArray(0),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val posts: List<Post>? = mutableListOf(),
+    val posts: List<Post> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val games: List<Game>? = mutableListOf(),
+     val games: List<Game> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val LFGs: List<LFG>? = mutableListOf(),
+    val lfgs: List<LFG> = mutableListOf(),
 
-    @ManyToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-    val tags: List<Tag>? = mutableListOf()
 )
