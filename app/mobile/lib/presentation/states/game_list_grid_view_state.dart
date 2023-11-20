@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/presentation/pages/game_page.dart';
+import 'package:mobile/presentation/pages/game_wiki_page.dart';
 import 'package:mobile/presentation/widgets/alert_widget.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
@@ -103,7 +105,7 @@ class GridViewState extends State {
           children: itemList
               .map((data) => GestureDetector(
                   onTap: () {
-                    getGridViewSelectedItem(context, data);
+                    Navigator.pushReplacement(context,MaterialPageRoute(builder: (BuildContext context) => GameWikiPage()));
                   },
                   child: GameCard(game: data)))
               .toList(),

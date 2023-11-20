@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/presentation/pages/game_wiki_page.dart';
 import 'package:mobile/presentation/pages/lfg_page.dart';
 import 'package:mobile/presentation/pages/forum_page.dart';
 import 'package:mobile/presentation/pages/game_page.dart';
@@ -17,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const ForumPage(),
-    GamePage(),
+    GameWikiPage(),
     LFGPage()
   ];
 
