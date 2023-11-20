@@ -9,23 +9,23 @@ import java.time.Instant
 class Comment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val commentId: Long = 0,
+    var commentId: Long = 0,
 
-    val content: String = "",
-    val creationDate: Instant = Instant.now(),
-    val upvotes: Int = 0,
-    val downvotes: Int = 0,
+    var content: String = "",
+    var creationDate: Instant = Instant.now(),
+    var upvotes: Int = 0,
+    var downvotes: Int = 0,
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postId")
-    val post: Post? = null,
+    var post: Post? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lfgId")
-    val lfg: LFG? = null,
+    var lfg: LFG? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    val user: User? = null
+    var user: User? = null
 )

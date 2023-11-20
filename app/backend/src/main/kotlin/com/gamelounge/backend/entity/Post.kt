@@ -2,31 +2,33 @@ package com.gamelounge.backend.entity
 import jakarta.persistence.*
 import lombok.NoArgsConstructor
 import java.time.Instant
-
+enum class PostCategory {
+    GUIDE, REVIEW, DISCUSSION
+}
 @Entity
 @Table(name = "posts")
 @NoArgsConstructor
 class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val postId: Long = 0,
+    var postId: Long = 0,
 
-    val content: String = "",
-    val creationDate: Instant = Instant.now(),
-    val upvotes: Int = 0,
-    val downvotes: Int = 0,
+    var content: String = "",
+    var creationDate: Instant = Instant.now(),
+    var upvotes: Int = 0,
+    var downvotes: Int = 0,
 
-    val category: String = "",
-    val annotations: String? = "",
+    @Enumerated(EnumType.STRING)
+    var category: PostCategory = PostCategory.DISCUSSION,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    val user: User? = null,
+    var user: User? = null,
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val comments: List<Comment> = mutableListOf(),
+    var comments: List<Comment> = mutableListOf(),
 
     @ManyToOne
     @JoinColumn(name = "gameId")
-    val relatedGame: Game? = null
+    var relatedGame: Game? = null
 )
