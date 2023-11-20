@@ -14,7 +14,6 @@ class User(
 
     val username: String = "",
     val email: String = "",
-    val password: String = "",
     val profilePicture: String? = null,
     val about: String? = null,
     var passwordHash: ByteArray = ByteArray(0),

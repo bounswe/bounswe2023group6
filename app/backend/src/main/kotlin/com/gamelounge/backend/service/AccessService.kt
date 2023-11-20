@@ -12,6 +12,7 @@ import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.PasswordResetTokenRepository
 import com.gamelounge.backend.repository.SessionRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 import java.util.*
 
@@ -25,17 +26,15 @@ class AccessService(
     val customProperties: CustomProperties
 ){
 
-    fun register(request: RegisterationRequest){
-        // Encrypt the password
+    fun register(request: RegisterationRequest, image: MultipartFile?){
         val (passwordHash, salt) = generateHash(request.password)
 
-        // Save the data to database
         if (userRepository.existsByUsername(request.username)){
             throw UsernameAlreadyExistException("The username already exists!")
         }
-//        val imageUrl: String = s3Service.save(request.image)
+
         val imageUrl: String = "some-url"
-        userRepository.save(User(username = request.username, email = request.email, password = request.password, profilePicture = imageUrl))
+        userRepository.save(User(username = request.username, email = request.email, passwordHash = passwordHash, salt = salt, profilePicture = imageUrl))
 
     }
 

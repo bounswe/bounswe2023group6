@@ -2,7 +2,8 @@ package com.gamelounge.backend.model
 
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.net.URL
+import org.springframework.web.multipart.MultipartFile
+
 
 data class RegisterationRequest (
     @JsonProperty("username")
@@ -12,9 +13,5 @@ data class RegisterationRequest (
     val password: String,
 
     @JsonProperty("email")
-    val email: String,
-
-    @JsonProperty("image")
-    val image: ByteArray?
-
+    val email: String
 )
