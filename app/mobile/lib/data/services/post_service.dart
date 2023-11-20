@@ -1,8 +1,12 @@
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/models/dto/content/post_create_dto_request.dart';
+import 'package:mobile/data/models/dto/content/post_create_dto_response.dart';
 import 'package:mobile/data/models/post_model.dart';
+import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
+
 
 class PostService {
   static const String serverUrl =
@@ -11,13 +15,14 @@ class PostService {
   final BaseNetworkService service = BaseNetworkService();
 
   // static const String _getPosts = "/posts";
-  // static const String _createPost = "/create_post";
+  static const String _createPost = "/posts";
   // static const String _updatePost = "/update_post";
   // static const String _deletePost = "/delete_post";
   // static const String _reportPost = "/report_post";
   // static const String _upvotePost = "/upvote_post";
   // static const String _downvotePost = "/downvote_post";
-  // static const String _getComments = "/comments";
+
+  // static const String _getComments = "/comments/post/";
   // static const String _createComment = "/create_comment";
   // static const String _updateComment = "/update_comment";
   // static const String _deleteComment = "/delete_comment";
@@ -77,17 +82,47 @@ class PostService {
 
   }
 
-  Future<bool> createPost(Content postAsContent) async {
-    // final response = await service.sendRequestSafe<PostCreateDTORequest, PostCreateDTOResponse>(
-    //   _createPost,
-    //   null,
-    //   PostCreateDTOResponse(),
-    //   'POST',
-    // );
-    // if (response.success) {
-    //   return true;
+  Future<Post> createPost(String title, String content) async {
     if (NetworkConstants.useMockData) {
-      return true;
+      return Post(
+        id: 1,
+        title: title,
+        content: content,
+        userId: 0,
+        username: 'user1',
+        createdDate: DateTime.now(),
+        likes: 0,
+        dislikes: 0,
+        comments: 0,
+      );
+    }
+    
+    PostCreateDTORequest postCreateDTORequest = PostCreateDTORequest(
+      title: title,
+      content: content,
+    );
+    ServiceResponse response = await service.sendRequestSafe<PostCreateDTORequest, PostCreateDtoResponse>(
+      _createPost,
+      postCreateDTORequest,
+      PostCreateDtoResponse(),
+      'POST',
+    );
+    if (response.success) {
+      PostCreateDtoResponse postCreateDtoResponse = response.responseConverted;
+      Post createdPost = Post(
+        id: postCreateDtoResponse.id!,
+        title: postCreateDtoResponse.title,
+        content: postCreateDtoResponse.content!,
+        // userId: postCreateDtoResponse.ownerUser.id,
+        userId: 0,
+        username: postCreateDtoResponse.ownerUser?.name,
+        createdDate: postCreateDtoResponse.createdAt!,
+        likes: 0,
+        dislikes: 0,
+        comments: 0,
+      );
+      
+      return createdPost;
     } else {
       throw Exception('Failed to create post');
     }

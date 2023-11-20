@@ -24,18 +24,9 @@ class _PostPageState extends State<PostPage> {
   PostService postService = PostService();
 
   late Post post;
+  bool initializedBefore = false;
   final TextEditingController _commentController = TextEditingController();
-  // final User currentUser; 
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        post = ModalRoute.of(context)!.settings.arguments as Post;
-      });
-    });
-  }
+  // final User currentUser;
 
   @override
   void dispose() {
@@ -43,8 +34,37 @@ class _PostPageState extends State<PostPage> {
     super.dispose();
   }
 
+  Future<bool> loadPostData() async {
+    if (initializedBefore) {
+      return true;
+    }
+
+    setState(() {
+      post = ModalRoute.of(context)!.settings.arguments as Post;
+    });
+    List<Comment> commentList = await postService.getComments(post.id);
+    setState(() {
+      post.commentList = commentList;
+    });
+
+    initializedBefore = true;
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: loadPostData(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return buildPage();
+          }
+        });
+  }
+
+  Widget buildPage() {
     return Scaffold(
       appBar: AppBar(
         title: Text(post.title!),
