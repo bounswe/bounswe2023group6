@@ -13,6 +13,7 @@ class Post(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var postId: Long = 0,
 
+    var title: String = "",
     var content: String = "",
     var creationDate: Instant = Instant.now(),
     var upvotes: Int = 0,
