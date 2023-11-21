@@ -1,13 +1,12 @@
 import 'package:mobile/data/models/content_model.dart';
 
-class Post extends Content {
-  Post({
+class Comment extends Content {
+  Comment({
     required DateTime createdDate,
     required int id,
     required String content,
     required int userId,
     required username,
-    required title,
     likes = 0,
     dislikes = 0,
     comments = 0,
@@ -15,12 +14,11 @@ class Post extends Content {
     createdDate: createdDate,
     id: id,
     content: content,
-    type: ContentType.post,
+    type: ContentType.comment,
     userId: userId,
+    username: username,
     likes: likes,
     dislikes: dislikes,
     comments: comments,
-    title: title,
-    username: username, 
-  );
+  );  
 }
