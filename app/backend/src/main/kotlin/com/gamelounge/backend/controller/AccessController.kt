@@ -1,8 +1,7 @@
 package com.gamelounge.backend.controller
 
-import com.gamelounge.backend.model.*
+import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.service.AccessService
-import com.gamelounge.backend.service.EmailService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -20,10 +19,12 @@ class AccessController(
     @ResponseStatus(HttpStatus.CREATED)
     fun register(
         @RequestPart("request") request: RegisterationRequest,
-        @RequestPart("image") image: MultipartFile?): ResponseEntity<Map<String, String>> {
+        @RequestPart("image") image: MultipartFile?
+    ): ResponseEntity<Map<String, String>> {
 
         accessService.register(request, image)
         return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("message" to "Registered successfully!"))
+
     }
 
     @PostMapping("/login")

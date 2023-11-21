@@ -4,7 +4,7 @@ package com.gamelounge.backend.service
 import com.gamelounge.backend.config.CustomProperties
 
 import com.gamelounge.backend.entity.Session
-import com.gamelounge.backend.model.RegisterationRequest
+import com.gamelounge.backend.model.request.RegisterationRequest
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.HashingUtil.generateHash
 import com.gamelounge.backend.entity.User
@@ -32,6 +32,8 @@ class AccessService(
         if (userRepository.existsByUsername(request.username)){
             throw UsernameAlreadyExistException("The username already exists!")
         }
+
+        // will implement AWS S3 logic here
 
         val imageUrl: String = "some-url"
         userRepository.save(User(username = request.username, email = request.email, passwordHash = passwordHash, salt = salt, profilePicture = imageUrl))
