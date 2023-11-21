@@ -92,7 +92,7 @@ const Navbarx = () => {
 						</Link>
 					</NavbarItem>
 					<NavbarItem>
-						<Link color='foreground' href='#'>
+						<Link href='/forum' aria-current='page' color='secondary'>
 							Forum
 						</Link>
 					</NavbarItem>
