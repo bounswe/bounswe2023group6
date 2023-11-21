@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage'
 import { GamePage } from './pages/GamePage';
 import { ProfilePage } from './pages/Profile';
 import { ResetPassword, ForgotPassword, Login, Signup } from './pages/Auth'
+import { ForumPage } from './pages/ForumPage';
 
 const App = () => (
 	<BrowserRouter>
@@ -16,6 +17,7 @@ const App = () => (
 			<Route path='/reset-password' element={<ResetPassword />} />
 			<Route path='/home' element={<HomePage />} />
 			<Route path="/game/fifa" element={<GamePage />} />
+			<Route path="/forum" element={<ForumPage />} />
 		</Routes>
 	</BrowserRouter>
 )
