@@ -12,12 +12,12 @@ import {
 	DropdownMenu,
 	Avatar
 } from '@nextui-org/react'
-import { AcmeLogo } from './AcmeLogo.js'
 import { SearchIcon } from '../../SearchIcon.js'
 import './Navbar.css'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import logo from '../../gamelounge.png'
 const Navbarx = () => {
 	const api_url = process.env.REACT_APP_API_URL
 	const navigate = useNavigate()
@@ -78,20 +78,7 @@ const Navbarx = () => {
 		<Navbar isBordered>
 			<NavbarContent justify='start'>
 				<NavbarBrand className='mr-4'>
-					<AcmeLogo />
-					<p
-						style={{
-							background:
-								'linear-gradient(90deg, rgba(72,2,122,1) 0%, rgba(106,34,159,1) 26%, rgba(128,90,232,1) 52%, rgba(41,82,187,1) 82%, rgba(40,125,177,1) 100%)',
-							WebkitBackgroundClip: 'text',
-							color: 'transparent',
-							fontWeight: 'bold',
-							fontFamily: 'Bodoni'
-						}}
-						className='smx:hidden font-bold text-inherit'
-					>
-						GameLounge
-					</p>
+					<img src={logo} className='rounded-lg' height='48' width='64' />
 				</NavbarBrand>
 				<NavbarContent className='smx:flex gap-3'>
 					<NavbarItem>
