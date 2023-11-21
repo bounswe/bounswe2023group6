@@ -33,7 +33,10 @@ class AccessService(
         if (userRepository.existsByUsername(request.username)){
             throw UsernameAlreadyExistException("The username already exists!")
         }
-        userRepository.save(User(request.username, request.email, request.name, request.surname, request.image, passwordHash, salt))
+//        val imageUrl: String = s3Service.save(request.image)
+        val imageUrl: String = "some-url"
+        userRepository.save(User(username = request.username, email = request.email, password = request.password, profilePicture = imageUrl))
+
     }
 
     fun login(username: String, password: String): UUID {

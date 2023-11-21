@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/presentation/pages/forgot_password_page.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
+import 'package:mobile/presentation/pages/post_page.dart';
+import 'package:mobile/presentation/pages/profile_page.dart';
 import 'presentation/pages/auth_page_demo.dart';
 import 'presentation/pages/registration_page.dart';
 import 'presentation/pages/login_page.dart';
@@ -54,6 +56,8 @@ class MainApp extends StatelessWidget {
         '/registration': (context) => RegistrationPage(),
         '/login': (context) => LoginPage(),
         '/forgot': (context) => ForgotPage(),
+        '/profile': (context) => const ProfilePage(),
+        '/post': (context) => const PostPage(),
       },
       // Set the CustomAppBar as the app bar for all pages
       builder: (context, child) {
