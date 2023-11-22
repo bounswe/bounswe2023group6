@@ -17,14 +17,12 @@ class UserController (
 ){
     @GetMapping("/user")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getUserInfoBySessionId(@CookieValue("SESSIONID") sessionId: UUID): User{
         return userService.getUserBySessionId(sessionId)
     }
 
     @GetMapping("/user/{username}")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getUserInfoByUsername(@PathVariable username: String): User{
         return userService.getUserByUsername(username)
     }
