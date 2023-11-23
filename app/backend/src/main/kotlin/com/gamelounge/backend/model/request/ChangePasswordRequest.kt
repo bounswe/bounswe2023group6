@@ -1,4 +1,4 @@
-package com.gamelounge.backend.model
+package com.gamelounge.backend.model.request
 
 data class ChangePasswordRequest (
     val currentPassword: String,
