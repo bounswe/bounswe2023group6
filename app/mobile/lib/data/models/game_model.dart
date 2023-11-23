@@ -6,10 +6,12 @@ class Game {
   final String description;
   final String imageLink;
 
+
   Game({
     required this.id,
     required this.name,
     required this.description,
-    this.imageLink = NetworkConstants.defaultGameImage,
+    required this.imageLink,
+    
   });
 }
