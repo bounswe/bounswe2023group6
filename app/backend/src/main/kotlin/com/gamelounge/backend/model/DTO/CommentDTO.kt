@@ -1,5 +1,11 @@
 package com.gamelounge.backend.model.DTO
 
+import java.time.Instant
+
 data class CommentDTO(
-    val id: String
+    var commentId: Long = 0,
+    var content: String = "",
+    var creationDate: Instant = Instant.now(),
+    var upvotes: Int = 0,
+    var downvotes: Int = 0,
 )

@@ -83,6 +83,17 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(mapOf("errorMessage" to exception.message))
     }
-
+    @ExceptionHandler(CommentNotFoundException::class)
+    fun handleCommentNotFoundException(exception: CommentNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(UnauthorizedCommentAccessException::class)
+    fun handleUnauthorizedCommentAccessException(exception: UnauthorizedCommentAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(mapOf("errorMessage" to exception.message))
+    }
 
 }

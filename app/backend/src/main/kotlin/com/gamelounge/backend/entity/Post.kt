@@ -18,6 +18,8 @@ class Post(
     var creationDate: Instant = Instant.now(),
     var upvotes: Int = 0,
     var downvotes: Int = 0,
+    var totalComments: Int = 0,
+
 
     @Enumerated(EnumType.STRING)
     var category: PostCategory = PostCategory.DISCUSSION,
