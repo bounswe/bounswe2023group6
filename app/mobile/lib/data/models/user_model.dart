@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:mobile/data/models/game_model.dart';
@@ -39,7 +40,7 @@ class User {
       email: json['email'],
       password: json['password'],
       username: json['username'],
-      profileImage: json['image'],
+      profileImage: null,
     );
   }
 
@@ -50,7 +51,7 @@ class User {
       'email': email,
       'password': password,
       'username': username,
-      'image': profileImage.toString(),
+      'image': null,
     };
   }
 }

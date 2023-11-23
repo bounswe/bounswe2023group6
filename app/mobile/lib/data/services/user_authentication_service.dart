@@ -176,6 +176,7 @@ class UserAuthenticationService {
         "Hey there, I'm Ayse, and I'm a huge game enthusiast. Ever since I was a kid, video games have been a major part of my life. From the first time I picked up a controller, I was hooked. I spent countless hours playing my favorite games, immersing myself in their worlds, and trying to master their mechanics.";
     user.likedPosts = [
       Post(
+        createdDate: DateTime.now(),
         id: 1,
         title: 'Post 1',
         userId: 1,
@@ -187,6 +188,7 @@ class UserAuthenticationService {
         comments: 8,
       ),
       Post(
+        createdDate: DateTime.now().subtract(const Duration(days: 1)),
         id: 2,
         title: 'Post 2',
         userId: 2,
@@ -198,6 +200,7 @@ class UserAuthenticationService {
         comments: 3,
       ),
       Post(
+        createdDate: DateTime.now().subtract(const Duration(days: 2)),        
         id: 3,
         title: 'Post 3',
         userId: 3,
