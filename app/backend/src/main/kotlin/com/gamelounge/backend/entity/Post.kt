@@ -20,6 +20,7 @@ class Post(
     var downvotes: Int = 0,
     var totalComments: Int = 0,
 
+
     @Enumerated(EnumType.STRING)
     var category: PostCategory = PostCategory.DISCUSSION,
 

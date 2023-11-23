@@ -1,0 +1,14 @@
+@media (max-width: 767px) {
+	.smx\:hidden {
+		display: none;
+	}
+	.smx\:block {
+		display: block;
+	}
+}
+@media (min-width: 767px) {
+	.nsm\:hidden {
+		display: none;
+		visibility: hidden;
+	}
+}

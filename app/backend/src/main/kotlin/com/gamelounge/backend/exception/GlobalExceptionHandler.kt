@@ -96,5 +96,4 @@ class GlobalExceptionHandler {
             .body(mapOf("errorMessage" to exception.message))
     }
 
-
 }

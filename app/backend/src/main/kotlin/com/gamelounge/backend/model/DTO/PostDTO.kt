@@ -13,3 +13,4 @@ data class PostDTO(
     var totalComments: Int = 0,
     var category: PostCategory = PostCategory.DISCUSSION
 )
+

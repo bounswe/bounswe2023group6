@@ -19,7 +19,6 @@ class LFG(
     val micCamRequirement: Boolean = true,
     val memberCapacity: Int = 0,
     val creationDate: Instant = Instant.now(),
-    val tags: String? = "",
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -30,5 +29,13 @@ class LFG(
 
     @ManyToOne
     @JoinColumn(name = "gameId")
-    val relatedGame: Game? = null
+    val relatedGame: Game? = null,
+
+    @ManyToMany
+    @JoinTable(
+    name = "lfg_tags",
+    joinColumns = [JoinColumn(name = "lfgId")],
+    inverseJoinColumns = [JoinColumn(name = "tagId")]
+    )
+    var tags: List<Tag> = mutableListOf()
 )

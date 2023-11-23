@@ -36,5 +36,13 @@ class Game (
     val lfgs: List<LFG> =  mutableListOf(),
 
     @OneToMany(mappedBy = "relatedGame")
-    val posts: List<Post> = mutableListOf()
+    val posts: List<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "game_tags",
+        joinColumns = [JoinColumn(name = "gameId")],
+        inverseJoinColumns = [JoinColumn(name = "tagId")]
+    )
+    var tags: List<Tag> = mutableListOf()
 )
