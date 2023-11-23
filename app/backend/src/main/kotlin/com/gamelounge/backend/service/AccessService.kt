@@ -35,7 +35,7 @@ class AccessService(
         }
 //        val imageUrl: String = s3Service.save(request.image)
         val imageUrl: String = "some-url"
-        userRepository.save(User(username = request.username, email = request.email, password = request.password, profilePicture = imageUrl))
+        userRepository.save(User(username = request.username, passwordHash = passwordHash, salt = salt, email = request.email, password = request.password, profilePicture = imageUrl))
 
     }
 
