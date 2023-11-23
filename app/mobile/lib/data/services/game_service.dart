@@ -1,19 +1,22 @@
-import 'package:flutter/material.dart';
+import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/game_model.dart';
-import 'package:mobile/presentation/pages/game_page.dart';
-import 'package:mobile/presentation/pages/game_wiki_page.dart';
-import 'package:mobile/presentation/widgets/alert_widget.dart';
-import 'package:mobile/presentation/widgets/button_widget.dart';
-import 'package:mobile/presentation/widgets/game_card_widget.dart';
+import 'package:mobile/data/services/base_service.dart';
 
-class GridViewState extends State {
-  int countValue = 2;
-  int aspectWidth = 2;
-  int aspectHeight = 1;
+class GameService {
+  static const String serverUrl =
+    NetworkConstants.BASE_LOCAL_URL;
 
-  List<Game> itemList = getImageDataList();
+  final BaseNetworkService service = BaseNetworkService();
 
-  static List<Game> getImageDataList() {
+  Future<Game> getGame(int id) async {
+    return getGameDataList()[id];
+  }
+
+  static Game getGameStatic(int id)  {
+    return getGameDataList()[id];
+  }
+
+  static List<Game> getGameDataList() {
     return [
       Game(
           id: 1,
@@ -39,10 +42,55 @@ class GridViewState extends State {
       Game(
           id: 4,
           description:
-              "Celeste, Kanadalı video oyunu geliştiricisi Matt Thorson tarafından tasarlanan ve geliştirilen bir platform oyunudur. Noel Berry tarafından tasarlanan ve geliştirilen bir platform oyunu olan TowerFall'ın yaratıcısı Matt Thorson tarafından tasarlanan ve geliştirilen bir platform oyunudur. Oyun, 2018'de Microsoft Windows, Nintendo Switch, PlayStation 4, Xbox One, macOS ve Linux için piyasaya sürüldü. Oyun, 2019'da Google Stadia için piyasaya sürüldü.",
+              """ 
+# Celeste
+
+## Overview
+
+**Celeste** is a critically acclaimed indie platformer video game developed by Maddy Makes Games. Released in 2018, the game has gained widespread recognition for its challenging gameplay, beautiful pixel art, and a heartfelt narrative.
+
+## Gameplay
+
+### Controls
+
+Players control the protagonist, Madeline, as she ascends the titular mountain, Celeste. The controls are simple yet precise, allowing for tight maneuvers and challenging platforming sequences.
+
+### Platforming Challenges
+
+Celeste is known for its challenging platforming levels, each filled with obstacles, puzzles, and enemies. The game introduces various mechanics, including climbing, dashing, and wall jumping, which players must master to progress through the levels.
+
+### Story
+
+The narrative of Celeste follows Madeline's journey to the summit of Celeste Mountain. Along the way, she encounters other characters and faces her inner struggles. The game delves into themes of mental health, self-discovery, and perseverance.
+
+## Development
+
+### Developer
+
+- **Developer:** Maddy Makes Games
+- **Release Date:** January 25, 2018
+- **Platforms:** Microsoft Windows, macOS, Linux, Nintendo Switch, PlayStation 4, Xbox One
+
+### Reception
+
+Celeste received widespread acclaim from both players and critics. Its engaging gameplay, emotionally resonant story, and beautiful soundtrack contributed to its success. The game won several awards, including the "Best Independent Game" at The Game Awards 2018.
+
+## Legacy
+
+Celeste has left a lasting impact on the indie gaming scene, inspiring other developers to create emotionally driven and challenging experiences. The game's success also led to the creation of free additional levels, expanding the content available to players.
+
+## External Links
+
+- [Official Celeste Website](https://www.celestegame.com/)
+- [Celeste on Steam](https://store.steampowered.com/app/504230/Celeste/)
+
+*Note: The information in this wiki page is based on knowledge as of the last update in January 2022, and there may have been additional developments or releases since then.*
+
+  """,
           name: "Celeste",
           imageLink:
               "https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png"),
+          
       Game(
           id: 5,
           description:
@@ -58,59 +106,5 @@ class GridViewState extends State {
           imageLink:
               "https://upload.wikimedia.org/wikipedia/en/9/94/Ori_and_the_Will_of_the_Wisps.jpg"),
     ];
-  }
-
-  changeMode() {
-    if (countValue == 2) {
-      setState(() {
-        countValue = 1;
-        aspectWidth = 3;
-        aspectHeight = 1;
-      });
-    } else {
-      setState(() {
-        countValue = 2;
-        aspectWidth = 2;
-        aspectHeight = 1;
-      });
-    }
-  }
-
-  getGridViewSelectedItem(BuildContext context, Game gridItem) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertWidget(
-          title: gridItem.name,
-          content: gridItem.description,
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(children: [
-      Container(
-          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          child: Button(
-            onPressed: () => changeMode(),
-            label: 'Change GridView Mode To ListView ',
-          )),
-      Expanded(
-        child: GridView.count(
-          crossAxisCount: countValue,
-          childAspectRatio: (aspectWidth / aspectHeight),
-          children: itemList
-              .map((data) => GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(context,MaterialPageRoute(builder: (BuildContext context) => GameWikiPage(game: data,)));
-                  },
-                  child: GameCard(game: data)))
-              .toList(),
-        ),
-      )
-    ]));
   }
 }
