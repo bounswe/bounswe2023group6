@@ -1,22 +1,26 @@
-class Post {
-  final int id;
-  final String title;
-  final String content;
-  final int userId;
+import 'package:mobile/data/models/content_model.dart';
 
-  String? username; 
-  int likes = 0;
-  int dislikes = 0;
-  int comments = 0;
-
+class Post extends Content {
   Post({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.userId,
-    this.username,
-    this.likes = 0,
-    this.dislikes = 0,
-    this.comments = 0,
-  });
+    required DateTime createdDate,
+    required int id,
+    required String content,
+    required int userId,
+    required username,
+    required title,
+    likes = 0,
+    dislikes = 0,
+    comments = 0,
+  }) : super(
+    createdDate: createdDate,
+    id: id,
+    content: content,
+    type: ContentType.post,
+    userId: userId,
+    likes: likes,
+    dislikes: dislikes,
+    comments: comments,
+    title: title,
+    username: username, 
+  );
 }

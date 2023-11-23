@@ -1,22 +1,18 @@
 import React from 'react';
-import { Button } from 'primereact/button';
 
-const Group = ({item}) => {
-
+const Group = ({ item }) => {
     return (
-        <div className="pb-4 bg-slate-200 px-2 py-2 rounded">
-            <div className="flex flex-row gap-4">
-                <div className='w-[180px]'>
-                    <img src={item.image}  alt="Resim" className="max-w-full" />
+        <div className="card compact bg-green-100 text-sky-800 shadow-xl m-2">
+            <figure className="px-4 pt-4">
+                <img src={item.image} alt="Group" className="rounded-lg h-20 w-20 object-cover" />
+            </figure>
+            <div className="card-body">
+                <h2 className="card-title text-base">{item.header}</h2>
+                <p className="text-xs">{item.text}</p>
+                <div className="flex justify-between items-center text-xs">
+                    <span>Players: {item.players}</span>
+                    <button className="btn btn-secondary btn-sm">Join</button>
                 </div>
-                <div style={{marginBottom:'5px'}}>
-                    <h2 className="text">{item.header}</h2>
-                    <p style={{fontSize:'12px'}}>{item.text}</p>
-                </div>
-            </div>
-            <div className="footer">
-                <div className="date">Players: {item.players}</div>
-                <Button  className="p-button-text" style={{height:'30px', backgroundColor:'#B46060', color:'#FFF4E0', justifyContent:'center'}}>Join</Button>
             </div>
         </div>
     );

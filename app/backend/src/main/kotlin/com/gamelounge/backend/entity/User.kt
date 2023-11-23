@@ -13,10 +13,11 @@ class User(
     val userId: Long = 0,
 
     val username: String = "",
-    val email: String = "",
-    val password: String = "",
+    var email: String = "",
     val profilePicture: String? = null,
-    val about: String? = null,
+    var about: String? = null,
+    var title: String? = null,
+    var company: String? = null,
     var passwordHash: ByteArray = ByteArray(0),
     var salt: ByteArray = ByteArray(0),
 
@@ -24,9 +25,33 @@ class User(
     val posts: List<Post> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-     val games: List<Game> = mutableListOf(),
+    val games: List<Game> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val lfgs: List<LFG> = mutableListOf(),
 
-)
+    @ManyToMany
+    @JoinTable(
+        name = "user_likes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "postId")]
+    )
+    var likedPosts: List<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_likes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "postId")]
+    )
+    var likedComments: List<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_tags",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "tagId")]
+    )
+    var tags: List<Tag> = mutableListOf()
+
+    )

@@ -3,7 +3,7 @@ package com.gamelounge.backend.service
 import com.gamelounge.backend.config.CustomProperties
 import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.exception.*
-import com.gamelounge.backend.model.RegisterationRequest
+import com.gamelounge.backend.model.request.RegisterationRequest
 import com.gamelounge.backend.repository.PasswordResetTokenRepository
 import com.gamelounge.backend.repository.SessionRepository
 import com.gamelounge.backend.repository.UserRepository
