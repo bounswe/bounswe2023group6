@@ -33,5 +33,6 @@ class Post(
 
     @ManyToOne
     @JoinColumn(name = "gameId")
-    var relatedGame: Game? = null
+    var relatedGame: Game? = null,
+
 )

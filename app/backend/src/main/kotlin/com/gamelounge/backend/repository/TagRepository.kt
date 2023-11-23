@@ -6,5 +6,4 @@ import org.springframework.data.repository.CrudRepository
 
 interface TagRepository: CrudRepository<Tag, Long> {
 
-    fun findTagByUsers(users: MutableList<User>)
 }

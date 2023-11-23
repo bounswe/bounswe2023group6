@@ -1,28 +1,18 @@
 package com.gamelounge.backend.util
-import com.gamelounge.backend.entity.Comment
-import com.gamelounge.backend.entity.Post
-import com.gamelounge.backend.entity.Game
-import com.gamelounge.backend.entity.LFG
-import com.gamelounge.backend.entity.Tag
-import com.gamelounge.backend.entity.User
-import com.gamelounge.backend.model.DTO.GameDTO
-import com.gamelounge.backend.model.DTO.LFGDTO
-import com.gamelounge.backend.model.DTO.TagDTO
-import com.gamelounge.backend.model.DTO.UserDTO
-import com.gamelounge.backend.model.DTO.CommentDTO
-import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.entity.*
+import com.gamelounge.backend.model.DTO.*
 
 object ConverterDTO {
-    fun convertToPostDTO(Post: Post) : PostDTO {
+    fun convertToPostDTO(post: Post) : PostDTO {
         return PostDTO(
-            postId = Post.postId,
-            title = Post.title,
-            content = Post.content,
-            creationDate = Post.creationDate,
-            upvotes = Post.upvotes,
-            downvotes = Post.downvotes,
-            totalComments = Post.totalComments,
-            category = Post.category
+            postId = post.postId,
+            title = post.title,
+            content = post.content,
+            creationDate = post.creationDate,
+            upvotes = post.upvotes,
+            downvotes = post.downvotes,
+            totalComments = post.totalComments,
+            category = post.category
         )
     }
     fun convertBulkToPostDTO(Posts: List<Post>) : List<PostDTO> {
@@ -105,5 +95,20 @@ object ConverterDTO {
 
     fun convertBulkToGameDTO(games: List<Game>): List<GameDTO>{
         return games.map { game -> convertToGameDTO(game) }
+    }
+
+    fun convertToReportDTO(report: Report): ReportDTO{
+        return ReportDTO(
+            report.reportId,
+            report.reason,
+            convertToUserDTO(report.reportingUser!!),
+            report.reportedPost?.let { convertToPostDTO(it) },
+            report.reportedLFG?.let { convertToLFGDTO(it) },
+            report.reportedComment?.let { convertToCommentDTO(it) }
+        )
+    }
+
+    fun convertToReportDTO(reports: List<Report>): List<ReportDTO>{
+        return reports.map { report -> convertToReportDTO(report) }
     }
 }
