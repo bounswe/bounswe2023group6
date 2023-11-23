@@ -19,9 +19,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         automaticallyImplyLeading:
             showBackButton, // Control back button visibility
-        title: SizedBox(
-            height: 150,
-            child: Image.asset('lib/assets/logo.png', fit: BoxFit.contain)),
+        title: InkWell(
+          onTap: () {
+             Navigator.pushNamed(context, '/');
+          },
+          child: SizedBox(
+              height: 150,
+              child: Image.asset('lib/assets/logo.png', fit: BoxFit.contain)),
+        ),
         centerTitle: true, // Center the title in the middle
         backgroundColor:
             Theme.of(context).primaryColor, // Use the theme's primary color

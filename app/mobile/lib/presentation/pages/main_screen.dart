@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/presentation/pages/game_wiki_page.dart';
 import 'package:mobile/presentation/pages/lfg_page.dart';
 import 'package:mobile/presentation/pages/forum_page.dart';
@@ -18,9 +20,11 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const ForumPage(),
-    GameWikiPage(),
+    GamePage(),
+    //GameWikiPage(game: GameService.getGameStatic(3)),
     LFGPage()
   ];
+
 
   @override
   Widget build(BuildContext context) {
