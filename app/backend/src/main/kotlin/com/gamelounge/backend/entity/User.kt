@@ -32,6 +32,22 @@ class User(
 
     @ManyToMany
     @JoinTable(
+        name = "user_likes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "postId")]
+    )
+    var likedPosts: List<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_likes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "postId")]
+    )
+    var likedComments: List<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
         name = "user_tags",
         joinColumns = [JoinColumn(name = "userId")],
         inverseJoinColumns = [JoinColumn(name = "tagId")]
