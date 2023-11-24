@@ -2,7 +2,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum SharedKeys {
-  user
+  user,
+  sessionId
 }
 
 class SharedManager {
@@ -20,6 +21,10 @@ class SharedManager {
 
   Future<void> saveStringItems(SharedKeys key, List<String> value) async {
     await preferences?.setStringList(key.name, value);
+  }
+
+  bool checkString(SharedKeys key) {
+    return preferences?.containsKey(key.name) ?? false;
   }
 
   String getString(SharedKeys key) {

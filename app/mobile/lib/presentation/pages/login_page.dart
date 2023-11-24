@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/presentation/widgets/alert_widget.dart';
 import 'package:mobile/utils/shared_manager.dart';
-import 'package:mobile/utils/user_cache_manager.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  late final UserCacheManager userCacheManager;
+  late final CacheManager cacheManager;
 
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> initializeCache() async {
     final SharedManager manager = SharedManager();
     await manager.init();
-    userCacheManager = UserCacheManager(manager);
+    cacheManager = CacheManager(manager);
   }
 
   Future<void> loginUser() async {
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
         // Navigate to the next screen or perform other actions for a successful login.
         updateSession(username);
         User user= (await authService.getCurrentUser(username))!;
-        await userCacheManager.saveUser(user);
+        await cacheManager.saveUser(user);
         Navigator.pushNamed(context, '/');
         return;
       } else {
