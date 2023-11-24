@@ -76,7 +76,11 @@ class PostController(private val postService: PostService) {
         val downvotedUsersDTO = postService.getDownvotedUsers(id)
         return ResponseEntity.ok(downvotedUsersDTO)
     }
-
-
+    // REPORT POST
+    @PostMapping("/{id}/report")
+    fun reportPost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reason: String): ResponseEntity<Void> {
+        postService.reportPost(sessionId, id, reason)
+        return ResponseEntity.noContent().build<Void>()
+    }
 
 }

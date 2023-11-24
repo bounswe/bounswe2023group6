@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import lombok.NoArgsConstructor
 
 @Entity
-@Table(name = "users")
+@Table(name = "reports")
 @NoArgsConstructor
 class Report(
     @Id

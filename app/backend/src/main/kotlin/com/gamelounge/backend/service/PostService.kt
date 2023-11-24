@@ -1,12 +1,14 @@
 package com.gamelounge.backend.service
 
 import com.gamelounge.backend.entity.Post
+import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.exception.PostNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedPostAccessException
 import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.ConverterDTO
 import jakarta.transaction.Transactional
@@ -17,7 +19,8 @@ import java.util.UUID
 class PostService(
     private val postRepository: PostRepository,
     private val sessionAuth: SessionAuth,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val reportRepository: ReportRepository
 ) {
     fun createPost(sessionId: UUID, post: Post): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -109,5 +112,12 @@ class PostService(
         return usersDTO
     }
 
+    fun reportPost(sessionId: UUID, postId: Long, reason: String) {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        val post = getPost(postId)
+        var newReport = Report(reason = reason, reportingUser = user, reportedPost = post)
+        reportRepository.save(newReport)
+    }
 
 }
