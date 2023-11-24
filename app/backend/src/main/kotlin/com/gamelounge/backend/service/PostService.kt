@@ -8,6 +8,8 @@ import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.model.request.CreatePostRequest
+import com.gamelounge.backend.model.request.UpdatePostRequest
 import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.ConverterDTO
@@ -22,18 +24,23 @@ class PostService(
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository
 ) {
-    fun createPost(sessionId: UUID, post: Post): Post {
+    fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
-        post.user = user
-        return postRepository.save(post)
+        val newPost = Post(
+            title = post.title,
+            content = post.content,
+            category = post.category,
+            user = user
+        )
+        return postRepository.save(newPost)
     }
 
     fun getPost(postId: Long): Post {
         return postRepository.findById(postId).orElseThrow { PostNotFoundException("Post not found with ID: $postId") }
     }
 
-    fun updatePost(sessionId: UUID, postId: Long, updatedPost: Post): Post {
+    fun updatePost(sessionId: UUID, postId: Long, updatedPost: UpdatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val post = getPost(postId)
 

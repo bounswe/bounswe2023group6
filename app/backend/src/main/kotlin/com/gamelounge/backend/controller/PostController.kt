@@ -3,6 +3,7 @@ package com.gamelounge.backend.controller
 import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.model.request.CreatePostRequest
 import com.gamelounge.backend.service.PostService
 import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.ResponseEntity
@@ -14,7 +15,7 @@ import java.util.UUID
 class PostController(private val postService: PostService) {
 
     @PostMapping
-    fun createPost(@CookieValue("SESSIONID") sessionId: UUID, @RequestBody post: Post): ResponseEntity<PostDTO> {
+    fun createPost(@CookieValue("SESSIONID") sessionId: UUID, @RequestBody post: CreatePostRequest): ResponseEntity<PostDTO> {
         val newPost = postService.createPost(sessionId, post)
         val newPostDTO = ConverterDTO.convertToPostDTO(newPost)
         return ResponseEntity.ok(newPostDTO)

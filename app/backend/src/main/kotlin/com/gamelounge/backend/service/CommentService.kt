@@ -10,6 +10,8 @@ import com.gamelounge.backend.exception.PostNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedCommentAccessException
 import com.gamelounge.backend.exception.UserNotFoundException
 import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.model.request.CreateCommentRequest
+import com.gamelounge.backend.model.request.UpdateCommentRequest
 import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.ConverterDTO
@@ -25,20 +27,23 @@ class CommentService(
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository
 ) {
-    fun createComment(sessionId: UUID, postId: Long, comment: Comment): Comment {
+    fun createComment(sessionId: UUID, postId: Long, comment: CreateCommentRequest): Comment {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
         val post = postRepository.findById(postId).orElseThrow { PostNotFoundException("Post not found") }
-        comment.user = user
-        comment.post = post
-        return commentRepository.save(comment)
+        post.totalComments += 1
+        val newComment = Comment(content = comment.content)
+        newComment.user = user
+        newComment.post = post
+        postRepository.save(post)
+        return commentRepository.save(newComment)
     }
 
     fun getComment(commentId: Long): Comment {
         return commentRepository.findById(commentId).orElseThrow { CommentNotFoundException("Comment not found with ID: $commentId") }
     }
 
-    fun updateComment(sessionId: UUID, commentId: Long, updatedComment: Comment): Comment {
+    fun updateComment(sessionId: UUID, commentId: Long, updatedComment: UpdateCommentRequest): Comment {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val comment = getComment(commentId)
 
@@ -55,11 +60,13 @@ class CommentService(
     fun deleteComment(sessionId: UUID, commentId: Long) {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val comment = getComment(commentId)
-
         if (comment.user?.userId != userId) {
             throw UnauthorizedCommentAccessException("Unauthorized to delete comment with ID: $commentId")
         }
-
+        // get post and decrement total comments
+        val post = postRepository.findById(comment.post?.postId!!).orElseThrow { PostNotFoundException("Post not found") }
+        post.totalComments -= 1
+        postRepository.save(post)
         commentRepository.delete(comment)
     }
 

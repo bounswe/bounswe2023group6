@@ -3,6 +3,8 @@ package com.gamelounge.backend.controller
 import com.gamelounge.backend.entity.Comment
 import com.gamelounge.backend.model.DTO.CommentDTO
 import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.model.request.CreateCommentRequest
+import com.gamelounge.backend.model.request.UpdateCommentRequest
 import com.gamelounge.backend.service.CommentService
 import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.ResponseEntity
@@ -14,7 +16,7 @@ import java.util.UUID
 class CommentController(private val commentService: CommentService) {
 
     @PostMapping("/post/{postId}")
-    fun createComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable postId: Long, @RequestBody comment: Comment): ResponseEntity<CommentDTO> {
+    fun createComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable postId: Long, @RequestBody comment: CreateCommentRequest): ResponseEntity<CommentDTO> {
         val newComment = commentService.createComment(sessionId, postId, comment)
         val newCommentDTO = ConverterDTO.convertToCommentDTO(newComment)
         return ResponseEntity.ok(newCommentDTO)
@@ -28,7 +30,7 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @PutMapping("/{id}")
-    fun updateComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody updatedComment: Comment): ResponseEntity<CommentDTO> {
+    fun updateComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody updatedComment: UpdateCommentRequest): ResponseEntity<CommentDTO> {
         val comment = commentService.updateComment(sessionId, id, updatedComment)
         val commentDTO = ConverterDTO.convertToCommentDTO(comment)
         return ResponseEntity.ok(commentDTO)
