@@ -14,7 +14,7 @@ class User(
 
     val username: String = "",
     var email: String = "",
-    val profilePicture: String? = null,
+    var profilePicture: String? = null,
     var about: String? = null,
     var title: String? = null,
     var company: String? = null,
@@ -44,7 +44,7 @@ class User(
         joinColumns = [JoinColumn(name = "userId")],
         inverseJoinColumns = [JoinColumn(name = "postId")]
     )
-    var likedComments: List<Post> = mutableListOf(),
+    var likedComments: List<Comment> = mutableListOf(),
 
     @ManyToMany
     @JoinTable(

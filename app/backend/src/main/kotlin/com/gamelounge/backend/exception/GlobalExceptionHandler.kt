@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import software.amazon.awssdk.services.s3.model.S3Exception
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -95,5 +96,13 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(mapOf("errorMessage" to exception.message))
     }
+
+    @ExceptionHandler(S3Exception::class)
+    fun handleAmazonS3Exception(exception: S3Exception): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+
 
 }
