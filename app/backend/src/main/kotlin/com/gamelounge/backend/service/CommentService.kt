@@ -1,6 +1,7 @@
 package com.gamelounge.backend.service
 
 import com.gamelounge.backend.entity.Comment
+import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.repository.CommentRepository
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
@@ -9,6 +10,7 @@ import com.gamelounge.backend.exception.PostNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedCommentAccessException
 import com.gamelounge.backend.exception.UserNotFoundException
 import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.ConverterDTO
 import jakarta.transaction.Transactional
@@ -20,7 +22,8 @@ class CommentService(
     private val commentRepository: CommentRepository,
     private val sessionAuth: SessionAuth,
     private val postRepository: PostRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val reportRepository: ReportRepository
 ) {
     fun createComment(sessionId: UUID, postId: Long, comment: Comment): Comment {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -112,6 +115,14 @@ class CommentService(
         val comment = getComment(commentId)
         val commentsDTO = ConverterDTO.convertBulkToUserDTO(comment.dislikedUsers)
         return commentsDTO
+    }
+    // report comment
+    fun reportComment(sessionId: UUID, commentId: Long, reason: String) {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
+        val comment = getComment(commentId)
+        var newReport = Report(reason = reason, reportingUser = user, reportedComment = comment)
+        reportRepository.save(newReport)
     }
 
 }

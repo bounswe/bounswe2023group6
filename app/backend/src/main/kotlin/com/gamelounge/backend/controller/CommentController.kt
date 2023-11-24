@@ -71,5 +71,12 @@ class CommentController(private val commentService: CommentService) {
         val usersDTO = commentService.getDownvotedUsers(id)
         return ResponseEntity.ok(usersDTO)
     }
+    // report comment
+    @PostMapping("/{id}/report")
+    fun reportComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reason: String): ResponseEntity<Void> {
+        commentService.reportComment(sessionId, id, reason)
+        return ResponseEntity.noContent().build<Void>()
+    }
+
 
 }
