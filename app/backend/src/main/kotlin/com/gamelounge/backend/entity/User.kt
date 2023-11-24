@@ -36,7 +36,15 @@ class User(
         joinColumns = [JoinColumn(name = "userId")],
         inverseJoinColumns = [JoinColumn(name = "postId")]
     )
-    var likedPosts: List<Post> = mutableListOf(),
+    var likedPosts: MutableList<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_dislikes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "postId")]
+    )
+    var dislikedPosts: MutableList<Post> = mutableListOf(),
 
     @ManyToMany
     @JoinTable(
@@ -45,6 +53,14 @@ class User(
         inverseJoinColumns = [JoinColumn(name = "postId")]
     )
     var likedComments: List<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_dislikes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "postId")]
+    )
+    var dislikedComments: List<Post> = mutableListOf(),
 
     @ManyToMany
     @JoinTable(

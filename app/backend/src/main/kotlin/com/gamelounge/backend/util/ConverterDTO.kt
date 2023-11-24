@@ -15,8 +15,8 @@ object ConverterDTO {
             category = post.category
         )
     }
-    fun convertBulkToPostDTO(Posts: List<Post>) : List<PostDTO> {
-        return Posts.map { convertToPostDTO(it) }
+    fun convertBulkToPostDTO(posts: MutableList<Post>) : List<PostDTO> {
+        return posts.map { convertToPostDTO(it) }
     }
     fun convertToCommentDTO(comment: Comment) : CommentDTO {
         return CommentDTO(

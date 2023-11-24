@@ -7,6 +7,7 @@ import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.repository.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -57,4 +58,54 @@ class PostService(
     fun getAllPosts(): List<Post> {
         return postRepository.findAll()
     }
+    @Transactional
+    fun upvotePost(sessionId: UUID, postId: Long): Post {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        val post = getPost(postId)
+
+        if (!post.likedUsers.contains(user)){
+            post.likedUsers.add(user)
+            user.likedPosts.add(post)
+            post.upvotes += 1
+        }
+        else{
+            post.likedUsers.remove(user)
+            user.likedPosts.remove(post)
+            post.upvotes -= 1
+        }
+        userRepository.save(user)
+        return postRepository.save(post)
+    }
+    @Transactional
+    fun downvotePost(sessionId: UUID, postId: Long): Post {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        val post = getPost(postId)
+
+        if (!post.dislikedUsers.contains(user)){
+            post.dislikedUsers.add(user)
+            user.dislikedPosts.add(post)
+            post.downvotes += 1
+        }
+        else{
+            post.dislikedUsers.remove(user)
+            user.dislikedPosts.remove(post)
+            post.downvotes -= 1
+        }
+        userRepository.save(user)
+        return postRepository.save(post)
+    }
+    fun getUpvotedUsers(postId: Long): List<String> {
+        val post = getPost(postId)
+        // TODO: return list of usernames and profile pictures
+        return post.likedUsers.map { user -> user.username }
+    }
+    fun getDownvotedUsers(postId: Long): List<String> {
+        val post = getPost(postId)
+        // TODO: return list of usernames and profile pictures
+        return post.dislikedUsers.map { user -> user.username }
+    }
+
+
 }
