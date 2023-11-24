@@ -13,6 +13,7 @@ import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/base_dto_object.dart';
 
 import 'package:mobile/data/models/service_response.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class BaseNetworkService
     with
@@ -86,6 +87,15 @@ class BaseNetworkService
       ..method = type
       ..extra ??= <String, dynamic>{}
       ..headers ??= <String, dynamic>{};
+
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    if (manager.checkString(SharedKeys.sessionId)) {
+      String sessionID = manager.getString(SharedKeys.sessionId);
+      
+      // add sessionid as a cookie to the request header
+      customOptions.headers!['Cookie'] = "SESSIONID=$sessionID";
+    }
 
     try {
       Map<String, dynamic>? data;

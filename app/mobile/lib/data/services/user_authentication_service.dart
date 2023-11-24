@@ -22,7 +22,7 @@ class UserAuthenticationService {
 
   final BaseNetworkService service = BaseNetworkService();
 
-  late final CacheManager cacheManager;
+  CacheManager? cacheManager;
 
   static const String _getUser = "/user";
   static const String _getUserDetails = "/user_details";
@@ -51,7 +51,7 @@ class UserAuthenticationService {
       final SharedManager manager = SharedManager();
       await manager.init();
       cacheManager = CacheManager(manager);
-      cacheManager.saveSessionId(sessionId);
+      cacheManager!.saveSessionId(sessionId);
       return true;
     } else {
       print('Login failed - Status Code: ${response.errorMessage}');
@@ -89,7 +89,7 @@ class UserAuthenticationService {
       final SharedManager manager = SharedManager();
       await manager.init();
       cacheManager = CacheManager(manager);
-      cacheManager.removeSessionId();
+      cacheManager!.removeSessionId();
   }
 
   // Reset the user's password

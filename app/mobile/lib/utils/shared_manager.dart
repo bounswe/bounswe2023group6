@@ -23,6 +23,10 @@ class SharedManager {
     await preferences?.setStringList(key.name, value);
   }
 
+  bool checkString(SharedKeys key) {
+    return preferences?.containsKey(key.name) ?? false;
+  }
+
   String getString(SharedKeys key) {
     return (preferences?.getString(key.name))!;
   }

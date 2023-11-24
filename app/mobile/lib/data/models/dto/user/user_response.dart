@@ -21,9 +21,6 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
 
   @override
   void validate() {
-    ValidationUtil.validate(name, ValidationPolicy.stringNotEmptyValidation());
-    ValidationUtil.validate(
-        surname, ValidationPolicy.stringNotEmptyValidation());
     ValidationUtil.validate(email, ValidationPolicy.emailValidation());
     ValidationUtil.validate(
         username, ValidationPolicy.stringNotEmptyValidation());
