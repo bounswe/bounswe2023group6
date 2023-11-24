@@ -80,17 +80,22 @@ class CommentService(
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
         val comment = getComment(commentId)
 
-        if (!comment.likedUsers.contains(user)) {
+        val alreadyLiked = comment.likedUsers.contains(user)
+        val alreadyDisliked = comment.dislikedUsers.contains(user)
+        if (alreadyLiked){
+            comment.likedUsers.remove(user)
+            comment.upvotes -= 1
+        }
+        else if (alreadyDisliked) {
+            comment.dislikedUsers.remove(user)
+            comment.downvotes -= 1
             comment.likedUsers.add(user)
-            user.likedComments.add(comment)
             comment.upvotes += 1
         }
         else {
-            comment.likedUsers.remove(user)
-            user.likedComments.remove(comment)
-            comment.upvotes -= 1
+            comment.likedUsers.add(user)
+            comment.upvotes += 1
         }
-        userRepository.save(user)
         return commentRepository.save(comment)
     }
 
@@ -100,17 +105,23 @@ class CommentService(
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
         val comment = getComment(commentId)
 
-        if (!comment.dislikedUsers.contains(user)) {
-            comment.dislikedUsers.add(user)
-            user.dislikedComments.add(comment)
-            comment.downvotes += 1
-        }
-        else {
+        val alreadyLiked = comment.likedUsers.contains(user)
+        val alreadyDisliked = comment.dislikedUsers.contains(user)
+
+        if (alreadyDisliked){
             comment.dislikedUsers.remove(user)
-            user.dislikedComments.remove(comment)
             comment.downvotes -= 1
         }
-        userRepository.save(user)
+        else if (alreadyLiked){
+            comment.likedUsers.remove(user)
+            comment.upvotes -= 1
+            comment.dislikedUsers.add(user)
+            comment.downvotes += 1
+        }
+        else{
+            comment.dislikedUsers.add(user)
+            comment.downvotes += 1
+        }
         return commentRepository.save(comment)
     }
 

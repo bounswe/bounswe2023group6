@@ -6,6 +6,7 @@ object ConverterDTO {
     fun convertToPostDTO(post: Post) : PostDTO {
         return PostDTO(
             postId = post.postId,
+            creatorUserId = post.user?.userId!!,
             title = post.title,
             content = post.content,
             creationDate = post.creationDate,
@@ -21,6 +22,7 @@ object ConverterDTO {
     fun convertToCommentDTO(comment: Comment) : CommentDTO {
         return CommentDTO(
             commentId = comment.commentId,
+            creatorUserId = comment.user?.userId!!,
             content = comment.content,
             creationDate = comment.creationDate,
             upvotes = comment.upvotes,

@@ -77,17 +77,26 @@ class PostService(
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val post = getPost(postId)
 
-        if (!post.likedUsers.contains(user)){
+        val alreadyLiked = post.likedUsers.contains(user)
+        val alreadyDisliked = post.dislikedUsers.contains(user)
+        if (alreadyLiked){
+            post.likedUsers.remove(user)
+            //user.likedPosts.remove(post) no need to add to user it handles itself
+            post.upvotes -= 1
+        }
+        else if (alreadyDisliked){
+            post.dislikedUsers.remove(user)
+            //user.dislikedPosts.remove(post) no need to add to user it handles itself
+            post.downvotes -= 1
             post.likedUsers.add(user)
-            user.likedPosts.add(post)
+            //user.likedPosts.add(post) no need to add to user it handles itself
             post.upvotes += 1
         }
         else{
-            post.likedUsers.remove(user)
-            user.likedPosts.remove(post)
-            post.upvotes -= 1
+            post.likedUsers.add(user)
+            //user.likedPosts.add(post) no need to add to user it handles itself
+            post.upvotes += 1
         }
-        userRepository.save(user)
         return postRepository.save(post)
     }
     @Transactional
@@ -96,17 +105,26 @@ class PostService(
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val post = getPost(postId)
 
-        if (!post.dislikedUsers.contains(user)){
+        val alreadyLiked = post.likedUsers.contains(user)
+        val alreadyDisliked = post.dislikedUsers.contains(user)
+        if (alreadyDisliked){
+            post.dislikedUsers.remove(user)
+            //user.dislikedPosts.remove(post) no need to add to user it handles itself
+            post.downvotes -= 1
+        }
+        else if (alreadyLiked){
+            post.likedUsers.remove(user)
+            //user.likedPosts.remove(post) no need to add to user it handles itself
+            post.upvotes -= 1
             post.dislikedUsers.add(user)
-            user.dislikedPosts.add(post)
+            //user.dislikedPosts.add(post) no need to add to user it handles itself
             post.downvotes += 1
         }
         else{
-            post.dislikedUsers.remove(user)
-            user.dislikedPosts.remove(post)
-            post.downvotes -= 1
+            post.dislikedUsers.add(user)
+            //user.dislikedPosts.add(post) no need to add to user it handles itself
+            post.downvotes += 1
         }
-        userRepository.save(user)
         return postRepository.save(post)
     }
     fun getUpvotedUsers(postId: Long): List<UserDTO> {
