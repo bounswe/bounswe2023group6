@@ -10,6 +10,7 @@ import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
+import 'package:mobile/data/services/post_service.dart';
 import 'dart:convert';
 import '../../data/models/user_model.dart';
 
@@ -40,6 +41,9 @@ class UserAuthenticationService {
     );
 
     if (response.success) {
+      String? sessionId =
+          response.response!.headers['set-cookie']?.first.split(";").first.split("=")[1].split(",").first;
+      print(sessionId); 
       return true;
     } else {
       print('Login failed - Status Code: ${response.errorMessage}');
@@ -171,47 +175,10 @@ class UserAuthenticationService {
     }
   }
 
-  void loadMockData(User user) {
+  void loadMockData(User user) async {
     user.about =
         "Hey there, I'm Ayse, and I'm a huge game enthusiast. Ever since I was a kid, video games have been a major part of my life. From the first time I picked up a controller, I was hooked. I spent countless hours playing my favorite games, immersing myself in their worlds, and trying to master their mechanics.";
-    user.likedPosts = [
-      Post(
-        createdDate: DateTime.now(),
-        id: 1,
-        title: 'Post 1',
-        userId: 1,
-        content:
-            "Hey, fellow gamers! Just stumbled upon the latest trailer for 'Epic Battles: The Saga,' and I'm mind-blown! The graphics are absolutely jaw-dropping, and the gameplay looks like a total adrenaline rush. I can't wait to get my hands on this game and dive into epic battles of galactic proportions. What are your thoughts? Is",
-        username: "GamerXplorer • 8hr",
-        likes: 23,
-        dislikes: 2,
-        comments: 8,
-      ),
-      Post(
-        createdDate: DateTime.now().subtract(const Duration(days: 1)),
-        id: 2,
-        title: 'Post 2',
-        userId: 2,
-        username: "EpicQuestMaster • 2hr",
-        content:
-            "After weeks of traversing the cosmos, I've finally completed 'Galactic Explorers,' and I'm here to share my thoughts. This game is a true cosmic adventure with its vast open-world, stunning visuals, and a captivating storyline. From epic space battles to discovering new alien civilizations",
-        likes: 11,
-        dislikes: 1,
-        comments: 3,
-      ),
-      Post(
-        createdDate: DateTime.now().subtract(const Duration(days: 2)),        
-        id: 3,
-        title: 'Post 3',
-        userId: 3,
-        username: "GamerXplorer • 8hr",
-        content:
-            "Hey, fellow gamers! Just stumbled upon the latest trailer for 'Epic Battles: The Saga,' and I'm mind-blown! The graphics are absolutely jaw-dropping, and the gameplay looks like a total adrenaline rush. I can't wait to get my hands on this game and dive into epic battles of galactic proportions. What are your thoughts? Is",
-        likes: 23,
-        dislikes: 2,
-        comments: 8,
-      ),
-    ];
+    user.likedPosts = await PostService().getPosts();
     user.likedGames = [
       Game(
           id: 1,
