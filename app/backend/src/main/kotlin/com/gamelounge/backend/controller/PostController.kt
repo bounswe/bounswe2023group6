@@ -2,6 +2,7 @@ package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.service.PostService
 import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.ResponseEntity
@@ -40,9 +41,10 @@ class PostController(private val postService: PostService) {
     }
 
     @GetMapping
-    fun getAllPosts(): ResponseEntity<List<Post>> {
+    fun getAllPosts(): ResponseEntity<List<PostDTO>> {
         val posts = postService.getAllPosts()
-        return ResponseEntity.ok(posts)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(posts)
+        return ResponseEntity.ok(postsDTO)
     }
 
     // implement upvote endpoint
@@ -63,16 +65,18 @@ class PostController(private val postService: PostService) {
 
     // implement get upvoted users endpoint
     @GetMapping("/{id}/upvoteUsers")
-    fun getUpvotedUsers(@PathVariable id: Long): ResponseEntity<List<String>> {
-        val upvotedUsers = postService.getUpvotedUsers(id)
-        return ResponseEntity.ok(upvotedUsers)
+    fun getUpvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
+        val upvotedUsersDTO = postService.getUpvotedUsers(id)
+        return ResponseEntity.ok(upvotedUsersDTO)
     }
 
     // implement get downvoted users endpoint
     @GetMapping("/{id}/downvoteUsers")
-    fun getDownvotedUsers(@PathVariable id: Long): ResponseEntity<List<String>> {
-        val downvotedUsers = postService.getDownvotedUsers(id)
-        return ResponseEntity.ok(downvotedUsers)
+    fun getDownvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
+        val downvotedUsersDTO = postService.getDownvotedUsers(id)
+        return ResponseEntity.ok(downvotedUsersDTO)
     }
+
+
 
 }

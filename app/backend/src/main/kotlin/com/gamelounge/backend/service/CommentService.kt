@@ -8,7 +8,10 @@ import com.gamelounge.backend.exception.CommentNotFoundException
 import com.gamelounge.backend.exception.PostNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedCommentAccessException
 import com.gamelounge.backend.exception.UserNotFoundException
+import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.util.ConverterDTO
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -60,4 +63,55 @@ class CommentService(
     fun getAllCommentsForPost(postId: Long): List<Comment> {
         return commentRepository.findAll().filter { it.post?.postId == postId }
     }
+    @Transactional
+    fun upvoteComment(sessionId: UUID, commentId: Long): Comment {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
+        val comment = getComment(commentId)
+
+        if (!comment.likedUsers.contains(user)) {
+            comment.likedUsers.add(user)
+            user.likedComments.add(comment)
+            comment.upvotes += 1
+        }
+        else {
+            comment.likedUsers.remove(user)
+            user.likedComments.remove(comment)
+            comment.upvotes -= 1
+        }
+        userRepository.save(user)
+        return commentRepository.save(comment)
+    }
+
+    @Transactional
+    fun downvoteComment(sessionId: UUID, commentId: Long): Comment {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
+        val comment = getComment(commentId)
+
+        if (!comment.dislikedUsers.contains(user)) {
+            comment.dislikedUsers.add(user)
+            user.dislikedComments.add(comment)
+            comment.downvotes += 1
+        }
+        else {
+            comment.dislikedUsers.remove(user)
+            user.dislikedComments.remove(comment)
+            comment.downvotes -= 1
+        }
+        userRepository.save(user)
+        return commentRepository.save(comment)
+    }
+
+    fun getUpvotedUsers(commentId: Long): List<UserDTO> {
+        val comment = getComment(commentId)
+        val commentsDTO = ConverterDTO.convertBulkToUserDTO(comment.likedUsers)
+        return commentsDTO
+    }
+    fun getDownvotedUsers(commentId: Long): List<UserDTO> {
+        val comment = getComment(commentId)
+        val commentsDTO = ConverterDTO.convertBulkToUserDTO(comment.dislikedUsers)
+        return commentsDTO
+    }
+
 }

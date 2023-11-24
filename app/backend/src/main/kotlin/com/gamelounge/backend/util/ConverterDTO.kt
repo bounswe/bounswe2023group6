@@ -15,7 +15,7 @@ object ConverterDTO {
             category = post.category
         )
     }
-    fun convertBulkToPostDTO(posts: MutableList<Post>) : List<PostDTO> {
+    fun convertBulkToPostDTO(posts: List<Post>) : List<PostDTO> {
         return posts.map { convertToPostDTO(it) }
     }
     fun convertToCommentDTO(comment: Comment) : CommentDTO {
@@ -42,6 +42,9 @@ object ConverterDTO {
             company = user.company,
             tags = convertBulkToTagDTO(user.tags)
         )
+    }
+    fun convertBulkToUserDTO(users: List<User>): List<UserDTO> {
+        return users.map { convertToUserDTO(it) }
     }
 
     fun convertToTagDTO(tag: Tag): TagDTO{

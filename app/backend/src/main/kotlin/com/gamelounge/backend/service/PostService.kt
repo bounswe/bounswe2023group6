@@ -6,7 +6,9 @@ import com.gamelounge.backend.exception.UnauthorizedPostAccessException
 import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
+import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.util.ConverterDTO
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -96,15 +98,15 @@ class PostService(
         userRepository.save(user)
         return postRepository.save(post)
     }
-    fun getUpvotedUsers(postId: Long): List<String> {
+    fun getUpvotedUsers(postId: Long): List<UserDTO> {
         val post = getPost(postId)
-        // TODO: return list of usernames and profile pictures
-        return post.likedUsers.map { user -> user.username }
+        val usersDTO = ConverterDTO.convertBulkToUserDTO(post.likedUsers)
+        return usersDTO
     }
-    fun getDownvotedUsers(postId: Long): List<String> {
+    fun getDownvotedUsers(postId: Long): List<UserDTO> {
         val post = getPost(postId)
-        // TODO: return list of usernames and profile pictures
-        return post.dislikedUsers.map { user -> user.username }
+        val usersDTO = ConverterDTO.convertBulkToUserDTO(post.dislikedUsers)
+        return usersDTO
     }
 
 

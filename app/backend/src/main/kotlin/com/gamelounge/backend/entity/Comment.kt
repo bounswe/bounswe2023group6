@@ -27,5 +27,22 @@ class Comment(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    var user: User? = null
+    var user: User? = null,
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_likes",
+        joinColumns = [JoinColumn(name = "commentId")],
+        inverseJoinColumns = [JoinColumn(name = "userId")]
+    )
+    var likedUsers: MutableList<User> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_dislikes",
+        joinColumns = [JoinColumn(name = "commentId")],
+        inverseJoinColumns = [JoinColumn(name = "userId")]
+    )
+    var dislikedUsers: MutableList<User> = mutableListOf()
+
 )

@@ -1,7 +1,10 @@
 package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.entity.Comment
+import com.gamelounge.backend.model.DTO.CommentDTO
+import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.service.CommentService
+import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -11,21 +14,24 @@ import java.util.UUID
 class CommentController(private val commentService: CommentService) {
 
     @PostMapping("/post/{postId}")
-    fun createComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable postId: Long, @RequestBody comment: Comment): ResponseEntity<Comment> {
+    fun createComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable postId: Long, @RequestBody comment: Comment): ResponseEntity<CommentDTO> {
         val newComment = commentService.createComment(sessionId, postId, comment)
-        return ResponseEntity.ok(newComment)
+        val newCommentDTO = ConverterDTO.convertToCommentDTO(newComment)
+        return ResponseEntity.ok(newCommentDTO)
     }
 
     @GetMapping("/{id}")
-    fun getComment(@PathVariable id: Long): ResponseEntity<Comment> {
+    fun getComment(@PathVariable id: Long): ResponseEntity<CommentDTO> {
         val comment = commentService.getComment(id)
-        return ResponseEntity.ok(comment)
+        val commentDTO = ConverterDTO.convertToCommentDTO(comment)
+        return ResponseEntity.ok(commentDTO)
     }
 
     @PutMapping("/{id}")
-    fun updateComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody updatedComment: Comment): ResponseEntity<Comment> {
+    fun updateComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody updatedComment: Comment): ResponseEntity<CommentDTO> {
         val comment = commentService.updateComment(sessionId, id, updatedComment)
-        return ResponseEntity.ok(comment)
+        val commentDTO = ConverterDTO.convertToCommentDTO(comment)
+        return ResponseEntity.ok(commentDTO)
     }
 
     @DeleteMapping("/{id}")
@@ -35,8 +41,35 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @GetMapping("/post/{postId}")
-    fun getAllCommentsForPost(@PathVariable postId: Long): ResponseEntity<List<Comment>> {
+    fun getAllCommentsForPost(@PathVariable postId: Long): ResponseEntity<List<CommentDTO>> {
         val comments = commentService.getAllCommentsForPost(postId)
-        return ResponseEntity.ok(comments)
+        val commentsDTO = ConverterDTO.convertBulkToCommentDTO(comments)
+        return ResponseEntity.ok(commentsDTO)
     }
+
+    // implement upvote endpoint
+    @PutMapping("/{id}/upvote")
+    fun upvoteComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<CommentDTO> {
+        val comment = commentService.upvoteComment(sessionId, id)
+        val commentDTO = ConverterDTO.convertToCommentDTO(comment)
+        return ResponseEntity.ok(commentDTO)
+    }
+    @PutMapping("/{id}/downvote")
+    fun downvoteComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<CommentDTO> {
+        val comment = commentService.downvoteComment(sessionId, id)
+        val commentDTO = ConverterDTO.convertToCommentDTO(comment)
+        return ResponseEntity.ok(commentDTO)
+    }
+
+    @GetMapping("/{id}/upvotedUsers")
+    fun getUpvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
+        val usersDTO = commentService.getUpvotedUsers(id)
+        return ResponseEntity.ok(usersDTO)
+    }
+    @GetMapping("/{id}/downvotedUsers")
+    fun getDownvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
+        val usersDTO = commentService.getDownvotedUsers(id)
+        return ResponseEntity.ok(usersDTO)
+    }
+
 }
