@@ -7,7 +7,7 @@ import 'package:mobile/presentation/pages/main_screen.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
 import 'package:mobile/presentation/widgets/avatar_widget.dart';
 import 'package:mobile/utils/shared_manager.dart';
-import 'package:mobile/utils/user_cache_manager.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/registration_page.dart';
@@ -169,6 +169,7 @@ class LoggedDrawer extends StatelessWidget {
                   title: const Text('Log Out'),
                   onTap:() {
                     clearData();
+                    
                     Navigator.pop(context);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
                   },
@@ -182,6 +183,8 @@ class LoggedDrawer extends StatelessWidget {
   }
 
   void clearData() async {
+    UserAuthenticationService authService = UserAuthenticationService();
+    authService.logout();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
