@@ -31,7 +31,7 @@ class Comment(
 
     @ManyToMany
     @JoinTable(
-        name = "user_likes",
+        name = "user_comment_likes",
         joinColumns = [JoinColumn(name = "commentId")],
         inverseJoinColumns = [JoinColumn(name = "userId")]
     )
@@ -39,7 +39,7 @@ class Comment(
 
     @ManyToMany
     @JoinTable(
-        name = "user_dislikes",
+        name = "user_comment_dislikes",
         joinColumns = [JoinColumn(name = "commentId")],
         inverseJoinColumns = [JoinColumn(name = "userId")]
     )

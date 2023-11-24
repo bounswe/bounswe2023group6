@@ -46,7 +46,7 @@ class Post(
 
     @ManyToMany
     @JoinTable(
-        name = "user_likes",
+        name = "user_post_likes",
         joinColumns = [JoinColumn(name = "postId")],
         inverseJoinColumns = [JoinColumn(name = "userId")]
     )
@@ -54,7 +54,7 @@ class Post(
 
     @ManyToMany
     @JoinTable(
-        name = "user_dislikes",
+        name = "user_post_dislikes",
         joinColumns = [JoinColumn(name = "postId")],
         inverseJoinColumns = [JoinColumn(name = "userId")]
     )
