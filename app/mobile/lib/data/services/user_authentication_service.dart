@@ -11,6 +11,8 @@ import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
 import 'package:mobile/data/services/post_service.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import 'dart:convert';
 import '../../data/models/user_model.dart';
 
@@ -19,6 +21,8 @@ class UserAuthenticationService {
       NetworkConstants.BASE_LOCAL_URL; // Replace with your server's URL
 
   final BaseNetworkService service = BaseNetworkService();
+
+  late final CacheManager cacheManager;
 
   static const String _getUser = "/user";
   static const String _getUserDetails = "/user_details";
@@ -42,8 +46,12 @@ class UserAuthenticationService {
 
     if (response.success) {
       String? sessionId =
-          response.response!.headers['set-cookie']?.first.split(";").first.split("=")[1].split(",").first;
+          response.response?.headers['set-cookie']?.first.split(";").first.split("=")[1].split(",").first;
       print(sessionId); 
+      final SharedManager manager = SharedManager();
+      await manager.init();
+      cacheManager = CacheManager(manager);
+      cacheManager.saveSessionId(sessionId);
       return true;
     } else {
       print('Login failed - Status Code: ${response.errorMessage}');
@@ -78,8 +86,10 @@ class UserAuthenticationService {
 
   // Log out the current user
   Future<void> logout() async {
-    // You can add any necessary logic for logging out here
-    // For example, clearing user data or tokens
+      final SharedManager manager = SharedManager();
+      await manager.init();
+      cacheManager = CacheManager(manager);
+      cacheManager.removeSessionId();
   }
 
   // Reset the user's password

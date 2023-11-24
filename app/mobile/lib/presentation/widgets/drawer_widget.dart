@@ -27,7 +27,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   final UserAuthenticationService authService = UserAuthenticationService();
 
-  late final UserCacheManager userCacheManager;
+  late final CacheManager cacheManager;
 
 
   @override
@@ -41,13 +41,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Future<void> initializeCache() async {
     final SharedManager manager = SharedManager();
     await manager.init();
-    userCacheManager = UserCacheManager(manager);
+    cacheManager = CacheManager(manager);
+  
+
+    print(cacheManager.getSessionId());
+
     setState(() {
-      currentuser = userCacheManager.getUser();
+      currentuser = cacheManager.getUser();
       username = currentuser!.username!;
     });
   }
-
 
   void loadData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

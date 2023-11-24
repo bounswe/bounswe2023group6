@@ -7,7 +7,7 @@ import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/post/content_card_widget.dart';
 import 'package:mobile/utils/shared_manager.dart';
-import 'package:mobile/utils/user_cache_manager.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import 'package:provider/provider.dart';
 
 class PostState extends ChangeNotifier {
@@ -23,7 +23,7 @@ class PostState extends ChangeNotifier {
   void initState() async {
     final SharedManager manager = SharedManager();
     await manager.init();
-    currentUser = UserCacheManager(manager).getUser();
+    currentUser = CacheManager(manager).getUser();
     super.notifyListeners();
   }
 
