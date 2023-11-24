@@ -9,6 +9,7 @@ import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
+import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.model.request.UpdatePostRequest
 import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
@@ -119,11 +120,11 @@ class PostService(
         return usersDTO
     }
 
-    fun reportPost(sessionId: UUID, postId: Long, reason: String) {
+    fun reportPost(sessionId: UUID, postId: Long, reqBody: ReportRequest) {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val post = getPost(postId)
-        var newReport = Report(reason = reason, reportingUser = user, reportedPost = post)
+        var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedPost = post)
         reportRepository.save(newReport)
     }
 

@@ -4,6 +4,7 @@ import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
+import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.model.request.UpdatePostRequest
 import com.gamelounge.backend.service.PostService
 import com.gamelounge.backend.util.ConverterDTO
@@ -80,8 +81,8 @@ class PostController(private val postService: PostService) {
     }
     // REPORT POST
     @PostMapping("/{id}/report")
-    fun reportPost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reason: String): ResponseEntity<Void> {
-        postService.reportPost(sessionId, id, reason)
+    fun reportPost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<Void> {
+        postService.reportPost(sessionId, id, reqBody)
         return ResponseEntity.noContent().build<Void>()
     }
 

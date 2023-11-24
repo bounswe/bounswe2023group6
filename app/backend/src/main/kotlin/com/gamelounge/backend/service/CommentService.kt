@@ -11,6 +11,7 @@ import com.gamelounge.backend.exception.UnauthorizedCommentAccessException
 import com.gamelounge.backend.exception.UserNotFoundException
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreateCommentRequest
+import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.model.request.UpdateCommentRequest
 import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
@@ -124,11 +125,11 @@ class CommentService(
         return commentsDTO
     }
     // report comment
-    fun reportComment(sessionId: UUID, commentId: Long, reason: String) {
+    fun reportComment(sessionId: UUID, commentId: Long, reqBody: ReportRequest) {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
         val comment = getComment(commentId)
-        var newReport = Report(reason = reason, reportingUser = user, reportedComment = comment)
+        val newReport = Report(reason = reqBody.reason, reportingUser = user, reportedComment = comment)
         reportRepository.save(newReport)
     }
 

@@ -4,6 +4,7 @@ import com.gamelounge.backend.entity.Comment
 import com.gamelounge.backend.model.DTO.CommentDTO
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreateCommentRequest
+import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.model.request.UpdateCommentRequest
 import com.gamelounge.backend.service.CommentService
 import com.gamelounge.backend.util.ConverterDTO
@@ -75,8 +76,8 @@ class CommentController(private val commentService: CommentService) {
     }
     // report comment
     @PostMapping("/{id}/report")
-    fun reportComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reason: String): ResponseEntity<Void> {
-        commentService.reportComment(sessionId, id, reason)
+    fun reportComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<Void> {
+        commentService.reportComment(sessionId, id, reqBody)
         return ResponseEntity.noContent().build<Void>()
     }
 
