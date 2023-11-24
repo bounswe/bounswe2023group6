@@ -32,6 +32,7 @@ dependencies {
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.flywaydb:flyway-core")
+	implementation("software.amazon.awssdk:s3:2.17.101")
 
 
 }

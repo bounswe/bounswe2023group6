@@ -1,13 +1,15 @@
 package com.gamelounge.backend.controller
 
-import com.gamelounge.backend.entity.Game
-import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.entity.User
-import com.gamelounge.backend.model.request.RegisterationRequest
+import com.gamelounge.backend.middleware.SessionAuth
+import com.gamelounge.backend.model.DTO.CommentDTO
+import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.request.UpdateUserRequest
 import com.gamelounge.backend.model.response.GetUserInfoResponse
 import com.gamelounge.backend.service.UserService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
@@ -15,7 +17,8 @@ import java.util.UUID
 @RestController
 @RequestMapping("/user")
 class UserController (
-    val userService: UserService
+    val userService: UserService,
+    val sessionAuth: SessionAuth
 ){
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
@@ -34,57 +37,52 @@ class UserController (
     @PostMapping()
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin(origins = ["*"])
-    fun updateUserByUsername(
+    fun updateUserByUserId(
         @RequestPart("request") request: UpdateUserRequest,
         @RequestPart("image") image: MultipartFile?,
-        username: String
-    ){
-        userService.updateUser(request, image, username)
+        @CookieValue("SESSIONID") sessionId: UUID
+    ): ResponseEntity<Map<String, String>>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        userService.updateUser(request, image, userId)
+
+        return ResponseEntity.ok().body(mapOf("message" to "User updated successfully"))
     }
 
     @GetMapping("/created-posts")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin(origins = ["*"])
-    fun getCreatedPosts(username: String): List<Post>{
-        return userService.getCreatedPosts(username)
+    fun getCreatedPosts(@CookieValue("SESSIONID") sessionId: UUID): List<PostDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getCreatedPosts(userId)
     }
 
     @GetMapping("/created-games")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin(origins = ["*"])
-    fun getCreatedGames(username: String): List<Game>{
-        return userService.getCreatedGames(username)
+    fun getCreatedGames(@CookieValue("SESSIONID") sessionId: UUID): List<GameDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getCreatedGames(userId)
+    }
+
+    @GetMapping("/liked-posts")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin(origins = ["*"])
+    fun getLikedPosts(@CookieValue("SESSIONID") sessionId: UUID): List<PostDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getLikedPosts(userId)
+    }
+
+    @GetMapping("/liked-comments")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin(origins = ["*"])
+    fun getLikedComments(@CookieValue("SESSIONID") sessionId: UUID): List<CommentDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getLikedComments(userId)
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

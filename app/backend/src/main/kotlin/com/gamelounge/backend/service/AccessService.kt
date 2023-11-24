@@ -23,7 +23,8 @@ class AccessService(
     val emailService: EmailService,
     val passwordResetTokenRepository: PasswordResetTokenRepository,
     val passwordResetTokenService: PasswordResetTokenService,
-    val customProperties: CustomProperties
+    val customProperties: CustomProperties,
+    val s3Service: S3Service
 ){
 
     fun register(request: RegisterationRequest, image: MultipartFile?){
@@ -33,11 +34,9 @@ class AccessService(
             throw UsernameAlreadyExistException("The username already exists!")
         }
 
-        // will implement AWS S3 logic here
+        val user = userRepository.save(User(username = request.username, email = request.email, passwordHash = passwordHash, salt = salt))
 
-        val imageUrl: String = "some-url"
-        userRepository.save(User(username = request.username, email = request.email, passwordHash = passwordHash, salt = salt, profilePicture = imageUrl))
-
+        image?.let { saveImageInS3AndImageURLInDB(image, user) }
     }
 
     fun login(username: String, password: String): UUID {
@@ -144,5 +143,9 @@ class AccessService(
         passwordResetTokenRepository.delete(passwordResetToken)
     }
 
+    private fun saveImageInS3AndImageURLInDB(image: MultipartFile, user: User) {
+        user.profilePicture = s3Service.uploadProfilePictureAndReturnURL(image, user.userId)
+        userRepository.save(user)
+    }
 
 }

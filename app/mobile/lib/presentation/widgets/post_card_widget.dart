@@ -14,7 +14,7 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/post', arguments: post);
+        Navigator.pushNamed(context, '/post', arguments: post.id);
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -23,7 +23,7 @@ class PostCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            userInformationSection(post),
+            userInformationSection(context, post.ownerUser),
             postContentSection(post),
           ]),
         ),

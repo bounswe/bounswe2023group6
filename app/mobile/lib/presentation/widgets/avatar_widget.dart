@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class DisplayAvatar extends StatelessWidget {
   final ByteData? byteData;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final int size;
 
-  const DisplayAvatar({super.key, required this.byteData, required this.onPressed, this.size = 75});
+  const DisplayAvatar({super.key, required this.byteData, this.onPressed, this.size = 75});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,10 @@ class DisplayAvatar extends StatelessWidget {
     return Center(
         child: Stack(children: [
       buildImage(color),
-      Positioned(right: 4, top: 10, child: buildEditIcon(color)),
+      onPressed != null ? 
+        Positioned(right: 4, top: 10, child: buildEditIcon(color))
+        : 
+        Container(),
     ]));
   }
 

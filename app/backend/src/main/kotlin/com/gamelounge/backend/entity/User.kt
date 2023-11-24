@@ -15,7 +15,7 @@ class User(
 
     val username: String = "",
     var email: String = "",
-    val profilePicture: String? = null,
+    var profilePicture: String? = null,
     var about: String? = null,
     var title: String? = null,
     var company: String? = null,
