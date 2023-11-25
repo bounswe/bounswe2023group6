@@ -21,7 +21,6 @@ class _MainScreenState extends State<MainScreen> {
     const HomePage(),
     const ForumPage(),
     GamePage(),
-    //GameWikiPage(game: GameService.getGameStatic(3)),
     LFGPage()
   ];
 
