@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/services/post_service.dart';
 
 Widget updateWidget(BuildContext context, {required Content content}) {
   ContentType contentType = content.type;
@@ -63,7 +64,7 @@ Widget _buildPostUpdateWidget(BuildContext context, Content post) {
         onPressed: () {
           post.title = titleController.text;
           post.content = bodyController.text;
-          // postService.updatePost(newContent);
+          PostService().updatePost(post);
           Navigator.of(context).pop();
         },
       ),
@@ -71,7 +72,7 @@ Widget _buildPostUpdateWidget(BuildContext context, Content post) {
   );
 }
 
-Widget _buildCommentUpdateWidget(BuildContext context, Content content) {
+Widget _buildCommentUpdateWidget(BuildContext context, Content comment) {
   final TextEditingController bodyController = TextEditingController();
 
   return AlertDialog(
@@ -83,7 +84,7 @@ Widget _buildCommentUpdateWidget(BuildContext context, Content content) {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextFormField(
-            controller: bodyController..text = content.content,
+            controller: bodyController..text = comment.content,
             minLines: 3,
             maxLines: 5,
             decoration: const InputDecoration(
@@ -109,8 +110,8 @@ Widget _buildCommentUpdateWidget(BuildContext context, Content content) {
       TextButton(
         child: const Text("Update"),
         onPressed: () {
-          content.content = bodyController.text;
-          // postService.updateComment(newContent);
+          comment.content = bodyController.text;
+          PostService().updateComment(comment);
           Navigator.of(context).pop();
         },
       ),

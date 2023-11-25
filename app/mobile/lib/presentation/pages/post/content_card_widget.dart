@@ -53,7 +53,8 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
         padding: const EdgeInsets.all(8.0),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          userInformationSection(context, content.ownerUser, isContentOfOriginalPoster: content.ownerUser.username == connectedPostState.post.ownerUser.username),
+          userInformationSection(context, content.ownerUsername, content.ownerProfileImage, 
+            isContentOfOriginalPoster: content.ownerUsername == connectedPostState.post.ownerUsername),
           contentSection(content,
               parentContent: parentContent, isReply: isReply),
         ]),
@@ -116,7 +117,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
   }
 
   Widget contentMoreOptionsSection(Content content) {
-    bool isContentOfCurrentUser = (connectedPostState.currentUser.username == content.ownerUser.username);
+    bool isContentOfCurrentUser = (connectedPostState.currentUser.username == content.ownerUsername);
     return PopupMenuButton<ContentMoreOptions>(
       icon: const Icon(Icons.more_vert),
       onSelected: (ContentMoreOptions result) {
@@ -129,7 +130,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
               },
             ).then((value) => {
               setState(() {
-                // Update the page with the new content
+
               })
             });
             break;
@@ -148,7 +149,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                       child: const Text("OK"),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                        connectedPostState.deleteContent(content);                        
                       },
                     ),
                   ],
@@ -160,7 +161,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return ReportWidget();
+                return ReportWidget(content: content);
               },
             );
             break;
@@ -205,15 +206,12 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
               onPressed: () {
                 if (content.type == ContentType.post) {
                   postService.upvotePost(content.id);
-                  setState(() {
-                    widget.content.likes++;
-                  });
                 } else {
                   postService.upvoteComment(content.id);
-                  setState(() {
-                    widget.content.likes++;                    
-                  });
                 }
+                setState(() {
+                  widget.content.likes++;                    
+                });                
               },
             ),
             const SizedBox(
@@ -228,16 +226,13 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
               icon: const Icon(Icons.thumb_down_alt_rounded),
               onPressed: () {
                 if (content.type == ContentType.post) {
-                  postService.upvotePost(content.id);
-                  setState(() {
-                    widget.content.dislikes++;
-                  });
+                  postService.downvotePost(content.id);
                 } else {
-                  postService.upvoteComment(content.id);
-                  setState(() {
-                    widget.content.dislikes++;                    
-                  });
+                  postService.downvoteComment(content.id);
                 }
+                setState(() {
+                  widget.content.dislikes++;                    
+                });                
               },
             ),
             const SizedBox(

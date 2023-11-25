@@ -15,6 +15,7 @@ class PostState extends ChangeNotifier {
   int currentCommentParentId = 0;
   final commentDataKey = GlobalKey<FormState>();
   late User currentUser;
+  bool postDeleted = false;
 
   PostState(this.post) {
     initState();
@@ -39,6 +40,20 @@ class PostState extends ChangeNotifier {
     post.commentList.add(comment);
     currentCommentParentId = 0;
 
+    notifyListeners();
+  }
+
+  void deleteContent(Content content) {
+    if (content.type == ContentType.post) {
+      postDeleted = true;
+    } else {
+      post.commentList.remove(content);
+      post.commentList.forEach((element) {
+        if (element.parentContentId == content.id) {
+          deleteContent(element);
+        }
+      });
+    }
     notifyListeners();
   }
 }
@@ -82,6 +97,9 @@ class PostPage extends StatelessWidget {
   Widget buildPage() {
     return Consumer<PostState>(
       builder: (context, postState, child) {
+        if (postState.postDeleted) {
+          Future.microtask(() => Navigator.of(context).pop("delete"));
+        }
         return Scaffold(
           appBar: AppBar(
             title: Text(postState.post.title!),
@@ -129,10 +147,10 @@ class PostPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  userInformationSection(context, postState.post.ownerUser,
-                      isContentOfOriginalPoster:
-                          postState.post.ownerUser.username ==
-                              postState.currentUser.username),
+                  userInformationSection(context, postState.post.ownerUsername,
+                      postState.post.ownerProfileImage,
+                      isContentOfOriginalPoster: postState.post.ownerUsername ==
+                          postState.currentUser.username),
                   postState.currentCommentParentId != 0
                       ? Flexible(
                           child: Column(
@@ -170,15 +188,9 @@ class PostPage extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: () {
-                    Comment comment = Comment(
-                      createdDate: DateTime.now(),
-                      id: post.commentList.length + 1,
-                      content: _commentController.text,
-                      ownerUser: postState.currentUser,
-                      parentContentId: postState.currentCommentParentId,
-                    );
-                    // postService.createComment(post.id, comment);
+                  onPressed: () async {
+                    Comment comment = await postService.createComment(
+                        post.id, _commentController.text);
                     postState.addComment(comment);
                     _commentController.clear();
                   },
@@ -215,7 +227,7 @@ class PostPage extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              Text("Reply to ${content.ownerUser.username}"),
+              Text("Reply to ${content.ownerUsername}"),
             ],
           ),
           const SizedBox(

@@ -29,7 +29,7 @@ class _ForumPageState extends State<ForumPage> {
               List<Post> posts = snapshot.data!;
               return ListView(
                 children: [
-                  for (var i = 0; i < 6; i++) PostCard(post: posts[i]),
+                  for (var i = 0; i < posts.length; i++) PostCard(post: posts[i]),
                 ],
               );
             } else {
@@ -40,7 +40,7 @@ class _ForumPageState extends State<ForumPage> {
         floatingActionButton: isLoggedIn
             ? FloatingActionButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/create_post');
+                  Navigator.pushNamed(context, '/create_post').then((_) => setState((){}));
                 },
                 child: const Icon(Icons.add),
               )
