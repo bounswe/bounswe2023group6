@@ -16,6 +16,8 @@ dependencies:
   provider: ^6.1.1
   flutter_rating_bar: ^4.0.1
   flutter_markdown: ^0.6.18+2
+  autoscale_tabbarview: ^1.0.2
+
 
 
 

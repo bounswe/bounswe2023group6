@@ -90,6 +90,7 @@ class UserAuthenticationService {
       await manager.init();
       cacheManager = CacheManager(manager);
       cacheManager!.removeSessionId();
+      
   }
 
   // Reset the user's password
