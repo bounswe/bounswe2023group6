@@ -27,7 +27,8 @@ class UserService(
     private val userRepository: UserRepository,
     private val postRepository: PostRepository,
     private val gameRepository: GameRepository,
-    private val s3Service: S3Service
+    private val s3Service: S3Service,
+    private val tagService: TagService
 ) {
 
     fun getUserBySessionId(sessionId: UUID): User {
@@ -50,7 +51,7 @@ class UserService(
         user.email = request.email ?: user.email
         user.about = request.about ?: user.about
         user.profilePicture = image?.let { s3Service.uploadProfilePictureAndReturnURL(it, user.userId) }
-        user.tags = fromStringToTag(request.tags) ?: user.tags
+        user.tags = tagService.createAndReturnTagsFromTagNames(request.tags) ?: user.tags
         user.title = request.title ?: user.title
         user.company = request.company ?: user.company
 
@@ -86,10 +87,4 @@ class UserService(
             user.about
         )
     }
-
-    fun fromStringToTag(tags: List<String>?): List<Tag>?{
-        return null
-    }
-
 }
-
