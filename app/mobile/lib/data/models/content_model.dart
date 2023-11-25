@@ -10,7 +10,11 @@ class Content {
   final int id;
   String content;
   final ContentType type;
-  User ownerUser;
+  // User? ownerUser;
+  final int ownerUserId;
+  final String ownerUsername;
+  final String ownerProfileImage;
+
   // final int userId;
   // final String username;
   // final List<String>? annotations;
@@ -40,9 +44,9 @@ class Content {
     required this.id,
     required this.content,
     required this.type,
-    // required this.userId,
-    // required this.username,
-    required this.ownerUser,
+    required this.ownerUserId,
+    required this.ownerUsername,
+    required this.ownerProfileImage,
     required this.createdDate,
     // this.annotations,
     // this.tags,
@@ -64,7 +68,7 @@ class Content {
 }
 
 // Content related widgets
-Widget userInformationSection(BuildContext context, User user,
+Widget userInformationSection(BuildContext context, String username, String profileImage,
     {bool isContentOfOriginalPoster = false}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,7 +87,7 @@ Widget userInformationSection(BuildContext context, User user,
           IconButton(
             onPressed: () {
               // go to profile page
-              Navigator.pushNamed(context, '/profile', arguments: user.username);
+              Navigator.pushNamed(context, '/profile', arguments: username);
             },
             icon: const Icon(Icons.account_circle),
           ),
@@ -93,7 +97,7 @@ Widget userInformationSection(BuildContext context, User user,
               padding: const EdgeInsets.all(4.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(user.username!, style: const TextStyle(fontSize: 13)),
+                child: Text(username, style: const TextStyle(fontSize: 13)),
               ),
             ),
           ),
