@@ -1,5 +1,6 @@
 package com.gamelounge.backend.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.exception.PostNotFoundException
@@ -23,7 +24,8 @@ class PostService(
     private val postRepository: PostRepository,
     private val sessionAuth: SessionAuth,
     private val userRepository: UserRepository,
-    private val reportRepository: ReportRepository
+    private val reportRepository: ReportRepository,
+    private val objectMapper: ObjectMapper
 ) {
     fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -64,7 +66,12 @@ class PostService(
         if (post.user?.userId != userId) {
             throw UnauthorizedPostAccessException("Unauthorized to delete post with ID: $postId")
         }
-
+        val postDTO = ConverterDTO.convertToPostDTO(post)
+        post.reports.forEach { report ->
+            report.reportedObject = objectMapper.writeValueAsString(postDTO)
+            report.reportedPost = null
+            reportRepository.save(report)
+        }
         postRepository.delete(post)
     }
 

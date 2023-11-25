@@ -1,5 +1,6 @@
 package com.gamelounge.backend.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.gamelounge.backend.entity.Comment
 import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.repository.CommentRepository
@@ -26,7 +27,8 @@ class CommentService(
     private val sessionAuth: SessionAuth,
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
-    private val reportRepository: ReportRepository
+    private val reportRepository: ReportRepository,
+    private val objectMapper: ObjectMapper
 ) {
     fun createComment(sessionId: UUID, postId: Long, comment: CreateCommentRequest): Comment {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -64,6 +66,11 @@ class CommentService(
         if (comment.user?.userId != userId) {
             throw UnauthorizedCommentAccessException("Unauthorized to delete comment with ID: $commentId")
         }
+        val commentDTO = ConverterDTO.convertToCommentDTO(comment)
+        comment.reports.forEach { report ->
+            report.reportedObject = objectMapper.writeValueAsString(commentDTO)
+            report.reportedComment = null
+            reportRepository.save(report) }
         // get post and decrement total comments
         val post = postRepository.findById(comment.post?.postId!!).orElseThrow { PostNotFoundException("Post not found") }
         post.totalComments -= 1

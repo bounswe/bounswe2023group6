@@ -58,5 +58,8 @@ class Post(
         joinColumns = [JoinColumn(name = "postId")],
         inverseJoinColumns = [JoinColumn(name = "userId")]
     )
-    var dislikedUsers: MutableList<User> = mutableListOf()
+    var dislikedUsers: MutableList<User> = mutableListOf(),
+
+    @OneToMany(mappedBy = "reportedPost", cascade = [CascadeType.PERSIST])
+    var reports: MutableList<Report> = mutableListOf()
 )

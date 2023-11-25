@@ -43,6 +43,9 @@ class Comment(
         joinColumns = [JoinColumn(name = "commentId")],
         inverseJoinColumns = [JoinColumn(name = "userId")]
     )
-    var dislikedUsers: MutableList<User> = mutableListOf()
+    var dislikedUsers: MutableList<User> = mutableListOf(),
+
+    @OneToMany(mappedBy = "reportedComment", cascade = [CascadeType.PERSIST])
+    var reports: MutableList<Report> = mutableListOf()
 
 )
