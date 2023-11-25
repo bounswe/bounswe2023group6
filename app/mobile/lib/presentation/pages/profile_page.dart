@@ -61,7 +61,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
 Widget buildProfilePage(User user) => Scaffold(
       appBar: CustomAppBar(title: TextConstants.titleText),
-      drawer: const CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [

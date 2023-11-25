@@ -9,21 +9,57 @@ import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/markdown_widget.dart';
 
 
-class GameWikiPage extends StatelessWidget {
-  
+class GameWiki extends StatefulWidget {
+  const GameWiki({super.key});
 
-  GameWikiPage({super.key, required this.game});
+  @override
+  State<GameWiki> createState() => _GameWikiState();
+}
 
-  final Game game;
-
-  final List<Game> itemList =  GameService.getGameDataList();
-  
+class _GameWikiState extends State<GameWiki> {
   @override
   Widget build(BuildContext context) {
+    final int gameId = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       appBar: CustomAppBar(title: "Game Page"),
-      drawer: const CustomDrawer(),
-      body: ListView(
+      body: GameWikiPage(gameId:  gameId -1 ,),
+    );
+  }
+}
+
+
+class GameWikiPage extends StatefulWidget {
+
+  GameWikiPage({super.key, required this.gameId});
+
+  final int gameId;
+
+  @override
+  State<GameWikiPage> createState() => _GameWikiPageState();
+}
+
+class _GameWikiPageState extends State<GameWikiPage> {
+  final List<Game> itemList =  GameService.getGameDataList();
+  final GameService gameService = GameService();
+
+  @override
+  void initState() {
+    super.initState();
+    loadGameData(widget.gameId);
+  }
+
+  late Game game;
+
+  Future<void> loadGameData(int gameId) async {
+    Game gameData = await gameService.getGame(gameId);
+    setState(() {
+      game =  gameData;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
           children: [
             Card(
               margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
@@ -151,8 +187,7 @@ class GameWikiPage extends StatelessWidget {
               ),
             ),
           ],
-        ),
-    );
+        );
   }
 }
 
@@ -168,9 +203,10 @@ class VerticalGameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(builder: (context) =>  GameWikiPage(game: game,)),
+          "/game",
+          arguments: game.id
         );
       },
       child: SizedBox(

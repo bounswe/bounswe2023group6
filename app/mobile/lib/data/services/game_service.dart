@@ -9,7 +9,7 @@ class GameService {
   final BaseNetworkService service = BaseNetworkService();
 
   Future<Game> getGame(int id) async {
-    return getGameDataList()[id];
+    return  getGameDataList()[id];
   }
 
   static Game getGameStatic(int id)  {
