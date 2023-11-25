@@ -5,7 +5,7 @@ import java.time.Instant
 
 data class PostDTO(
     var postId: Long = 0,
-    var creatorUserId : Long = 0,
+    var creatorUser : UserDTO? = null,
     var title: String = "",
     var content: String = "",
     var creationDate: Instant = Instant.now(),
