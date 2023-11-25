@@ -4,10 +4,12 @@ import 'package:mobile/utils/service_validation_util.dart';
 class PostCreateDTORequest extends BaseDTOObject<PostCreateDTORequest> {
   String title; 
   String content;
+  String category;
 
   PostCreateDTORequest({
     required this.title,
     required this.content,
+    required this.category,
   });
 
   @override
@@ -20,12 +22,14 @@ class PostCreateDTORequest extends BaseDTOObject<PostCreateDTORequest> {
       PostCreateDTORequest(
         title: json["title"],
         content: json["content"],
+        category: json["category"],
       );
 
   @override
   Map<String, dynamic> toJson() => {
         "title": title,
         "content": content,
+        "category": category,
       };
 
   @override
