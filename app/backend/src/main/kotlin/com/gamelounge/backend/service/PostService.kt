@@ -25,7 +25,8 @@ class PostService(
     private val sessionAuth: SessionAuth,
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val tagService: TagService
 ) {
     fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -34,7 +35,8 @@ class PostService(
             title = post.title,
             content = post.content,
             category = post.category,
-            user = user
+            user = user,
+            postTags = tagService.createAndReturnTagsFromTagNames(post.tags)
         )
         return postRepository.save(newPost)
     }
@@ -51,9 +53,10 @@ class PostService(
             throw UnauthorizedPostAccessException("Unauthorized to update post with ID: $postId")
         }
 
-        post.title = updatedPost.title
-        post.content = updatedPost.content
-        post.category = updatedPost.category
+        post.title = updatedPost.title ?: post.title
+        post.content = updatedPost.content ?: post.content
+        post.category = updatedPost.category ?: post.category
+        post.postTags = tagService.createAndReturnTagsFromTagNames(updatedPost.tags) ?: post.postTags
         // TODO
 
         return postRepository.save(post)
