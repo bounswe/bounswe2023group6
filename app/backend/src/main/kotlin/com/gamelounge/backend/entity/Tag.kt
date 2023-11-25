@@ -11,6 +11,7 @@ class Tag(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val tagId: Long = 0,
 
+    @Column(unique = true)
     val name: String = "",
 
     @ManyToMany
