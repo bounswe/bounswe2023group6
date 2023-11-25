@@ -3,5 +3,5 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class UpdateCommentRequest(
     @JsonProperty("content")
-    val content: String
+    val content: String?
 )

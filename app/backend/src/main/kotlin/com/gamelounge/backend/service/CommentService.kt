@@ -54,7 +54,7 @@ class CommentService(
             throw UnauthorizedCommentAccessException("Unauthorized to update comment with ID: $commentId")
         }
 
-        comment.content = updatedComment.content
+        comment.content = updatedComment.content ?: comment.content
         // TODO: Update other fields
 
         return commentRepository.save(comment)
