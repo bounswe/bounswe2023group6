@@ -3,6 +3,7 @@ package com.gamelounge.backend.entity
 import jakarta.persistence.*
 import lombok.Data
 import lombok.NoArgsConstructor
+import org.springframework.boot.web.server.Cookie
 
 @Entity
 @Table(name = "users")
@@ -32,19 +33,35 @@ class User(
 
     @ManyToMany
     @JoinTable(
-        name = "user_likes",
+        name = "user_post_likes",
         joinColumns = [JoinColumn(name = "userId")],
         inverseJoinColumns = [JoinColumn(name = "postId")]
     )
-    var likedPosts: List<Post> = mutableListOf(),
+    var likedPosts: MutableList<Post> = mutableListOf(),
 
     @ManyToMany
     @JoinTable(
-        name = "user_likes",
+        name = "user_post_dislikes",
         joinColumns = [JoinColumn(name = "userId")],
         inverseJoinColumns = [JoinColumn(name = "postId")]
     )
-    var likedComments: List<Comment> = mutableListOf(),
+    var dislikedPosts: MutableList<Post> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_comment_likes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "commentId")]
+    )
+    var likedComments: MutableList<Comment> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_comment_dislikes",
+        joinColumns = [JoinColumn(name = "userId")],
+        inverseJoinColumns = [JoinColumn(name = "commentId")]
+    )
+    var dislikedComments: MutableList<Comment> = mutableListOf(),
 
     @ManyToMany
     @JoinTable(

@@ -28,11 +28,35 @@ class Post(
     @JoinColumn(name = "userId")
     var user: User? = null,
 
-    @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var comments: List<Comment> = mutableListOf(),
-
     @ManyToOne
     @JoinColumn(name = "gameId")
     var relatedGame: Game? = null,
 
+    @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var comments: List<Comment> = mutableListOf(),
+
+
+    @ManyToMany
+    @JoinTable(
+        name = "post_tags",
+        joinColumns = [JoinColumn(name = "postId")],
+        inverseJoinColumns = [JoinColumn(name = "tagId")]
+    )
+    var postTags: List<Tag> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_post_likes",
+        joinColumns = [JoinColumn(name = "postId")],
+        inverseJoinColumns = [JoinColumn(name = "userId")]
+    )
+    var likedUsers: MutableList<User> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_post_dislikes",
+        joinColumns = [JoinColumn(name = "postId")],
+        inverseJoinColumns = [JoinColumn(name = "userId")]
+    )
+    var dislikedUsers: MutableList<User> = mutableListOf()
 )
