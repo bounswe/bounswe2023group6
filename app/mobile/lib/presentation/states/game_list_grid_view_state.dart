@@ -105,7 +105,7 @@ class GridViewState extends State {
           children: itemList
               .map((data) => GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(context,MaterialPageRoute(builder: (BuildContext context) => GameWikiPage(game: data,)));
+                    Navigator.pushNamed(context, "/game", arguments: data.id);
                   },
                   child: GameCard(game: data)))
               .toList(),
