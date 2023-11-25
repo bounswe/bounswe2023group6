@@ -145,10 +145,10 @@ class LoggedDrawer extends StatelessWidget {
                   leading: const Icon(Icons.account_circle_outlined),
                   title: const Text('My Profile'),
                   onTap:() {
-                    Navigator.pop(context);
-                    Navigator.push(
+                    
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(builder: (context) => const ProfilePage()),
+                      "/profile",
                     );
                   },
                 ),
