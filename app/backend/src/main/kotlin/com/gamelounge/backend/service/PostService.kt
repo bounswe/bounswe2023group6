@@ -36,7 +36,7 @@ class PostService(
             content = post.content,
             category = post.category,
             user = user,
-            postTags = tagService.createAndReturnTagsFromTagNames(post.tags)
+            postTags = tagService.createAndReturnTagsFromTagNames(post.tags) ?: emptyList()
         )
         return postRepository.save(newPost)
     }

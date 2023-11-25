@@ -11,5 +11,5 @@ data class CreatePostRequest(
     @JsonProperty("category")
     val category: PostCategory,
     @JsonProperty("tags")
-    val tags: List<String>
+    val tags: List<String>? = emptyList()
 )

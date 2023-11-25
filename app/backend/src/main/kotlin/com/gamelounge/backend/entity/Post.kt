@@ -42,7 +42,7 @@ class Post(
         joinColumns = [JoinColumn(name = "postId")],
         inverseJoinColumns = [JoinColumn(name = "tagId")]
     )
-    var postTags: List<Tag>? = mutableListOf(),
+    var postTags: List<Tag> = mutableListOf(),
 
     @ManyToMany
     @JoinTable(

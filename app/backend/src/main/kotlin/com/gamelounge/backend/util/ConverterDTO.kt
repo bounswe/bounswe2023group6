@@ -13,7 +13,8 @@ object ConverterDTO {
             upvotes = post.upvotes,
             downvotes = post.downvotes,
             totalComments = post.totalComments,
-            category = post.category
+            category = post.category,
+            tags = convertBulkToTagDTO(post.postTags)
         )
     }
     fun convertBulkToPostDTO(posts: List<Post>) : List<PostDTO> {
