@@ -6,6 +6,7 @@ import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
 import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.model.request.UpdatePostRequest
+import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.PostService
 import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.ResponseEntity
@@ -38,9 +39,9 @@ class PostController(private val postService: PostService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deletePost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<Void> {
+    fun deletePost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<ResponseMessage> {
         postService.deletePost(sessionId, id)
-        return ResponseEntity.noContent().build<Void>()
+        return ResponseEntity.ok(ResponseMessage(message = "Post deleted successfully"))
     }
 
     @GetMapping
@@ -81,9 +82,9 @@ class PostController(private val postService: PostService) {
     }
     // REPORT POST
     @PostMapping("/{id}/report")
-    fun reportPost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<Void> {
+    fun reportPost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<ResponseMessage> {
         postService.reportPost(sessionId, id, reqBody)
-        return ResponseEntity.noContent().build<Void>()
+        return ResponseEntity.ok(ResponseMessage(message = "Post reported successfully"))
     }
 
 }

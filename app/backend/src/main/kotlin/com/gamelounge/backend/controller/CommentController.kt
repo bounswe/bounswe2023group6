@@ -6,6 +6,7 @@ import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreateCommentRequest
 import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.model.request.UpdateCommentRequest
+import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.CommentService
 import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.ResponseEntity
@@ -38,9 +39,9 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<Void> {
+    fun deleteComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<ResponseMessage> {
         commentService.deleteComment(sessionId, id)
-        return ResponseEntity.noContent().build<Void>()
+        return ResponseEntity.ok(ResponseMessage(message = "Comment deleted successfully"))
     }
 
     @GetMapping("/post/{postId}")
@@ -76,9 +77,17 @@ class CommentController(private val commentService: CommentService) {
     }
     // report comment
     @PostMapping("/{id}/report")
-    fun reportComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<Void> {
+    fun reportComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<ResponseMessage> {
         commentService.reportComment(sessionId, id, reqBody)
-        return ResponseEntity.noContent().build<Void>()
+        return ResponseEntity.ok(ResponseMessage(message = "Comment reported successfully"))
+    }
+
+    // get all replies to a comment
+    @GetMapping("/{id}/replies")
+    fun getAllReplies(@PathVariable id: Long): ResponseEntity<List<CommentDTO>> {
+        val replies = commentService.getAllReplies(id)
+        val repliesDTO = ConverterDTO.convertBulkToCommentDTO(replies)
+        return ResponseEntity.ok(repliesDTO)
     }
 
 

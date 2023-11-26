@@ -5,13 +5,15 @@ import java.time.Instant
 
 data class PostDTO(
     var postId: Long = 0,
-    var creatorUserId : Long = 0,
+    var creatorUser : UserDTO? = null,
     var title: String = "",
     var content: String = "",
     var creationDate: Instant = Instant.now(),
     var upvotes: Int = 0,
     var downvotes: Int = 0,
     var totalComments: Int = 0,
-    var category: PostCategory = PostCategory.DISCUSSION
+    var category: PostCategory = PostCategory.DISCUSSION,
+    ///var relatedGame: GameDTO? = null,
+    var tags: List<TagDTO>? = null
 )
 

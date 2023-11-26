@@ -2,6 +2,7 @@ package com.gamelounge.backend.entity
 
 import jakarta.persistence.*
 import lombok.NoArgsConstructor
+import org.hibernate.annotations.ColumnTransformer
 
 @Entity
 @Table(name = "reports")
@@ -27,5 +28,11 @@ class Report(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commentId")
-    var reportedComment: Comment? = null
+    var reportedComment: Comment? = null,
+
+    @Column(name = "reported_object", columnDefinition = "json")
+    @Basic(fetch = FetchType.LAZY)
+    @ColumnTransformer(read = "reported_object::json", write = "?::json")
+    var reportedObject: String? = null
+
 )

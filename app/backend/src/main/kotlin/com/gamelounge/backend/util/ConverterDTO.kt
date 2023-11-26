@@ -6,14 +6,15 @@ object ConverterDTO {
     fun convertToPostDTO(post: Post) : PostDTO {
         return PostDTO(
             postId = post.postId,
-            creatorUserId = post.user?.userId!!,
+            creatorUser = convertToUserDTO(post.user!!),
             title = post.title,
             content = post.content,
             creationDate = post.creationDate,
             upvotes = post.upvotes,
             downvotes = post.downvotes,
             totalComments = post.totalComments,
-            category = post.category
+            category = post.category,
+            tags = convertBulkToTagDTO(post.postTags)
         )
     }
     fun convertBulkToPostDTO(posts: List<Post>) : List<PostDTO> {
@@ -22,7 +23,8 @@ object ConverterDTO {
     fun convertToCommentDTO(comment: Comment) : CommentDTO {
         return CommentDTO(
             commentId = comment.commentId,
-            creatorUserId = comment.user?.userId!!,
+            replyToCommentID = comment.replyToComment?.commentId,
+            creatorUser = convertToUserDTO(comment.user!!),
             content = comment.content,
             creationDate = comment.creationDate,
             upvotes = comment.upvotes,
