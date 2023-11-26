@@ -17,6 +17,7 @@ class AccessController(
 
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin(origins = ["*"])
     fun register(
         @RequestPart("request") request: RegisterationRequest,
         @RequestPart("image") image: MultipartFile?
@@ -28,12 +29,14 @@ class AccessController(
     }
 
     @PostMapping("/login")
+    @CrossOrigin(origins = ["*"])
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Map<String, String>> {
         val sessionId = accessService.login(request.username, request.password)
         return ResponseEntity.ok().header("Set-Cookie", "SESSIONID=$sessionId; HttpOnly").body(mapOf("message" to "Logged in successfully."))
     }
 
     @PostMapping("/logout")
+    @CrossOrigin(origins = ["*"])
     fun logout(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<Map<String, String>> {
         sessionId?.let { accessService.logout(it) }
         return ResponseEntity.ok().body(mapOf("message" to "Logged out successfully."))
@@ -41,6 +44,7 @@ class AccessController(
     }
 
     @PostMapping("/change-password")
+    @CrossOrigin(origins = ["*"])
     fun changePassword(
             @CookieValue("SESSIONID") sessionId: UUID?,
             @RequestBody request: ChangePasswordRequest
@@ -64,12 +68,14 @@ class AccessController(
     }
 
     @PostMapping("/forgot-password")
+    @CrossOrigin(origins = ["*"])
     fun forgotPassword(@RequestBody request: ForgotPasswordRequest): ResponseEntity<Map<String, String>> {
         accessService.forgotPassword(username = request.username, email = request.email)
         return ResponseEntity.ok().body(mapOf("message" to "Password reset token generated successfully."))
     }
 
     @PostMapping("/reset-password")
+    @CrossOrigin(origins = ["*"])
     fun resetPassword(@RequestBody request: ResetPasswordRequest): ResponseEntity<Map<String, String>> {
         accessService.resetPassword(token = request.token, newPassword = request.newPassword, confirmNewPassword = request.confirmNewPassword)
         return ResponseEntity.ok().body(mapOf("message" to "Password reset successfully."))
