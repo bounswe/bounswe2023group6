@@ -34,10 +34,9 @@ class Comment extends Content {
       createdDate: DateTime.parse(json['creationDate']),
       likes: json['upvotes'],
       dislikes: json['downvotes'],
-      ownerUserId: json['creatorUserId'],
-      ownerUsername: json['creatorUsername'],
-      ownerProfileImage: json['creatorProfileImage'],
-      // ownerUser: User.fromJson(json['user']), 
+      ownerUserId: json['creatorUser']["userId"],
+      ownerUsername: json['creatorUser']["username"],
+      ownerProfileImage: json['creatorUser']["profilePicture"] ?? "",
       parentContentId:  json.containsKey('parentContentId') ? json['parentContentId'] : null,
     );
   }

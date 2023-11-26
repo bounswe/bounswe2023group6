@@ -182,7 +182,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
           value: ContentMoreOptions.delete,
           child: Text('Delete'),
         ),
-        if (!isContentOfCurrentUser)
+        // if (!isContentOfCurrentUser)
           const PopupMenuItem<ContentMoreOptions>(
             value: ContentMoreOptions.report,
             child: Text('Report'),

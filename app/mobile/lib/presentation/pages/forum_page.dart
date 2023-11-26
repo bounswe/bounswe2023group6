@@ -40,7 +40,17 @@ class _ForumPageState extends State<ForumPage> {
         floatingActionButton: isLoggedIn
             ? FloatingActionButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/create_post').then((_) => setState((){}));
+                  Navigator.pushNamed(context, '/create_post').then((value) {
+                    if (value != null && value == "create") {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Post created"),
+                        ),
+                      );
+                      // refresh the current page
+                      Navigator.pushReplacementNamed(context, '/');
+                    }
+                  }); 
                 },
                 child: const Icon(Icons.add),
               )

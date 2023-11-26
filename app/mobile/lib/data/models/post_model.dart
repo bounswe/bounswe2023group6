@@ -40,9 +40,9 @@ class Post extends Content {
       likes: json['upvotes'],
       dislikes: json['downvotes'],
       comments: json['totalComments'],
-      ownerUserId: json['creatorUserId'],
-      ownerUsername: json['creatorUsername'],
-      ownerProfileImage: json['creatorProfileImage'],
+      ownerUserId: json['creatorUser']["userId"],
+      ownerUsername: json['creatorUser']["username"],
+      ownerProfileImage: json['creatorUser']["profilePicture"] ?? "",
       commentList: json.containsKey("comments") 
         ? List<Comment>.from(json['comments'].map((x) => Comment.fromJson(x)))
         : [],

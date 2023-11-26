@@ -119,23 +119,7 @@ class _PostCreatePageState extends State<PostCreatePage> {
                         _titleController.text, 
                         _contentController.text
                       );
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: const Text("Post created"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    Navigator.of(context).pop("create");
                   }
                 },
                 child: const Text("Create"),
