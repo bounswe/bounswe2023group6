@@ -1,3 +1,5 @@
+import 'package:mobile/data/models/post_model.dart';
+
 class Game {
   final int id;
   final String name;
@@ -12,6 +14,8 @@ class Game {
   String? playerPerspective;
   String? artStyle;
   String? series;
+  List<Game> similarGameList;
+  List<Post> relatedPosts;
 
   Game({
     required this.id,
@@ -27,6 +31,8 @@ class Game {
     this.playerPerspective,
     this.artStyle,
     this.series,
+    this.similarGameList = const [],
+    this.relatedPosts = const [],
   });
 
 

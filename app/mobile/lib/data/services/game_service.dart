@@ -1,5 +1,10 @@
 import 'package:mobile/constants/network_constants.dart';
+import 'package:mobile/data/models/dto/empty_response.dart';
+import 'package:mobile/data/models/dto/game/game_request.dart';
+import 'package:mobile/data/models/dto/game/game_response.dart';
+import 'package:mobile/data/models/dto/game/multiple_game_dto_response.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
 
 class GameService {
@@ -8,8 +13,48 @@ class GameService {
 
   final BaseNetworkService service = BaseNetworkService();
 
-  Future<Game> getGame(int id) async {
-    return  getGameDataList()[id];
+  static const String _getGames = "/game/games";
+
+  Future<List<Game>> getGames() async {
+    if (NetworkConstants.useMockGameData) {
+      return  getGameDataList();
+    }
+
+    ServiceResponse<MultipleGameAsDTO> response = 
+    await service.sendRequestSafe<EmptyResponse, MultipleGameAsDTO>(
+      _getGames,
+      null,
+      MultipleGameAsDTO(),
+      'GET',
+    ); 
+    if (response.success) {
+      List<Game> games = response.responseConverted!.games!
+          .map((e) => e as Game)
+          .toList();
+      return games;
+    } else {
+      throw Exception('Failed to load games');
+    }
+  }
+
+  Future<Game> getGame(int gameid) async {
+    if (NetworkConstants.useMockGameData) {
+      return  getGameDataList()[gameid -1 ];
+    }
+
+    ServiceResponse<GameDTOResponse> response = 
+    await service.sendRequestSafe<EmptyResponse, GameDTOResponse>(
+      "$_getGames/$gameid",
+      null,
+      GameDTOResponse(),
+      'GET',
+    ); 
+    if (response.success) {
+      Game game = response.responseConverted! as Game;
+      return game;
+    } else {
+      throw Exception('Failed to load game');
+    }
   }
 
   static Game getGameStatic(int id)  {

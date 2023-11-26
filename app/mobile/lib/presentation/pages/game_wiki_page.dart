@@ -26,11 +26,10 @@ class _GameWikiState extends State<GameWiki> {
     final int gameId = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       appBar: CustomAppBar(title: "Game Page"),
-      body: GameWikiPage(gameId:  gameId -1 ,),
+      body: GameWikiPage(gameId:  gameId,),
     );
   }
 }
-
 
 class GameWikiPage extends StatefulWidget {
 
@@ -43,45 +42,62 @@ class GameWikiPage extends StatefulWidget {
 }
 
 class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderStateMixin{
-  final List<Game> itemList =  GameService.getGameDataList();
+  final List<Game> similarGameList =  GameService.getGameDataList();
   final GameService gameService = GameService();
   final PostService postService = PostService();
-  late List<Post> relatedPosts;
+  
   late TabController tabController;
-
 
   @override
   void initState() {
     super.initState();
-    loadGameData(widget.gameId);
-    loadRelatedPosts();
+    // loadGameData(widget.gameId);
+    // loadRelatedPosts();
+    
     setState(() {
       tabController =  TabController(length: 2, vsync: this);
     });
     
   }
 
-  late Game game;
+  // late List<Post> relatedPosts;
+  // late Game game;
 
-  Future<void> loadGameData(int gameId) async {
-    Game gameData = await gameService.getGame(gameId);
-    setState(() {
-      game =  gameData;
-    });
-  }
+  // Future<void> loadGameData(int gameId) async {
+  //   Game gameData = await gameService.getGame(gameId);
+  //   setState(() {
+  //     game =  gameData;
+  //   });
+  // }
 
-  Future<void> loadRelatedPosts() async {
+  // Future<void> loadRelatedPosts() async {
+  //   List<Post> postList = await postService.getPosts();
+  //   setState(() {
+  //     relatedPosts =  postList;
+  //   });
+  // }
+
+  Future<Game> loadGame(int gameId) async {
+    Game game = await gameService.getGame(gameId);
     List<Post> postList = await postService.getPosts();
-    setState(() {
-      relatedPosts =  postList;
-    });
+    List<Game> similarGames = await gameService.getGames();
+    
+    game.relatedPosts = postList;
+    game.similarGameList = similarGames;
+
+    return game;
   }
 
   bool notNull(Object o) => o != null;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return FutureBuilder(
+      future: loadGame(widget.gameId), 
+      builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
+            if (snapshot.hasData) {
+              Game game = snapshot.data!;
+              return ListView(
           children: [
             Card(
               margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
@@ -260,7 +276,7 @@ class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderSt
                         // This next line does the trick.
                         scrollDirection: Axis.horizontal,
                         children: [
-                          for (var i = 0; i < 6; i++) VerticalGameCard(game: itemList[i]),
+                          for (var i = 0; i < 6; i++) VerticalGameCard(game: game.similarGameList[i]),
                         ],
                       ),
                     ),
@@ -299,7 +315,7 @@ class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderSt
                       child: Column(
                         // This next line does the trick.
                         children: [
-                          for (var i = 0; i < relatedPosts.length; i++) PostCard(post: relatedPosts[i]),
+                          for (var i = 0; i < game.relatedPosts.length; i++) PostCard(post: game.relatedPosts[i]),
                         ],
                       ),
                         ),
@@ -320,6 +336,11 @@ class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderSt
             ),
           ],
         );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }
+    );    
   }
 }
 
