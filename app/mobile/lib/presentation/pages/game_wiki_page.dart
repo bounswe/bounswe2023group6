@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
+import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/markdown_widget.dart';
+import 'package:mobile/presentation/widgets/post_card_widget.dart';
+import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 
 
 class GameWiki extends StatefulWidget {
@@ -38,14 +42,23 @@ class GameWikiPage extends StatefulWidget {
   State<GameWikiPage> createState() => _GameWikiPageState();
 }
 
-class _GameWikiPageState extends State<GameWikiPage> {
+class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderStateMixin{
   final List<Game> itemList =  GameService.getGameDataList();
   final GameService gameService = GameService();
+  final PostService postService = PostService();
+  late List<Post> relatedPosts;
+  late TabController tabController;
+
 
   @override
   void initState() {
     super.initState();
     loadGameData(widget.gameId);
+    loadRelatedPosts();
+    setState(() {
+      tabController =  TabController(length: 2, vsync: this);
+    });
+    
   }
 
   late Game game;
@@ -54,6 +67,13 @@ class _GameWikiPageState extends State<GameWikiPage> {
     Game gameData = await gameService.getGame(gameId);
     setState(() {
       game =  gameData;
+    });
+  }
+
+  Future<void> loadRelatedPosts() async {
+    List<Post> postList = await postService.getPosts();
+    setState(() {
+      relatedPosts =  postList;
     });
   }
 
@@ -147,18 +167,24 @@ class _GameWikiPageState extends State<GameWikiPage> {
                 ),
               )
             ),
+            SizedBox(
+              height: 10,
+            ),
             Card(
               margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              child: SizedBox(
-                width: 500 ,
-                child:                     SizedBox(
-                      height: 500,
-                      child: SingleChildScrollView(
-                        child: MarkdownBody(data: game.description, shrinkWrap: true,),
-                      )
-                    ),
+              child: Column(
+                children: [
+                  const Text("Description", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),),
+                  SizedBox(
+                    width: 500 ,
+                    child: MarkdownBody(data: game.description, shrinkWrap: true,),          
+                  ),
+                ],
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Card(
               margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
@@ -168,18 +194,68 @@ class _GameWikiPageState extends State<GameWikiPage> {
                 child: Column(
                   children: [
                     const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Similar Games: ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700, ))
+                      alignment: Alignment.center,
+                      child: Text("Similar Games",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700, ))
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 20),
-                      height: 235,
+                      height: 195,
                       child: ListView(
                         // This next line does the trick.
                         scrollDirection: Axis.horizontal,
                         children: [
                           for (var i = 0; i < 6; i++) VerticalGameCard(game: itemList[i]),
                         ],
+                      ),
+                    ),
+                 ],
+                )
+              ),
+            ),
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              
+              child: SizedBox(
+                width: 500 ,
+                //height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    TabBar(
+                      controller: tabController,
+                      tabs: [
+                        Tab(
+                          text: 'Related Posts',
+                        ),
+                        Tab(
+                          text: 'Related LFGs',
+                        ),
+                      ],
+                      labelColor: Colors.black,
+                    ),
+                    Container(
+                      
+                      child: AutoScaleTabBarView(
+                        controller: tabController,
+                        children: [
+                          Container(
+                      margin: const EdgeInsets.symmetric(vertical: 20),
+                      child: Column(
+                        // This next line does the trick.
+                        children: [
+                          for (var i = 0; i < relatedPosts.length; i++) PostCard(post: relatedPosts[i]),
+                        ],
+                      ),
+                        ),
+                        const Column(
+                          children: [
+                            SizedBox(height: 25,),
+                            Center(child: Text("Nothing to show",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500, ))),  
+                            SizedBox(height: 25,),
+                          ],
+                        )
+                          
+                        ]
                       ),
                     ),
                  ],
@@ -210,12 +286,12 @@ class VerticalGameCard extends StatelessWidget {
         );
       },
       child: SizedBox(
-        width: 160,
+        width: 130,
         child: Column(
           children: [
             Container(
-              height: 200,
-              width: 150,
+              height: 160,
+              width: 120,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(game.imageLink),
