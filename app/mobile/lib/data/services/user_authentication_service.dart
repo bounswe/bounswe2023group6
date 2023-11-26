@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/login/login_request.dart';
 import 'package:mobile/data/models/dto/login/login_response.dart';
@@ -60,26 +62,28 @@ class UserAuthenticationService {
   }
 
   Future<bool> registerUser(String username, String password, String email) async {
-    final RegisterDTORequest registerRequest = RegisterDTORequest(
-      username: username,
-      password: password,
-      email: email,
-      name: "dummy",
-      surname: "dummy"
+    Map<String, String> request = {
+      'username': username,
+      'password': password,
+      'email': email,
+      'name': "dummy",
+      'surname': "dummy"
+    };
+    var formData = FormData.fromMap({
+      'request': MultipartFile.fromString(
+        jsonEncode(request),
+        contentType: MediaType("application", "json"),
+      ),
+    });
+    Response response = await Dio().post(
+      '$serverUrl/register',
+      data: formData,
     );
 
-    ServiceResponse response =
-        await service.sendRequestSafe<RegisterDTORequest, RegisterDTOResponse>(
-      _register,
-      registerRequest,
-      RegisterDTOResponse(),
-      'POST',
-    );
-
-    if (response.success) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
     } else {
-      print('register failed - Status Code: ${response.errorMessage}');
+      print('register failed - Status Code: ${response.statusCode}');
       return false;
     }
   }
