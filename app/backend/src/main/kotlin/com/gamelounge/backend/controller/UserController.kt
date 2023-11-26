@@ -22,21 +22,18 @@ class UserController (
 ){
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getUserInfoBySessionId(@CookieValue("SESSIONID") sessionId: UUID): User{
         return userService.getUserBySessionId(sessionId)
     }
 
     @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getUserInfoByUsername(@PathVariable username: String): GetUserInfoResponse{
         return userService.getUserInfoByUsername(username)
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun updateUserByUserId(
         @RequestPart("request") request: UpdateUserRequest,
         @RequestPart("image") image: MultipartFile?,
@@ -51,7 +48,6 @@ class UserController (
 
     @GetMapping("/created-posts")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getCreatedPosts(@CookieValue("SESSIONID") sessionId: UUID): List<PostDTO>{
         val userId = sessionAuth.getUserIdFromSession(sessionId)
 
@@ -60,7 +56,6 @@ class UserController (
 
     @GetMapping("/created-games")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getCreatedGames(@CookieValue("SESSIONID") sessionId: UUID): List<GameDTO>{
         val userId = sessionAuth.getUserIdFromSession(sessionId)
 
@@ -69,7 +64,6 @@ class UserController (
 
     @GetMapping("/liked-posts")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getLikedPosts(@CookieValue("SESSIONID") sessionId: UUID): List<PostDTO>{
         val userId = sessionAuth.getUserIdFromSession(sessionId)
 
@@ -78,7 +72,6 @@ class UserController (
 
     @GetMapping("/liked-comments")
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
     fun getLikedComments(@CookieValue("SESSIONID") sessionId: UUID): List<CommentDTO>{
         val userId = sessionAuth.getUserIdFromSession(sessionId)
 
