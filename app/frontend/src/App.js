@@ -5,6 +5,7 @@ import { GamePage } from './pages/GamePage';
 import { ProfilePage } from './pages/Profile';
 import { ResetPassword, ForgotPassword, Login, Signup } from './pages/Auth'
 import { ForumPage } from './pages/ForumPage';
+import { PostPage } from './pages/PostPage';
 import { NextUIProvider } from '@nextui-org/react'
 
 const App = () => (
@@ -20,6 +21,7 @@ const App = () => (
 				<Route path='/home' element={<HomePage />} />
 				<Route path="/game/fifa" element={<GamePage />} />
 				<Route path="/forum" element={<ForumPage />} />
+				<Route path="/postpage" element={<PostPage />} />
 			</Routes>
 		</BrowserRouter>
 	</NextUIProvider>
