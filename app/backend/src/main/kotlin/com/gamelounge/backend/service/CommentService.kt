@@ -35,7 +35,8 @@ class CommentService(
         val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
         val post = postRepository.findById(postId).orElseThrow { PostNotFoundException("Post not found") }
         post.totalComments += 1
-        val newComment = Comment(content = comment.content)
+        val replyToComment = comment.replyToCommentId?.let { commentRepository.findById(it).orElseThrow { CommentNotFoundException("Comment not found") } }
+        val newComment = Comment(content = comment.content, replyToComment = replyToComment)
         newComment.user = user
         newComment.post = post
         postRepository.save(post)
@@ -149,6 +150,10 @@ class CommentService(
         val comment = getComment(commentId)
         val newReport = Report(reason = reqBody.reason, reportingUser = user, reportedComment = comment)
         reportRepository.save(newReport)
+    }
+    fun getAllReplies(commentId: Long): List<Comment> {
+        val comment = getComment(commentId)
+        return comment.replies
     }
 
 }

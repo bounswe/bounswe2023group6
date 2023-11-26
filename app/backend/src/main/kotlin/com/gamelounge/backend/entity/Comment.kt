@@ -46,6 +46,12 @@ class Comment(
     var dislikedUsers: MutableList<User> = mutableListOf(),
 
     @OneToMany(mappedBy = "reportedComment", cascade = [CascadeType.PERSIST])
-    var reports: MutableList<Report> = mutableListOf()
+    var reports: MutableList<Report> = mutableListOf(),
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "replyToCommentId")
+    var replyToComment: Comment? = null,
+
+    @OneToMany(mappedBy = "replyToComment", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var replies: MutableList<Comment> = mutableListOf()
 )

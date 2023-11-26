@@ -92,5 +92,14 @@ class CommentController(private val commentService: CommentService) {
         return ResponseEntity.ok(ResponseMessage(message = "Comment reported successfully"))
     }
 
+    // get all replies to a comment
+    @GetMapping("/{id}/replies")
+    @CrossOrigin(origins = ["*"])
+    fun getAllReplies(@PathVariable id: Long): ResponseEntity<List<CommentDTO>> {
+        val replies = commentService.getAllReplies(id)
+        val repliesDTO = ConverterDTO.convertBulkToCommentDTO(replies)
+        return ResponseEntity.ok(repliesDTO)
+    }
+
 
 }

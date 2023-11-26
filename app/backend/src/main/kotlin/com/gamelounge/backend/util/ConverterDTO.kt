@@ -23,6 +23,7 @@ object ConverterDTO {
     fun convertToCommentDTO(comment: Comment) : CommentDTO {
         return CommentDTO(
             commentId = comment.commentId,
+            replyToCommentID = comment.replyToComment?.commentId,
             creatorUser = convertToUserDTO(comment.user!!),
             content = comment.content,
             creationDate = comment.creationDate,
