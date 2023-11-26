@@ -87,14 +87,31 @@ object ConverterDTO {
             game.description,
             game.genre,
             game.platform,
-            game.avatarDetails,
+            convertBulkToCharacterDTO(game.characters),
             game.playerNumber,
             game.releaseYear,
             game.universe,
             game.mechanics,
             game.playtime,
-            game.mapInformation,
-            convertBulkToTagDTO(game.tags)
+            game.totalRating,
+            game.countRating,
+            game.averageRating,
+            game.creationDate,
+            convertBulkToTagDTO(game.tags),
+            game.gamePicture
+        )
+    }
+
+    fun convertBulkToCharacterDTO(characters: List<Character>): List<CharacterDTO>{
+        return characters.map{character -> convertToCharacterDTO(character)}
+    }
+
+    fun convertToCharacterDTO(character: Character) : CharacterDTO {
+        return CharacterDTO(
+                characterId  = character.characterId,
+                name = character.name,
+                description = character.description,
+                gameID = character.relatedGame?.gameId!!
         )
     }
 
