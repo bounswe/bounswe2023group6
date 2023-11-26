@@ -155,5 +155,4 @@ class PostService(
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedPost = post)
         reportRepository.save(newReport)
     }
-
 }
