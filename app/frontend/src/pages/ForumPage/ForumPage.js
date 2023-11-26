@@ -5,6 +5,7 @@ import Sidebar from '../../components/Sidebar';
 import userlogo from './user.jpg';
 import upvotelogo from './upvote.png';
 import downvotelogo from './downvote.png';
+import CreatePost from './CreatePost';
 
 const ForumPage = () => {
   const forumPosts = [
@@ -78,6 +79,7 @@ const ForumPage = () => {
             <div className='w-5/6 flex flex-col'>
               <div className='w-full flex flex-row'>
                 <div className='flex flex-col'>
+                  <CreatePost/>
                   {forumPosts.map((post) => (
                     <div key={post.id} className='card compact bg-gray-50 text-sky-800 shadow-xl m-2 p-4'>
                       <div className='flex-col'>
