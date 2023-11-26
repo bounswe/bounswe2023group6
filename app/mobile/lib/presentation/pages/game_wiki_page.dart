@@ -77,6 +77,8 @@ class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderSt
     });
   }
 
+  bool notNull(Object o) => o != null;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -99,27 +101,27 @@ class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderSt
                                 alignment: Alignment.centerLeft,
                                 child: Text("Release Date: ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600))
                               ),
-                              const Align(
+                              Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("Jan 25, 2018",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
+                                child: Text(game.releaseYear ?? "-",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
                               ),
                               const SizedBox( height: 10,),
                               const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("Released By:  ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600))
                               ),
-                              const Align(
+                              Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("Maddy Makes Games",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
+                                child: Text(game.developers ?? "-",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
                               ),
                               const SizedBox( height: 10,),
                               const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("Genre: ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600))
                               ),
-                              const Align(
+                              Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text("Adventure, Indie, Platform",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
+                                child: Text(game.genre ?? "-",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
                               ),
                               const SizedBox( height: 10,),
                               const Align(
@@ -176,15 +178,69 @@ class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderSt
               child: Column(
                 children: [
                   const Text("Description", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),),
-                  SizedBox(
-                    width: 500 ,
-                    child: MarkdownBody(data: game.description, shrinkWrap: true,),          
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: SizedBox(
+                      width: 500 ,
+                      child: MarkdownBody(data: game.description, shrinkWrap: true,),          
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 10,
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              child: Container(
+                width: 500,
+                child: Column(
+                  children: <Widget>[
+                    const Text("Additional Information", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),),
+                    if (game.platforms != null)  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: RichText(text: TextSpan(style: TextStyle(color: Colors.black),children: <TextSpan>[TextSpan(text: "Platforms: ", style: TextStyle(fontWeight: FontWeight.w500 ),), TextSpan(text: game.platforms!,)],)),
+                      ),
+                    ),
+                    if (game.gameModes != null)  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: RichText(text: TextSpan(style: TextStyle(color: Colors.black),children: <TextSpan>[TextSpan(text: "Game Modes: ", style: TextStyle(fontWeight: FontWeight.w500 ),), TextSpan(text: game.gameModes!,)],)),
+                      ),
+                    ),
+                    if (game.themes != null)  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: RichText(text: TextSpan(style: TextStyle(color: Colors.black),children: <TextSpan>[TextSpan(text: "Themes: ", style: TextStyle(fontWeight: FontWeight.w500 ),), TextSpan(text: game.themes!,)],)),
+                      ),
+                    ),
+                    if (game.playerPerspective != null)  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: RichText(text: TextSpan(style: TextStyle(color: Colors.black),children: <TextSpan>[TextSpan(text: "Player Perspective: ", style: TextStyle(fontWeight: FontWeight.w500 ),), TextSpan(text: game.playerPerspective!,)],)),
+                      ),
+                    ),
+                    if (game.artStyle != null)  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: RichText(text: TextSpan(style: TextStyle(color: Colors.black),children: <TextSpan>[TextSpan(text: "Art Style: ", style: TextStyle(fontWeight: FontWeight.w500 ),), TextSpan(text: game.artStyle!,)],)),
+                      ),
+                    ),
+                    if (game.series != null)  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: RichText(text: TextSpan(style: TextStyle(color: Colors.black),children: <TextSpan>[TextSpan(text: "Series: ", style: TextStyle(fontWeight: FontWeight.w500 ),), TextSpan(text: game.series!,)],)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             Card(
               margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
