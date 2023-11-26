@@ -3,7 +3,6 @@ import 'package:mobile/presentation/widgets/alert_widget.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
-import '../../data/models/user_model.dart';
 import '../widgets/app_bar_widget.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -12,47 +11,38 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController surnameController = TextEditingController();
-  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmpasswordController =
+      TextEditingController();
 
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
 
   final List<String> controllerNames = [
-    'Name',
-    'Surname',
     'Username',
     'Email',
-    'Password'
+    'Password',
+    'Confirm Password'
   ]; // Add controller names
 
   void registerUser() async {
-    final String name = nameController.text;
-    final String surname = surnameController.text;
-    final String username = userNameController.text;
+    final String username = usernameController.text;
     final String email = emailController.text;
     final String password = passwordController.text;
+    final String confirmPassword = confirmpasswordController.text;
 
     String title = "";
     String content = "";
 
-    if (ValidationUtils.isNameValid(name) &&
-        ValidationUtils.isNameValid(surname) &&
-        !username.isEmpty &&
+    if (username.isNotEmpty &&
         ValidationUtils.isEmailValid(email) &&
-        ValidationUtils.isPasswordValid(password)) {
-      final user = User(
-          name: name,
-          surname: surname,
-          email: email,
-          password: password,
-          username: username);
-
+        ValidationUtils.isPasswordValid(password) &&
+        password == confirmPassword) {
       try {
-        final registered = await authService.registerUser(user);
+        final registered =
+            await authService.registerUser(username, password, email);
 
         if (registered) {
           // Navigate to the next screen or perform other actions for a successful login.
@@ -69,13 +59,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       }
     } else {
       // Validate user input using ValidationUtils
-      if (!ValidationUtils.isNameValid(name)) {
-        title = "Wrong Name";
-        content = "Wrong Name Format";
-      } else if (!ValidationUtils.isNameValid(surname)) {
-        title = "Wrong Surname";
-        content = "Wrong Surname Format";
-      } else if (username.isEmpty) {
+      if (username.isEmpty) {
         // Handle invalid username
         // You can show an error message or perform any other action here.
         title = "Wrong Username";
@@ -90,6 +74,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         // You can show an error message or perform any other action here.
         title = "Wrong Password";
         content = "Wrong Password Format";
+      } else if (password != confirmPassword) {
+        title = "Confirm Password";
+        content = "Password does not match";
       }
     }
 
@@ -104,9 +91,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmpasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Registration',
         showBackButton: true,
       ),
@@ -115,15 +112,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: FormWidget(
           title: 'Please fill the registration form:',
           controllers: [
-            nameController,
-            surnameController,
-            userNameController,
+            usernameController,
             emailController,
-            passwordController
+            passwordController,
+            confirmpasswordController
           ],
           controllerNames:
               controllerNames, // Pass the controller names to FormWidget
           onSubmit: registerUser,
+          validators: const [
+            ValidationUtils.usernameValidation,
+            ValidationUtils.emailValidation,
+            ValidationUtils.passwordValidation,
+            ValidationUtils.confirmPasswordValidation
+          ],
         ),
       ),
     );

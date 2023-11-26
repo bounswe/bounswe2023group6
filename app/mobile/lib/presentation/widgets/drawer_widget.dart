@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_authentication_service.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
+import 'package:mobile/presentation/pages/profile_page.dart';
+import 'package:mobile/presentation/widgets/avatar_widget.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/registration_page.dart';
@@ -19,20 +23,33 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
   late String username = '';
-  bool ispp = false;
-  late ByteData byteData;
-  late User currentuser;
+  User? currentuser;
 
   final UserAuthenticationService authService = UserAuthenticationService();
 
+  late final CacheManager cacheManager;
 
 
   @override
   void initState() {
-
-    loadData();
-    getUser();
+    //loadData();
+    //getUser();
     super.initState();
+    initializeCache();
+  }
+
+  Future<void> initializeCache() async {
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    cacheManager = CacheManager(manager);
+  
+
+    print(cacheManager.getSessionId());
+
+    setState(() {
+      currentuser = cacheManager.getUser();
+      username = currentuser!.username!;
+    });
   }
 
   void loadData() async {
@@ -46,52 +63,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
   void getUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    currentuser = (await authService.getCurrentUser(prefs.getString('username')))!;
-    
-    if (currentuser.profileImage != null){
-      
-      setState(() {
-        byteData = currentuser.profileImage!;
-        ispp = true;
-      });
-
+    if (prefs.getString('username') == null) {
+      return;
     }
-  }
 
-  CircleAvatar profilphoto(bool istrue){
-    if (istrue) {
-      return  CircleAvatar(
-                    radius: 70,
-                    child: ClipOval(
-                      child: Image.memory(
-                        byteData.buffer.asUint8List(),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                );
-    } else {
-      return  CircleAvatar(
-                backgroundColor: Theme.of(context).primaryColor,
-                radius: 60,
-                child: const Icon(
-                  Icons.account_circle,
-                  size: 130,
-                  color: Colors.white,
-                ),
-              );
-    }
+    User user = (await authService.getCurrentUser(prefs.getString('username')))!;    
+    setState(() {
+      currentuser = user; 
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
 
-    if (username == '') {
+    if (username == '' || currentuser == null) {
       return const GuestDrawer();
     }
     else {
     
-      return LoggedDrawer(username: username, pp : profilphoto(ispp));
+      return LoggedDrawer(username: username, pp: DisplayAvatar(byteData: currentuser!.profileImage, onPressed: () {
+        // go to profile page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfilePage()),
+        );
+      }));
 
     }
 
@@ -100,7 +96,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
 class LoggedDrawer extends StatelessWidget {
   final String username;
-  final CircleAvatar pp;
+  final Widget pp;
   const LoggedDrawer({
     super.key, required this.username, required this.pp,
   });
@@ -145,9 +141,16 @@ class LoggedDrawer extends StatelessWidget {
             flex: 5,
             child: Column(
               children: [
-                const ListTile(
-                  leading: Icon(Icons.account_circle_outlined),
-                  title: Text('My Profile'),
+                ListTile(
+                  leading: const Icon(Icons.account_circle_outlined),
+                  title: const Text('My Profile'),
+                  onTap:() {
+                    
+                    Navigator.pushNamed(
+                      context,
+                      "/profile",
+                    );
+                  },
                 ),
                 const ListTile(
                   leading: Icon(Icons.bookmarks_outlined),
@@ -166,6 +169,7 @@ class LoggedDrawer extends StatelessWidget {
                   title: const Text('Log Out'),
                   onTap:() {
                     clearData();
+                    
                     Navigator.pop(context);
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
                   },
@@ -179,6 +183,8 @@ class LoggedDrawer extends StatelessWidget {
   }
 
   void clearData() async {
+    UserAuthenticationService authService = UserAuthenticationService();
+    authService.logout();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }

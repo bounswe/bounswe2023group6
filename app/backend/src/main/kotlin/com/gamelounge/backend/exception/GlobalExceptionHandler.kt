@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import software.amazon.awssdk.services.s3.model.S3Exception
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -65,7 +66,43 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(mapOf("errorMessage" to exception.message))
     }
+    @ExceptionHandler(UserNotFoundException::class)
+    fun handleUserNotFoundException(exception: UserNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(PostNotFoundException::class)
+    fun handlePostNotFoundException(exception: PostNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(UnauthorizedPostAccessException::class)
+    fun handleUnauthorizedPostAccessException(exception: UnauthorizedPostAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(CommentNotFoundException::class)
+    fun handleCommentNotFoundException(exception: CommentNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(UnauthorizedCommentAccessException::class)
+    fun handleUnauthorizedCommentAccessException(exception: UnauthorizedCommentAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(mapOf("errorMessage" to exception.message))
+    }
 
+    @ExceptionHandler(S3Exception::class)
+    fun handleAmazonS3Exception(exception: S3Exception): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(mapOf("errorMessage" to exception.message))
+    }
 
 
 }

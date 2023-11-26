@@ -4,7 +4,7 @@ package com.gamelounge.backend.service
 import com.gamelounge.backend.config.CustomProperties
 
 import com.gamelounge.backend.entity.Session
-import com.gamelounge.backend.model.RegisterationRequest
+import com.gamelounge.backend.model.request.RegisterationRequest
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.HashingUtil.generateHash
 import com.gamelounge.backend.entity.User
@@ -12,6 +12,7 @@ import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.PasswordResetTokenRepository
 import com.gamelounge.backend.repository.SessionRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 import java.util.*
 
@@ -22,18 +23,20 @@ class AccessService(
     val emailService: EmailService,
     val passwordResetTokenRepository: PasswordResetTokenRepository,
     val passwordResetTokenService: PasswordResetTokenService,
-    val customProperties: CustomProperties
+    val customProperties: CustomProperties,
+    val s3Service: S3Service
 ){
 
-    fun register(request: RegisterationRequest){
-        // Encrypt the password
+    fun register(request: RegisterationRequest, image: MultipartFile?){
         val (passwordHash, salt) = generateHash(request.password)
 
-        // Save the data to database
         if (userRepository.existsByUsername(request.username)){
             throw UsernameAlreadyExistException("The username already exists!")
         }
-        userRepository.save(User(request.username, request.email, request.name, request.surname, request.image, passwordHash, salt))
+
+        val user = userRepository.save(User(username = request.username, email = request.email, passwordHash = passwordHash, salt = salt))
+
+        image?.let { saveImageInS3AndImageURLInDB(image, user) }
     }
 
     fun login(username: String, password: String): UUID {
@@ -140,5 +143,9 @@ class AccessService(
         passwordResetTokenRepository.delete(passwordResetToken)
     }
 
+    private fun saveImageInS3AndImageURLInDB(image: MultipartFile, user: User) {
+        user.profilePicture = s3Service.uploadProfilePictureAndReturnURL(image, user.userId)
+        userRepository.save(user)
+    }
 
 }

@@ -1,30 +1,81 @@
 package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.entity.User
+import com.gamelounge.backend.middleware.SessionAuth
+import com.gamelounge.backend.model.DTO.CommentDTO
+import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.model.request.UpdateUserRequest
+import com.gamelounge.backend.model.response.GetUserInfoResponse
 import com.gamelounge.backend.service.UserService
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.CookieValue
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @RestController
+@RequestMapping("/user")
 class UserController (
-    val userService: UserService
+    val userService: UserService,
+    val sessionAuth: SessionAuth
 ){
-    @GetMapping("/user")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     fun getUserInfoBySessionId(@CookieValue("SESSIONID") sessionId: UUID): User{
         return userService.getUserBySessionId(sessionId)
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    fun getUserInfoByUsername(@PathVariable username: String): User{
-        return userService.getUserByUsername(username)
+    fun getUserInfoByUsername(@PathVariable username: String): GetUserInfoResponse{
+        return userService.getUserInfoByUsername(username)
+    }
+
+    @PostMapping()
+    @ResponseStatus(HttpStatus.OK)
+    fun updateUserByUserId(
+        @RequestPart("request") request: UpdateUserRequest,
+        @RequestPart("image") image: MultipartFile?,
+        @CookieValue("SESSIONID") sessionId: UUID
+    ): ResponseEntity<Map<String, String>>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        userService.updateUser(request, image, userId)
+
+        return ResponseEntity.ok().body(mapOf("message" to "User updated successfully"))
+    }
+
+    @GetMapping("/created-posts")
+    @ResponseStatus(HttpStatus.OK)
+    fun getCreatedPosts(@CookieValue("SESSIONID") sessionId: UUID): List<PostDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getCreatedPosts(userId)
+    }
+
+    @GetMapping("/created-games")
+    @ResponseStatus(HttpStatus.OK)
+    fun getCreatedGames(@CookieValue("SESSIONID") sessionId: UUID): List<GameDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getCreatedGames(userId)
+    }
+
+    @GetMapping("/liked-posts")
+    @ResponseStatus(HttpStatus.OK)
+    fun getLikedPosts(@CookieValue("SESSIONID") sessionId: UUID): List<PostDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getLikedPosts(userId)
+    }
+
+    @GetMapping("/liked-comments")
+    @ResponseStatus(HttpStatus.OK)
+    fun getLikedComments(@CookieValue("SESSIONID") sessionId: UUID): List<CommentDTO>{
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+
+        return userService.getLikedComments(userId)
     }
 
 }

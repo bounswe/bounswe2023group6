@@ -1,11 +1,12 @@
 package com.gamelounge.backend.controller
 
-import com.gamelounge.backend.model.*
+import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.service.AccessService
-import com.gamelounge.backend.service.EmailService
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 
@@ -13,11 +14,17 @@ import java.util.UUID
 class AccessController(
     val accessService: AccessService
 ) {
-    @PostMapping("/register")
+
+    @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
-    fun register(@RequestBody request: RegisterationRequest): ResponseEntity<Map<String, String>> {
-        accessService.register(request)
+    fun register(
+        @RequestPart("request") request: RegisterationRequest,
+        @RequestPart("image") image: MultipartFile?
+    ): ResponseEntity<Map<String, String>> {
+
+        accessService.register(request, image)
         return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("message" to "Registered successfully!"))
+
     }
 
     @PostMapping("/login")

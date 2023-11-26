@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/presentation/widgets/alert_widget.dart';
-import 'package:mobile/presentation/widgets/button_widget.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import '../widgets/form_widget.dart';
 import '../../utils/validation_utils.dart';
 import '../../data/services/user_authentication_service.dart';
 import '../widgets/app_bar_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,11 +18,25 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  late final CacheManager cacheManager;
+
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
 
   // Define controller names
   final List<String> controllerNames = ['Username', 'Password'];
+  
+  @override
+  void initState() {
+    super.initState();
+    initializeCache();
+  }
+
+  Future<void> initializeCache() async {
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    cacheManager = CacheManager(manager);
+  }
 
   Future<void> loginUser() async {
     final String username = userNameController.text;
@@ -30,20 +45,21 @@ class _LoginPageState extends State<LoginPage> {
     String content = "";
     // Validate user input using ValidationUtils
 
-    if (!username.isEmpty && ValidationUtils.isPasswordValid(password)) {
+    if (!username.isEmpty && password.isNotEmpty) {
       
       final loggedIn = await authService.loginUser(username, password);
 
       if (loggedIn) {
         // Navigate to the next screen or perform other actions for a successful login.
         updateSession(username);
+        User user= (await authService.getCurrentUser(username))!;
+        await cacheManager.saveUser(user);
         Navigator.pushNamed(context, '/');
         return;
       } else {
         title = "Error";
         content = "Wrong credentials.";
       }
-
     } else {
       if (username.isEmpty) {
         // Handle invalid email
@@ -56,7 +72,6 @@ class _LoginPageState extends State<LoginPage> {
         title = "Wrong Password";
         content = "Wrong Password Format";
       }
-
     }
     showDialog(
         context: context,
@@ -73,11 +88,10 @@ class _LoginPageState extends State<LoginPage> {
     prefs.setString('username', username);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Login',
         showBackButton: true,
       ),
@@ -91,6 +105,10 @@ class _LoginPageState extends State<LoginPage> {
               controllerNames:
                   controllerNames, // Pass controllerNames to FormWidget
               onSubmit: loginUser,
+              validators: [
+                ValidationUtils.dummyValidation,
+                ValidationUtils.dummyValidation
+              ],
             ),
             InkWell(
               onTap: () {

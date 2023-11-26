@@ -1,10 +1,20 @@
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/login/login_request.dart';
 import 'package:mobile/data/models/dto/login/login_response.dart';
+import 'package:mobile/data/models/dto/register/register_request.dart';
+import 'package:mobile/data/models/dto/register/register_response.dart';
+import 'package:mobile/data/models/dto/user/user_detailed_response.dart';
 import 'package:mobile/data/models/dto/user/user_response.dart';
+import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
+import 'package:mobile/data/services/post_service.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import 'dart:convert';
 import '../../data/models/user_model.dart';
 
@@ -14,10 +24,15 @@ class UserAuthenticationService {
 
   final BaseNetworkService service = BaseNetworkService();
 
+  CacheManager? cacheManager;
+
   static const String _getUser = "/user";
+  static const String _getUserDetails = "/user_details";
+  static const String _login = "/login";
+  static const String _register = "/register";
 
   Future<bool> loginUser(String username, String password) async {
-    const String path = '/login';
+
     final LoginDTORequest loginRequest = LoginDTORequest(
       username: username,
       password: password,
@@ -25,78 +40,61 @@ class UserAuthenticationService {
 
     ServiceResponse response =
         await service.sendRequestSafe<LoginDTORequest, LoginDTOResponse>(
-      path,
+      _login,
       loginRequest,
       LoginDTOResponse(),
       'POST',
     );
 
     if (response.success) {
+      String? sessionId =
+          response.response?.headers['set-cookie']?.first.split(";").first.split("=")[1].split(",").first;
+      print(sessionId); 
+      final SharedManager manager = SharedManager();
+      await manager.init();
+      cacheManager = CacheManager(manager);
+      cacheManager!.saveSessionId(sessionId);
       return true;
     } else {
       print('Login failed - Status Code: ${response.errorMessage}');
       return false;
     }
-
-    const loginUrl = '$serverUrl/login';
-
-    final body = jsonEncode({
-      'username': username,
-      'password': password,
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse(loginUrl),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final User user = User.fromJson(responseData);
-        return true;
-      } else {
-        print('Login failed - Status Code: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('Login failed: $e');
-      return false;
-    }
   }
 
-  Future<bool> registerUser(User user) async {
-    try {
-      final data = jsonEncode(user.toJson());
+  Future<bool> registerUser(String username, String password, String email) async {
+    Map<String, String> request = {
+      'username': username,
+      'password': password,
+      'email': email,
+      'name': "dummy",
+      'surname': "dummy"
+    };
+    var formData = FormData.fromMap({
+      'request': MultipartFile.fromString(
+        jsonEncode(request),
+        contentType: MediaType("application", "json"),
+      ),
+    });
+    Response response = await Dio().post(
+      '$serverUrl/register',
+      data: formData,
+    );
 
-      final response = await http.post(
-        Uri.parse('$serverUrl/register'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: data,
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print('Registration successful');
-        return true;
-      } else {
-        print('Registration failed - Status Code: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('Registration failed: $e');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      print('register failed - Status Code: ${response.statusCode}');
       return false;
     }
   }
 
   // Log out the current user
   Future<void> logout() async {
-    // You can add any necessary logic for logging out here
-    // For example, clearing user data or tokens
+      final SharedManager manager = SharedManager();
+      await manager.init();
+      cacheManager = CacheManager(manager);
+      cacheManager!.removeSessionId();
+      
   }
 
   // Reset the user's password
@@ -161,5 +159,56 @@ class UserAuthenticationService {
       print('User not found - Status Code: ${response.errorMessage}');
       return null;
     }
+  }
+
+  Future<void> getUserDetails(User user) async {
+    ServiceResponse response = await service
+        .sendRequestSafe<UserDetailedDTOResponse, UserDetailedDTOResponse>(
+      "$_getUserDetails/${user.username}",
+      null,
+      UserDetailedDTOResponse(),
+      'GET',
+    );
+
+    if (response.success) {
+      UserDetailedDTOResponse userResponse = response.responseConverted;
+      user.about = userResponse.about;
+      // user.likedPosts = userResponse.likedPosts;
+      // user.savedPosts = userResponse.savedPosts;
+      // user.createdPosts = userResponse.createdPosts;
+      // user.commentedPosts = userResponse.commentedPosts;
+      // user.reportedPosts = userResponse.reportedPosts;
+      // user.blockedPosts = userResponse.blockedPosts;
+      // user.likedGames = userResponse.likedGames;
+      // user.savedGames = userResponse.savedGames;
+      if (NetworkConstants.useMockData) {
+        loadMockData(user);
+      }
+    } else {
+      print('User not found - Status Code: ${response.errorMessage}');
+      loadMockData(user);
+    }
+  }
+
+  void loadMockData(User user) async {
+    user.about =
+        "Hey there, I'm Ayse, and I'm a huge game enthusiast. Ever since I was a kid, video games have been a major part of my life. From the first time I picked up a controller, I was hooked. I spent countless hours playing my favorite games, immersing myself in their worlds, and trying to master their mechanics.";
+    user.likedPosts = await PostService().getPosts();
+    user.likedGames = [
+      Game(
+          id: 1,
+          description:
+              "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
+          name: "Witcher 3",
+          imageLink:
+              "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"),
+      Game(
+          id: 2,
+          description:
+              "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
+          name: "Witcher 3",
+          imageLink:
+              "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"),
+    ];
   }
 }
