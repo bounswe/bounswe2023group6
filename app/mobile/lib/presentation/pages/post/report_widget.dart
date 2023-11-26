@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/services/post_service.dart';
 
 class ReportWidget extends StatelessWidget {
-  ReportWidget({Key? key}) : super(key: key);
+  final Content content;
+  ReportWidget({Key? key, required this.content}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
   final _reasonController = TextEditingController();
@@ -59,10 +62,11 @@ class ReportWidget extends StatelessWidget {
           child: const Text("Report"),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              // TODO: sent report to backend
-              // content.type == ContentType.post
-              //     ? postService.reportPost(content.id, "report")
-              //     : postService.reportComment(content.id, "report");              
+              String reason = _reasonController.text;
+              String description = _descriptionController.text;
+              content.type == ContentType.post
+                  ? PostService().reportPost(content.id, reason, description)
+                  : PostService().reportComment(content.id, reason, description);
               showDialog(
                 context: context,
                 builder: (context) {

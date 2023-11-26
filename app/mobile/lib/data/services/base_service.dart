@@ -119,7 +119,7 @@ class BaseNetworkService
         statusMessage: response.statusMessage,
         data: response.data is Map<String, dynamic>
             ? response.data
-            : jsonDecode(response.data),
+            : <String, dynamic>{"response": response.data}
       );
 
       ServiceResponse<DTORes> serviceResponse = ServiceResponse(

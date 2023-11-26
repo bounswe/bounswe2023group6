@@ -14,7 +14,19 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/post', arguments: post.id);
+        Navigator.pushNamed(context, '/post', arguments: post.id).then((value) {
+          if (value != null) {
+            if (value == "delete") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Post deleted"),
+                ),
+              );
+              // refresh the current page
+              Navigator.pushReplacementNamed(context, '/');
+            }
+          }
+        });
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -23,7 +35,8 @@ class PostCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            userInformationSection(context, post.ownerUser),
+            userInformationSection(
+                context, post.ownerUsername, post.ownerProfileImage),
             postContentSection(post),
           ]),
         ),

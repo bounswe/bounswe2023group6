@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
               List<Post> posts = snapshot.data!;
               return ListView(
                 children: [
-                  for (var i = 0; i < 6; i++) PostCard(post: posts[i]),
+                  for (var i = 0; i < posts.length; i++) PostCard(post: posts[i]),
                 ],
               );
             } else {

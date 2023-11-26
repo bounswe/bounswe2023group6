@@ -7,9 +7,11 @@ class Post extends Content {
     required DateTime createdDate,
     required int id,
     required String content,
-    required ownerUser,
     required title,
     required relatedGameId, 
+    required ownerUserId,
+    required ownerUsername,
+    required ownerProfileImage,
     likes = 0,
     dislikes = 0,
     comments = 0,
@@ -21,7 +23,9 @@ class Post extends Content {
     type: ContentType.post,
     likes: likes,
     dislikes: dislikes,
-    ownerUser: ownerUser,
+    ownerUserId: ownerUserId,
+    ownerUsername: ownerUsername,
+    ownerProfileImage: ownerProfileImage,
     commentList: commentList,
     title: title,
     relatedGameId: relatedGameId, 
@@ -35,9 +39,16 @@ class Post extends Content {
       createdDate: DateTime.parse(json['creationDate']),
       likes: json['upvotes'],
       dislikes: json['downvotes'],
-      ownerUser: User.fromJson(json['user']), 
-      commentList: List<Comment>.from(json['comments'].map((x) => Comment.fromJson(x))),
-      relatedGameId: json['game']['gameId'],
+      comments: json['totalComments'],
+      ownerUserId: json['creatorUser']["userId"],
+      ownerUsername: json['creatorUser']["username"],
+      ownerProfileImage: json['creatorUser']["profilePicture"] ?? "",
+      commentList: json.containsKey("comments") 
+        ? List<Comment>.from(json['comments'].map((x) => Comment.fromJson(x)))
+        : [],
+      relatedGameId: json.containsKey("game") 
+      ? json['game']['gameId']
+      : null,
     );
   }
 
@@ -46,14 +57,15 @@ class Post extends Content {
       'postId': id,
       'title': title,
       'content': content,
+      'category': 'DISCUSSION',
       'creationDate': createdDate.toString(),
       'upvotes': likes,
       'downvotes': dislikes,
-      'user': ownerUser.toJson(),
-      'comments': commentList.map((x) => x.toJson()),
-      'game': {
-        'gameId': relatedGameId,
-      },
+      'creatorUserId': ownerUserId,
+      'creatorUsername': ownerUsername,
+      'creatorProfileImage': ownerProfileImage,
+      // 'comments': commentList.map((x) => x.toJson()),
+      // 'relatedGameId': relatedGameId,
     };
   }
 }
