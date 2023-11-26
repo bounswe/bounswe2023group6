@@ -1,7 +1,7 @@
 import React from 'react';
 import * as images from "../../pages/Auth/images";
-import Sidebar from '../../components/Sidebar'
 import LikedPosts from "./LikedPosts";
+import Navbarx from '../../components/navbar/Navbar';
 
 const ProfilePage = () => {
 
@@ -33,54 +33,58 @@ const ProfilePage = () => {
     ];
 
     return (
-        <div className='flex flex-row bg-[#FFF4E0]'>
-            <div className='w-1/5 flex flex-col h-screen'>
-                <Sidebar/>
+        <>
+            <Navbarx></Navbarx>
+            <div className='flex flex-row bg-gray-50 justify-center'>
+                <div className='w-2/3'>
+                    <div className='flex flex-col p-5 justify-center items-center'>
+                        <div className="compact text-sky-800 bg-green-100 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl">
+                            <div className="flex justify-center items-center w-1/5">
+                                <img src={images.mahmutdemir} className="rounded-full"/>
+                            </div>
+                            <div className="flex justify-end w-4/5">
+                                <div className="h-0.7">
+                                    <h1 className="text-3xl mb-2">{user.name}</h1>
+                                    <span className="py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mr-3 mt-2">
+                                        {user.title}
+                                    </span>
+                                    <span className="py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mt-2">
+                                        {user.company}
+                                    </span>
+                                </div>
+                                <div className="card-actions flex justify-end items-end">
+                                    <button className="btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0">
+                                        {user.following} following
+                                    </button>
+                                    <button className="btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0">
+                                        {user.followers} followers
+                                    </button>
+                                </div>
+                                <div className="card-actions justify-end h-0.05 mb-0">
+                                    <button className="btn btn-sm bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 ">
+                                        <i className="i pi pi-user-edit"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="compact text-sky-800 bg-green-100 shadow-xl p-8 flex h-1/4 mb-2 rounded-xl">
+                            <h2 className="flex justify-center items-center text-xl mb-3 mr-3">About Me</h2>
+                            <p>{user.about}</p>
+                        </div>
+                        <div className="compact text-sky-800 bg-green-100 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl">
+                            <h2 className="flex justify-center items-center text-xl mb-3">Liked Posts</h2>
+                            <div className='flex flex-col justify-center items-center ml-12 w-4/5 '>
+                                {postData.map((item, key) => <LikedPosts item={item} key={key} />)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className='w-4/5 flex flex-col p-5 justify-center items-center'>
-                <div className="compact text-[#FFF4E0] bg-[#4D4D4D]   shadow-xl  p-4 flex w-4/5 h-1/4 mb-2 rounded-xl">
-                    <div className="w-1/3 flex justify-center items-center">
-                        <img src={images.mahmutdemir} className="rounded-full h-3/5 w-3/5"/>
-                    </div>
-                    <div className="w-2/3">
-                        <div className="card-actions justify-end h-0.05 mb-0">
-                            <button className="btn  btn-sm bg-[#B46060] hover:bg-[#B46060] text-white border-0 ">
-                                <i className="i pi pi-user-edit"/>
-                            </button>
-                        </div>
-                        <div className="h-0.7">
-                            <h1 className="text-3xl mb-2">{user.name}</h1>
-                            <span className="py-2 px-4 text-[#4D4D4D] rounded-2xl bg-[#FFF4E0] w-auto mr-3 mt-2">
-                                {user.title}
-                            </span>
-                            <span className="py-2 px-4 text-[#4D4D4D] rounded-2xl bg-[#FFF4E0] w-auto mt-2">
-                                {user.company}
-                            </span>
-                        </div>
-                        <div className="card-actions flex justify-end items-end">
-                            <button className="btn bg-[#B46060] hover:bg-[#B46060] text-white border-0">
-                                {user.following} following
-                            </button>
-                            <button className="btn bg-[#B46060] hover:bg-[#B46060] text-white border-0">
-                                {user.followers} followers
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="compact text-[#FFF4E0] bg-[#4D4D4D]  shadow-xl  p-4  w-4/5  h-1/6 mb-2 rounded-xl">
-                    <h2 className="flex justify-center text-xl mb-3">About Me</h2>
-                    <p>{user.about}
-                    </p>
-                </div>
-                <div className="compact text-[#FFF4E0] bg-[#4D4D4D]  shadow-xl  p-4  w-4/5 rounded-xl">
-                    <h2 className="flex justify-center text-xl mb-3">Liked Posts</h2>
-                    <div className='flex flex-col justify-center ml-12 w-4/5 '>
-                        {postData.map((item, key) => <LikedPosts item={item} key={key} />)}
-                    </div>
-                </div>
+            <div className="bg-gray-50 text-gray-700 text-center p-8">
+                <p className="text-m">@2023 Game Lounge, All rights reserved.</p>
             </div>
-        </div>
+        </>
     );
-};
+}
 
 export default ProfilePage;
