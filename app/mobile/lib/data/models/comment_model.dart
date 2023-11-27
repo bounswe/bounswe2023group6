@@ -37,7 +37,7 @@ class Comment extends Content {
       ownerUserId: json['creatorUser']["userId"],
       ownerUsername: json['creatorUser']["username"],
       ownerProfileImage: json['creatorUser']["profilePicture"] ?? "",
-      parentContentId:  json.containsKey('parentContentId') ? json['parentContentId'] : null,
+      parentContentId:  json.containsKey('replyToCommentID') ? json['replyToCommentID'] : null,
     );
   }
 
@@ -53,7 +53,7 @@ class Comment extends Content {
       'creatorProfileImage': ownerProfileImage,
       // 'user': ownerUser?.toJson(),
       'comments': comments,
-      'parentContentId': parentContentId,
+      'replyToCommentID': parentContentId,
       'game': {
         'gameId': relatedGameId,
       },

@@ -66,7 +66,11 @@ class PostPage extends StatelessWidget {
 
   Future<PostState> loadPostData(int postId) async {
     Post post = await postService.getPost(postId);
+    await post.loadContentSocialData();
     List<Comment> commentList = await postService.getComments(post.id);
+    commentList.forEach((element) async {
+      await element.loadContentSocialData();
+    });
     post.commentList = commentList;
 
     return PostState(post);
@@ -147,10 +151,8 @@ class PostPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  userInformationSection(context, postState.post.ownerUsername,
-                      postState.post.ownerProfileImage,
-                      isContentOfOriginalPoster: postState.post.ownerUsername ==
-                          postState.currentUser.username),
+                  userInformationSection(context, postState.currentUser.username,
+                      postState.currentUser.profilePicture),
                   postState.currentCommentParentId != 0
                       ? Flexible(
                           child: Column(
@@ -189,8 +191,11 @@ class PostPage extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () async {
+                    int? parentId = postState.currentCommentParentId != 0
+                        ? postState.currentCommentParentId
+                        : null;
                     Comment comment = await postService.createComment(
-                        post.id, _commentController.text);
+                        post.id, _commentController.text, parentId);
                     postState.addComment(comment);
                     _commentController.clear();
                   },

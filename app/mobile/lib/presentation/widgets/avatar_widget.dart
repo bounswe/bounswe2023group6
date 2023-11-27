@@ -19,7 +19,7 @@ class DisplayAvatar extends StatelessWidget {
       onPressed != null ? 
         Positioned(right: 4, top: 10, child: buildEditIcon(color))
         : 
-        Container(),
+        const SizedBox.shrink()
     ]));
   }
 
