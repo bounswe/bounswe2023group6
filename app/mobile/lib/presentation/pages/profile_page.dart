@@ -20,11 +20,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final UserService userService = UserService();
+  final TextEditingController aboutMeController = TextEditingController();
 
   late User currentUser;
   late User profileUser;
   bool pageInitialized = false;
   bool isProfileOfCurrentUser = false;
+  bool isEditingAboutMe = false;
 
   Future<void> loadUser(String profileUsername) async {
     if (pageInitialized) {
@@ -93,15 +95,24 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             buildProfileSection(
               "About Me",
-              Text(
-                user.about ?? 'About Me',
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  fontFamily: 'Roboto Mono',
-                  color: Colors.white,
-                ),
-              ),
+              isEditingAboutMe
+                  ? TextField(
+                      controller: aboutMeController,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                      maxLines: null,
+                    )
+                  : Text(
+                      user.about ?? 'About Me',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        fontFamily: 'Roboto Mono',
+                        color: Colors.white,
+                      ),
+                    ),
               () {},
             ),
             buildProfileSection(
@@ -160,8 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Stack(children: [
                               Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(3, 15, 3, 15),
+                                padding: const EdgeInsets.fromLTRB(3, 15, 3, 15),
                                 child: Align(
                                     alignment: Alignment.topLeft, child: child),
                               ),
@@ -201,17 +211,28 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
 
-  Widget buildEditIcon(Color color, VoidCallback onPressed,
-          [Color? background]) =>
-      CircleAvatar(
-          // radius: 100,
-          backgroundColor: background,
-          child: IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: color,
-              size: 15,
-            ),
-            onPressed: onPressed,
-          ));
+  Widget buildEditIcon(Color color, VoidCallback onPressed, [Color? background]) {
+    return CircleAvatar(
+      backgroundColor: background,
+      child: IconButton(
+        icon: Icon(
+          isEditingAboutMe ? Icons.check : Icons.edit,
+          color: color,
+          size: 15,
+        ),
+        onPressed: () {
+          setState(() {
+            isEditingAboutMe = !isEditingAboutMe;
+            if (!isEditingAboutMe) {
+              profileUser.about = aboutMeController.text;
+              // Add logic to save the updated about text in your database or backend if necessary
+            } else {
+              aboutMeController.text = profileUser.about ?? '';
+            }
+          });
+          onPressed();
+        },
+      ),
+    );
+  }
 }
