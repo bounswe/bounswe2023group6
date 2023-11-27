@@ -64,7 +64,7 @@ export default function HomePage() {
 		{
 			image: zehrayildirim,
 			username: 'Zehra Yıldırım',
-			tag: '#counterstrike .#dota2'
+			tag: '#counterstrike #dota2'
 		},
 		{
 			image: mahmutdemir,
