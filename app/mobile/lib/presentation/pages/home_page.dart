@@ -51,13 +51,43 @@ class _HomePageState extends State<HomePage> {
               List<Game> games = snapshot.data![1];
               return ListView(
                 children: [
-
+                  SizedBox(height: 10,),
+                  SearchAnchor(
+                      builder: (BuildContext context, SearchController controller) {
+                    return SearchBar(
+                      controller: controller,
+                      padding: const MaterialStatePropertyAll<EdgeInsets>(
+                          EdgeInsets.symmetric(horizontal: 16.0)),
+                      onTap: () {
+                        controller.openView();
+                      },
+                      onChanged: (_) {
+                        controller.openView();
+                      },
+                      leading: const Icon(Icons.search),
+                    );
+                  }, suggestionsBuilder:
+                          (BuildContext context, SearchController controller) {
+                    return List<ListTile>.generate(5, (int index) {
+                      final String item = '';
+                      return ListTile(
+                        title: Text(item),
+                        onTap: () {
+                          setState(() {
+                            controller.closeView(item);
+                          });
+                        },
+                      );
+                    });
+                  },
+                  ),
+                  SizedBox(height: 15,),
                   Card(
                     margin:
                       const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
-                    color: ColorConstants.color2,
+                    //color: ColorConstants.color2,
                     child: Column(
                       children: [
                         Text("Recommended Games", style: TextStyle(fontSize: 18),),
@@ -73,8 +103,20 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                  ),                  
-                  for (var i = 0; i < posts.length; i++) PostCard(post: posts[i]),
+                  ),  
+                  SizedBox(height: 15,),
+                  Card(
+                    margin:
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                    child: Column(
+                      children: [
+                        Text("Recommended Posts", style: TextStyle(fontSize: 18),),
+                        for (var i = 0; i < posts.length; i++) PostCard(post: posts[i]),
+                      ],
+                    ),
+                  )                
 
                 ],
               );
