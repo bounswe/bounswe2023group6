@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
+import 'package:mobile/data/models/dto/game/game_create_dto_request.dart';
 import 'package:mobile/data/models/dto/game/game_request.dart';
 import 'package:mobile/data/models/dto/game/game_response.dart';
 import 'package:mobile/data/models/dto/game/multiple_game_dto_response.dart';
@@ -15,21 +18,21 @@ class GameService {
   static const String _getGames = "/game";
   static List<Game> gameList = [
     Game(
-        gameId: 1,
-        description:
-            "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
-        title: "Witcher 3",
-        gamePicture:
-            "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
-        genre: "Adventure, Role-playing(RPG)",
-        developers: "CD Projekt RED",
-        releaseYear: "May 19, 2015",
-        platform:
-            " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
-        playerNumber: "Single Player",
-        universe: "Fantasy",
-        mechanics: "Third-person",
-        ),
+      gameId: 1,
+      description:
+          "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
+      title: "Witcher 3",
+      gamePicture:
+          "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
+      genre: "Adventure, Role-playing(RPG)",
+      developers: "CD Projekt RED",
+      releaseYear: "May 19, 2015",
+      platform:
+          " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
+      playerNumber: "Single Player",
+      universe: "Fantasy",
+      mechanics: "Third-person",
+    ),
     Game(
       gameId: 2,
       description:
@@ -180,7 +183,31 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     return gameList;
   }
 
-  static void addGame(Game game) {
-    gameList.add(game);
+  static void create(
+      String title,
+      String description,
+      String? genre,
+      String? platform,
+      String numberOfPlayer,
+      int year,
+      String? universe,
+      String playTime) {
+    if (NetworkConstants.useMockData) {
+      gameList.add(Game(
+          gameId: gameList.length + 1,
+          title: title,
+          description: description,
+          gamePicture: ""));
+    } else {
+      GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
+          title: title,
+          description: description,
+          genre: genre,
+          platform: platform,
+          numberOfPlayer: numberOfPlayer,
+          year: year,
+          universe: universe,
+          playtime: playTime);
+    }
   }
 }

@@ -2,15 +2,14 @@ import 'package:mobile/data/models/dto/base_dto_object.dart';
 import 'package:mobile/utils/service_validation_util.dart';
 
 class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
-  String title; 
+  String title;
   String description;
-  String genre;
-  String platform;
+  String? genre;
+  String? platform;
   String numberOfPlayer;
-  String year;
-  String universe;
+  int year;
+  String? universe;
   String playtime;
-
 
   GameCreateDTORequest({
     required this.title,
@@ -26,7 +25,8 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
   @override
   void validate() {
     ValidationUtil.validate(title, ValidationPolicy.stringNotEmptyValidation());
-    ValidationUtil.validate(description, ValidationPolicy.stringNotEmptyValidation());
+    ValidationUtil.validate(
+        description, ValidationPolicy.stringNotEmptyValidation());
   }
 
   factory GameCreateDTORequest.fromJson(Map<String, dynamic> json) =>
@@ -55,5 +55,5 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
 
   @override
   GameCreateDTORequest fromJson(Map<String, dynamic> json) =>
-      GameCreateDTORequest.fromJson(json);  
+      GameCreateDTORequest.fromJson(json);
 }

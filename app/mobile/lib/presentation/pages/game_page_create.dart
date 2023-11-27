@@ -36,7 +36,6 @@ class _GameCreatePageState extends State<GamePageCreate> {
   ];
   String? _selectedPlatform;
 
-  final _avatarController = TextEditingController();
   final _playerNumberController = TextEditingController();
   final _releaseYearController = TextEditingController();
 
@@ -51,7 +50,6 @@ class _GameCreatePageState extends State<GamePageCreate> {
 
   final _mechanicsController = TextEditingController();
   final _playTimeController = TextEditingController();
-  final _mapInformationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -142,23 +140,13 @@ class _GameCreatePageState extends State<GamePageCreate> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _avatarController,
-                minLines: 2,
-                maxLines: 10,
-                decoration: const InputDecoration(
-                  hintText: "Avatar Details",
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter details about avatars";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
                 controller: _playerNumberController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 decoration: const InputDecoration(
-                  hintText: "Number Of Player",
+                  hintText: "Number of Players",
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -222,6 +210,10 @@ class _GameCreatePageState extends State<GamePageCreate> {
               ),
               TextFormField(
                 controller: _playTimeController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 decoration: const InputDecoration(
                   hintText: "Play Time",
                 ),
@@ -232,36 +224,22 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _mapInformationController,
-                minLines: 2,
-                maxLines: 10,
-                decoration: const InputDecoration(
-                  hintText: "Map Information",
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter information about map";
-                  }
-                  return null;
-                },
-              ),
               const SizedBox(height: 16),
               Button(
                   label: "Create",
                   onPressed: () async {
-                    /*
                     if (_formKey.currentState!.validate()) {
-                      GameService.addGame(Game(
-                          id: GameService.getGameDataList().length + 1,
-                          name: _titleController.text,
-                          description: _descriptionController.text,
-                          imageLink: _imageController.text,
-                          genre: _selectedGenre,
-                          developers: _developerController.text,
-                          releaseYear: _yearController.text));
+                      GameService.create(
+                          _titleController.text,
+                          _descriptionController.text,
+                          _selectedGenre,
+                          _selectedPlatform,
+                          _playerNumberController.text,
+                          int.parse(_releaseYearController.text),
+                          _selectedUniverse,
+                          _playTimeController.text);
                       Navigator.of(context).pop("create");
-                    }*/
+                    }
                   }),
             ]),
           ),
