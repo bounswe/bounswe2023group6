@@ -7,6 +7,10 @@ import React, { useEffect, useState } from 'react';
 import hyrule from './hyrule.jpg';
 import victory_royale from './victory-royale.jpg';
 import rocket_league from './rocket-league.jpg';
+import kerimbahadir from './kerimbahadir.jpg';
+import zehrayildirim from './zehrayildirim.jpg';
+import mahmutdemir from './mahmutdemir.jpg';
+import alikasap from './alikasap.jpg';
 
 
 export default function HomePage() {
@@ -48,22 +52,22 @@ export default function HomePage() {
 
 	const suggestionData = [
 		{
-			image: `https://primefaces.org/cdn/primereact/images/product/bamboo-watch.jpg}`,
+			image: kerimbahadir,
 			username: 'Kerim Bahadır',
 			tag: '#counterstrike #developer'
 		},
 		{
-			image: `https://primefaces.org/cdn/primereact/images/product/brown-purse.jpg}`,
+			image: alikasap,
 			username: 'Ali Kasap',
 			tag: '#counterstrike #gamer #rpg'
 		},
 		{
-			image: `https://primefaces.org/cdn/primereact/images/product/galaxy-earrings.jpg}`,
+			image: zehrayildirim,
 			username: 'Zehra Yıldırım',
 			tag: '#counterstrike .#dota2'
 		},
 		{
-			image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
+			image: mahmutdemir,
 			username: 'Mahmut Demir',
 			tag: '#counterstrike #fighter'
 		}
