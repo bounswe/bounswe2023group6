@@ -5,6 +5,7 @@ import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.CommentDTO
 import com.gamelounge.backend.model.DTO.GameDTO
 import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.UpdateUserRequest
 import com.gamelounge.backend.model.response.GetUserInfoResponse
 import com.gamelounge.backend.service.UserService
@@ -22,7 +23,7 @@ class UserController (
 ){
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    fun getUserInfoBySessionId(@CookieValue("SESSIONID") sessionId: UUID): User{
+    fun getUserInfoBySessionId(@CookieValue("SESSIONID") sessionId: UUID): UserDTO {
         return userService.getUserBySessionId(sessionId)
     }
 

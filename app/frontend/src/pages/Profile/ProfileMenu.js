@@ -5,11 +5,10 @@ const ProfileMenu = ({ activeTab, onTabChange }) => {
         { label: 'Liked Posts', value: 'likedPosts' },
         { label: 'Liked Comments', value: 'likedComments' },
         { label: 'Created Posts', value: 'createdPosts' },
-        { label: 'Created Comments', value: 'createdComments' },
     ];
 
     return (
-        <div className="flex w-full bg-gray-200 p-2 rounded mt-4 shadow-xl">
+        <div className="flex w-full bg-gray-200 p-2 rounded mt-4 mb-8 shadow-xl">
             {menuItems.map((item) => (
                 <button
                     key={item.value}
