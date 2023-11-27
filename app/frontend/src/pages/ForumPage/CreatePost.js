@@ -38,24 +38,25 @@ export default function CreatePost() {
         clearData();
     };
 
-    const onSubmit = (event) => {
-
+    const onSubmit = () => {
         axiosInstance.post('/forum/posts', {
             title,
             content,
             category,
             tag
-        },
-            {
-                withCredentials: true
-            })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
+        }, {
+            withCredentials: true
+        })
+        .then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+                handleClose();
+            }
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     };
 
     const clearData = () => {
