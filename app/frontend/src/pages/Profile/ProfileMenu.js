@@ -9,12 +9,12 @@ const ProfileMenu = ({ activeTab, onTabChange }) => {
     ];
 
     return (
-        <div className="flex w-full bg-gray-300 p-2 rounded mt-4 shadow-xl">
+        <div className="flex w-full bg-gray-200 p-2 rounded mt-4 shadow-xl">
             {menuItems.map((item) => (
                 <button
                     key={item.value}
                     className={`flex-1 p-2 ${
-                        activeTab === item.value ? 'bg-cyan-700 text-gray-200 rounded shadow-xl' : 'bg-gray-300'
+                        activeTab === item.value ? 'bg-cyan-700 text-gray-200 rounded shadow-xl' : 'bg-gray-200'
                     } hover:bg-cyan-700 hover:opacity-50 hover:text-gray-200`}
                     onClick={() => onTabChange(item.value)}
                 >
