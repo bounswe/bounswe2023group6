@@ -4,6 +4,8 @@ import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class GamePageCreate extends StatefulWidget {
   const GamePageCreate({Key? key}) : super(key: key);
@@ -13,6 +15,17 @@ class GamePageCreate extends StatefulWidget {
 }
 
 class _GameCreatePageState extends State<GamePageCreate> {
+  File? _image;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = pickedFile != null ? File(pickedFile.path) : null;
+    });
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -224,23 +237,31 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: Text("Choose Image"),
+              ),
               const SizedBox(height: 16),
               Button(
-                  label: "Create",
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      GameService.create(
-                          _titleController.text,
-                          _descriptionController.text,
-                          _selectedGenre,
-                          _selectedPlatform,
-                          _playerNumberController.text,
-                          int.parse(_releaseYearController.text),
-                          _selectedUniverse,
-                          _playTimeController.text);
-                      Navigator.of(context).pop("create");
-                    }
-                  }),
+                label: "Create",
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    GameService().createGame(
+                      _titleController.text,
+                      _descriptionController.text,
+                      _selectedGenre,
+                      _selectedPlatform,
+                      _playerNumberController.text,
+                      int.parse(_releaseYearController.text),
+                      _selectedUniverse,
+                      _playTimeController.text,
+                      _image, // Pass the image path to your service method
+                    );
+
+                    Navigator.of(context).pop("create");
+                  }
+                },
+              ),
             ]),
           ),
         ),

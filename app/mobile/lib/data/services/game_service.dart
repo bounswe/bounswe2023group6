@@ -195,49 +195,48 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       int year,
       String? universe,
       String playTime,
-      File file) async {
+      File? file) async {
     if (NetworkConstants.useMockData) {
       gameList.add(Game(
           gameId: gameList.length + 1,
           title: title,
           description: description,
           gamePicture: ""));
-    } 
+    }
     GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
-      title: title,
-      description: description,
-      genre: genre,
-      platform: platform,
-      numberOfPlayer: numberOfPlayer,
-      year: year,
-      universe: universe,
-      playtime: playTime);
+        title: title,
+        description: description,
+        genre: genre,
+        platform: platform,
+        numberOfPlayer: numberOfPlayer,
+        year: year,
+        universe: universe,
+        playtime: playTime);
 
     final SharedManager manager = SharedManager();
     await manager.init();
     if (!manager.checkString(SharedKeys.sessionId)) {
       throw Exception('Session id is null');
     }
-    String sessionID = manager.getString(SharedKeys.sessionId);  
+    String sessionID = manager.getString(SharedKeys.sessionId);
 
-    String fileName = file.path.split('/').last;
+    String fileName = file!.path.split('/').last;
     FormData formData = FormData.fromMap({
-        "request": gameCreateDTORequest.toJson(),
-        "image":
-            await MultipartFile.fromFile(file.path, filename:fileName),
+      "request": gameCreateDTORequest.toJson(),
+      "image": await MultipartFile.fromFile(file.path, filename: fileName),
     });
 
     Response response = await Dio().post(
-      service.options.baseUrl + "/game", 
+      service.options.baseUrl + "/game",
       data: formData,
       options: Options(
         headers: {
           'Content-Type': 'multipart/form-data',
           'Cookie': 'SESSIONID=$sessionID'
         },
-      ),      
+      ),
     );
-    
+
     return response.data['gameId'];
   }
 }
