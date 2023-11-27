@@ -4,8 +4,15 @@ import { Link } from 'react-router-dom'
 import Navbarx from '../../components/navbar/Navbar'
 import { useState, useEffect } from 'react'
 import { getGame, rateGame } from '../../services/gameServise'
-
+import { useParams } from 'react-router-dom'
+import { getAllGames } from '../../services/gameService'
+import { useNavigate } from 'react-router-dom'
 const GamePage = () => {
+	const navigate = useNavigate() // Use useNavigate instead of useHistory
+
+	const { gameId } = useParams()
+	console.log(gameId)
+
 	const [game, setGames] = useState({
 		gameId: 0,
 		title: 'string',
@@ -40,7 +47,8 @@ const GamePage = () => {
 	useEffect(() => {
 		const game = async () => {
 			try {
-				const response = await getGame(1)
+				const response = await getGame(gameId)
+				console.log(response.data)
 				setGames(response.data)
 			} catch (error) {
 				console.error(error)
@@ -49,8 +57,7 @@ const GamePage = () => {
 			}
 		}
 		game()
-	}, [])
-	console.log(game)
+	}, [gameId])
 
 	const [rating, setRating] = useState(null)
 	const [hasRated, setHasRated] = useState(false)
@@ -61,19 +68,33 @@ const GamePage = () => {
 
 	const handleRateGame = async () => {
 		if (!hasRated && rating !== null) {
-		  try {
-			await rateGame(1, rating); // Assuming gameId is 1, replace with actual gameId if necessary
-			setHasRated(true);
-		  } catch (error) {
-			if (error.response && error.response.status === 403) {
-			  alert("You cannot vote more than once.");
-			} else {
-			  console.error("Error rating game:", error);
+			try {
+				await rateGame(gameId, rating) // Assuming gameId is 1, replace with actual gameId if necessary
+				setHasRated(true)
+			} catch (error) {
+				if (error.response && error.response.status === 403) {
+					alert('You cannot vote more than once.')
+				} else {
+					console.error('Error rating game:', error)
+				}
 			}
-		  }
 		}
-	};
+	}
+	const [gamesmyliked, setGamesMyLiked] = useState([])
+	useEffect(() => {
+		const fetchGames = async () => {
+			try {
+				const response = await getAllGames()
+				setGamesMyLiked(response.data.slice(0, 4))
+			} catch (error) {
+				console.error(error)
+			} finally {
+				console.log('all games')
+			}
+		}
 
+		fetchGames()
+	}, [])
 
 	return (
 		<>
@@ -121,7 +142,7 @@ const GamePage = () => {
 													/>
 												))}
 											</div>
-											<button className='btn btn-primary w-1/4 mt-2 ' onClick={() => handleRateGame()}>
+											<button className='btn btn-primary w-1/2 mt-2 ' onClick={() => handleRateGame()}>
 												Rate Game
 											</button>
 										</div>
@@ -157,16 +178,18 @@ const GamePage = () => {
 								<div className='w-1/5 flex flex-col'>
 									<div className='h-full card compact bg-gray-200 text-cyan-700 shadow-xl m-2 p-4'>
 										<h2 className='text-xl font-bold p-1'>Games You May Like:</h2>
-										<li className='mb-2'>
-											<Link to='/content/fifa-22' className='text-gray-700 mr-4'>
-												FIFA 22
-											</Link>
-										</li>
-										<li className='mb-2'>
-											<Link to='/content/uefa-euro-2020' className='text-gray-700 mr-4'>
-												UEFA Euro 2020
-											</Link>
-										</li>
+										{gamesmyliked.map((game) => (
+											<li key={game.id} className='mb-2'>
+												<button
+													onClick={() => {
+														navigate(`/game/${game.gameId}`) // Use navigate for programmatic navigation
+													}}
+													className='text-gray-700 mr-4'
+												>
+													{game.title}
+												</button>
+											</li>
+										))}
 									</div>
 								</div>
 							</div>

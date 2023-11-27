@@ -42,7 +42,7 @@ const Navbarx = () => {
 						'Content-Type': 'application/json'
 					},
 					withCredentials: true
-				},
+				}
 			)
 
 			if (response.status === 200) {
@@ -88,7 +88,7 @@ const Navbarx = () => {
 						</Link>
 					</NavbarItem>
 					<NavbarItem>
-						<Link href='/game/fifa' aria-current='page' className='text-[#fff4e0]'>
+						<Link href='/game' aria-current='page' className='text-[#fff4e0]'>
 							Game
 						</Link>
 					</NavbarItem>

@@ -4,7 +4,7 @@ const GameCard = ({ game }) => (
 	<div key={game.gameId} className='card compact bg-gray-200 text-gray-800 shadow-xl m-2 p-4'>
 		<div className='flex-col'>
 			<h3 className='text-2xl font-bold text-[#b46161] link'>
-				<a href={`/games/${game.gameId}`}>{game.title}</a>
+				<a href={`/game/${game.gameId}`}>{game.title}</a>
 			</h3>
 			<p className='text-gray-700 mb-4'>{game.description}</p>
 			<div className='flex flex-wrap border-b-2 border-gray-200 pb-2 opacity-75 mb-4'>

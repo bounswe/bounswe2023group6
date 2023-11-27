@@ -20,9 +20,9 @@ const App = () => (
 				<Route path='/signup' element={<Signup />} />
 				<Route path='/reset-password' element={<ResetPassword />} />
 				<Route path='/home' element={<HomePage />} />
-				<Route path='/game/fifa' element={<GamePage />} />
 				<Route path='/forum' element={<ForumPage />} />
 				<Route path='/game' element={<GameForum />} />
+				<Route path='/game/:gameId' element={<GamePage />} />
 
 				<Route path='/posts/:postId' element={<PostPage />} />
 			</Routes>

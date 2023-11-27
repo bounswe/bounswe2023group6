@@ -18,6 +18,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+//import { postChar } from '../../services/gameServise'
 
 export default function CreateGame() {
 	const api_url = process.env.REACT_APP_API_URL
@@ -79,6 +80,17 @@ export default function CreateGame() {
 			platform: selectedPlatforms.toString(),
 			image: selectedImage
 		}
+		// //	if (postData.characters.length != 0) {
+		// 		postData.characters.forEach(async (character) => {
+		// 			const { name, description } = character
+		// 			const characterData = { name, description }
+		// 			try {
+		// 				await postChar(gameIdcharacterData)
+		// 			} catch (error) {
+		// 				console.log(error)
+		// 			}
+		// 		})
+		// 	}
 		delete postData.characters
 		const { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image } = postData
 		const request = { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image }
