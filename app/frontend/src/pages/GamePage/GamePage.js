@@ -1,18 +1,16 @@
 import React from 'react'
 import 'tailwindcss/tailwind.css'
 import logo from '../../logo512.jpg'
-import gamelounge from '../../gamelounge.png'
 // import Sidebar from '../../components/Sidebar';
 import { Link } from 'react-router-dom'
 import CreateGame from './CreateGame'
-
+import Navbarx from '../../components/navbar/Navbar'
 const GamePage = () => {
 	return (
 		<>
 			<div className='w-full flex flex-col'>
-				<div className='flex justify-center items-center p-1 bg-black'>
-					<img src={gamelounge} alt='Site Logo' className='h-24' />
-				</div>
+				<Navbarx />
+
 				<div className='flex flex-row grow bg-gray-100'>
 					{/* <div className='w-1/5 flex flex-col gap-4'>
             <Sidebar />
