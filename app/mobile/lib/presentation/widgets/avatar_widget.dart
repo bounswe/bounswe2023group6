@@ -6,8 +6,9 @@ class DisplayAvatar extends StatelessWidget {
   final ByteData? byteData;
   final VoidCallback? onPressed;
   final int size;
+  final String? imageLink;
 
-  const DisplayAvatar({super.key, required this.byteData, this.onPressed, this.size = 75});
+  const DisplayAvatar({super.key, this.byteData, this.imageLink, this.onPressed, this.size = 75});
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +36,16 @@ class DisplayAvatar extends StatelessWidget {
                 size: 130,
               )
             : 
-            ClipRRect(
-              borderRadius: BorderRadius.circular(120),
-              child: Image.memory(
-                byteData!.buffer.asUint8List(),
-                fit: BoxFit.cover,
+            imageLink != null ?
+              Image.network(imageLink!, fit: BoxFit.cover,)
+              :
+              ClipRRect(
+                borderRadius: BorderRadius.circular(120),
+                child: Image.memory(
+                  byteData!.buffer.asUint8List(),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
       ),
     );
   }
