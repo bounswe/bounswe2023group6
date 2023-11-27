@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/user_service.dart';
 import 'package:mobile/presentation/widgets/alert_widget.dart';
 import 'package:mobile/utils/shared_manager.dart';
 import 'package:mobile/utils/cache_manager.dart';
@@ -52,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
       if (loggedIn) {
         // Navigate to the next screen or perform other actions for a successful login.
         updateSession(username);
-        User user= (await authService.getCurrentUser(username))!;
+        User user= (await UserService().getUser(username));
         await cacheManager.saveUser(user);
         Navigator.pushNamed(context, '/');
         return;

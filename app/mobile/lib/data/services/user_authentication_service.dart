@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/login/login_request.dart';
 import 'package:mobile/data/models/dto/login/login_response.dart';
@@ -60,26 +62,28 @@ class UserAuthenticationService {
   }
 
   Future<bool> registerUser(String username, String password, String email) async {
-    final RegisterDTORequest registerRequest = RegisterDTORequest(
-      username: username,
-      password: password,
-      email: email,
-      name: "dummy",
-      surname: "dummy"
+    Map<String, String> request = {
+      'username': username,
+      'password': password,
+      'email': email,
+      'name': "dummy",
+      'surname': "dummy"
+    };
+    var formData = FormData.fromMap({
+      'request': MultipartFile.fromString(
+        jsonEncode(request),
+        contentType: MediaType("application", "json"),
+      ),
+    });
+    Response response = await Dio().post(
+      '$serverUrl/register',
+      data: formData,
     );
 
-    ServiceResponse response =
-        await service.sendRequestSafe<RegisterDTORequest, RegisterDTOResponse>(
-      _register,
-      registerRequest,
-      RegisterDTOResponse(),
-      'POST',
-    );
-
-    if (response.success) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
     } else {
-      print('register failed - Status Code: ${response.errorMessage}');
+      print('register failed - Status Code: ${response.statusCode}');
       return false;
     }
   }
@@ -129,82 +133,5 @@ class UserAuthenticationService {
     } catch (e) {
       return false;
     }
-  }
-
-  // Get the current user
-  Future<User?> getCurrentUser(String? username) async {
-    ServiceResponse response =
-        await service.sendRequestSafe<UserDTOResponse, UserDTOResponse>(
-      "$_getUser/$username",
-      null,
-      UserDTOResponse(),
-      'GET',
-    );
-
-    if (response.success) {
-      UserDTOResponse userResponse = response.responseConverted;
-      User user = User(
-        name: userResponse.name,
-        surname: userResponse.surname,
-        email: userResponse.email,
-        username: userResponse.username,
-        profileImage: userResponse.profileImage,
-      );
-      return user;
-    } else {
-      print('User not found - Status Code: ${response.errorMessage}');
-      return null;
-    }
-  }
-
-  Future<void> getUserDetails(User user) async {
-    ServiceResponse response = await service
-        .sendRequestSafe<UserDetailedDTOResponse, UserDetailedDTOResponse>(
-      "$_getUserDetails/${user.username}",
-      null,
-      UserDetailedDTOResponse(),
-      'GET',
-    );
-
-    if (response.success) {
-      UserDetailedDTOResponse userResponse = response.responseConverted;
-      user.about = userResponse.about;
-      // user.likedPosts = userResponse.likedPosts;
-      // user.savedPosts = userResponse.savedPosts;
-      // user.createdPosts = userResponse.createdPosts;
-      // user.commentedPosts = userResponse.commentedPosts;
-      // user.reportedPosts = userResponse.reportedPosts;
-      // user.blockedPosts = userResponse.blockedPosts;
-      // user.likedGames = userResponse.likedGames;
-      // user.savedGames = userResponse.savedGames;
-      if (NetworkConstants.useMockData) {
-        loadMockData(user);
-      }
-    } else {
-      print('User not found - Status Code: ${response.errorMessage}');
-      loadMockData(user);
-    }
-  }
-
-  void loadMockData(User user) async {
-    user.about =
-        "Hey there, I'm Ayse, and I'm a huge game enthusiast. Ever since I was a kid, video games have been a major part of my life. From the first time I picked up a controller, I was hooked. I spent countless hours playing my favorite games, immersing myself in their worlds, and trying to master their mechanics.";
-    user.likedPosts = await PostService().getPosts();
-    user.likedGames = [
-      Game(
-          id: 1,
-          description:
-              "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
-          name: "Witcher 3",
-          imageLink:
-              "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"),
-      Game(
-          id: 2,
-          description:
-              "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
-          name: "Witcher 3",
-          imageLink:
-              "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"),
-    ];
   }
 }

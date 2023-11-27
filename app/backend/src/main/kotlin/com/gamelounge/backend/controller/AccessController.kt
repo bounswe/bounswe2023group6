@@ -14,9 +14,10 @@ import java.util.UUID
 class AccessController(
     val accessService: AccessService
 ) {
+
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    @CrossOrigin(origins = ["*"])
     @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin(origins = ["*"])
     fun register(
         @RequestPart("request") request: RegisterationRequest,
         @RequestPart("image") image: MultipartFile?

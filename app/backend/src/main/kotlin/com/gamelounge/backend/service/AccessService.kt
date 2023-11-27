@@ -6,6 +6,7 @@ import com.gamelounge.backend.config.CustomProperties
 import com.gamelounge.backend.entity.Session
 import com.gamelounge.backend.model.request.RegisterationRequest
 import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.repository.GameRepository
 import com.gamelounge.backend.util.HashingUtil.generateHash
 import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.exception.*
@@ -24,7 +25,8 @@ class AccessService(
     val passwordResetTokenRepository: PasswordResetTokenRepository,
     val passwordResetTokenService: PasswordResetTokenService,
     val customProperties: CustomProperties,
-    val s3Service: S3Service
+    val s3Service: S3Service,
+    val gameRepository: GameRepository
 ){
 
     fun register(request: RegisterationRequest, image: MultipartFile?){

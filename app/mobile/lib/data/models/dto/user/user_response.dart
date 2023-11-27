@@ -1,51 +1,26 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:mobile/data/models/dto/base_dto_object.dart';
+import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/utils/service_validation_util.dart';
 
 class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
-  final String? name;
-  final String? surname;
-  final String? email;
-  final String? username;
-  final ByteData? profileImage;
+  User? user;
 
   UserDTOResponse({
-    this.name,
-    this.surname,
-    this.email,
-    this.username,
-    this.profileImage,
+    this.user,
   });
 
   @override
   void validate() {
-    ValidationUtil.validate(email, ValidationPolicy.emailValidation());
-    ValidationUtil.validate(
-        username, ValidationPolicy.stringNotEmptyValidation());
+    ValidationUtil.validate(user!.username, ValidationPolicy.stringNotEmptyValidation());
+    ValidationUtil.validate(user!.email, ValidationPolicy.emailValidation());
   }
 
-  factory UserDTOResponse.fromJson(Map<String, dynamic> json) =>
-      UserDTOResponse(
-        name: json["name"],
-        surname: json["surname"],
-        email: json["email"],
-        username: json["username"],
-        profileImage: json['image'] != null ? 
-          ByteData.view(Uint8List.fromList(
-            base64Decode(json['image']),
-          ).buffer) : null,
+  factory UserDTOResponse.fromJson(Map<String, dynamic> json) => UserDTOResponse(
+        user: User.fromJson(json),
       );
 
   @override
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "surname": surname,
-        "email": email,
-        "username": username,
-        "image": profileImage.toString(),
-      };
+  Map<String, dynamic> toJson() => user!.toJson();
 
   @override
   UserDTOResponse fromJson(Map<String, dynamic> json) =>

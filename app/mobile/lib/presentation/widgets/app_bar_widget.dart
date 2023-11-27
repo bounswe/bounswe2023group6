@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
-  List<Widget>? actions;
+  final List<Widget>? actions;
 
   CustomAppBar({
     Key? key,
     required this.title,
     this.showBackButton = true,
-    List<Widget>? actions,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -21,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             showBackButton, // Control back button visibility
         title: InkWell(
           onTap: () {
-             Navigator.pushNamed(context, '/');
+            Phoenix.rebirth(context);
           },
           child: SizedBox(
               height: 150,
@@ -30,6 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         centerTitle: true, // Center the title in the middle
         backgroundColor:
             Theme.of(context).primaryColor, // Use the theme's primary color
+        actions: actions,
       ),
     );
   }

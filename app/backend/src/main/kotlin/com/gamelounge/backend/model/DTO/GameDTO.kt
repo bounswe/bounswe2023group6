@@ -1,17 +1,23 @@
 package com.gamelounge.backend.model.DTO
 
+import java.time.Instant
+
 data class GameDTO(
-    var gameId: Long = 0,
-    var title: String = "",
-    var description: String = "",
-    var genre: String = "",
-    var platform: String = "",
-    var avatarDetails: String = "", // Consider a more complex structure
-    var playerNumber: String = "",
-    var releaseYear: Int = 0,
-    var universe: String = "",
-    var mechanics: String = "",
-    var playtime: String = "",
-    var mapInformation: String = "",
-    var tags: List<TagDTO>
+        var gameId: Long = 0,
+        var title: String = "",
+        var description: String = "",
+        var genre: String = "",
+        var platform: String = "",
+        var characters: List<CharacterDTO>,
+        var playerNumber: String = "",
+        var releaseYear: Int = 0,
+        var universe: String = "",
+        var mechanics: String = "",
+        var playtime: String = "",
+        var totalRating: Int,
+        var countRating: Int,
+        var averageRating: Double,
+        var creationDate: Instant = Instant.now(),
+        var tags: List<TagDTO>,
+        var gamePicture: String? = null,
 )

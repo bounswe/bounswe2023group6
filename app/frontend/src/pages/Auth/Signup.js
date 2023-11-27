@@ -42,40 +42,39 @@ const Signup = () => {
 	};
 	
 	const handleSubmit = async (e) => {
-		e.preventDefault();
-		
-		const { username, password, email, name, surname, image } = formData;
-	  
-		const data = {
-			username,
-			password,
-			email,
-			name,
-			surname,
-			image: Array.from(image) 
-		};
-	  
-		try {
-			const response = await axios.post(`${api_url}/register`, data, {
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-		
-			if (response.status === 201) {
-				setIsSuccessful(true);
-				setTimeout(() => {
-					navigate('/login');
-				}, 2000);
-			}
-		} catch (error) {
-			if (error.response && error.response.status === 409) {
-				setErrorMessage('The username already exists!');
-			} else {
-				setErrorMessage('An error occurred. Please try again.');
-			}
-		}
-	};
+        e.preventDefault();
+        
+        const { username, password, email, name, surname, image } = formData;
+    
+        const request = { username, password, email, name, surname };
+        const formDataToSend = new FormData();
+        formDataToSend.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+        if (image) {
+            const file = new File([image], 'image.png', { type: 'image/png' });
+            formDataToSend.append('image', file);
+        }
+    
+        try {
+            const response = await axios.post(`${api_url}/register`, formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+    
+            if (response.status === 201) {
+                setIsSuccessful(true);
+                setTimeout(() => {
+                    navigate('/login');
+                }, 2000);
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 409) {
+                setErrorMessage('The username already exists!');
+            } else {
+                setErrorMessage('An error occurred. Please try again.');
+            }
+        }
+    };
 	
 
     return (
@@ -140,6 +139,7 @@ const Signup = () => {
                                         accept="image/*"
                                         onChange={handleImageChange}
                                     />
+                                    <label className='block text-xs mt-1 mb-1 font-light text-gray-500'>(Maximum 1 MB)</label>
                                 </div>
                                 <button className='w-full h-10 px-3 text-white transition-colors duration-150 bg-blue-600 rounded-lg focus:shadow-outline hover:bg-blue-700'>
                                     Sign up
