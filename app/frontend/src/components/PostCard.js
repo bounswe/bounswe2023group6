@@ -2,6 +2,7 @@ import React from 'react';
 // import userlogo from '../user.jpg';
 import upvotelogo from '../upvote.png';
 import downvotelogo from '../downvote.png';
+import ReportIcon from "@mui/icons-material/Report";
 
 const PostCard = ({ post, onUpvote, onDownvote }) => (  
   <div key={post.id} className='card compact bg-gray-200 text-gray-800 shadow-xl m-2 p-4'>
@@ -9,6 +10,9 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
       <h3 className="text-2xl font-bold text-[#b46161] link">
           <a href={`/posts/${post.postId}`}>{post.title}</a>
       </h3>
+        <button className="p-2 text-black rounded absolute right-1 top-1">
+            <ReportIcon/>
+        </button>
       <p className='text-gray-700 mb-4'>{post.content}</p>
       <div className='flex flex-wrap border-b-2 border-gray-200 pb-2 opacity-75 mb-4'>
         {/* {post.tags.map((tag) => (
