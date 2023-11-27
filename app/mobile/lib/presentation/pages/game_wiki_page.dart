@@ -11,6 +11,7 @@ import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/markdown_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
+import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
 
 class GameWiki extends StatefulWidget {
   const GameWiki({super.key});
@@ -486,35 +487,35 @@ class _GameWikiPageState extends State<GameWikiPage>
   }
 }
 
-class VerticalGameCard extends StatelessWidget {
-  final Game game;
+// class VerticalGameCard extends StatelessWidget {
+//   final Game game;
 
-  const VerticalGameCard({super.key, required this.game});
+//   const VerticalGameCard({super.key, required this.game});
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, "/game", arguments: game.id);
-      },
-      child: SizedBox(
-        width: 130,
-        child: Column(children: [
-          Container(
-            height: 160,
-            width: 120,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: NetworkImage(game.imageLink),
-              fit: BoxFit.fill,
-            )),
-          ),
-          Text(
-            game.name,
-            maxLines: 3,
-          ),
-        ]),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: () {
+//         Navigator.pushNamed(context, "/game", arguments: game.id);
+//       },
+//       child: SizedBox(
+//         width: 130,
+//         child: Column(children: [
+//           Container(
+//             height: 160,
+//             width: 120,
+//             decoration: BoxDecoration(
+//                 image: DecorationImage(
+//               image: NetworkImage(game.imageLink),
+//               fit: BoxFit.fill,
+//             )),
+//           ),
+//           Text(
+//             game.name,
+//             maxLines: 3,
+//           ),
+//         ]),
+//       ),
+//     );
+//   }
+// }
