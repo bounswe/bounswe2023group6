@@ -19,6 +19,7 @@ dependencies:
   autoscale_tabbarview: ^1.0.2
   http_parser: ^4.0.2
   flutter_phoenix: "^1.0.0"
+  image_picker: ^0.8.4
 
 
 

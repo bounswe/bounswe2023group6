@@ -59,8 +59,8 @@ class _MainScreenState extends State<MainScreen> {
               ),
               BottomNavigationBarItem(icon: Icon(Icons.forum), label: "Forum"),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.library_books), label: "Wiki"),
-              BottomNavigationBarItem(icon: Icon(Icons.group_add), label: "LFG"),
+                  icon: Icon(Icons.library_books), label: "Games"),
+              BottomNavigationBarItem(icon: Icon(Icons.group_add), label: "Groups"),
             ],
             onTap: (index) {
               setState(() {

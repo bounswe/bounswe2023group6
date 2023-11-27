@@ -1,60 +1,67 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
+import 'package:mobile/data/models/dto/game/game_create_dto_request.dart';
 import 'package:mobile/data/models/dto/game/game_request.dart';
 import 'package:mobile/data/models/dto/game/game_response.dart';
 import 'package:mobile/data/models/dto/game/multiple_game_dto_response.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:provider/provider.dart';
 
 class GameService {
   static const String serverUrl = NetworkConstants.BASE_LOCAL_URL;
 
   final BaseNetworkService service = BaseNetworkService();
 
-  static const String _getGames = "/game/games";
+  static const String _getGames = "/game";
   static List<Game> gameList = [
     Game(
-        id: 1,
-        description:
-            "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
-        name: "Witcher 3",
-        imageLink:
-            "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
-        genre: "Adventure, Role-playing(RPG)",
-        developers: "CD Projekt RED",
-        releaseYear: "May 19, 2015",
-        platforms:
-            " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
-        gameModes: "Single Player",
-        themes: "Fantasy",
-        playerPerspective: "Third-person",
-        artStyle: "Realistic",
-        series: "The Witcher"),
+      gameId: 1,
+      description:
+          "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
+      title: "Witcher 3",
+      gamePicture:
+          "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
+      genre: "Adventure, Role-playing(RPG)",
+      developers: "CD Projekt RED",
+      releaseYear: 2015,
+      platform:
+          " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
+      playerNumber: "Single Player",
+      universe: "Fantasy",
+      mechanics: "Third-person",
+    ),
     Game(
-      id: 2,
+      gameId: 2,
       description:
           "League of Legends (kısaca LoL), Riot Games tarafından geliştirilen ve yayımlanan video oyunu. Microsoft Windows ve macOS işletim sistemlerinde çalışan oyun, tür olarak MOBA (Çok Oyunculu Çevrimiçi Savaş Arenası) olarak adlandırılmaktadır. 27 Ekim 2009'da piyasaya sürülen oyun, 2012 yılında en çok oynanan oyun unvanını aldı. 2014 yılında 67 milyon, 2016 yılında 100 milyon oyuncuya ulaştı. 2020 yılında 115 milyon oyuncuya ulaştı.",
-      name: "League of Legends",
-      imageLink:
+      title: "League of Legends",
+      gamePicture:
           "https://cdn.ntvspor.net/047bed7cbad44a3dae8bdd7b643ab253.jpg?crop=158,0,782,624&w=800&h=800&mode=crop",
       genre: "MOBA, Role-playing(RPG), Strategy",
       developers: "Riot Games",
-      releaseYear: "Oct 27, 2009",
+      releaseYear: 2009,
     ),
     Game(
-      id: 3,
+      gameId: 3,
       description:
           "Call of Duty: WWII, Sledgehammer Games tarafından geliştirilen ve Activision tarafından yayımlanan birinci şahıs nişancı türündeki video oyunudur. Oyun, Call of Duty serisinin 14. oyunu olup 3 Kasım 2017 tarihinde Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürüldü.",
-      name: "Call of Duty: WWII",
-      imageLink:
+      title: "Call of Duty: WWII",
+      gamePicture:
           "https://upload.wikimedia.org/wikipedia/tr/8/85/Call_of_Duty_WIII_Kapak_Resmi.jpg",
       genre: "Shooter",
       developers: "Sledgehammer Games",
-      releaseYear: "Nov 02, 2017",
+      releaseYear: 2017,
     ),
     Game(
-      id: 4,
+      gameId: 4,
       description: """ 
 # Celeste
 
@@ -100,35 +107,35 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
 *Note: The information in this wiki page is based on knowledge as of the last update in January 2022, and there may have been additional developments or releases since then.*
 
   """,
-      name: "Celeste",
-      imageLink:
+      title: "Celeste",
+      gamePicture:
           "https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png",
       genre: "Adventure, Indie, Platform",
       developers: "Maddy Makes Games",
-      releaseYear: "Jan 25, 2018",
+      releaseYear: 2018,
     ),
     Game(
-      id: 5,
+      gameId: 5,
       description:
           "Baldur's Gate 3, Larian Studios tarafından geliştirilen ve Wizards of the Coast tarafından yayınlanan bir rol yapma video oyunudur. Oyun, Dungeons & Dragons 5th edition kurallarına dayanmaktadır. Oyun, 6 Ekim 2020'de Microsoft Windows ve Google Stadia için erken erişimde piyasaya sürüldü.",
-      name: "Baldur's Gate 3",
-      imageLink:
+      title: "Baldur's Gate 3",
+      gamePicture:
           "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png",
       genre:
           "Adventure, Role-playing (RPG), Strategy, Tactical, Turn-based strategy (TBS)",
       developers: "Larian Studios",
-      releaseYear: "Oct 06, 2020",
+      releaseYear: 2020,
     ),
     Game(
-      id: 6,
+      gameId: 6,
       description:
           "Ori and the Will of the Wisps, Moon Studios tarafından geliştirilen ve Xbox Game Studios tarafından yayınlanan bir platform oyunudur. Oyun, 11 Mart 2020'de Microsoft Windows ve Xbox One için piyasaya sürüldü. Oyun, 17 Eylül 2020'de Nintendo Switch için piyasaya sürüldü.",
-      name: "Ori and The Will of The Wisps",
-      imageLink:
+      title: "Ori and The Will of The Wisps",
+      gamePicture:
           "https://upload.wikimedia.org/wikipedia/en/9/94/Ori_and_the_Will_of_the_Wisps.jpg",
       genre: "Adventure, Platform",
       developers: "Moon Studios",
-      releaseYear: "Mar 10, 2020",
+      releaseYear: 2020,
     ),
   ];
 
@@ -144,9 +151,9 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       MultipleGameAsDTO(),
       'GET',
     );
+
     if (response.success) {
-      List<Game> games =
-          response.responseConverted!.games!.map((e) => e as Game).toList();
+      List<Game> games = response.responseConverted!.games!.map((e) => e.game!).toList();
       return games;
     } else {
       throw Exception('Failed to load games');
@@ -160,13 +167,13 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
 
     ServiceResponse<GameDTOResponse> response =
         await service.sendRequestSafe<EmptyResponse, GameDTOResponse>(
-      "$_getGames/$gameid",
+      "/game/$gameid",
       null,
       GameDTOResponse(),
       'GET',
     );
     if (response.success) {
-      Game game = response.responseConverted! as Game;
+      Game game = response.responseConverted!.game!;
       return game;
     } else {
       throw Exception('Failed to load game');
@@ -181,7 +188,64 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     return gameList;
   }
 
-  static void addGame(Game game) {
-    gameList.add(game);
+  Future<void> createGame(
+      String title,
+      String description,
+      String? genre,
+      String? platform,
+      String numberOfPlayer,
+      String mechanics,
+      int year,
+      String? universe,
+      String playTime,
+      File? file) async {
+    if (NetworkConstants.useMockData) {
+      gameList.add(Game(
+          gameId: gameList.length + 1,
+          title: title,
+          description: description,
+          gamePicture: ""));
+    }
+    GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
+        title: title,
+        description: description,
+        genre: genre,
+        platform: platform,
+        numberOfPlayer: numberOfPlayer,
+        year: year,
+        universe: universe,
+        mechanics: mechanics,
+        playtime: playTime);
+
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    if (!manager.checkString(SharedKeys.sessionId)) {
+      throw Exception('Session id is null');
+    }
+    String sessionID = manager.getString(SharedKeys.sessionId);
+
+    String fileName = file!.path.split('/').last;
+    FormData formData = FormData.fromMap({
+     "request": await MultipartFile.fromString(
+      jsonEncode(gameCreateDTORequest.toJson()),
+      contentType: MediaType.parse('application/json'),
+    ),
+      "image": await MultipartFile.fromFile(file.path, filename: fileName),
+    },
+    ListFormat.multiCompatible,
+    );
+    
+    Response response = await Dio().post(
+      service.options.baseUrl + "/game",
+      data: formData,
+      options: Options(
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Cookie': 'SESSIONID=$sessionID'
+        },
+      ),
+    );
+
+    return response.data['gameId'];
   }
 }

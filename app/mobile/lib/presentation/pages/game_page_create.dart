@@ -4,6 +4,8 @@ import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class GamePageCreate extends StatefulWidget {
   const GamePageCreate({Key? key}) : super(key: key);
@@ -13,6 +15,17 @@ class GamePageCreate extends StatefulWidget {
 }
 
 class _GameCreatePageState extends State<GamePageCreate> {
+  File? _image;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = pickedFile != null ? File(pickedFile.path) : null;
+    });
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -36,7 +49,6 @@ class _GameCreatePageState extends State<GamePageCreate> {
   ];
   String? _selectedPlatform;
 
-  final _avatarController = TextEditingController();
   final _playerNumberController = TextEditingController();
   final _releaseYearController = TextEditingController();
 
@@ -51,14 +63,13 @@ class _GameCreatePageState extends State<GamePageCreate> {
 
   final _mechanicsController = TextEditingController();
   final _playTimeController = TextEditingController();
-  final _mapInformationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Game Page"),
-        backgroundColor: ColorConstants.color1,
+        backgroundColor: ColorConstants.color3,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -142,23 +153,13 @@ class _GameCreatePageState extends State<GamePageCreate> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _avatarController,
-                minLines: 2,
-                maxLines: 10,
-                decoration: const InputDecoration(
-                  hintText: "Avatar Details",
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter details about avatars";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
                 controller: _playerNumberController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 decoration: const InputDecoration(
-                  hintText: "Number Of Player",
+                  hintText: "Number of Players",
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -222,6 +223,10 @@ class _GameCreatePageState extends State<GamePageCreate> {
               ),
               TextFormField(
                 controller: _playTimeController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 decoration: const InputDecoration(
                   hintText: "Play Time",
                 ),
@@ -232,37 +237,32 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _mapInformationController,
-                minLines: 2,
-                maxLines: 10,
-                decoration: const InputDecoration(
-                  hintText: "Map Information",
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter information about map";
-                  }
-                  return null;
-                },
+              Button(
+                onPressed: _pickImage,
+                label: "Choose Image",
               ),
               const SizedBox(height: 16),
               Button(
-                  label: "Create",
-                  onPressed: () async {
-                    /*
-                    if (_formKey.currentState!.validate()) {
-                      GameService.addGame(Game(
-                          id: GameService.getGameDataList().length + 1,
-                          name: _titleController.text,
-                          description: _descriptionController.text,
-                          imageLink: _imageController.text,
-                          genre: _selectedGenre,
-                          developers: _developerController.text,
-                          releaseYear: _yearController.text));
-                      Navigator.of(context).pop("create");
-                    }*/
-                  }),
+                label: "Create",
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    GameService().createGame(
+                      _titleController.text,
+                      _descriptionController.text,
+                      _selectedGenre,
+                      _selectedPlatform,
+                      _playerNumberController.text,
+                      _mechanicsController.text,
+                      int.parse(_releaseYearController.text),
+                      _selectedUniverse,
+                      _playTimeController.text,
+                      _image, // Pass the image path to your service method
+                    );
+
+                    Navigator.of(context).pop("create");
+                  }
+                },
+              ),
             ]),
           ),
         ),

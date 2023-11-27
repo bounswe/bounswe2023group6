@@ -33,7 +33,8 @@ class PostService {
   static const String _upvotePost = "/forum/posts/{id}/upvote";
   static const String _downvotePost = "/forum/posts/{id}/downvote";
   static const String _getLikedUsersForPost = "/forum/posts/{id}/upvoteUsers";
-  static const String _getDislikedUsersForPost = "/forum/posts/{id}/downvoteUsers";
+  static const String _getDislikedUsersForPost =
+      "/forum/posts/{id}/downvoteUsers";
 
   static const String _getComments = "/comments/post/{id}";
   static const String _createComment = "/comments/post/{id}";
@@ -43,7 +44,8 @@ class PostService {
   static const String _upvoteComment = "/comments/{id}/upvote";
   static const String _downvoteComment = "/comments/{id}/downvote";
   static const String _getLikedUsersForComment = "/comments/{id}/upvotedUsers";
-  static const String _getDislikedUsersForComment = "/comments/{id}/downvotedUsers";
+  static const String _getDislikedUsersForComment =
+      "/comments/{id}/downvotedUsers";
 
   Future<List<Post>> getPosts() async {
     if (NetworkConstants.useMockData) {
@@ -191,10 +193,7 @@ class PostService {
     }
 
     PostCreateDTORequest postCreateDTORequest = PostCreateDTORequest(
-      title: title,
-      content: content,
-      category: "DISCUSSION"
-    );
+        title: title, content: content, category: "DISCUSSION");
     ServiceResponse<SingleContentDTO> response =
         await service.sendRequestSafe<PostCreateDTORequest, SingleContentDTO>(
       _createPost,
@@ -315,8 +314,8 @@ class PostService {
       return [1, 2, 3];
     }
 
-    ServiceResponse<MultipleUserAsDTO> response = await service
-        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+    ServiceResponse<MultipleUserAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
       _getLikedUsersForPost.replaceFirst('{id}', postId.toString()),
       null,
       MultipleUserAsDTO(),
@@ -337,8 +336,8 @@ class PostService {
       return [4, 5, 6];
     }
 
-    ServiceResponse<MultipleUserAsDTO> response = await service
-        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+    ServiceResponse<MultipleUserAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
       _getDislikedUsersForPost.replaceFirst('{id}', postId.toString()),
       null,
       MultipleUserAsDTO(),
@@ -408,7 +407,8 @@ class PostService {
     }
   }
 
-  Future<Comment> createComment(int relatedPostId, String commentContent, int? parentContentId) async {
+  Future<Comment> createComment(
+      int relatedPostId, String commentContent, int? parentContentId) async {
     if (NetworkConstants.useMockData) {
       return Comment(
         id: 1,
@@ -423,11 +423,9 @@ class PostService {
     }
 
     CommentCreateDTORequest commentAsContent = CommentCreateDTORequest(
-      content: commentContent, 
-      parentContentId: parentContentId
-    );
-    ServiceResponse<SingleContentDTO> response =
-        await service.sendRequestSafe<CommentCreateDTORequest, SingleContentDTO>(
+        content: commentContent, parentContentId: parentContentId);
+    ServiceResponse<SingleContentDTO> response = await service
+        .sendRequestSafe<CommentCreateDTORequest, SingleContentDTO>(
       _createComment.replaceFirst('{id}', relatedPostId.toString()),
       commentAsContent,
       SingleContentDTO(),
@@ -482,7 +480,8 @@ class PostService {
     }
   }
 
-  Future<bool> reportComment(int commentId, String reason, String description) async {
+  Future<bool> reportComment(
+      int commentId, String reason, String description) async {
     if (NetworkConstants.useMockData) {
       return true;
     }
@@ -547,8 +546,8 @@ class PostService {
       return [1, 2, 3];
     }
 
-    ServiceResponse<MultipleUserAsDTO> response = await service
-        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+    ServiceResponse<MultipleUserAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
       _getLikedUsersForComment.replaceFirst('{id}', commentId.toString()),
       null,
       MultipleUserAsDTO(),
@@ -569,8 +568,8 @@ class PostService {
       return [4, 5, 6];
     }
 
-    ServiceResponse<MultipleUserAsDTO> response = await service
-        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+    ServiceResponse<MultipleUserAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
       _getDislikedUsersForComment.replaceFirst('{id}', commentId.toString()),
       null,
       MultipleUserAsDTO(),
