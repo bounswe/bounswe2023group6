@@ -89,22 +89,22 @@ Widget userInformationSection(
     children: [
       Column(
         children: [
-          // user.profileImage != null
-          //     ? DisplayAvatar(
-          //         byteData: user.profileImage,
-          //         onPressed: () {
-          //           // go to profile page
-          //           Navigator.pushNamed(context, '/profile', arguments: username);
-          //         },
-          //       )
-          //     : const Icon(Icons.account_circle),
-          IconButton(
-            onPressed: () {
-              // go to profile page
-              Navigator.pushNamed(context, '/profile', arguments: username);
-            },
-            icon: const Icon(Icons.account_circle),
-          ),
+          profileImage != ''
+              ? DisplayAvatar(
+                  imageLink: profileImage,
+                  onPressed: () {
+                    // go to profile page
+                    Navigator.pushNamed(context, '/profile',
+                        arguments: username);
+                  },
+                )
+              : IconButton(
+                  onPressed: () {
+                    // go to profile page
+                    Navigator.pushNamed(context, '/profile', arguments: username);
+                  },
+                  icon: const Icon(Icons.account_circle),
+                ),
           SizedBox(
             width: 80,
             child: Padding(

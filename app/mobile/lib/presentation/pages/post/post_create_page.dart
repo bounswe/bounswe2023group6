@@ -141,12 +141,12 @@ class _PostCreatePageState extends State<PostCreatePage> {
       ),
       items: gameList.map((game) {
         return DropdownMenuItem<int>(
-          value: game.id,
+          value: game.gameId,
           child: Row(
             children: [
-              Image.network(game.imageLink, width: 50, height: 50),
+              Image.network(game.gamePicture, width: 50, height: 50),
               const SizedBox(width: 16),
-              Text(game.name),
+              Text(game.title),
             ],
           ),
         );
