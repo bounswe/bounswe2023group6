@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/widgets/avatar_widget.dart';
 
 enum ContentType { post, comment, lfg }
@@ -64,7 +65,16 @@ class Content {
     this.commentList = const [],
   }) : comments = commentList.length;
 
-  // Content initialize
+  Future<void> loadContentSocialData() async {
+    PostService postService = PostService();
+    if (type == ContentType.post) {
+      likeIds = await postService.getLikedUsersForPost(id);
+      dislikeIds = await postService.getDislikedUsersForPost(id);
+    } else {
+      likeIds = await postService.getLikedUsersForComment(id);
+      dislikeIds = await postService.getDislikedUsersForComment(id);
+    }
+  }
 }
 
 // Content related widgets
