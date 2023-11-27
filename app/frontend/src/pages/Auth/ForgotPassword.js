@@ -29,7 +29,8 @@ const ForgotPassword = () => {
 			const response = await axios.post(`${API_URL}/forgot-password`, data, {
 				headers: {
 					'Content-Type': 'application/json'
-				}
+				},
+				withCredentials: true
 			});
 
 			if (response.status === 200) {

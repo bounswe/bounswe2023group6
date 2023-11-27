@@ -38,31 +38,27 @@ export default function CreatePost() {
 		clearData()
 	}
 
-	const onSubmit = () => {
-		axiosInstance
-			.post(
-				'/forum/posts',
-				{
-					title,
-					content,
-					category,
-					tag
-				},
-				{
-					withCredentials: true
-				}
-			)
-			.then((response) => {
-				console.log(response)
-				if (response.status === 200) {
-					handleClose()
-				}
-				window.location.reload()
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-	}
+    const onSubmit = () => {
+        axiosInstance.defaults.withCredentials = true;
+        axiosInstance.post('/forum/posts', {
+            title,
+            content,
+            category,
+            tag
+        }, {
+            withCredentials: true
+        })
+        .then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+                handleClose();
+            }
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    };
 
 	const clearData = () => {
 		setTitle('')

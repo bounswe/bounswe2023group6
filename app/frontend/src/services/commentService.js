@@ -1,8 +1,11 @@
 import axios from 'axios';
 
+
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8080',
 });
+
+axiosInstance.defaults.withCredentials = true;
 
 export const getAllCommentsForPost = (postId) => {
     return axiosInstance.get(`/comments/post/${postId}`);

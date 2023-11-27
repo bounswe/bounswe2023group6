@@ -17,24 +17,14 @@ import java.util.UUID
 @RequestMapping("/forum/posts")
 class PostController(private val postService: PostService) {
 
-    val sampleUUID: UUID = UUID.fromString("1997004a-6715-45c2-a559-087be232b823")
-
-    // Access-Control-Allow-Origin: *
     @PostMapping
-    @CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true", allowedHeaders = ["*"], exposedHeaders = ["Access-Control-Allow-Origin"])
-//    fun createPost(@CookieValue("SESSIONID") sessionId: UUID, @RequestBody post: CreatePostRequest): ResponseEntity<PostDTO> {
-//        val newPost = postService.createPost(sessionId, post)
-//        val newPostDTO = ConverterDTO.convertToPostDTO(newPost)
-//        return ResponseEntity.ok(newPostDTO)
-//    }
-    fun createPost(@RequestBody post: CreatePostRequest): ResponseEntity<PostDTO> {
-        val newPost = postService.createPost(sampleUUID, post)
+    fun createPost(@CookieValue("SESSIONID") sessionId: UUID, @RequestBody post: CreatePostRequest): ResponseEntity<PostDTO> {
+        val newPost = postService.createPost(sessionId, post)
         val newPostDTO = ConverterDTO.convertToPostDTO(newPost)
         return ResponseEntity.ok(newPostDTO)
     }
 
     @GetMapping("/{id}")
-    @CrossOrigin(origins = ["*"])
     fun getPost(@PathVariable id: Long): ResponseEntity<PostDTO> {
         val post = postService.getPost(id)
         val postDTO = ConverterDTO.convertToPostDTO(post)
@@ -42,62 +32,65 @@ class PostController(private val postService: PostService) {
     }
 
     @PutMapping("/{id}")
-    @CrossOrigin(origins = ["*"])
-    fun updatePost(@PathVariable id: Long, @RequestBody updatedPost: UpdatePostRequest): ResponseEntity<PostDTO> {
-        val post = postService.updatePost(sampleUUID, id, updatedPost)
+
+    fun updatePost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody updatedPost: UpdatePostRequest): ResponseEntity<PostDTO> {
+        val post = postService.updatePost(sessionId, id, updatedPost)
         val postDTO = ConverterDTO.convertToPostDTO(post)
         return ResponseEntity.ok(postDTO)
     }
 
     @DeleteMapping("/{id}")
-    @CrossOrigin(origins = ["*"])
-    fun deletePost(@PathVariable id: Long): ResponseEntity<ResponseMessage> {
-        postService.deletePost(sampleUUID, id)
+
+    fun deletePost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<ResponseMessage> {
+        postService.deletePost(sessionId, id)
         return ResponseEntity.ok(ResponseMessage(message = "Post deleted successfully"))
     }
 
     @GetMapping
-    @CrossOrigin(origins = ["*"])
     fun getAllPosts(): ResponseEntity<List<PostDTO>> {
         val posts = postService.getAllPosts()
         val postsDTO = ConverterDTO.convertBulkToPostDTO(posts)
         return ResponseEntity.ok(postsDTO)
     }
 
+    // implement upvote endpoint
     @PutMapping("/{id}/upvote")
-    @CrossOrigin(origins = ["*"])
-    fun upvotePost(@PathVariable id: Long): ResponseEntity<PostDTO> {
-        val post = postService.upvotePost(sampleUUID, id)
+
+    fun upvotePost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<PostDTO> {
+        val post = postService.upvotePost(sessionId, id)
         val postDTO = ConverterDTO.convertToPostDTO(post)
         return ResponseEntity.ok(postDTO)
     }
 
+    // implement downvote endpoint
     @PutMapping("/{id}/downvote")
-    @CrossOrigin(origins = ["*"])
-    fun downvotePost(@PathVariable id: Long): ResponseEntity<PostDTO> {
-        val post = postService.downvotePost(sampleUUID, id)
+
+    fun downvotePost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<PostDTO> {
+        val post = postService.downvotePost(sessionId, id)
         val postDTO = ConverterDTO.convertToPostDTO(post)
         return ResponseEntity.ok(postDTO)
     }
 
+    // implement get upvoted users endpoint
     @GetMapping("/{id}/upvoteUsers")
-    @CrossOrigin(origins = ["*"])
+
     fun getUpvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
         val upvotedUsersDTO = postService.getUpvotedUsers(id)
         return ResponseEntity.ok(upvotedUsersDTO)
     }
 
+    // implement get downvoted users endpoint
     @GetMapping("/{id}/downvoteUsers")
-    @CrossOrigin(origins = ["*"])
+
     fun getDownvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
         val downvotedUsersDTO = postService.getDownvotedUsers(id)
         return ResponseEntity.ok(downvotedUsersDTO)
     }
-
+    // REPORT POST
     @PostMapping("/{id}/report")
-    @CrossOrigin(origins = ["*"])
-    fun reportPost(@PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<ResponseMessage> {
-        postService.reportPost(sampleUUID, id, reqBody)
+
+    fun reportPost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<ResponseMessage> {
+        postService.reportPost(sessionId, id, reqBody)
         return ResponseEntity.ok(ResponseMessage(message = "Post reported successfully"))
     }
 

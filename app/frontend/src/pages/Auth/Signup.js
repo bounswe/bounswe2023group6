@@ -55,6 +55,8 @@ const Signup = () => {
         }
     
         try {
+            axios.defaults.withCredentials = true;
+
             const response = await axios.post(`${api_url}/register`, formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

@@ -16,7 +16,7 @@ class TagController (
 ){
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin(origins = ["*"])
+
     fun getAllTags(): List<TagDTO>{
         return tagService.getAllTags()
     }

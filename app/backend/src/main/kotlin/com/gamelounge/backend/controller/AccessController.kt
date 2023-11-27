@@ -2,6 +2,8 @@ package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.service.AccessService
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -17,7 +19,7 @@ class AccessController(
 
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
-    @CrossOrigin(origins = ["*"])
+//
     fun register(
         @RequestPart("request") request: RegisterationRequest,
         @RequestPart("image") image: MultipartFile?
@@ -25,18 +27,21 @@ class AccessController(
 
         accessService.register(request, image)
         return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("message" to "Registered successfully!"))
-
     }
 
     @PostMapping("/login")
-    @CrossOrigin(origins = ["*"])
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<Map<String, String>> {
+    fun login(@RequestBody request: LoginRequest, response: HttpServletResponse){
         val sessionId = accessService.login(request.username, request.password)
-        return ResponseEntity.ok().header("Set-Cookie", "SESSIONID=$sessionId; HttpOnly").body(mapOf("message" to "Logged in successfully."))
+
+        val cookie = Cookie("SESSIONID", "$sessionId")
+        cookie.path = "/"
+        response.addCookie(cookie)
+
+
+        response.setHeader("Access-Control-Allow-Credentials", "true")
     }
 
     @PostMapping("/logout")
-    @CrossOrigin(origins = ["*"])
     fun logout(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<Map<String, String>> {
         sessionId?.let { accessService.logout(it) }
         return ResponseEntity.ok().body(mapOf("message" to "Logged out successfully."))
@@ -44,10 +49,10 @@ class AccessController(
     }
 
     @PostMapping("/change-password")
-    @CrossOrigin(origins = ["*"])
+
     fun changePassword(
-            @CookieValue("SESSIONID") sessionId: UUID?,
-            @RequestBody request: ChangePasswordRequest
+        @CookieValue("SESSIONID") sessionId: UUID?,
+        @RequestBody request: ChangePasswordRequest
     ): ResponseEntity<Map<String, String>> {
         sessionId?.let { existingSessionId ->
             // First, check if the user is logged in with the provided session ID.
@@ -68,14 +73,14 @@ class AccessController(
     }
 
     @PostMapping("/forgot-password")
-    @CrossOrigin(origins = ["*"])
+
     fun forgotPassword(@RequestBody request: ForgotPasswordRequest): ResponseEntity<Map<String, String>> {
         accessService.forgotPassword(username = request.username, email = request.email)
         return ResponseEntity.ok().body(mapOf("message" to "Password reset token generated successfully."))
     }
 
     @PostMapping("/reset-password")
-    @CrossOrigin(origins = ["*"])
+
     fun resetPassword(@RequestBody request: ResetPasswordRequest): ResponseEntity<Map<String, String>> {
         accessService.resetPassword(token = request.token, newPassword = request.newPassword, confirmNewPassword = request.confirmNewPassword)
         return ResponseEntity.ok().body(mapOf("message" to "Password reset successfully."))
