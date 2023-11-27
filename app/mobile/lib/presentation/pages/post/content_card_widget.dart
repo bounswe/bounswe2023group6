@@ -11,6 +11,7 @@ enum ContentMoreOptions {
   delete,
   report,
   reply,
+  goToGamePage,
 }
 
 class ContentCardWidget extends StatefulWidget {
@@ -44,7 +45,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
     connectedPostState = context.watch<PostState>();
 
     return Card(
-      key: !isPost && !isReply ? GlobalObjectKey(content.id) : null,
+      key: !isPost && !isReply ? content.globalKey : null,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
@@ -71,8 +72,10 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             InkWell(
               onTap: () {
                 // TODO: Change render objects border color for parent comment
+                GlobalObjectKey parentContentGlobalKey = connectedPostState.post.commentList.where(
+                  (element) => element.id == parentContent.id).first.globalKey;
                 Scrollable.ensureVisible(
-                    GlobalObjectKey(parentContent.id).currentContext!,
+                    parentContentGlobalKey.currentContext!,
                     curve: Curves.easeInOut);
               },
               child: Align(
@@ -164,6 +167,10 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
           case ContentMoreOptions.reply:
             connectedPostState.updateCommentParentId(content.id);
             break;
+          case ContentMoreOptions.goToGamePage:
+            print("go to game page ${content.relatedGameId}");
+            // Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
+            break;
         }
       },
       itemBuilder: (BuildContext context) =>
@@ -183,10 +190,16 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             value: ContentMoreOptions.report,
             child: Text('Report'),
           ),
-        const PopupMenuItem<ContentMoreOptions>(
-          value: ContentMoreOptions.reply,
-          child: Text('Reply'),
-        ),
+        if (!widget.isPost) 
+          const PopupMenuItem<ContentMoreOptions>(
+            value: ContentMoreOptions.reply,
+            child: Text('Reply'),
+          ),
+        if (widget.isPost && content.relatedGameId != 0)
+          const PopupMenuItem<ContentMoreOptions>(
+            value: ContentMoreOptions.goToGamePage,
+            child: Text('Go to game page'),
+          ),
       ],
     );
   }

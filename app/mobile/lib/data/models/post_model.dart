@@ -27,6 +27,7 @@ class Post extends Content {
     ownerUsername: ownerUsername,
     ownerProfileImage: ownerProfileImage,
     commentList: commentList,
+    comments: comments,
     title: title,
     relatedGameId: relatedGameId, 
   );
@@ -46,9 +47,10 @@ class Post extends Content {
       commentList: json.containsKey("comments") 
         ? List<Comment>.from(json['comments'].map((x) => Comment.fromJson(x)))
         : [],
-      relatedGameId: json.containsKey("game") 
-      ? json['game']['gameId']
-      : null,
+      // relatedGameId: json.containsKey("relatedGameId") 
+      // ? json['relatedGameId']
+      // : 0,
+      relatedGameId: json['relatedGameId'] ?? 0,
     );
   }
 

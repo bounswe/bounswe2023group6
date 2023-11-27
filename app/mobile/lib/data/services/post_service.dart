@@ -173,7 +173,7 @@ class PostService {
     }
   }
 
-  Future<Post> createPost(String title, String content) async {
+  Future<Post> createPost(String title, String content, int relatedGameId) async {
     if (NetworkConstants.useMockData) {
       return Post(
         id: 1,
@@ -193,6 +193,7 @@ class PostService {
     PostCreateDTORequest postCreateDTORequest = PostCreateDTORequest(
       title: title,
       content: content,
+      relatedGameId: relatedGameId,
       category: "DISCUSSION"
     );
     ServiceResponse<SingleContentDTO> response =
