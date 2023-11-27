@@ -114,15 +114,7 @@ class UserService {
 
     if (response.success) {
       List<Game> games = response.responseConverted!.games!
-          .map((e) => Game(
-                gameId: e.gameId!,
-                title: e.title!,
-                description: e.description!,
-                gamePicture: e.gamePicture!,
-                releaseYear: e.releaseYear!,
-                developers: e.developers!,
-                genre: e.genre!,
-              ))
+          .map((e) => e.game!)
           .toList();
 
       return games;

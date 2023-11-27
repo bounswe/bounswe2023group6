@@ -127,12 +127,12 @@ class _GameWikiPageState extends State<GameWikiPage>
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w600))),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(game.releaseYear as String ?? "-",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400))),
+                                  // Align(
+                                  //     alignment: Alignment.centerLeft,
+                                  //     child: Text("" + game.releaseYear! as  ?? "-",
+                                  //         style: TextStyle(
+                                  //             fontSize: 12,
+                                  //             fontWeight: FontWeight.w400))),
                                   const SizedBox(
                                     height: 10,
                                   ),
@@ -409,7 +409,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                               // This next line does the trick.
                               scrollDirection: Axis.horizontal,
                               children: [
-                                for (var i = 0; i < 6; i++)
+                                for (var i = 0; i < game.similarGameList.length; i++)
                                   VerticalGameCard(
                                       game: game.similarGameList[i]),
                               ],

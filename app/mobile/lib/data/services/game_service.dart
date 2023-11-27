@@ -153,7 +153,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     );
 
     if (response.success) {
-      List<Game> games = response.responseConverted!.games!.map((e) => Game(gameId: e.gameId!, title: e.title!, description: e.description!, gamePicture: e.gamePicture!)).toList();
+      List<Game> games = response.responseConverted!.games!.map((e) => e.game!).toList();
       return games;
     } else {
       throw Exception('Failed to load games');
@@ -167,13 +167,13 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
 
     ServiceResponse<GameDTOResponse> response =
         await service.sendRequestSafe<EmptyResponse, GameDTOResponse>(
-      "$_getGames/$gameid",
+      "/game/$gameid",
       null,
       GameDTOResponse(),
       'GET',
     );
     if (response.success) {
-      Game game = response.responseConverted! as Game;
+      Game game = response.responseConverted!.game!;
       return game;
     } else {
       throw Exception('Failed to load game');
