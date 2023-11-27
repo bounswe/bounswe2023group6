@@ -79,7 +79,10 @@ class _GamePageState extends State<GamePage> {
                   }
                 });
               },
-              child: Icon(Icons.add),
+              child: const Icon(
+                Icons.add,
+                color: ColorConstants.buttonColor,
+              ),
             )
           : FloatingActionButton(
               onPressed: () {

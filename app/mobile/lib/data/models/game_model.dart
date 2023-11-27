@@ -1,7 +1,7 @@
 import 'package:mobile/data/models/post_model.dart';
 
 class Game {
-  final int id;
+  late final int id;
   final String name;
   final String description;
   final String imageLink;
@@ -34,7 +34,6 @@ class Game {
     this.similarGameList = const [],
     this.relatedPosts = const [],
   });
-
 
   factory Game.fromJson(Map<String, dynamic> json) {
     return Game(

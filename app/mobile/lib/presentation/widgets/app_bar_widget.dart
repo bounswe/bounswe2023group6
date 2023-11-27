@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -21,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             showBackButton, // Control back button visibility
         title: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/');
+            Phoenix.rebirth(context);
           },
           child: SizedBox(
               height: 150,
