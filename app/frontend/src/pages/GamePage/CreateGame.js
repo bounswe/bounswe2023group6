@@ -33,9 +33,6 @@ export default function CreateGame() {
 		universe: '',
 		mechanics: '',
 		playtime: '',
-		totalRating: 0,
-		countRating: 0,
-		averageRating: 0,
 		image: null,
 		characters: []
 	})
@@ -83,9 +80,11 @@ export default function CreateGame() {
 			image: selectedImage
 		}
 		delete postData.characters
-
+		const { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image } = postData
+		const request = { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image }
 		const formDataToSend = new FormData()
-		formDataToSend.append('request', new Blob([JSON.stringify(postData)], { type: 'application/json' }))
+
+		formDataToSend.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
 		if (selectedImage) {
 			const file = new File([selectedImage], 'image.png', { type: 'image/png' })
 			formDataToSend.append('image', file)
@@ -116,9 +115,6 @@ export default function CreateGame() {
 			universe: '',
 			mechanics: '',
 			playtime: '',
-			totalRating: 0,
-			countRating: 0,
-			averageRating: 0,
 			image: null,
 			characters: []
 		})
