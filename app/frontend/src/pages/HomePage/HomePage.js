@@ -113,19 +113,22 @@ export default function HomePage() {
                     </div>
                     <div className='flex flex-row mx-4'>
                         {/* Flex elements in a row, add margin on the left and right */}
-                        <div className='flex flex-col w-1/2 ml-12 mr-12'>
+                        <div className='card flex flex-col w-1/3 ml-4 mr-4 bg-green-200'>
+                            <h4 className='flex text-2xl font-bold font-sans justify-center m-2'>Posts</h4>
                             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
                             {postData.map((item, key) => (
                                 <Post item={item} key={key}/>
                             ))}
                         </div>
-                        <div className='flex flex-col w-1/2 ml-12 mr-12'>
+                        <div className='card flex flex-col w-1/3 ml-4 mr-4 bg-green-200'>
+                            <h4 className='flex text-2xl font-bold font-sans justify-center m-2'>Games</h4>
                             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
                             {gameData.map((item, key) => (
                                 <Game item={item} key={key}/>
                             ))}
                         </div>
-                        <div className='flex flex-col w-1/2 ml-12 mr-12'>
+                        <div className='card flex flex-col w-1/3 ml-4 mr-4 bg-green-200'>
+                            <h4 className='flex text-2xl font-bold font-sans justify-center m-2'>Groups</h4>
                             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
                             {groupData.map((item, key) => (
                                 <Group item={item} key={key}/>
