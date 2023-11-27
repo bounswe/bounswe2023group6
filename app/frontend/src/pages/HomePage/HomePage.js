@@ -1,10 +1,27 @@
-import React from 'react'
 import Suggestion from './Suggestion'
-import Post from './Post'
+import Game from './Game'
 import Group from './Group'
 import Navbarx from '../../components/navbar/Navbar'
+import { getAllGames } from '../../services/gameService';
+import React, { useEffect, useState } from 'react';
+
 
 export default function HomePage() {
+	const [gamesData, setGamesData] = useState([]);
+
+	useEffect(() => {
+		const fetchGames = async () => {
+		try {
+			const response = await getAllGames();
+			setGamesData(response.data);
+		} catch (error) {
+			console.log(error);
+		}
+		};
+
+		fetchGames();
+	}, []);
+
 	const groupData = [
 		{
 			image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
@@ -49,34 +66,34 @@ export default function HomePage() {
 		}
 	]
 
-	const postData = [
-		{
-			image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
-			header: 'Resident Evil 4 Remake',
-			content:
-				"Looking for someone to join me in my Resident Evil 4 adventure! Let's team up and face the horrors together.️ #ResidentEvil4 #GamingBuddyWanted",
-			date: '29.10.2023  00.00'
-		},
-		{
-			image: 'https://primefaces.org/cdn/primereact/images/product/game-controller.jpg',
-			header: 'Fifa',
-			content:
-				'FIFA is one of the most popular football simulation games developed by EA Sports. It offers an immersive gaming experience with realistic graphics, player mechanics, and stadiums.',
-			date: '29.10.2023  00.00'
-		},
-		{
-			image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
-			header: 'The Witcher 3: Wild Hunt',
-			content:
-				"The Witcher 3 is an unforgettable gaming experience. Its open world, rich storytelling, and captivating characters make it a must-play RPG. If you love epic adventures, this one's a masterpiece.",
-			date: '29.10.2023  00.00'
-		}
-	]
+	// const postData = [
+	// 	{
+	// 		image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
+	// 		header: 'Resident Evil 4 Remake',
+	// 		content:
+	// 			"Looking for someone to join me in my Resident Evil 4 adventure! Let's team up and face the horrors together.️ #ResidentEvil4 #GamingBuddyWanted",
+	// 		date: '29.10.2023  00.00'
+	// 	},
+	// 	{
+	// 		image: 'https://primefaces.org/cdn/primereact/images/product/game-controller.jpg',
+	// 		header: 'Fifa',
+	// 		content:
+	// 			'FIFA is one of the most popular football simulation games developed by EA Sports. It offers an immersive gaming experience with realistic graphics, player mechanics, and stadiums.',
+	// 		date: '29.10.2023  00.00'
+	// 	},
+	// 	{
+	// 		image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
+	// 		header: 'The Witcher 3: Wild Hunt',
+	// 		content:
+	// 			"The Witcher 3 is an unforgettable gaming experience. Its open world, rich storytelling, and captivating characters make it a must-play RPG. If you love epic adventures, this one's a masterpiece.",
+	// 		date: '29.10.2023  00.00'
+	// 	}
+	// ]
 
   return (
     <>
     <Navbarx></Navbarx>
-    <div className='flex flex-row grow bg-gray-50'>
+    <div className='flex flex-row grow bg-gray-50 justify-center items-center'>
       {/* Make elements flex, these will be in a row */}
       {/* <div className='w-1/5 flex flex-col gap-4'> */}
         {/* Take 1/5 width of the screen, flex elements in a column, add gap between elements */}
@@ -93,9 +110,11 @@ export default function HomePage() {
           {/* Flex elements in a row, add margin on the left and right */}
           <div className='flex flex-col w-1/2 ml-12 mr-12'>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
-            {postData.map((item, key) => (
-              <Post item={item} key={key} />
-            ))}
+            <div>
+				{gamesData.map((game) => (
+					<Game key={game.gameId} game={game} />
+				))}
+			</div>
           </div>
           <div className='flex flex-col w-1/2 ml-12 mr-12'>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}

@@ -54,6 +54,7 @@ class GameController(private val gameService: GameService) {
     }
 
     @GetMapping
+    @CrossOrigin(origins = ["http://localhost:3000", "*"])
     fun getAllGames(): ResponseEntity<List<GameDTO>> {
         val games = gameService.getAllGames();
         val gameDTOs = ConverterDTO.convertBulkToGameDTO(games);

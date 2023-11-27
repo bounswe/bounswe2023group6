@@ -15,14 +15,11 @@ class SpringSecurityCorsApplication{
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
-					.allowedOrigins("http://localhost:3000") // Specify the exact origin
+					.allowedOrigins("http://localhost:3000", "*", "http://localhost")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-					.allowCredentials(true) // Allow credentials
+					.allowCredentials(true)
 					.allowedHeaders("*")
 					.exposedHeaders("Access-Control-Allow-Origin")
-
-            // ctx.response.headers.add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
-            // ctx.response.headers.add("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range")
 			}
 		}
 	}
