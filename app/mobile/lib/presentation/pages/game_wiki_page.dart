@@ -123,31 +123,31 @@ class _GameWikiPageState extends State<GameWikiPage>
                                   ),
                                   const Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text("Release Date: ",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600))),
-                                  // Align(
-                                  //     alignment: Alignment.centerLeft,
-                                  //     child: Text("" + game.releaseYear! as  ?? "-",
-                                  //         style: TextStyle(
-                                  //             fontSize: 12,
-                                  //             fontWeight: FontWeight.w400))),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  const Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text("Released By:  ",
+                                      child: Text("Release Year: ",
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(game.developers ?? "-",
+                                      child: Text(game.releaseYear!.toString() ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  // const Align(
+                                  //     alignment: Alignment.centerLeft,
+                                  //     child: Text("Released By:  ",
+                                  //         style: TextStyle(
+                                  //             fontSize: 15,
+                                  //             fontWeight: FontWeight.w600))),
+                                  // Align(
+                                  //     alignment: Alignment.centerLeft,
+                                  //     child: Text(game.developers ?? "-",
+                                  //         style: TextStyle(
+                                  //             fontSize: 12,
+                                  //             fontWeight: FontWeight.w400))),
                                   const SizedBox(
                                     height: 10,
                                   ),
@@ -172,9 +172,9 @@ class _GameWikiPageState extends State<GameWikiPage>
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500))),
-                                  const Align(
+                                  Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text("4.5",
+                                      child: Text(game.averageRating.toString(),
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
@@ -287,7 +287,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Game Modes: ",
+                                    text: "Mechanics: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
@@ -308,7 +308,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Themes: ",
+                                    text: "Universe: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
@@ -319,7 +319,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                               )),
                             ),
                           ),
-                        if (game.universe != null)
+                        if (game.playerNumber != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -329,18 +329,18 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Player Perspective: ",
+                                    text: "Player Number: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.universe!,
+                                    text: game.playerNumber!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.universe != null)
+                        if (game.playtime != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -350,33 +350,12 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Art Style: ",
+                                    text: "Playtime: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.universe!,
-                                  )
-                                ],
-                              )),
-                            ),
-                          ),
-                        if (game.universe != null)
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: RichText(
-                                  text: TextSpan(
-                                style: TextStyle(color: Colors.black),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: "Series: ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                  TextSpan(
-                                    text: game.universe!,
+                                    text: game.playtime!,
                                   )
                                 ],
                               )),
