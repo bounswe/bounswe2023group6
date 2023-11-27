@@ -1,8 +1,10 @@
 import Suggestion from './Suggestion'
 import Game from './Game'
 import Group from './Group'
+import Post from './Post'
 import Navbarx from '../../components/navbar/Navbar'
 import { getAllGames } from '../../services/gameService';
+import { getAllPosts } from '../../services/postService';
 import React, { useEffect, useState } from 'react';
 import hyrule from './hyrule.jpg';
 import victory_royale from './victory-royale.jpg';
@@ -11,6 +13,7 @@ import rocket_league from './rocket-league.jpg';
 
 export default function HomePage() {
 	const [gamesData, setGamesData] = useState([]);
+	const [postData, setPostData] = useState([]);
 
 	useEffect(() => {
 		const fetchGames = async () => {
@@ -24,6 +27,15 @@ export default function HomePage() {
 
 		fetchGames();
 	}, []);
+
+	useEffect(() => {
+		const fetchPosts = async () => {
+		  const response = await getAllPosts();
+		  setPostData(response.data);
+		};
+	  
+		fetchPosts();
+	  }, []);
 
 	const groupData = [
 		{
@@ -93,6 +105,8 @@ export default function HomePage() {
 	// 	}
 	// ]
 
+	console.log(postData);
+
   return (
     <>
     <Navbarx></Navbarx>
@@ -103,15 +117,18 @@ export default function HomePage() {
       {/* </div> */}
       <div className='flex flex-col gap-4 ml-12 mr-12'>
         {/* Take 4/5 width of the screen, flex elements in a column, add gap between elements */}
+		<div className='flex w-full items-center justify-center mt-6'><h1><b>Suggestions</b></h1></div>
         <div className='flex w-full justify-center'>
           {/* In the full width you can take (i.e. 4/5), flex elements in a row, center them */}
+		  
           {suggestionData.map((item, key) => (
             <Suggestion item={item} key={key} />
           ))}
         </div>
         <div className='flex flex-row mx-4'>
           {/* Flex elements in a row, add margin on the left and right */}
-          <div className='flex flex-col w-1/2 ml-12 mr-12'>
+          <div className='flex flex-col w-1/3 ml-12 mr-12'>
+		  <div className='flex w-full items-center justify-center mt-4'><h1><b>Games</b></h1></div>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
             <div>
 				{gamesData.map((game) => (
@@ -119,12 +136,20 @@ export default function HomePage() {
 				))}
 			</div>
           </div>
-          <div className='flex flex-col w-1/2 ml-12 mr-12'>
+          <div className='flex flex-col w-1/3 ml-12 mr-12'>
+		  <div className='flex w-full items-center justify-center mt-4'><h1><b>Groups</b></h1></div>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
             {groupData.map((item, key) => (
               <Group item={item} key={key} />
             ))}
           </div>
+
+		  	<div className='flex flex-col w-1/3 ml-12 mr-12'>
+			  <div className='flex w-full items-center justify-center mt-4'><h1><b>Posts</b></h1></div>
+				{postData.map((post) => (
+					<Post key={post.postId} post={post} />
+				))}
+			</div>
         </div>
       </div>
 
