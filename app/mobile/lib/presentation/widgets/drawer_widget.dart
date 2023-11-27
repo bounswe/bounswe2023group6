@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_authentication_service.dart';
 import 'package:mobile/data/services/user_service.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
+import 'package:mobile/presentation/pages/opening_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
 import 'package:mobile/presentation/widgets/avatar_widget.dart';
 import 'package:mobile/utils/shared_manager.dart';
@@ -167,9 +169,7 @@ class LoggedDrawer extends StatelessWidget {
                   title: const Text('Log Out'),
                   onTap:() {
                     clearData();
-                    
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
+                    Phoenix.rebirth(context);
                   },
                 ),
               ],
