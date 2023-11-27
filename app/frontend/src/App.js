@@ -21,7 +21,7 @@ const App = () => (
 				<Route path='/home' element={<HomePage />} />
 				<Route path="/game/fifa" element={<GamePage />} />
 				<Route path="/forum" element={<ForumPage />} />
-				<Route path="/postpage" element={<PostPage />} />
+				<Route path="/posts/:postId" element={<PostPage />} />
 			</Routes>
 		</BrowserRouter>
 	</NextUIProvider>
