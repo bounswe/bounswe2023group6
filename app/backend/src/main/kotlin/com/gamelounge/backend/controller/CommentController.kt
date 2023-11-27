@@ -19,7 +19,7 @@ class CommentController(private val commentService: CommentService) {
     val sampleUUID: UUID = UUID.fromString("1997004a-6715-45c2-a559-087be232b823")
 
     @PostMapping("/post/{postId}")
-    @CrossOrigin(origins = ["*"])
+
     fun createComment(@PathVariable postId: Long, @RequestBody comment: CreateCommentRequest): ResponseEntity<CommentDTO> {
         val newComment = commentService.createComment(sampleUUID, postId, comment)
         val newCommentDTO = ConverterDTO.convertToCommentDTO(newComment)
@@ -27,7 +27,7 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @GetMapping("/{id}")
-    @CrossOrigin(origins = ["*"])
+
     fun getComment(@PathVariable id: Long): ResponseEntity<CommentDTO> {
         val comment = commentService.getComment(id)
         val commentDTO = ConverterDTO.convertToCommentDTO(comment)
@@ -35,7 +35,7 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @PutMapping("/{id}")
-    @CrossOrigin(origins = ["*"])
+
     fun updateComment(@PathVariable id: Long, @RequestBody updatedComment: UpdateCommentRequest): ResponseEntity<CommentDTO> {
         val comment = commentService.updateComment(sampleUUID, id, updatedComment)
         val commentDTO = ConverterDTO.convertToCommentDTO(comment)
@@ -43,14 +43,14 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @DeleteMapping("/{id}")
-    @CrossOrigin(origins = ["*"])
+
     fun deleteComment(@PathVariable id: Long): ResponseEntity<ResponseMessage> {
         commentService.deleteComment(sampleUUID, id)
         return ResponseEntity.ok(ResponseMessage(message = "Comment deleted successfully"))
     }
 
     @GetMapping("/post/{postId}")
-    @CrossOrigin(origins = ["*"])
+
     fun getAllCommentsForPost(@PathVariable postId: Long): ResponseEntity<List<CommentDTO>> {
         val comments = commentService.getAllCommentsForPost(postId)
         val commentsDTO = ConverterDTO.convertBulkToCommentDTO(comments)
@@ -58,7 +58,7 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @PutMapping("/{id}/upvote")
-    @CrossOrigin(origins = ["*"])
+
     fun upvoteComment(@PathVariable id: Long): ResponseEntity<CommentDTO> {
         val comment = commentService.upvoteComment(sampleUUID, id)
         val commentDTO = ConverterDTO.convertToCommentDTO(comment)
@@ -66,7 +66,7 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @PutMapping("/{id}/downvote")
-    @CrossOrigin(origins = ["*"])
+
     fun downvoteComment(@PathVariable id: Long): ResponseEntity<CommentDTO> {
         val comment = commentService.downvoteComment(sampleUUID, id)
         val commentDTO = ConverterDTO.convertToCommentDTO(comment)
@@ -74,28 +74,28 @@ class CommentController(private val commentService: CommentService) {
     }
 
     @GetMapping("/{id}/upvotedUsers")
-    @CrossOrigin(origins = ["*"])
+
     fun getUpvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
         val usersDTO = commentService.getUpvotedUsers(id)
         return ResponseEntity.ok(usersDTO)
     }
 
     @GetMapping("/{id}/downvotedUsers")
-    @CrossOrigin(origins = ["*"])
+
     fun getDownvotedUsers(@PathVariable id: Long): ResponseEntity<List<UserDTO>> {
         val usersDTO = commentService.getDownvotedUsers(id)
         return ResponseEntity.ok(usersDTO)
     }
 
     @PostMapping("/{id}/report")
-    @CrossOrigin(origins = ["*"])
+
     fun reportComment(@PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<ResponseMessage> {
         commentService.reportComment(sampleUUID, id, reqBody)
         return ResponseEntity.ok(ResponseMessage(message = "Comment reported successfully"))
     }
 
     @GetMapping("/{id}/replies")
-    @CrossOrigin(origins = ["*"])
+
     fun getAllReplies(@PathVariable id: Long): ResponseEntity<List<CommentDTO>> {
         val replies = commentService.getAllReplies(id)
         val repliesDTO = ConverterDTO.convertBulkToCommentDTO(replies)

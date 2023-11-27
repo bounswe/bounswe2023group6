@@ -90,6 +90,7 @@ export default function CreateGame() {
 			formDataToSend.append('image', file)
 		}
 		try {
+			axios.defaults.withCredentials = true
 			const response = await axios.post(`${api_url}/game`, formDataToSend, {
 				headers: {
 					'Content-Type': 'multipart/form-data'

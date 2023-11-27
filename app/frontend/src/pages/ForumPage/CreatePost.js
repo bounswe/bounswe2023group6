@@ -39,6 +39,7 @@ export default function CreatePost() {
     };
 
     const onSubmit = () => {
+        axiosInstance.defaults.withCredentials = true;
         axiosInstance.post('/forum/posts', {
             title,
             content,

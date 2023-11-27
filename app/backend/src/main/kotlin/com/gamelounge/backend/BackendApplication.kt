@@ -7,19 +7,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 
 @SpringBootApplication
-class BackendApplication
-
-class SpringSecurityCorsApplication{
+class BackendApplication {
 	@Bean
 	fun corsFilter(): WebMvcConfigurer {
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
-					.allowedOrigins("http://localhost:3000", "*", "http://localhost")
+					.allowedOrigins("http://localhost:3000")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowCredentials(true)
 					.allowedHeaders("*")
-					.exposedHeaders("Access-Control-Allow-Origin")
+					.exposedHeaders("Access-Control-Allow-Origin", "Cookie", "Set-Cookie")
 			}
 		}
 	}

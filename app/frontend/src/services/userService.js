@@ -4,6 +4,8 @@ const axiosInstance = axios.create({
   baseURL: 'http://localhost:8080',
 });
 
+axiosInstance.defaults.withCredentials = true;
+
 export const getUserInfoBySessionId = (sessionId) => {
   return axiosInstance.get('/user', {
     headers: { Cookie: `SESSIONID=${sessionId}` }
