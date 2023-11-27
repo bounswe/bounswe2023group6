@@ -115,10 +115,10 @@ class UserService {
     if (response.success) {
       List<Game> games = response.responseConverted!.games!
           .map((e) => Game(
-                id: e.id!,
-                name: e.name!,
+                gameId: e.gameId!,
+                title: e.title!,
                 description: e.description!,
-                imageLink: e.imageLink!,
+                gamePicture: e.gamePicture!,
                 releaseYear: e.releaseYear!,
                 developers: e.developers!,
                 genre: e.genre!,
@@ -185,18 +185,18 @@ class UserService {
     user.likedPosts = await PostService().getPosts();
     user.likedGames = [
       Game(
-          id: 1,
+          gameId: 1,
           description:
               "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
-          name: "Witcher 3",
-          imageLink:
+          title: "Witcher 3",
+          gamePicture:
               "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"),
       Game(
-          id: 2,
+          gameId: 2,
           description:
               "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
-          name: "Witcher 3",
-          imageLink:
+          title: "Witcher 3",
+          gamePicture:
               "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"),
     ];
   }

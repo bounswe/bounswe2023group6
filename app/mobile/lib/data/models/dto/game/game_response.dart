@@ -1,34 +1,42 @@
+import 'package:mobile/data/models/character_model.dart';
 import 'package:mobile/data/models/dto/base_dto_object.dart';
 
 class GameDTOResponse extends BaseDTOObject<GameDTOResponse> {
   int? id;
-  String? name;
+  int? gameId;
+  String? title;
   String? description;
-  String? imageLink;
-  String? releaseYear;
   String? developers;
   String? genre;
-  String? platforms;
-  String? gameModes;
-  String? themes;
-  String? playerPerspective;
-  String? artStyle;
-  String? series;
+  String? platform;
+  List<Character>? characters;
+  String? playerNumber;
+  String? releaseYear;
+  String? universe;
+  String? mechanics;
+  String? playtime;
+  int? totalRating;
+  int? countRating;
+  double? averageRating;
+  String? creationDate;
+  String? gamePicture;
 
   GameDTOResponse({
-    this.id,
-    this.name,
+    this.gameId,
+    this.title,
     this.description,
-    this.imageLink,
-    this.releaseYear,
-    this.developers,
     this.genre,
-    this.platforms,
-    this.gameModes,
-    this.themes,
-    this.playerPerspective,
-    this.artStyle,
-    this.series,
+    this.platform,
+    this.playerNumber,
+    this.releaseYear,
+    this.universe,
+    this.mechanics,
+    this.playtime,
+    this.totalRating,
+    this.countRating,
+    this.averageRating,
+    this.creationDate,
+    this.gamePicture,
   });
 
   @override
@@ -37,24 +45,39 @@ class GameDTOResponse extends BaseDTOObject<GameDTOResponse> {
 
   factory GameDTOResponse.fromJson(Map<String, dynamic> json) =>
       GameDTOResponse(
-        id: json['id'],
-        name: json['title'],
+        gameId: json['gameId'],
+        title: json['title'],
         description: json['description'],
-        imageLink: json['imageLink'],
-        releaseYear: json['releaseYear'],
-        developers: json['developers'],
         genre: json['genre'],
+        platform: json['platform'],
+        playerNumber: json['playerNumber'],
+        releaseYear: json['releaseYear'],
+        universe: json['universe'],
+        mechanics: json['mechanics'],
+        playtime: json['playtime'],
+        totalRating: json['totalRating'],
+        countRating: json['countRating'],
+        averageRating: json['averageRating'],
+        creationDate: json['creationDate'],
+        gamePicture: json['gamePicture'],
       );
 
   @override
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': name,
+        'gameId': gameId,
+        'title': title,
         'description': description,
-        'imageLink': imageLink,
-        'releaseYear': releaseYear,
-        'developers': developers,
         'genre': genre,
+        'platform': platform,
+        'playerNumber': playerNumber,
+        'universe': universe,
+        'mechanics': mechanics,
+        'playtime': playtime,
+        'totalRating': totalRating,
+        'countRating': countRating,
+        'averageRating': averageRating,
+        'creationDate': creationDate,
+        'gamePicture': gamePicture,
       };
 
   @override

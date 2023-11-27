@@ -35,7 +35,7 @@ class GridViewState extends State {
       context: context,
       builder: (BuildContext context) {
         return AlertWidget(
-          title: gridItem.name,
+          title: gridItem.title,
           content: gridItem.description,
         );
       },
@@ -59,7 +59,7 @@ class GridViewState extends State {
           children: itemList
               .map((data) => GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, "/game", arguments: data.id);
+                    Navigator.pushNamed(context, "/game", arguments: data.gameId);
                     //getGridViewSelectedItem(context, data);
                   },
                   child: GameCard(game: data)))

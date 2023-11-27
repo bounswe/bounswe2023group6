@@ -12,49 +12,48 @@ class GameService {
 
   final BaseNetworkService service = BaseNetworkService();
 
-  static const String _getGames = "/game/games";
+  static const String _getGames = "/game";
   static List<Game> gameList = [
     Game(
-        id: 1,
+        gameId: 1,
         description:
             "The Witcher 3: Wild Hunt, CD Projekt RED tarafından geliştirilen ve yayımlanan aksiyon rol yapma oyunudur. The Witcher serisinin üçüncü oyunu olan yapım, The Witcher 2: Assassins of Kings'in devamı niteliğindedir. Oyun, 19 Mayıs 2015'te Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürülmüştür. Nintendo Switch sürümü 15 Ekim 2019'da yayımlanmıştır. Oyun, 2015 yılında 250'den fazla yılın oyun ödülünü kazanmıştır.",
-        name: "Witcher 3",
-        imageLink:
+        title: "Witcher 3",
+        gamePicture:
             "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
         genre: "Adventure, Role-playing(RPG)",
         developers: "CD Projekt RED",
         releaseYear: "May 19, 2015",
-        platforms:
+        platform:
             " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
-        gameModes: "Single Player",
-        themes: "Fantasy",
-        playerPerspective: "Third-person",
-        artStyle: "Realistic",
-        series: "The Witcher"),
+        playerNumber: "Single Player",
+        universe: "Fantasy",
+        mechanics: "Third-person",
+        ),
     Game(
-      id: 2,
+      gameId: 2,
       description:
           "League of Legends (kısaca LoL), Riot Games tarafından geliştirilen ve yayımlanan video oyunu. Microsoft Windows ve macOS işletim sistemlerinde çalışan oyun, tür olarak MOBA (Çok Oyunculu Çevrimiçi Savaş Arenası) olarak adlandırılmaktadır. 27 Ekim 2009'da piyasaya sürülen oyun, 2012 yılında en çok oynanan oyun unvanını aldı. 2014 yılında 67 milyon, 2016 yılında 100 milyon oyuncuya ulaştı. 2020 yılında 115 milyon oyuncuya ulaştı.",
-      name: "League of Legends",
-      imageLink:
+      title: "League of Legends",
+      gamePicture:
           "https://cdn.ntvspor.net/047bed7cbad44a3dae8bdd7b643ab253.jpg?crop=158,0,782,624&w=800&h=800&mode=crop",
       genre: "MOBA, Role-playing(RPG), Strategy",
       developers: "Riot Games",
       releaseYear: "Oct 27, 2009",
     ),
     Game(
-      id: 3,
+      gameId: 3,
       description:
           "Call of Duty: WWII, Sledgehammer Games tarafından geliştirilen ve Activision tarafından yayımlanan birinci şahıs nişancı türündeki video oyunudur. Oyun, Call of Duty serisinin 14. oyunu olup 3 Kasım 2017 tarihinde Microsoft Windows, PlayStation 4 ve Xbox One için piyasaya sürüldü.",
-      name: "Call of Duty: WWII",
-      imageLink:
+      title: "Call of Duty: WWII",
+      gamePicture:
           "https://upload.wikimedia.org/wikipedia/tr/8/85/Call_of_Duty_WIII_Kapak_Resmi.jpg",
       genre: "Shooter",
       developers: "Sledgehammer Games",
       releaseYear: "Nov 02, 2017",
     ),
     Game(
-      id: 4,
+      gameId: 4,
       description: """ 
 # Celeste
 
@@ -100,19 +99,19 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
 *Note: The information in this wiki page is based on knowledge as of the last update in January 2022, and there may have been additional developments or releases since then.*
 
   """,
-      name: "Celeste",
-      imageLink:
+      title: "Celeste",
+      gamePicture:
           "https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png",
       genre: "Adventure, Indie, Platform",
       developers: "Maddy Makes Games",
       releaseYear: "Jan 25, 2018",
     ),
     Game(
-      id: 5,
+      gameId: 5,
       description:
           "Baldur's Gate 3, Larian Studios tarafından geliştirilen ve Wizards of the Coast tarafından yayınlanan bir rol yapma video oyunudur. Oyun, Dungeons & Dragons 5th edition kurallarına dayanmaktadır. Oyun, 6 Ekim 2020'de Microsoft Windows ve Google Stadia için erken erişimde piyasaya sürüldü.",
-      name: "Baldur's Gate 3",
-      imageLink:
+      title: "Baldur's Gate 3",
+      gamePicture:
           "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png",
       genre:
           "Adventure, Role-playing (RPG), Strategy, Tactical, Turn-based strategy (TBS)",
@@ -120,11 +119,11 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       releaseYear: "Oct 06, 2020",
     ),
     Game(
-      id: 6,
+      gameId: 6,
       description:
           "Ori and the Will of the Wisps, Moon Studios tarafından geliştirilen ve Xbox Game Studios tarafından yayınlanan bir platform oyunudur. Oyun, 11 Mart 2020'de Microsoft Windows ve Xbox One için piyasaya sürüldü. Oyun, 17 Eylül 2020'de Nintendo Switch için piyasaya sürüldü.",
-      name: "Ori and The Will of The Wisps",
-      imageLink:
+      title: "Ori and The Will of The Wisps",
+      gamePicture:
           "https://upload.wikimedia.org/wikipedia/en/9/94/Ori_and_the_Will_of_the_Wisps.jpg",
       genre: "Adventure, Platform",
       developers: "Moon Studios",

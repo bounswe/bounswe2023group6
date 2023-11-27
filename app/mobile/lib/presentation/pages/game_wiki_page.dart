@@ -114,7 +114,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                               Expanded(
                                   child: Column(
                                 children: [
-                                  Text(game.name,
+                                  Text(game.title,
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700)),
@@ -205,7 +205,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 width: 150, // Size of image
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
-                                  image: NetworkImage(game.imageLink),
+                                  image: NetworkImage(game.gamePicture),
                                   fit: BoxFit.fill,
                                 )),
                               ),
@@ -256,7 +256,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w700),
                         ),
-                        if (game.platforms != null)
+                        if (game.platform != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -271,13 +271,13 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.platforms!,
+                                    text: game.platform!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.gameModes != null)
+                        if (game.mechanics != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -292,13 +292,13 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.gameModes!,
+                                    text: game.mechanics!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.themes != null)
+                        if (game.universe != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -313,13 +313,13 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.themes!,
+                                    text: game.universe!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.playerPerspective != null)
+                        if (game.universe != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -334,13 +334,13 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.playerPerspective!,
+                                    text: game.universe!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.artStyle != null)
+                        if (game.universe != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -355,13 +355,13 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.artStyle!,
+                                    text: game.universe!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.series != null)
+                        if (game.universe != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -376,7 +376,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.series!,
+                                    text: game.universe!,
                                   )
                                 ],
                               )),
