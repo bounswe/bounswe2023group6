@@ -17,10 +17,19 @@ import java.util.UUID
 @RequestMapping("/forum/posts")
 class PostController(private val postService: PostService) {
 
+    val sampleUUID: UUID = UUID.fromString("1997004a-6715-45c2-a559-087be232b823")
+
+    // Access-Control-Allow-Origin: *
     @PostMapping
-    @CrossOrigin(origins = ["*"])
-    fun createPost(@CookieValue("SESSIONID") sessionId: UUID, @RequestBody post: CreatePostRequest): ResponseEntity<PostDTO> {
-        val newPost = postService.createPost(sessionId, post)
+    @CrossOrigin(origins = ["http://localhost:3000"], allowCredentials = "true", allowedHeaders = ["*"], exposedHeaders = ["Access-Control-Allow-Origin"])
+//    fun createPost(@CookieValue("SESSIONID") sessionId: UUID, @RequestBody post: CreatePostRequest): ResponseEntity<PostDTO> {
+//        val newPost = postService.createPost(sessionId, post)
+//        val newPostDTO = ConverterDTO.convertToPostDTO(newPost)
+//        return ResponseEntity.ok(newPostDTO)
+//    }
+    fun createPost(@RequestBody post: CreatePostRequest): ResponseEntity<PostDTO> {
+//        val sampleUUID: UUID = UUID.fromString("1997004a-6715-45c2-a559-087be232b823")
+        val newPost = postService.createPost(sampleUUID, post)
         val newPostDTO = ConverterDTO.convertToPostDTO(newPost)
         return ResponseEntity.ok(newPostDTO)
     }

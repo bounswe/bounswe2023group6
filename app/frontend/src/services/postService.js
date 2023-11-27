@@ -8,9 +8,9 @@ export const getAllPosts = () => {
   return axiosInstance.get('/forum/posts');
 };
 
-export const createPost = (postData, sessionId) => {
+export const createPost = (postData) => {
+  console.log(postData);
   return axiosInstance.post('/forum/posts', postData, {
-    headers: { Cookie: `SESSIONID=${sessionId}` },
     withCredentials: true
   });
 };
