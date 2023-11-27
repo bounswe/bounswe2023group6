@@ -4,6 +4,9 @@ import Group from './Group'
 import Navbarx from '../../components/navbar/Navbar'
 import { getAllGames } from '../../services/gameService';
 import React, { useEffect, useState } from 'react';
+import hyrule from './hyrule.jpg';
+import victory_royale from './victory-royale.jpg';
+import rocket_league from './rocket-league.jpg';
 
 
 export default function HomePage() {
@@ -24,19 +27,19 @@ export default function HomePage() {
 
 	const groupData = [
 		{
-			image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
+			image: hyrule,
 			header: '"Looking for a co-op adventure in Hyrule!"',
 			text: "Need a skilled squad for high-intensity chicken dinners! Who's in for some PUBG action? Let's conquer the battleground together! 🍗🔫",
 			players: '4/5'
 		},
 		{
-			image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
+			image: victory_royale,
 			header: '"Searching for squadmates for some intense battle royale action!"',
 			text: "Building forts and taking names! Searching for fellow Fortnite warriors to join my squad. Let's get those Victory Royales! 🏰👑",
 			players: '4/5'
 		},
 		{
-			image: `https://primefaces.org/cdn/primereact/images/product/game-controller.jpg}`,
+			image: rocket_league,
 			header: 'Anyone for Rocket league',
 			text: "Ready to score some goals and pull off epic aerials? Looking for Rocket League teammates who can bring the heat on the field. Let's drive to victory! 🚗⚽",
 			players: '4/5'
