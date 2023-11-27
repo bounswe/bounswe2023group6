@@ -10,8 +10,8 @@ class LoginDTOResponse extends BaseDTOObject<LoginDTOResponse> {
 
   @override
   void validate() {
-    ValidationUtil.validate(
-        message, ValidationPolicy.stringNotEmptyValidation());
+    // ValidationUtil.validate(
+    //     message, ValidationPolicy.stringNotEmptyValidation());
   }
 
   factory LoginDTOResponse.fromJson(Map<String, dynamic> json) =>
