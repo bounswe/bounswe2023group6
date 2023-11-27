@@ -18,7 +18,6 @@ import axios from 'axios';
 
 
 export default function CreatePost() {
-    const api_url = process.env.REACT_APP_API_URL;
     const [open, setOpen] = useState(false);
     const {  handleSubmit } = useForm();
     const [title, setTitle] = useState(false);
@@ -27,7 +26,7 @@ export default function CreatePost() {
     const [category, setCategory] = useState(false);
 
     const axiosInstance = axios.create({
-        baseURL: `http://localhost:8080`,
+        baseURL: `${process.env.REACT_APP_API_URL}`
     });
 
     const handleClickOpen = () => {
@@ -40,15 +39,16 @@ export default function CreatePost() {
     };
 
     const onSubmit = (event) => {
-        const postData = {
-            title: title,
-            content: content,
-            category: category
-        }
 
-        axiosInstance.post(`${api_url}/forum/posts`, {
-            postData
-        })
+        axiosInstance.post('/forum/posts', {
+            title,
+            content,
+            category,
+            tag
+        },
+            {
+                withCredentials: true
+            })
             .then((response) => {
                 console.log(response);
             })
@@ -78,9 +78,9 @@ export default function CreatePost() {
     ];
 
     const categories = [
-        'Guide',
-        'Review',
-        'Discussion'
+        'GUIDE',
+        'REVIEW',
+        'DISCUSSION'
     ]
 
 

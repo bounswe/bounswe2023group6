@@ -83,6 +83,7 @@ const ForumPage = () => {
         <div className='w-full flex justify-center p-4 bg-gray-50 pb-20'>
           <div className='w-4/6 flex flex-col'>
             <h1 className='text-4xl font-bold text-gray-700 text-center'>Forum</h1>
+            <CreatePost/>
             <div className='w-full flex flex-row'>
               <div className='flex flex-col'>
                 {forumPosts.map((post) => (
