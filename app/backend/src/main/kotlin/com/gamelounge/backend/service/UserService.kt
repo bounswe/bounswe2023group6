@@ -8,6 +8,7 @@ import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.model.DTO.CommentDTO
 import com.gamelounge.backend.model.DTO.GameDTO
 import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.UpdateUserRequest
 import com.gamelounge.backend.model.response.GetUserInfoResponse
 import com.gamelounge.backend.repository.GameRepository
@@ -17,6 +18,7 @@ import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToCommentDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToPostDTO
+import com.gamelounge.backend.util.ConverterDTO.convertToUserDTO
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -31,12 +33,12 @@ class UserService(
     private val tagService: TagService
 ) {
 
-    fun getUserBySessionId(sessionId: UUID): User {
+    fun getUserBySessionId(sessionId: UUID): UserDTO {
         val user = sessionRepository.findById(sessionId).map {
             it.user
         }.orElseThrow{SessionNotFoundException("Session not found.")}
 
-        return user
+        return convertToUserDTO(user)
     }
 
     fun getUserInfoByUsername(username: String): GetUserInfoResponse {
