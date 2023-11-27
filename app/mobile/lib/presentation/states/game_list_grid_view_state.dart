@@ -92,12 +92,12 @@ class GridViewState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(children: [
-      Container(
+      /*Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           child: Button(
             onPressed: () => changeMode(),
             label: 'Change GridView Mode To ListView ',
-          )),
+          )),*/
       Expanded(
         child: GridView.count(
           crossAxisCount: countValue,
@@ -106,6 +106,7 @@ class GridViewState extends State {
               .map((data) => GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, "/game", arguments: data.id);
+                    //getGridViewSelectedItem(context, data);
                   },
                   child: GameCard(game: data)))
               .toList(),

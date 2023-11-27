@@ -78,11 +78,35 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(mapOf("errorMessage" to exception.message))
     }
+    @ExceptionHandler(GameNotFoundException::class)
+    fun handleGetNotFoundException(exception: GameNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(CharacterNotFoundException::class)
+    fun handleCharacterNotFoundException(exception: CharacterNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(mapOf("errorMessage" to exception.message))
+    }
     @ExceptionHandler(UnauthorizedPostAccessException::class)
     fun handleUnauthorizedPostAccessException(exception: UnauthorizedPostAccessException): ResponseEntity<Map<String, String?>> {
         logger.info(exception.message)
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(UnauthorizedGameAccessException::class)
+    fun handleUnauthorizedGameAccessException(exception: UnauthorizedGameAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(UnauthorizedCharacterAccessException::class)
+    fun handleUnauthorizedCharacterAccessException(exception: UnauthorizedCharacterAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
     }
     @ExceptionHandler(CommentNotFoundException::class)
     fun handleCommentNotFoundException(exception: CommentNotFoundException): ResponseEntity<Map<String, String?>> {
@@ -102,6 +126,20 @@ class GlobalExceptionHandler {
         logger.info(exception.message)
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(mapOf("errorMessage" to exception.message))
+    }
+
+    @ExceptionHandler(WrongRatingGameException::class)
+    fun handleWrongRatingGameException(exception: WrongRatingGameException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+
+    @ExceptionHandler(DuplicatedRatingGameException::class)
+    fun handleDuplicatedRatingGameException(exception: DuplicatedRatingGameException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
     }
 
 
