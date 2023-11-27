@@ -49,7 +49,7 @@ const comments = [
 
 const PostPage = () => {
     return (
-        <>
+        <>  
           <Navbarx></Navbarx>
           <div className='w-full flex flex-col'>
             <div className='w-full flex justify-center p-4 bg-gray-50 pb-20'>
@@ -63,6 +63,14 @@ const PostPage = () => {
                 {comments.map((comment) => (
                     <CommentCard key={comment.commentId} comment={comment} />
                 ))}
+                <div className='flex flex-row'>
+                  <div className='flex flex-col w-5/6'>
+                    <textarea className='w-full h-24 p-2 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:border-green-400' placeholder='Add a comment...'></textarea>
+                  </div>
+                  <div className='flex flex-col'>
+                    <button className='w-20 h-10 p-2 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500 focus:outline-none'>Send</button>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="bg-gray-400 text-white text-center p-8">
