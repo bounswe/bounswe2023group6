@@ -45,12 +45,13 @@ const GamePage = () => {
 		],
 		gamePicture: 'string'
 	})
+	
 	useEffect(() => {
 		const game = async () => {
 			try {
 				const response = await getGame(gameId)
+				setGames(response.data);
 				console.log(response.data)
-				setGames(response.data.sort((a, b) => a.gameId - b.gameId));
 			} catch (error) {
 				console.error(error)
 			} finally {
