@@ -4,9 +4,9 @@ import upvotelogo from '../upvote.png';
 import downvotelogo from '../downvote.png';
 
 const PostCard = ({ post, onUpvote, onDownvote }) => (  
-  <div key={post.id} className='card compact bg-green-100 text-sky-800 shadow-xl m-2 p-4'>
+  <div key={post.id} className='card compact bg-gray-200 text-gray-800 shadow-xl m-2 p-4'>
     <div className='flex-col'>
-      <h3 className="text-2xl font-bold text-gray-800 link">
+      <h3 className="text-2xl font-bold text-[#b46161] link">
           <a href={`/posts/${post.postId}`}>{post.title}</a>
       </h3>
       <p className='text-gray-700 mb-4'>{post.content}</p>
