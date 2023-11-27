@@ -31,7 +31,7 @@ class GameService {
           "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
       genre: "Adventure, Role-playing(RPG)",
       developers: "CD Projekt RED",
-      releaseYear: "May 19, 2015",
+      releaseYear: 2015,
       platform:
           " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
       playerNumber: "Single Player",
@@ -47,7 +47,7 @@ class GameService {
           "https://cdn.ntvspor.net/047bed7cbad44a3dae8bdd7b643ab253.jpg?crop=158,0,782,624&w=800&h=800&mode=crop",
       genre: "MOBA, Role-playing(RPG), Strategy",
       developers: "Riot Games",
-      releaseYear: "Oct 27, 2009",
+      releaseYear: 2009,
     ),
     Game(
       gameId: 3,
@@ -58,7 +58,7 @@ class GameService {
           "https://upload.wikimedia.org/wikipedia/tr/8/85/Call_of_Duty_WIII_Kapak_Resmi.jpg",
       genre: "Shooter",
       developers: "Sledgehammer Games",
-      releaseYear: "Nov 02, 2017",
+      releaseYear: 2017,
     ),
     Game(
       gameId: 4,
@@ -112,7 +112,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
           "https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png",
       genre: "Adventure, Indie, Platform",
       developers: "Maddy Makes Games",
-      releaseYear: "Jan 25, 2018",
+      releaseYear: 2018,
     ),
     Game(
       gameId: 5,
@@ -124,7 +124,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       genre:
           "Adventure, Role-playing (RPG), Strategy, Tactical, Turn-based strategy (TBS)",
       developers: "Larian Studios",
-      releaseYear: "Oct 06, 2020",
+      releaseYear: 2020,
     ),
     Game(
       gameId: 6,
@@ -135,7 +135,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
           "https://upload.wikimedia.org/wikipedia/en/9/94/Ori_and_the_Will_of_the_Wisps.jpg",
       genre: "Adventure, Platform",
       developers: "Moon Studios",
-      releaseYear: "Mar 10, 2020",
+      releaseYear: 2020,
     ),
   ];
 
@@ -151,9 +151,9 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       MultipleGameAsDTO(),
       'GET',
     );
+
     if (response.success) {
-      List<Game> games =
-          response.responseConverted!.games!.map((e) => e as Game).toList();
+      List<Game> games = response.responseConverted!.games!.map((e) => Game(gameId: e.gameId!, title: e.title!, description: e.description!, gamePicture: e.gamePicture!)).toList();
       return games;
     } else {
       throw Exception('Failed to load games');

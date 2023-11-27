@@ -11,7 +11,7 @@ class GameDTOResponse extends BaseDTOObject<GameDTOResponse> {
   String? platform;
   List<Character>? characters;
   String? playerNumber;
-  String? releaseYear;
+  int? releaseYear;
   String? universe;
   String? mechanics;
   String? playtime;

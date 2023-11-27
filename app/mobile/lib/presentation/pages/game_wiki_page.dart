@@ -129,7 +129,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(game.releaseYear ?? "-",
+                                      child: Text(game.releaseYear as String ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
