@@ -1,5 +1,6 @@
-import 'dart:ffi';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
 import 'package:mobile/data/models/dto/game/game_create_dto_request.dart';
@@ -9,6 +10,8 @@ import 'package:mobile/data/models/dto/game/multiple_game_dto_response.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
+import 'package:mobile/utils/shared_manager.dart';
+import 'package:provider/provider.dart';
 
 class GameService {
   static const String serverUrl = NetworkConstants.BASE_LOCAL_URL;
@@ -173,6 +176,32 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     } else {
       throw Exception('Failed to load game');
     }
+  }
+
+  Future<String> postF(File file) async {
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    if (!manager.checkString(SharedKeys.sessionId)) {
+      throw Exception('Session id is null');
+    }
+    String sessionID = manager.getString(SharedKeys.sessionId);  
+
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+        "image":
+            await MultipartFile.fromFile(file.path, filename:fileName),
+    });
+    Response response = await Dio().post(
+      service.options.baseUrl + "/game", 
+      data: formData,
+      options: Options(
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Cookie': 'SESSIONID=$sessionID'
+        },
+      ),      
+      );
+    return response.data['gameId'];
   }
 
   static Game getGameStatic(int id) {
