@@ -87,47 +87,44 @@ Widget userInformationSection(
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Column(
-        children: [
-          profileImage != ''
-              ? DisplayAvatar(
-                  imageLink: profileImage,
-                  onPressed: () {
-                    // go to profile page
-                    Navigator.pushNamed(context, '/profile',
-                        arguments: username);
-                  },
-                )
-              : IconButton(
-                  onPressed: () {
-                    // go to profile page
-                    Navigator.pushNamed(context, '/profile', arguments: username);
-                  },
-                  icon: const Icon(Icons.account_circle),
+      InkWell(
+        onTap: () {
+          // go to profile page
+          Navigator.pushNamed(context, '/profile', arguments: username);
+        },
+        child: Column(
+          children: [
+            profileImage != ''
+                ? DisplayAvatar(
+                    imageLink: profileImage,
+                    size: 20,
+                  )
+                : const Icon(Icons.account_circle),
+            SizedBox(
+              width: 80,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(username, style: const TextStyle(fontSize: 13)),
                 ),
-          SizedBox(
-            width: 80,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(username, style: const TextStyle(fontSize: 13)),
               ),
             ),
-          ),
-          isContentOfOriginalPoster
-              // Show original poster tag(in a colored button) if content is of original poster
-              ? Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Original Poster',
-                        style: TextStyle(
-                            fontSize: 13, color: Theme.of(context).cardColor)),
-                  ),
-                )
-              : Container(),
-        ],
+            isContentOfOriginalPoster
+                // Show original poster tag(in a colored button) if content is of original poster
+                ? Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Original Poster',
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Theme.of(context).cardColor)),
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
       ),
     ],
   );

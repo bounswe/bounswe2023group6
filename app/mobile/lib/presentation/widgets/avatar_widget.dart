@@ -30,16 +30,20 @@ class DisplayAvatar extends StatelessWidget {
       child: CircleAvatar(
         radius: size.toDouble(),
         child: byteData == null
-            ? Icon(
-                Icons.account_circle,
-                color: color,
-                size: 130,
-              )
-            : 
-            imageLink != null ?
-              Image.network(imageLink!, fit: BoxFit.cover,)
-              :
-              ClipRRect(
+            ? imageLink == null 
+              ? Icon(
+                  Icons.account_circle,
+                  color: color,
+                  size: 130,
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(120),
+                  child: Image.network(
+                    imageLink!,
+                    fit: BoxFit.cover,
+                  )
+                )
+            : ClipRRect(
                 borderRadius: BorderRadius.circular(120),
                 child: Image.memory(
                   byteData!.buffer.asUint8List(),
