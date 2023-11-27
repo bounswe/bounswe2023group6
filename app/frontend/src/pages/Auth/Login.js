@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const Login = () => {
     const api_url = process.env.REACT_APP_API_URL;
-    console.log(api_url)
+    // console.log(api_url)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -16,25 +16,35 @@ const Login = () => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
-
+    
         const data = {
             username,
             password
         };
-
+    
         try {
             const response = await axios.post(`${api_url}/login`, data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-
+    
             if (response.status === 200) {
+                const setCookieHeader = response.headers['set-cookie'];
+                console.log(response)
+                if (setCookieHeader) {
+                    const sessionIdMatch = setCookieHeader.match(/SESSIONID=([^;]+)/);
+                    if (sessionIdMatch) {
+                        const sessionId = sessionIdMatch[1];
+                        localStorage.setItem('sessionId', sessionId);
+                    }
+                }
+    
                 localStorage.setItem('username', username);
                 const userResponse = await axios.get(`${api_url}/user/${username}`);
                 const userImage = userResponse.data.image;
                 localStorage.setItem('userImage', userImage);
-                
+    
                 navigate('/home');
             }
         } catch (err) {
@@ -43,6 +53,7 @@ const Login = () => {
             setIsLoading(false);
         }
     };
+    
 
     return (
         <div className='bg-gray-200 py-20'>

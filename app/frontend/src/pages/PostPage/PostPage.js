@@ -6,6 +6,8 @@ import 'tailwindcss/tailwind.css';
 import Navbarx from '../../components/navbar/Navbar';
 import PostCard from '../../components/PostCard';
 import CommentCard from '../../components/CommentCard';
+import { createPost } from '../../services/postService'; 
+
 
 
 const post = {
@@ -48,6 +50,21 @@ const comments = [
 ];
 
 const PostPage = () => {
+
+  const handleCreatePost = async () => {
+    try {
+        const postData = {
+            title: "New Post Title",
+            content: "Content of the new post",
+            category: "GUIDE"
+        };
+        const response = await createPost(postData);
+        console.log(response);
+    } catch (error) {
+        console.error("Error creating post:", error);
+    }
+  };
+
     return (
         <>  
           <Navbarx></Navbarx>
@@ -73,6 +90,14 @@ const PostPage = () => {
                 </div>
               </div>
             </div>
+            <div className='flex justify-center mt-4'>
+                  <button 
+                    onClick={handleCreatePost}
+                    className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300'
+                  >
+                    Create New Post
+                  </button>
+                </div>
             <div className="bg-gray-400 text-white text-center p-8">
               <p className="text-m">@2023 Game Lounge, All rights reserved.</p>
             </div>
