@@ -7,7 +7,7 @@ import CommentCard from '../../components/CommentCard';
 import { getPostById, upvotePost, downvotePost } from '../../services/postService';
 import { useParams } from 'react-router-dom';
 import { getAllCommentsForPost, createComment } from '../../services/commentService';
-
+import { upvoteComment, downvoteComment } from '../../services/commentService';
 
 const PostPage = () => {
   const { postId } = useParams();
@@ -42,6 +42,24 @@ const PostPage = () => {
       setPost(response.data);
     } catch (error) {
       console.error("Error downvoting post:", error);
+    }
+  };
+
+  const handleUpvoteComment = async (commentId) => {
+    try {
+      const response = await upvoteComment(commentId);
+      setComments(comments.map(comment => comment.commentId === commentId ? response.data : comment));
+    } catch (error) {
+      console.error("Error upvoting comment:", error);
+    }
+  };
+  
+  const handleDownvoteComment = async (commentId) => {
+    try {
+      const response = await downvoteComment(commentId);
+      setComments(comments.map(comment => comment.commentId === commentId ? response.data : comment));
+    } catch (error) {
+      console.error("Error downvoting comment:", error);
     }
   };
 
@@ -86,7 +104,12 @@ const PostPage = () => {
           )}
           <div className='mt-6'>
             {comments.map((comment) => (
-              <CommentCard key={comment.commentId} comment={comment} />
+              <CommentCard 
+                key={comment.commentId} 
+                comment={comment} 
+                onUpvote={() => handleUpvoteComment(comment.commentId)} 
+                onDownvote={() => handleDownvoteComment(comment.commentId)} 
+              />
             ))}
           </div>
           <textarea 
