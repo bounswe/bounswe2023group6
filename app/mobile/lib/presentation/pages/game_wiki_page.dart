@@ -12,7 +12,6 @@ import 'package:mobile/presentation/widgets/markdown_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 
-
 class GameWiki extends StatefulWidget {
   const GameWiki({super.key});
 
@@ -26,14 +25,14 @@ class _GameWikiState extends State<GameWiki> {
     final int gameId = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       appBar: CustomAppBar(title: "Game Page"),
-      body: GameWikiPage(gameId:  gameId -1 ,),
+      body: GameWikiPage(
+        gameId: gameId,
+      ),
     );
   }
 }
 
-
 class GameWikiPage extends StatefulWidget {
-
   GameWikiPage({super.key, required this.gameId});
 
   final int gameId;
@@ -42,268 +41,480 @@ class GameWikiPage extends StatefulWidget {
   State<GameWikiPage> createState() => _GameWikiPageState();
 }
 
-class _GameWikiPageState extends State<GameWikiPage> with SingleTickerProviderStateMixin{
-  final List<Game> itemList =  GameService.getGameDataList();
+class _GameWikiPageState extends State<GameWikiPage>
+    with SingleTickerProviderStateMixin {
+  final List<Game> similarGameList = GameService.getGameDataList();
   final GameService gameService = GameService();
   final PostService postService = PostService();
-  late List<Post> relatedPosts;
-  late TabController tabController;
 
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    loadGameData(widget.gameId);
-    loadRelatedPosts();
-    setState(() {
-      tabController =  TabController(length: 2, vsync: this);
-    });
-    
-  }
+    // loadGameData(widget.gameId);
+    // loadRelatedPosts();
 
-  late Game game;
-
-  Future<void> loadGameData(int gameId) async {
-    Game gameData = await gameService.getGame(gameId);
     setState(() {
-      game =  gameData;
+      tabController = TabController(length: 2, vsync: this);
     });
   }
 
-  Future<void> loadRelatedPosts() async {
+  // late List<Post> relatedPosts;
+  // late Game game;
+
+  // Future<void> loadGameData(int gameId) async {
+  //   Game gameData = await gameService.getGame(gameId);
+  //   setState(() {
+  //     game =  gameData;
+  //   });
+  // }
+
+  // Future<void> loadRelatedPosts() async {
+  //   List<Post> postList = await postService.getPosts();
+  //   setState(() {
+  //     relatedPosts =  postList;
+  //   });
+  // }
+
+  Future<Game> loadGame(int gameId) async {
+    Game game = await gameService.getGame(gameId);
     List<Post> postList = await postService.getPosts();
-    setState(() {
-      relatedPosts =  postList;
-    });
+    List<Game> similarGames = await gameService.getGames();
+
+    game.relatedPosts = postList;
+    game.similarGameList = similarGames;
+
+    return game;
   }
+
+  bool notNull(Object o) => o != null;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-          children: [
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              child: SizedBox(
-                width: 500 ,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
+    return FutureBuilder(
+        future: loadGame(widget.gameId),
+        builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
+          if (snapshot.hasData) {
+            Game game = snapshot.data!;
+            return ListView(
+              children: [
+                Card(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    child: SizedBox(
+                      width: 500,
+                      child: Column(
+                        children: [
+                          Row(
                             children: [
-                              Text(game.name, style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700)),
-                              const SizedBox( height: 15,),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Release Date: ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600))
+                              Expanded(
+                                  child: Column(
+                                children: [
+                                  Text(game.name,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700)),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("Release Date: ",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600))),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(game.releaseYear ?? "-",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400))),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("Released By:  ",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600))),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(game.developers ?? "-",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400))),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("Genre: ",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600))),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(game.genre ?? "-",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400))),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("Rating: ",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500))),
+                                  const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text("4.5",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400))),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  RatingBar.builder(
+                                    initialRating: 0,
+                                    minRating: 0,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemSize: 30,
+                                    itemCount: 5,
+                                    itemPadding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    onRatingUpdate: (rating) {
+                                      print(rating);
+                                    },
+                                  ),
+                                ],
+                              )),
+                              Container(
+                                height: 200,
+                                width: 150, // Size of image
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                  image: NetworkImage(game.imageLink),
+                                  fit: BoxFit.fill,
+                                )),
                               ),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Jan 25, 2018",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
-                              ),
-                              const SizedBox( height: 10,),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Released By:  ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600))
-                              ),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Maddy Makes Games",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
-                              ),
-                              const SizedBox( height: 10,),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Genre: ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600))
-                              ),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Adventure, Indie, Platform",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
-                              ),
-                              const SizedBox( height: 10,),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("Rating: ",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500))
-                              ),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text("4.5",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w400))
-                              ),
-                              const SizedBox( height: 10,),
-                              RatingBar.builder(
-                                initialRating: 0,
-                                minRating: 0,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemSize: 30,
-                                itemCount: 5,
-                                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                onRatingUpdate: (rating) {
-                                  print(rating);
-                                },
-                              ),
-                        
                             ],
-                          )
-                        ),
-                        Container(
-                          height: 200,
-                          width: 150, // Size of image
-                          decoration:  BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(game.imageLink),
-                              fit: BoxFit.fill,
-                            )
+                          ),
+                        ],
+                      ),
+                    )),
+                SizedBox(
+                  height: 10,
+                ),
+                Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Description",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w700),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: SizedBox(
+                          width: 500,
+                          child: MarkdownBody(
+                            data: game.description,
+                            shrinkWrap: true,
                           ),
                         ),
-                      ],
-                    ),
-                  ]
-                ),
-              )
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              child: Column(
-                children: [
-                  const Text("Description", style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),),
-                  SizedBox(
-                    width: 500 ,
-                    child: MarkdownBody(data: game.description, shrinkWrap: true,),          
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              child: SizedBox(
-                width: 500 ,
-                child: Column(
-                  children: [
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Text("Similar Games",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700, ))
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 20),
-                      height: 195,
-                      child: ListView(
-                        // This next line does the trick.
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          for (var i = 0; i < 6; i++) VerticalGameCard(game: itemList[i]),
-                        ],
-                      ),
-                    ),
-                 ],
-                )
-              ),
-            ),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal:10,vertical: 4),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              
-              child: SizedBox(
-                width: 500 ,
-                //height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    TabBar(
-                      controller: tabController,
-                      tabs: [
-                        Tab(
-                          text: 'Related Posts',
+                ),
+                Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Container(
+                    width: 500,
+                    child: Column(
+                      children: <Widget>[
+                        const Text(
+                          "Additional Information",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w700),
                         ),
-                        Tab(
-                          text: 'Related LFGs',
-                        ),
+                        if (game.platforms != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Platforms: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  TextSpan(
+                                    text: game.platforms!,
+                                  )
+                                ],
+                              )),
+                            ),
+                          ),
+                        if (game.gameModes != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Game Modes: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  TextSpan(
+                                    text: game.gameModes!,
+                                  )
+                                ],
+                              )),
+                            ),
+                          ),
+                        if (game.themes != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Themes: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  TextSpan(
+                                    text: game.themes!,
+                                  )
+                                ],
+                              )),
+                            ),
+                          ),
+                        if (game.playerPerspective != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Player Perspective: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  TextSpan(
+                                    text: game.playerPerspective!,
+                                  )
+                                ],
+                              )),
+                            ),
+                          ),
+                        if (game.artStyle != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Art Style: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  TextSpan(
+                                    text: game.artStyle!,
+                                  )
+                                ],
+                              )),
+                            ),
+                          ),
+                        if (game.series != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Series: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  TextSpan(
+                                    text: game.series!,
+                                  )
+                                ],
+                              )),
+                            ),
+                          ),
                       ],
-                      labelColor: Colors.black,
                     ),
-                    Container(
-                      
-                      child: AutoScaleTabBarView(
-                        controller: tabController,
-                        children: [
-                          Container(
-                      margin: const EdgeInsets.symmetric(vertical: 20),
+                  ),
+                ),
+                Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: SizedBox(
+                      width: 500,
                       child: Column(
-                        // This next line does the trick.
                         children: [
-                          for (var i = 0; i < relatedPosts.length; i++) PostCard(post: relatedPosts[i]),
+                          const Align(
+                              alignment: Alignment.center,
+                              child: Text("Similar Games",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ))),
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 20),
+                            height: 195,
+                            child: ListView(
+                              // This next line does the trick.
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                for (var i = 0; i < 6; i++)
+                                  VerticalGameCard(
+                                      game: game.similarGameList[i]),
+                              ],
+                            ),
+                          ),
                         ],
-                      ),
-                        ),
-                        const Column(
-                          children: [
-                            SizedBox(height: 25,),
-                            Center(child: Text("Nothing to show",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500, ))),  
-                            SizedBox(height: 25,),
-                          ],
-                        )
-                          
-                        ]
-                      ),
-                    ),
-                 ],
-                )
-              ),
-            ),
-          ],
-        );
+                      )),
+                ),
+                Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: SizedBox(
+                      width: 500,
+                      //height: MediaQuery.of(context).size.height,
+                      child: Column(
+                        children: [
+                          TabBar(
+                            controller: tabController,
+                            tabs: [
+                              Tab(
+                                text: 'Related Posts',
+                              ),
+                              Tab(
+                                text: 'Related LFGs',
+                              ),
+                            ],
+                            labelColor: Colors.black,
+                          ),
+                          Container(
+                            child: AutoScaleTabBarView(
+                                controller: tabController,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: Column(
+                                      // This next line does the trick.
+                                      children: [
+                                        for (var i = 0;
+                                            i < game.relatedPosts.length;
+                                            i++)
+                                          PostCard(post: game.relatedPosts[i]),
+                                      ],
+                                    ),
+                                  ),
+                                  const Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 25,
+                                      ),
+                                      Center(
+                                          child: Text("Nothing to show",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ))),
+                                      SizedBox(
+                                        height: 25,
+                                      ),
+                                    ],
+                                  )
+                                ]),
+                          ),
+                        ],
+                      )),
+                ),
+              ],
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }
 
 class VerticalGameCard extends StatelessWidget {
   final Game game;
 
-  const VerticalGameCard({
-    super.key,
-    required this.game
-  });
+  const VerticalGameCard({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          "/game",
-          arguments: game.id
-        );
+        Navigator.pushNamed(context, "/game", arguments: game.id);
       },
       child: SizedBox(
         width: 130,
-        child: Column(
-          children: [
-            Container(
-              height: 160,
-              width: 120,
-              decoration: BoxDecoration(
+        child: Column(children: [
+          Container(
+            height: 160,
+            width: 120,
+            decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(game.imageLink),
-                  fit: BoxFit.fill,
-                )
-              ),
-            ),
-            Text(game.name, maxLines: 3,),
-          ]
-        ),
+              image: NetworkImage(game.imageLink),
+              fit: BoxFit.fill,
+            )),
+          ),
+          Text(
+            game.name,
+            maxLines: 3,
+          ),
+        ]),
       ),
-
     );
   }
 }

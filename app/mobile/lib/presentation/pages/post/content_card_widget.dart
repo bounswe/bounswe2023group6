@@ -44,17 +44,17 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
     connectedPostState = context.watch<PostState>();
 
     return Card(
-      key: !isPost && !isReply 
-          ? GlobalObjectKey(content.id)
-          : null,
+      key: !isPost && !isReply ? GlobalObjectKey(content.id) : null,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          userInformationSection(context, content.ownerUsername, content.ownerProfileImage, 
-            isContentOfOriginalPoster: content.ownerUsername == connectedPostState.post.ownerUsername),
+          userInformationSection(
+              context, content.ownerUsername, content.ownerProfileImage,
+              isContentOfOriginalPoster: content.ownerUsername ==
+                  connectedPostState.post.ownerUsername),
           contentSection(content,
               parentContent: parentContent, isReply: isReply),
         ]),
@@ -62,7 +62,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
     );
   }
 
-   Widget contentSection(Content content,
+  Widget contentSection(Content content,
       {Content? parentContent, bool isReply = false}) {
     return Flexible(
       child: Column(
@@ -76,12 +76,11 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                     curve: Curves.easeInOut);
               },
               child: Align(
-                alignment: Alignment.topLeft,
-                child: ContentCardWidget(
-                  content: parentContent,
-                  isReply: true,
-                )
-              ),
+                  alignment: Alignment.topLeft,
+                  child: ContentCardWidget(
+                    content: parentContent,
+                    isReply: true,
+                  )),
             ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,7 +116,8 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
   }
 
   Widget contentMoreOptionsSection(Content content) {
-    bool isContentOfCurrentUser = (connectedPostState.currentUser.username == content.ownerUsername);
+    bool isContentOfCurrentUser =
+        (connectedPostState.currentUser.username == content.ownerUsername);
     return PopupMenuButton<ContentMoreOptions>(
       icon: const Icon(Icons.more_vert),
       onSelected: (ContentMoreOptions result) {
@@ -128,11 +128,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
               builder: (BuildContext context) {
                 return updateWidget(context, content: content);
               },
-            ).then((value) => {
-              setState(() {
-
-              })
-            });
+            ).then((value) => {setState(() {})});
             break;
           case ContentMoreOptions.delete:
             content.type == ContentType.post
@@ -149,7 +145,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                       child: const Text("OK"),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        connectedPostState.deleteContent(content);                        
+                        connectedPostState.deleteContent(content);
                       },
                     ),
                   ],
@@ -172,17 +168,17 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
       },
       itemBuilder: (BuildContext context) =>
           <PopupMenuEntry<ContentMoreOptions>>[
-        // if (isContentOfCurrentUser)
-        const PopupMenuItem<ContentMoreOptions>(
-          value: ContentMoreOptions.edit,
-          child: Text('Edit'),
-        ),
-        // if (isContentOfCurrentUser)
-        const PopupMenuItem<ContentMoreOptions>(
-          value: ContentMoreOptions.delete,
-          child: Text('Delete'),
-        ),
-        // if (!isContentOfCurrentUser)
+        if (isContentOfCurrentUser)
+          const PopupMenuItem<ContentMoreOptions>(
+            value: ContentMoreOptions.edit,
+            child: Text('Edit'),
+          ),
+        if (isContentOfCurrentUser)
+          const PopupMenuItem<ContentMoreOptions>(
+            value: ContentMoreOptions.delete,
+            child: Text('Delete'),
+          ),
+        if (!isContentOfCurrentUser)
           const PopupMenuItem<ContentMoreOptions>(
             value: ContentMoreOptions.report,
             child: Text('Report'),
@@ -196,22 +192,37 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
   }
 
   Widget contentSocialSection(Content content) {
+    bool isLikedByCurrentUser = content.likeIds.contains(connectedPostState.currentUser.userId);
+    bool isDislikedByCurrentUser = content.dislikeIds.contains(connectedPostState.currentUser.userId);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.thumb_up_alt_rounded),
+              icon: Icon(
+                isLikedByCurrentUser
+                    ? Icons.thumb_up_alt_rounded
+                    : Icons.thumb_up_alt_outlined,
+                color: isLikedByCurrentUser ? Colors.blue : Colors.black,
+              ),
               onPressed: () {
                 if (content.type == ContentType.post) {
                   postService.upvotePost(content.id);
                 } else {
                   postService.upvoteComment(content.id);
                 }
-                setState(() {
-                  widget.content.likes++;                    
-                });                
+                if (isLikedByCurrentUser) {
+                  setState(() {
+                    widget.content.likes--;
+                    widget.content.likeIds.remove(connectedPostState.currentUser.userId);
+                  });
+                } else {
+                  setState(() {
+                    widget.content.likes++;
+                    widget.content.likeIds.add(connectedPostState.currentUser.userId);
+                  });
+                }
               },
             ),
             const SizedBox(
@@ -223,16 +234,29 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
         Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.thumb_down_alt_rounded),
+              icon: Icon(
+                isDislikedByCurrentUser
+                    ? Icons.thumb_down_alt_rounded
+                    : Icons.thumb_down_alt_outlined,
+                color: isDislikedByCurrentUser ? Colors.blue : Colors.black,
+              ),
               onPressed: () {
                 if (content.type == ContentType.post) {
                   postService.downvotePost(content.id);
                 } else {
                   postService.downvoteComment(content.id);
                 }
-                setState(() {
-                  widget.content.dislikes++;                    
-                });                
+                if (isDislikedByCurrentUser) {
+                  setState(() {
+                    widget.content.dislikes--;
+                    widget.content.dislikeIds.remove(connectedPostState.currentUser.userId);
+                  });
+                } else {
+                  setState(() {
+                    widget.content.dislikes++;
+                    widget.content.dislikeIds.add(connectedPostState.currentUser.userId);
+                  });
+                }
               },
             ),
             const SizedBox(

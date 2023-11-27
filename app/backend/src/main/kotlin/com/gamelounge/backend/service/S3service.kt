@@ -34,7 +34,7 @@ class S3Service(
 
         putImageToS3Bucket(s3, image, "game-pictures/$gameId")
 
-        return createProfilePictureURL(gameId)
+        return createGamePicturesURL(gameId)
     }
 
     private fun createS3Client(): S3Client{
