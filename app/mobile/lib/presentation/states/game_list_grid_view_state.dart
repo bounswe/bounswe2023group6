@@ -11,8 +11,14 @@ class GridViewState extends State {
   int countValue = 2;
   int aspectWidth = 2;
   int aspectHeight = 1;
-
+  final GameService gameService = GameService();
   List<Game> itemList = GameService.getGameDataList();
+
+  Future<List<Game>> loadGames() async {
+    List<Game> gameList = await gameService.getGames();
+
+    return gameList;
+  }
 
   changeMode() {
     if (countValue == 2) {
@@ -30,28 +36,37 @@ class GridViewState extends State {
     }
   }
 
-  getGridViewSelectedItem(BuildContext context, Game gridItem) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertWidget(
-          title: gridItem.name,
-          content: gridItem.description,
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [
-      /*Container(
-          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          child: Button(
-            onPressed: () => changeMode(),
-            label: 'Change GridView Mode To ListView ',
-          )),*/
+        body: FutureBuilder(
+            future: Future.wait([loadGames()]),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                List<Game> games = snapshot.data![0];
+                return Column(children: [
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: countValue,
+                      childAspectRatio: (aspectWidth / aspectHeight),
+                      children: games
+                          .map((data) => GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, "/game",
+                                    arguments: data.gameId);
+                              },
+                              child: GameCard(game: data)))
+                          .toList(),
+                    ),
+                  )
+                ]);
+              } else {
+                return const CircularProgressIndicator();
+              }
+            })
+
+        /*Column(children: [
       Expanded(
         child: GridView.count(
           crossAxisCount: countValue,
@@ -59,13 +74,14 @@ class GridViewState extends State {
           children: itemList
               .map((data) => GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, "/game", arguments: data.id);
-                    //getGridViewSelectedItem(context, data);
+                    Navigator.pushNamed(context, "/game",
+                        arguments: data.gameId);
                   },
                   child: GameCard(game: data)))
               .toList(),
         ),
       )
-    ]));
+    ])*/
+        );
   }
 }

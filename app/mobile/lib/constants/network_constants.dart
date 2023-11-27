@@ -6,5 +6,5 @@ class NetworkConstants {
       "https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg";
 
   static bool useMockData = false;
-  static bool useMockGameData = true;
+  static bool useMockGameData = false;
 }

@@ -10,7 +10,7 @@ class VerticalGameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, "/game", arguments: game.id);
+        Navigator.pushNamed(context, "/game", arguments: game.gameId);
       },
       child: SizedBox(
         width: 130,
@@ -20,12 +20,12 @@ class VerticalGameCard extends StatelessWidget {
             width: 120,
             decoration: BoxDecoration(
                 image: DecorationImage(
-              image: NetworkImage(game.imageLink),
+              image: NetworkImage(game.gamePicture),
               fit: BoxFit.fill,
             )),
           ),
           Text(
-            game.name,
+            game.title,
             maxLines: 3,
           ),
         ]),

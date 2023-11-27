@@ -10,7 +10,8 @@ import java.time.Instant
 import java.util.UUID
 
 @Service
-class PasswordResetTokenService(@Autowired private val tokenRepository: PasswordResetTokenRepository) {
+class PasswordResetTokenService(
+    @Autowired private val tokenRepository: PasswordResetTokenRepository) {
 
     fun createToken(user: User): String {
         val token = UUID.randomUUID().toString()
@@ -34,7 +35,7 @@ class PasswordResetTokenService(@Autowired private val tokenRepository: Password
 
     }
 
-    private fun isTokenExpired(passwordResetToken: PasswordResetToken): Boolean {
+    fun isTokenExpired(passwordResetToken: PasswordResetToken): Boolean {
         return Instant.now().isAfter(passwordResetToken.expiryTimestamp)
     }
 
