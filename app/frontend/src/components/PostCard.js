@@ -3,7 +3,7 @@ import React from 'react';
 import upvotelogo from '../upvote.png';
 import downvotelogo from '../downvote.png';
 
-const PostCard = ({ post }) => (  
+const PostCard = ({ post, onUpvote, onDownvote }) => (  
   <div key={post.id} className='card compact bg-green-100 text-sky-800 shadow-xl m-2 p-4'>
     <div className='flex-col'>
       <h3 className="text-2xl font-bold text-gray-800 link">
@@ -25,12 +25,12 @@ const PostCard = ({ post }) => (
           <div className='ml-2 text-[#B46060] font-bold'>{post.creatorUser.username}</div>
         </div>
         <div className='flex'>
-          <div className='mr-12'>{post.totalComments} Comments </div>
-          <button className='w-6 h-6'>
+          <div className='mr-12'>{post.totalComments} Comments</div>
+          <button onClick={() => onUpvote()} className='w-6 h-6'>
             <img src={upvotelogo} alt='Thumbs Up'/>
           </button>
           <p className='text-black ml-1 mr-4'>{post.upvotes}</p>
-          <button className='w-6 h-6'>
+          <button onClick={() => onDownvote()} className='w-6 h-6'>
             <img src={downvotelogo} alt='Thumbs Down'/>
           </button>
           <p className='text-black ml-1'>{post.downvotes}</p>
