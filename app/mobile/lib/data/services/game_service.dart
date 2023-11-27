@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
 import 'package:mobile/data/models/dto/game/game_create_dto_request.dart';
@@ -192,6 +194,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       String? genre,
       String? platform,
       String numberOfPlayer,
+      String mechanics,
       int year,
       String? universe,
       String playTime,
@@ -211,6 +214,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
         numberOfPlayer: numberOfPlayer,
         year: year,
         universe: universe,
+        mechanics: mechanics,
         playtime: playTime);
 
     final SharedManager manager = SharedManager();
@@ -222,10 +226,15 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
 
     String fileName = file!.path.split('/').last;
     FormData formData = FormData.fromMap({
-      "request": gameCreateDTORequest.toJson(),
+     "request": await MultipartFile.fromString(
+      jsonEncode(gameCreateDTORequest.toJson()),
+      contentType: MediaType.parse('application/json'),
+    ),
       "image": await MultipartFile.fromFile(file.path, filename: fileName),
-    });
-
+    },
+    ListFormat.multiCompatible,
+    );
+    
     Response response = await Dio().post(
       service.options.baseUrl + "/game",
       data: formData,

@@ -10,6 +10,8 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
   int year;
   String? universe;
   String playtime;
+  String mechanics;
+
 
   GameCreateDTORequest({
     required this.title,
@@ -20,6 +22,7 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
     required this.year,
     required this.universe,
     required this.playtime,
+    required this.mechanics,
   });
 
   @override
@@ -39,6 +42,7 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
         year: json["releaseYear"],
         universe: json["universe"],
         playtime: json["playtime"],
+        mechanics: json["mechanics"]
       );
 
   @override
@@ -49,8 +53,12 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
         "platform": platform,
         "playerNumber": numberOfPlayer,
         "releaseYear": year,
+        "mechanics": mechanics,
         "universe": universe,
         "playtime": playtime,
+        "totalRating": 0,
+        "countRating": 0,
+        "averageRating": 0,
       };
 
   @override

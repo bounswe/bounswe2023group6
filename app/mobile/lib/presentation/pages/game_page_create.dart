@@ -252,6 +252,7 @@ class _GameCreatePageState extends State<GamePageCreate> {
                       _selectedGenre,
                       _selectedPlatform,
                       _playerNumberController.text,
+                      _mechanicsController.text,
                       int.parse(_releaseYearController.text),
                       _selectedUniverse,
                       _playTimeController.text,
