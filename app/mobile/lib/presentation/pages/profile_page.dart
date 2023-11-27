@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/constants/text_constants.dart';
@@ -10,6 +12,9 @@ import 'package:mobile/presentation/widgets/avatar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -17,6 +22,8 @@ class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
+
+
 
 class _ProfilePageState extends State<ProfilePage> {
   final UserService userService = UserService();
@@ -27,6 +34,31 @@ class _ProfilePageState extends State<ProfilePage> {
   bool pageInitialized = false;
   bool isProfileOfCurrentUser = false;
   bool isEditingAboutMe = false;
+
+Future<void> pickProfileImage() async {
+  final ImagePicker picker = ImagePicker();
+  final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+  if (pickedFile != null) {
+    final Uint8List imageData = await pickedFile.readAsBytes();
+    setState(() {
+      // Update the profile image in the User model
+      currentUser.profileImage = ByteData.view(imageData.buffer);
+      profileUser.profileImage = ByteData.view(imageData.buffer);
+
+      // Convert imageData to a base64 string (or any format your backend requires)
+      // For example, here we convert it to a base64 string
+      String base64Image = base64Encode(imageData);
+      currentUser.profilePicture = base64Image;
+      profileUser.profilePicture = base64Image;
+    });
+
+    // Upload the new image to the backend using UserService
+    await userService.updateUser(currentUser);
+  }
+}
+
+
 
   Future<void> loadUser(String profileUsername) async {
     if (pageInitialized) {
@@ -77,12 +109,10 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             DisplayAvatar(
-                byteData: user.profileImage, 
-                onPressed: isProfileOfCurrentUser 
-                  ? () {}
-                  : null, 
-                size: 50
-              ),
+  byteData: user.profileImage, 
+  onPressed: isProfileOfCurrentUser ? pickProfileImage : null,
+  size: 50,
+),
             Text(
               user.name ?? 'Name',
               style: const TextStyle(fontSize: 15),
@@ -211,28 +241,31 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
 
-  Widget buildEditIcon(Color color, VoidCallback onPressed, [Color? background]) {
-    return CircleAvatar(
-      backgroundColor: background,
-      child: IconButton(
-        icon: Icon(
-          isEditingAboutMe ? Icons.check : Icons.edit,
-          color: color,
-          size: 15,
-        ),
-        onPressed: () {
-          setState(() {
-            isEditingAboutMe = !isEditingAboutMe;
-            if (!isEditingAboutMe) {
-              profileUser.about = aboutMeController.text;
-              // Add logic to save the updated about text in your database or backend if necessary
-            } else {
-              aboutMeController.text = profileUser.about ?? '';
-            }
-          });
-          onPressed();
-        },
+Widget buildEditIcon(Color color, VoidCallback onPressed, [Color? background]) {
+  return CircleAvatar(
+    backgroundColor: background,
+    child: IconButton(
+      icon: Icon(
+        isEditingAboutMe ? Icons.check : Icons.edit,
+        color: color,
+        size: 15,
       ),
-    );
-  }
+      onPressed: () async {
+        if (isEditingAboutMe) {
+          // When finishing editing, update the user's about field
+          profileUser.about = aboutMeController.text;
+          bool updateResult = await userService.updateUser(profileUser);
+          if (!updateResult) {
+            // Handle update failure (e.g., show an error message)
+          }
+        }
+        setState(() {
+          isEditingAboutMe = !isEditingAboutMe;
+        });
+        onPressed();
+      },
+    ),
+  );
+}
+
 }
