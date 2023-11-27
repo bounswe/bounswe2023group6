@@ -1,11 +1,13 @@
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/models/dto/content/comment_create_dto_request.dart';
 import 'package:mobile/data/models/dto/content/multiple_content_dto_response.dart';
 import 'package:mobile/data/models/dto/content/post_create_dto_request.dart';
 import 'package:mobile/data/models/dto/content/post_report_dto_request.dart';
 import 'package:mobile/data/models/dto/content/single_content_dto_response.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
+import 'package:mobile/data/models/dto/user/multiple_user_as_dto.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
@@ -30,6 +32,8 @@ class PostService {
   static const String _reportPost = "/forum/posts/{id}/report";
   static const String _upvotePost = "/forum/posts/{id}/upvote";
   static const String _downvotePost = "/forum/posts/{id}/downvote";
+  static const String _getLikedUsersForPost = "/forum/posts/{id}/upvoteUsers";
+  static const String _getDislikedUsersForPost = "/forum/posts/{id}/downvoteUsers";
 
   static const String _getComments = "/comments/post/{id}";
   static const String _createComment = "/comments/post/{id}";
@@ -38,6 +42,8 @@ class PostService {
   static const String _reportComment = "/comments/{id}/report";
   static const String _upvoteComment = "/comments/{id}/upvote";
   static const String _downvoteComment = "/comments/{id}/downvote";
+  static const String _getLikedUsersForComment = "/comments/{id}/upvotedUsers";
+  static const String _getDislikedUsersForComment = "/comments/{id}/downvotedUsers";
 
   Future<List<Post>> getPosts() async {
     if (NetworkConstants.useMockData) {
@@ -304,6 +310,50 @@ class PostService {
     }
   }
 
+  Future<List<int>> getLikedUsersForPost(int postId) async {
+    if (NetworkConstants.useMockData) {
+      return [1, 2, 3];
+    }
+
+    ServiceResponse<MultipleUserAsDTO> response = await service
+        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+      _getLikedUsersForPost.replaceFirst('{id}', postId.toString()),
+      null,
+      MultipleUserAsDTO(),
+      'GET',
+    );
+    if (response.success) {
+      List<int> userIds = response.responseConverted!.users!
+          .map((e) => e.user!.userId)
+          .toList();
+      return userIds;
+    } else {
+      throw Exception('Failed to load liked users for post');
+    }
+  }
+
+  Future<List<int>> getDislikedUsersForPost(int postId) async {
+    if (NetworkConstants.useMockData) {
+      return [4, 5, 6];
+    }
+
+    ServiceResponse<MultipleUserAsDTO> response = await service
+        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+      _getDislikedUsersForPost.replaceFirst('{id}', postId.toString()),
+      null,
+      MultipleUserAsDTO(),
+      'GET',
+    );
+    if (response.success) {
+      List<int> userIds = response.responseConverted!.users!
+          .map((e) => e.user!.userId)
+          .toList();
+      return userIds;
+    } else {
+      throw Exception('Failed to load disliked users for post');
+    }
+  }
+
   Future<List<Comment>> getComments(int relatedPostId) async {
     if (NetworkConstants.useMockData) {
       return [
@@ -358,7 +408,7 @@ class PostService {
     }
   }
 
-  Future<Comment> createComment(int relatedPostId, String commentContent) async {
+  Future<Comment> createComment(int relatedPostId, String commentContent, int? parentContentId) async {
     if (NetworkConstants.useMockData) {
       return Comment(
         id: 1,
@@ -372,13 +422,12 @@ class PostService {
       );
     }
 
-    PostCreateDTORequest commentAsContent = PostCreateDTORequest(
-      title: "title", 
+    CommentCreateDTORequest commentAsContent = CommentCreateDTORequest(
       content: commentContent, 
-      category: "DISCUSSION"
+      parentContentId: parentContentId
     );
     ServiceResponse<SingleContentDTO> response =
-        await service.sendRequestSafe<PostCreateDTORequest, SingleContentDTO>(
+        await service.sendRequestSafe<CommentCreateDTORequest, SingleContentDTO>(
       _createComment.replaceFirst('{id}', relatedPostId.toString()),
       commentAsContent,
       SingleContentDTO(),
@@ -490,6 +539,50 @@ class PostService {
       return true;
     } else {
       throw Exception('Failed to downvote comment');
+    }
+  }
+
+  Future<List<int>> getLikedUsersForComment(int commentId) async {
+    if (NetworkConstants.useMockData) {
+      return [1, 2, 3];
+    }
+
+    ServiceResponse<MultipleUserAsDTO> response = await service
+        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+      _getLikedUsersForComment.replaceFirst('{id}', commentId.toString()),
+      null,
+      MultipleUserAsDTO(),
+      'GET',
+    );
+    if (response.success) {
+      List<int> userIds = response.responseConverted!.users!
+          .map((e) => e.user!.userId)
+          .toList();
+      return userIds;
+    } else {
+      throw Exception('Failed to load liked users for comment');
+    }
+  }
+
+  Future<List<int>> getDislikedUsersForComment(int commentId) async {
+    if (NetworkConstants.useMockData) {
+      return [4, 5, 6];
+    }
+
+    ServiceResponse<MultipleUserAsDTO> response = await service
+        .sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+      _getDislikedUsersForComment.replaceFirst('{id}', commentId.toString()),
+      null,
+      MultipleUserAsDTO(),
+      'GET',
+    );
+    if (response.success) {
+      List<int> userIds = response.responseConverted!.users!
+          .map((e) => e.user!.userId)
+          .toList();
+      return userIds;
+    } else {
+      throw Exception('Failed to load disliked users for comment');
     }
   }
 }

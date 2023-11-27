@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/constants/text_constants.dart';
 import 'package:mobile/data/models/user_model.dart';
-import 'package:mobile/data/services/user_authentication_service.dart';
+import 'package:mobile/data/services/user_service.dart';
+import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/avatar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,54 +19,68 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final UserAuthenticationService authService = UserAuthenticationService();
+  final UserService userService = UserService();
 
-  Future<User?> loadUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  late User currentUser;
+  late User profileUser;
+  bool pageInitialized = false;
+  bool isProfileOfCurrentUser = false;
 
-    if (prefs.getString('username') == null) {
-      return null;
+  Future<void> loadUser(String profileUsername) async {
+    if (pageInitialized) {
+      return;
     }
+    final SharedManager manager = SharedManager();
+    await manager.init();
+    User currentUserLocal = CacheManager(manager).getUser();
 
-    User user =
-        (await authService.getCurrentUser(prefs.getString('username')))!;
-    await authService.getUserDetails(user);
+    User profileUserLocal;
+    if (currentUserLocal.username == profileUsername) {
+      profileUserLocal = currentUserLocal;
+      isProfileOfCurrentUser = true;
+    } else {
+      profileUserLocal = (await userService.getUser(profileUsername));
+    }
+    await userService.getUserDetails(profileUserLocal);
 
-    return user;
+    setState(() {
+      currentUser = currentUserLocal;
+      profileUser = profileUserLocal;
+    });
+
+    pageInitialized = true;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: loadUser(),
-        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+        future: loadUser(ModalRoute.of(context)!.settings.arguments as String),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           switch (snapshot.connectionState) {
-            case ConnectionState.none:
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
             default:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                if (snapshot.hasData) {
-                  User user = snapshot.data!;
-                  return buildProfilePage(user);
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                return buildProfilePage(currentUser);
               }
           }
         });
   }
-}
 
-Widget buildProfilePage(User user) => Scaffold(
+  Widget buildProfilePage(User user) => Scaffold(
       appBar: CustomAppBar(title: TextConstants.titleText),
       body: SingleChildScrollView(
         child: Column(
           children: [
             DisplayAvatar(
-                byteData: user.profileImage, onPressed: () {}, size: 50),
+                byteData: user.profileImage, 
+                onPressed: isProfileOfCurrentUser 
+                  ? () {}
+                  : null, 
+                size: 50
+              ),
             Text(
               user.name ?? 'Name',
               style: const TextStyle(fontSize: 15),
@@ -120,81 +135,83 @@ Widget buildProfilePage(User user) => Scaffold(
       ),
     );
 
-Widget buildProfileSection(String sectionName, Widget child,
-        [VoidCallback? editCallback]) =>
-    Padding(
-        padding: const EdgeInsets.only(top: 10, bottom: 10),
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.center,
-          children: [
-            Column(
-              children: [
-                Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: ColorConstants.color3,
-                      boxShadow: const [
-                        BoxShadow(color: Colors.grey, spreadRadius: 1),
-                      ],
-                    ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Stack(children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(3, 15, 3, 15),
-                              child: Align(
-                                  alignment: Alignment.topLeft, child: child),
-                            ),
-                            editCallback != null
-                                ? Align(
-                                    alignment: Alignment.topRight,
-                                    child: buildEditIcon(Colors.white,
-                                        editCallback, ColorConstants.color1),
-                                  )
-                                : Container(),
-                          ])
-                        ]))
-              ],
+  Widget buildProfileSection(String sectionName, Widget child,
+          [VoidCallback? editCallback]) =>
+      Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              Column(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: ColorConstants.color3,
+                        boxShadow: const [
+                          BoxShadow(color: Colors.grey, spreadRadius: 1),
+                        ],
+                      ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Stack(children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(3, 15, 3, 15),
+                                child: Align(
+                                    alignment: Alignment.topLeft, child: child),
+                              ),
+                              editCallback != null && isProfileOfCurrentUser
+                                  ? Align(
+                                      alignment: Alignment.topRight,
+                                      child: buildEditIcon(Colors.white,
+                                          editCallback, ColorConstants.color1),
+                                    )
+                                  : Container(),
+                            ])
+                          ]))
+                ],
+              ),
+              Positioned(left: 0, top: -10, child: textAsButton(sectionName)),
+            ],
+          ));
+
+  Widget textAsButton(String text) => TextButton(
+        onPressed: () {},
+        child: Container(
+          width: 150,
+          height: 30,
+          padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: ColorConstants.color2,
+          ),
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
             ),
-            Positioned(left: 0, top: -10, child: textAsButton(sectionName)),
-          ],
-        ));
-
-Widget textAsButton(String text) => TextButton(
-      onPressed: () {},
-      child: Container(
-        width: 150,
-        height: 30,
-        padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom: 5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: ColorConstants.color2,
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
           ),
         ),
-      ),
-    );
+      );
 
-Widget buildEditIcon(Color color, VoidCallback onPressed,
-        [Color? background]) =>
-    CircleAvatar(
-        // radius: 100,
-        backgroundColor: background,
-        child: IconButton(
-          icon: Icon(
-            Icons.edit,
-            color: color,
-            size: 15,
-          ),
-          onPressed: onPressed,
-        ));
+  Widget buildEditIcon(Color color, VoidCallback onPressed,
+          [Color? background]) =>
+      CircleAvatar(
+          // radius: 100,
+          backgroundColor: background,
+          child: IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: color,
+              size: 15,
+            ),
+            onPressed: onPressed,
+          ));
+}

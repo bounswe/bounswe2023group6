@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_authentication_service.dart';
+import 'package:mobile/data/services/user_service.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
 import 'package:mobile/presentation/widgets/avatar_widget.dart';
@@ -67,7 +68,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       return;
     }
 
-    User user = (await authService.getCurrentUser(prefs.getString('username')))!;    
+    User user = (await UserService().getUser(prefs.getString('username')!));    
     setState(() {
       currentuser = user; 
     });
@@ -83,10 +84,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     
       return LoggedDrawer(username: username, pp: DisplayAvatar(byteData: currentuser!.profileImage, onPressed: () {
         // go to profile page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ProfilePage()),
-        );
+        Navigator.pushNamed(context, '/profile', arguments: username);
       }));
 
     }
@@ -145,10 +143,10 @@ class LoggedDrawer extends StatelessWidget {
                   leading: const Icon(Icons.account_circle_outlined),
                   title: const Text('My Profile'),
                   onTap:() {
-                    
                     Navigator.pushNamed(
-                      context,
-                      "/profile",
+                      context, 
+                      '/profile', 
+                      arguments: username
                     );
                   },
                 ),

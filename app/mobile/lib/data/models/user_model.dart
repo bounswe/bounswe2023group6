@@ -5,13 +5,16 @@ import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 
 class User {
-  final String? name;
-  final String? surname;
-  final String? email;
-  final String? password;
-  final String? username;
+  final int userId;
+  final String email;
+  final String username;
 
+  String? name;
+  String? surname;
   String? about;
+  String? title; 
+  String? company;
+
   List<Post> likedPosts = [];
   List<Post> savedPosts = [];
   List<Post> createdPosts = [];
@@ -20,38 +23,43 @@ class User {
   List<Post> blockedPosts = [];
 
   List<Game> likedGames = [];
+  List<Game> createdGames = [];
   List<Game> savedGames = [];
 
   ByteData? profileImage;
+  String profilePicture = '';
 
   User({
-    this.name,
-    this.surname,
-    this.email,
-    this.password,
-    this.username,
-    this.profileImage,
+    required this.userId,
+    required this.email,
+    required this.username,
+    this.profilePicture = '',
+    this.about,
+    this.title,
+    this.company,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'],
-      surname: json['surname'],
+      userId: json['userId'],
       email: json['email'],
-      password: json['password'],
       username: json['username'],
-      profileImage: null,
+      profilePicture: json['profilePicture'] ?? '',
+      about: json['about'],
+      title: json['title'] ?? '',
+      company: json['company'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'surname': surname,
+      'userId': userId,
       'email': email,
-      'password': password,
       'username': username,
-      'image': null,
+      'profilePicture': profilePicture,
+      'about': about,
+      'title': title,
+      'company': company,
     };
   }
 }
