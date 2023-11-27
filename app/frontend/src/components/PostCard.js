@@ -29,7 +29,15 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
           <div className='ml-2 text-[#B46060] font-bold'>{post.creatorUser.username}</div>
         </div>
         <div className='flex'>
-          <div className='mr-12'>{post.totalComments} Comments</div>
+        <div className='flex mr-4'>{post.category}</div>
+        <div className='post-tags'>
+          {post.tags.map((tag, index) => (
+            <span key={index} className='post-tag'>
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className='mr-12'>{post.totalComments} Comments</div>
           <button onClick={() => onUpvote()} className='w-6 h-6'>
             <img src={upvotelogo} alt='Thumbs Up'/>
           </button>

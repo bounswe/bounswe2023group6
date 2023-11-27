@@ -25,7 +25,9 @@ const ForumPage = () => {
       setIsLoading(true);
       try {
         const response = await getAllPosts();
-        setForumPosts(response.data);
+        // setForumPosts(response.data);
+        setForumPosts(response.data.sort((a, b) => a.postId - b.postId));
+        console.log(response.data[0])
       } catch (error) {
         console.error(error);
       } finally {
@@ -120,7 +122,6 @@ const ForumPage = () => {
   //   downvotes: forumPost.downvotes,
   //   totalComments: forumPost.commentCount,
   // }));
-
   return (
     <>
       <Navbarx></Navbarx>

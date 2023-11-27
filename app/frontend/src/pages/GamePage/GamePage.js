@@ -7,6 +7,7 @@ import { getGame, rateGame } from '../../services/gameServise'
 import { useParams } from 'react-router-dom'
 import { getAllGames } from '../../services/gameService'
 import { useNavigate } from 'react-router-dom'
+
 const GamePage = () => {
 	const navigate = useNavigate() // Use useNavigate instead of useHistory
 
@@ -49,7 +50,7 @@ const GamePage = () => {
 			try {
 				const response = await getGame(gameId)
 				console.log(response.data)
-				setGames(response.data)
+				setGames(response.data.sort((a, b) => a.gameId - b.gameId));
 			} catch (error) {
 				console.error(error)
 			} finally {
@@ -95,6 +96,8 @@ const GamePage = () => {
 
 		fetchGames()
 	}, [])
+
+	console.log(game);
 
 	return (
 		<>
