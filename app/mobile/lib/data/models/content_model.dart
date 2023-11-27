@@ -41,6 +41,8 @@ class Content {
   int? relatedGameId;
   String? title; // For post and lfg
 
+  GlobalObjectKey globalKey = GlobalObjectKey(UniqueKey());
+
   Content({
     required this.id,
     required this.content,
@@ -62,8 +64,9 @@ class Content {
     this.views = 0,
     this.parentContentId,
     this.relatedGameId,
+    this.comments = 0,
     this.commentList = const [],
-  }) : comments = commentList.length;
+  });
 
   Future<void> loadContentSocialData() async {
     PostService postService = PostService();
@@ -78,7 +81,8 @@ class Content {
 }
 
 // Content related widgets
-Widget userInformationSection(BuildContext context, String username, String profileImage,
+Widget userInformationSection(
+    BuildContext context, String username, String profileImage,
     {bool isContentOfOriginalPoster = false}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,16 +115,18 @@ Widget userInformationSection(BuildContext context, String username, String prof
               ),
             ),
           ),
-          isContentOfOriginalPoster 
-          // Show original poster tag(in a colored button) if content is of original poster
-            ? Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Original Poster', style: TextStyle(fontSize: 13, color: Theme.of(context).cardColor)),
-                ),
-              ) 
-            : Container(),
+          isContentOfOriginalPoster
+              // Show original poster tag(in a colored button) if content is of original poster
+              ? Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Original Poster',
+                        style: TextStyle(
+                            fontSize: 13, color: Theme.of(context).cardColor)),
+                  ),
+                )
+              : Container(),
         ],
       ),
     ],
