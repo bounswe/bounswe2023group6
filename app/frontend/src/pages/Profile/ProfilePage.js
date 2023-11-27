@@ -38,40 +38,40 @@ const ProfilePage = () => {
             <div className='flex flex-row bg-gray-50 justify-center'>
                 <div className='w-2/3'>
                     <div className='flex flex-col p-5 justify-center items-center'>
-                        <div className="compact text-sky-800 bg-green-100 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl">
+                        <div className="compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl">
                             <div className="flex justify-center items-center w-1/5">
-                                <img src={images.mahmutdemir} className="rounded-full"/>
+                                <img src={images.mahmutdemir} className="rounded-full shadow-xl"/>
                             </div>
                             <div className="flex justify-end w-4/5">
                                 <div className="h-0.7">
-                                    <h1 className="text-3xl mb-2">{user.name}</h1>
-                                    <span className="py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mr-3 mt-2">
+                                    <h1 className="text-3xl text-[#b46161] mb-2">{user.name}</h1>
+                                    <span className="py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mr-3 mt-2 shadow-xl">
                                         {user.title}
                                     </span>
-                                    <span className="py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mt-2">
+                                    <span className="py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mt-2 xhadow-xl">
                                         {user.company}
                                     </span>
                                 </div>
                                 <div className="card-actions flex justify-end items-end">
-                                    <button className="btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0">
+                                    <button className="btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl">
                                         {user.following} following
                                     </button>
-                                    <button className="btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0">
+                                    <button className="btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl">
                                         {user.followers} followers
                                     </button>
                                 </div>
                                 <div className="card-actions justify-end h-0.05 mb-0">
-                                    <button className="btn btn-sm bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 ">
+                                    <button className="btn btn-sm bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl">
                                         <i className="i pi pi-user-edit"/>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div className="compact text-sky-800 bg-green-100 shadow-xl p-8 flex h-1/4 mb-2 rounded-xl">
+                        <div className="compact text-cyan-800 bg-gray-200 shadow-xl p-8 flex h-1/4 mb-2 rounded-xl">
                             <h2 className="flex justify-center items-center text-xl mb-3 mr-3">About Me</h2>
-                            <p>{user.about}</p>
+                            <p className='text-gray-700'>{user.about}</p>
                         </div>
-                        <div className="compact text-sky-800 bg-green-100 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl">
+                        <div className="compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl">
                             <h2 className="flex justify-center items-center text-xl mb-3">Liked Posts</h2>
                             <div className='flex flex-col justify-center items-center ml-12 w-4/5 '>
                                 {postData.map((item, key) => <LikedPosts item={item} key={key} />)}
@@ -80,7 +80,7 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </div>
-            <div className="bg-gray-50 text-gray-700 text-center p-8">
+            <div className="bg-gray-400 text-white text-center p-8">
                 <p className="text-m">@2023 Game Lounge, All rights reserved.</p>
             </div>
         </>

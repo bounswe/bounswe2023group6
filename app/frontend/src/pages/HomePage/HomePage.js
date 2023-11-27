@@ -124,7 +124,11 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
     </div>
-    </>
+    <div className="bg-gray-400 text-white text-center mt-4 p-8">
+      <p className="text-m">@2023 Game Lounge, All rights reserved.</p>
+    </div>
+	</>
   )
 };

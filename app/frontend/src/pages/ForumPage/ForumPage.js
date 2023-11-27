@@ -1,8 +1,5 @@
 import React from 'react';
 import 'tailwindcss/tailwind.css';
-// import userlogo from '../../user.jpg';
-// import upvotelogo from '../../upvote.png';
-// import downvotelogo from '../../downvote.png';
 import Navbarx from '../../components/navbar/Navbar';
 import CreatePost from './CreatePost';
 import PostCard from '../../components/PostCard';
