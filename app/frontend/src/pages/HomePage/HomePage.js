@@ -76,6 +76,7 @@ export default function HomePage() {
   return (
     <>
     <Navbarx></Navbarx>
+    <div className='flex flex-col grow bg-gray-50'>
     <div className='flex flex-row grow bg-gray-50'>
       {/* Make elements flex, these will be in a row */}
       {/* <div className='w-1/5 flex flex-col gap-4'> */}
@@ -105,6 +106,11 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+    </div>
+    <div className="bg-gray-400 text-white text-center mt-4 p-8">
+      <p className="text-m">@2023 Game Lounge, All rights reserved.</p>
+    </div>
     </div>
     </>
   )

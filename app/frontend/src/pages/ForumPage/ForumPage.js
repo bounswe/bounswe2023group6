@@ -1,8 +1,6 @@
 import React from 'react';
 import 'tailwindcss/tailwind.css';
 import userlogo from './user.jpg';
-import upvotelogo from './upvote.png';
-import downvotelogo from './downvote.png';
 import Navbarx from '../../components/navbar/Navbar';
 
 const ForumPage = () => {
@@ -85,13 +83,13 @@ const ForumPage = () => {
             <div className='w-full flex flex-row'>
               <div className='flex flex-col'>
                 {forumPosts.map((post) => (
-                  <div key={post.id} className='card compact bg-green-100 text-sky-800 shadow-xl m-2 p-4'>
+                  <div key={post.id} className='card compact bg-gray-200 text-sky-800 shadow-xl m-2 p-4'>
                     <div className='flex-col'>
-                      <h3 className="text-2xl font-bold text-gray-800">{post.title}</h3>
+                      <h3 className="text-xl font-bold text-gray-700">{post.title}</h3>
                       <p className='text-gray-700 mb-4'>{post.content}</p>
-                      <div className='flex flex-wrap border-b-2 border-gray-200 pb-2 opacity-75 mb-4'>
+                      <div className='flex flex-wrap border-b-2 border-gray-400 pb-2 mb-4'>
                         {post.tags.map((tag, index) => (
-                          <span key={index} className='badge badge-secondary mr-2'>#{tag}</span>
+                          <span key={index} className='badge bg-[#b46161] border-[#b46161] text-gray-100 mr-2'>#{tag}</span>
                         ))}
                       </div>
                       <div className='flex justify-between items-center'>
@@ -101,18 +99,18 @@ const ForumPage = () => {
                               <img src={userlogo} alt='User'/>
                             </div>
                           </div>
-                          <div className='ml-2 text-[#B46060] font-bold'>{post.user}</div>
+                          <div className='ml-2 text-cyan-700 font-bold'>{post.user}</div>
                         </div>
                         <div className='flex'>
-                          <div className='mr-4'>{post.commentCount} Comments </div>
-                          <button className='w-6 h-6'>
-                            <img src={upvotelogo} alt='Thumbs Up'/>
-                          </button>
-                          <p className='text-black ml-1 mr-4'>{post.upvotes}</p>
-                          <button className='w-6 h-6'>
-                            <img src={downvotelogo} alt='Thumbs Down'/>
-                          </button>
-                          <p className='text-black ml-1'>{post.downvotes}</p>
+                          <div className='mr-4 text-gray-700 font-bold'>{post.commentCount} Comments </div>
+                          <button className="btn btn-circle btn-sm bg-gray-700 text-gray-100 hover:bg-gray-500">
+                                                  <i className="i pi pi-thumbs-up" />
+                                              </button>
+                          <p className='text-gray-700 ml-1 mr-4'>{post.upvotes}</p>
+                          <button className="btn btn-circle btn-sm bg-gray-700 text-gray-100 hover:bg-gray-500">
+                                                  <i className="i pi pi-thumbs-down" />
+                                              </button>
+                          <p className='text-gray-700 ml-1'>{post.downvotes}</p>
                         </div>
                       </div>
                     </div>

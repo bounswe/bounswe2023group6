@@ -75,29 +75,29 @@ const Navbarx = () => {
 	}, [])
 
 	return (
-		<Navbar isBordered>
+		<Navbar isBordered className='bg-black'>
 			<NavbarContent justify='start'>
 				<NavbarBrand className='mr-4'>
 					<img src={logo} className='rounded-lg' height='48' width='64' />
 				</NavbarBrand>
 				<NavbarContent className='smx:flex gap-3'>
 					<NavbarItem>
-						<Link color='foreground' href='home'>
+						<Link href='/home' className='text-[#fff4e0]'>
 							Home
 						</Link>
 					</NavbarItem>
-					<NavbarItem isActive>
-						<Link href='/game/fifa' aria-current='page' color='secondary'>
+					<NavbarItem>
+						<Link href='/game/fifa' aria-current='page' className='text-[#fff4e0]'>
 							Game
 						</Link>
 					</NavbarItem>
 					<NavbarItem>
-						<Link href='/forum' aria-current='page' color='secondary'>
+						<Link href='/forum' aria-current='page' className='text-[#fff4e0]'>
 							Forum
 						</Link>
 					</NavbarItem>
 					<NavbarItem>
-						<Link color='foreground' href='#'>
+						<Link href='#' className='text-[#fff4e0]'>
 							Groups
 						</Link>
 					</NavbarItem>
@@ -119,7 +119,7 @@ const Navbarx = () => {
 				/>
 				<Dropdown placement='bottom-end' justify='end'>
 					<DropdownTrigger>
-						<Avatar isBordered as='button' className='transition-transform' color='secondary' name='Jason Hughes' size='sm'>
+						<Avatar isBordered as='button' className='transition-transform bg-[#fff4e0]' name='Jason Hughes' size='sm'>
 							{userImage && <img src={`data:image/png;base64,${userImage}`} alt='User Avatar' />}
 						</Avatar>
 					</DropdownTrigger>
