@@ -119,9 +119,15 @@ const Navbarx = () => {
 				/>
 				<Dropdown placement='bottom-end' justify='end'>
 					<DropdownTrigger>
-						<Avatar isBordered as='button' className='transition-transform bg-[#fff4e0]' name='Jason Hughes' size='sm'>
-							{userImage && <img src={`data:image/png;base64,${userImage}`} alt='User Avatar' />}
-						</Avatar>
+						<Avatar
+							isBordered
+							as='button'
+							className='transition-transform'
+							color='secondary'
+							name='Jason Hughes'
+							size='sm'
+							src={userImage}
+						></Avatar>
 					</DropdownTrigger>
 					<DropdownMenu aria-label='Profile Actions' variant='flat' closeOnSelect={false}>
 						<DropdownItem key='profile' className='h-14 gap-2'>
@@ -146,7 +152,7 @@ const Navbarx = () => {
 							</DropdownItem>
 						) : null}
 
-						<DropdownItem key='settings' closeOnSelect='false'>
+						<DropdownItem key='settings' closeOnSelect='false' onClick={() => navigate('/profile-page')}>
 							My Profile
 						</DropdownItem>
 						<DropdownItem key='team_settings'>Account Settings</DropdownItem>
