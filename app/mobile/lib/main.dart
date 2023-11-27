@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/presentation/pages/forgot_password_page.dart';
 import 'package:mobile/presentation/pages/game_wiki_page.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
+import 'package:mobile/presentation/pages/opening_page.dart';
 import 'package:mobile/presentation/pages/post/post_create_page.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
@@ -9,9 +10,11 @@ import 'presentation/pages/auth_page_demo.dart';
 import 'presentation/pages/registration_page.dart';
 import 'presentation/pages/login_page.dart';
 import 'constants/color_constants.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+
 
 void main() {
-  runApp(const MainApp());
+  runApp(Phoenix(child: const MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -50,9 +53,10 @@ class MainApp extends StatelessWidget {
         ),
       ),
       // Define the initial route (optional)
-      initialRoute: '/',
+      initialRoute: '/opening',
       // Define the routes for your app
       routes: {
+        '/opening': (context) =>  OpeningPage(),
         '/': (context) => const MainScreen(), // Home page
         '/auth': (context) => const AuthPageDemo(),
         '/registration': (context) => RegistrationPage(),
@@ -63,6 +67,7 @@ class MainApp extends StatelessWidget {
         //'/create_post': (context) => const PostCreatePage(),
         //'/game':(context) => const GameWiki()
       },
+
       // Set the CustomAppBar as the app bar for all pages
       builder: (context, child) {
         return Scaffold(
