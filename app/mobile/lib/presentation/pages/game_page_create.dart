@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/game_model.dart';
-import 'package:mobile/data/services/post_service.dart';
+import 'package:mobile/data/services/game_service.dart';
+import 'package:mobile/presentation/widgets/button_widget.dart';
 
 class GamePageCreate extends StatefulWidget {
   const GamePageCreate({Key? key}) : super(key: key);
@@ -11,14 +14,51 @@ class GamePageCreate extends StatefulWidget {
 
 class _GameCreatePageState extends State<GamePageCreate> {
   final _formKey = GlobalKey<FormState>();
-  final _contentController = TextEditingController();
   final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final List<String> _genreList = [
+    "Action-Adventure",
+    "FPS",
+    "MMORPG",
+    "Moba",
+    "Platform",
+    "Sport"
+  ];
+  String? _selectedGenre;
+
+  final List<String> _platformList = [
+    "PlayStation 5",
+    "PlayStation 4",
+    "Nintendo Switch",
+    "PC",
+    "XBOX Series X",
+    "Steam Deck"
+  ];
+  String? _selectedPlatform;
+
+  final _avatarController = TextEditingController();
+  final _playerNumberController = TextEditingController();
+  final _releaseYearController = TextEditingController();
+
+  final List<String> _universeList = [
+    "Middle Earth",
+    "Fantasy",
+    "Postapocalyptic",
+    "Future",
+    "Antic",
+  ];
+  String? _selectedUniverse;
+
+  final _mechanicsController = TextEditingController();
+  final _playTimeController = TextEditingController();
+  final _mapInformationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Game Page"),
+        backgroundColor: ColorConstants.color1,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -29,17 +69,17 @@ class _GameCreatePageState extends State<GamePageCreate> {
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
-                  hintText: "Name",
+                  hintText: "Title",
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter a name";
+                    return "Please enter a title";
                   }
                   return null;
                 },
               ),
               TextFormField(
-                controller: _contentController,
+                controller: _descriptionController,
                 minLines: 3,
                 maxLines: 10,
                 decoration: const InputDecoration(
@@ -53,17 +93,176 @@ class _GameCreatePageState extends State<GamePageCreate> {
                 },
               ),
               const SizedBox(height: 16),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    await PostService().createPost(
-                        _titleController.text, _contentController.text);
-                    Navigator.of(context).pop("create");
-                  }
+              DropdownButtonFormField(
+                value: _selectedGenre,
+                items: _genreList.map((genre) {
+                  return DropdownMenuItem(
+                    value: genre,
+                    child: Text(genre),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGenre = value as String;
+                  });
                 },
-                child: const Text("Create"),
+                decoration: const InputDecoration(
+                  hintText: "Genre",
+                ),
+                validator: (value) {
+                  if (value == null) {
+                    return "Please select a genre";
+                  }
+                  return null;
+                },
               ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField(
+                value: _selectedPlatform,
+                items: _platformList.map((platform) {
+                  return DropdownMenuItem(
+                    value: platform,
+                    child: Text(platform),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedPlatform = value as String;
+                  });
+                },
+                decoration: const InputDecoration(
+                  hintText: "Platform",
+                ),
+                validator: (value) {
+                  if (value == null) {
+                    return "Please select a platform";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _avatarController,
+                minLines: 2,
+                maxLines: 10,
+                decoration: const InputDecoration(
+                  hintText: "Avatar Details",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter details about avatars";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _playerNumberController,
+                decoration: const InputDecoration(
+                  hintText: "Number Of Player",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter number of players";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _releaseYearController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: const InputDecoration(
+                  hintText: "Release Year",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter release year";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField(
+                value: _selectedUniverse,
+                items: _universeList.map((universe) {
+                  return DropdownMenuItem(
+                    value: universe,
+                    child: Text(universe),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedUniverse = value as String;
+                  });
+                },
+                decoration: const InputDecoration(
+                  hintText: "Universe",
+                ),
+                validator: (value) {
+                  if (value == null) {
+                    return "Please select a universe";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _mechanicsController,
+                decoration: const InputDecoration(
+                  hintText: "Mechanics",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter mechanics";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _playTimeController,
+                decoration: const InputDecoration(
+                  hintText: "Play Time",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter play time";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _mapInformationController,
+                minLines: 2,
+                maxLines: 10,
+                decoration: const InputDecoration(
+                  hintText: "Map Information",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter information about map";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              Button(
+                  label: "Create",
+                  onPressed: () async {
+                    /*
+                    if (_formKey.currentState!.validate()) {
+                      GameService.addGame(Game(
+                          id: GameService.getGameDataList().length + 1,
+                          name: _titleController.text,
+                          description: _descriptionController.text,
+                          imageLink: _imageController.text,
+                          genre: _selectedGenre,
+                          developers: _developerController.text,
+                          releaseYear: _yearController.text));
+                      Navigator.of(context).pop("create");
+                    }*/
+                  }),
             ]),
           ),
         ),
