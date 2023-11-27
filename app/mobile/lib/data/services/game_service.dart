@@ -178,7 +178,41 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     }
   }
 
-  Future<String> postF(File file) async {
+  static Game getGameStatic(int id) {
+    return getGameDataList()[id];
+  }
+
+  static List<Game> getGameDataList() {
+    return gameList;
+  }
+
+  Future<void> createGame(
+      String title,
+      String description,
+      String? genre,
+      String? platform,
+      String numberOfPlayer,
+      int year,
+      String? universe,
+      String playTime,
+      File file) async {
+    if (NetworkConstants.useMockData) {
+      gameList.add(Game(
+          gameId: gameList.length + 1,
+          title: title,
+          description: description,
+          gamePicture: ""));
+    } 
+    GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
+      title: title,
+      description: description,
+      genre: genre,
+      platform: platform,
+      numberOfPlayer: numberOfPlayer,
+      year: year,
+      universe: universe,
+      playtime: playTime);
+
     final SharedManager manager = SharedManager();
     await manager.init();
     if (!manager.checkString(SharedKeys.sessionId)) {
@@ -188,9 +222,11 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
 
     String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap({
+        "request": gameCreateDTORequest.toJson(),
         "image":
             await MultipartFile.fromFile(file.path, filename:fileName),
     });
+
     Response response = await Dio().post(
       service.options.baseUrl + "/game", 
       data: formData,
@@ -200,43 +236,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
           'Cookie': 'SESSIONID=$sessionID'
         },
       ),      
-      );
+    );
+    
     return response.data['gameId'];
-  }
-
-  static Game getGameStatic(int id) {
-    return getGameDataList()[id];
-  }
-
-  static List<Game> getGameDataList() {
-    return gameList;
-  }
-
-  static void create(
-      String title,
-      String description,
-      String? genre,
-      String? platform,
-      String numberOfPlayer,
-      int year,
-      String? universe,
-      String playTime) {
-    if (NetworkConstants.useMockData) {
-      gameList.add(Game(
-          gameId: gameList.length + 1,
-          title: title,
-          description: description,
-          gamePicture: ""));
-    } else {
-      GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
-          title: title,
-          description: description,
-          genre: genre,
-          platform: platform,
-          numberOfPlayer: numberOfPlayer,
-          year: year,
-          universe: universe,
-          playtime: playTime);
-    }
   }
 }
