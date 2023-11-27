@@ -69,7 +69,7 @@ class _GameCreatePageState extends State<GamePageCreate> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Game Page"),
-        backgroundColor: ColorConstants.color1,
+        backgroundColor: ColorConstants.color3,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -237,9 +237,9 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
-              ElevatedButton(
+              Button(
                 onPressed: _pickImage,
-                child: Text("Choose Image"),
+                label: "Choose Image",
               ),
               const SizedBox(height: 16),
               Button(

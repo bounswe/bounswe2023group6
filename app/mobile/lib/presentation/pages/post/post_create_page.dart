@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/post_service.dart';
+import 'package:mobile/presentation/widgets/button_widget.dart';
 
 class PostCreatePage extends StatefulWidget {
   const PostCreatePage({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _PostCreatePageState extends State<PostCreatePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Post"),
+        backgroundColor: ColorConstants.color3,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -82,17 +85,15 @@ class _PostCreatePageState extends State<PostCreatePage> {
               ),
               const SizedBox(height: 16),
 
-              ElevatedButton(
+              Button(
+                label: "Create",
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     await PostService().createPost(
-                        _titleController.text, 
-                        _contentController.text
-                      );
+                        _titleController.text, _contentController.text);
                     Navigator.of(context).pop("create");
                   }
                 },
-                child: const Text("Create"),
               ),
             ]),
           ),
