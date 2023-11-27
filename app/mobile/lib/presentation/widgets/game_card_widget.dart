@@ -24,7 +24,7 @@ class GameCard extends StatelessWidget {
                 child: Container(
                   decoration:  BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(game.imageLink),
+                      image: NetworkImage(game.gamePicture),
                       fit: BoxFit.fill,
                     )
                   ),
@@ -35,7 +35,7 @@ class GameCard extends StatelessWidget {
                 child: SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(game.name),
+                    child: Text(game.title),
                   ),
                 )
               ),

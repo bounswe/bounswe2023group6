@@ -11,6 +11,7 @@ import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/markdown_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
+import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
 
 class GameWiki extends StatefulWidget {
   const GameWiki({super.key});
@@ -113,7 +114,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                               Expanded(
                                   child: Column(
                                 children: [
-                                  Text(game.name,
+                                  Text(game.title,
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700)),
@@ -122,31 +123,31 @@ class _GameWikiPageState extends State<GameWikiPage>
                                   ),
                                   const Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text("Release Date: ",
+                                      child: Text("Release Year: ",
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(game.releaseYear ?? "-",
+                                      child: Text(game.releaseYear!.toString() ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  const Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text("Released By:  ",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600))),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(game.developers ?? "-",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400))),
+                                  // const Align(
+                                  //     alignment: Alignment.centerLeft,
+                                  //     child: Text("Released By:  ",
+                                  //         style: TextStyle(
+                                  //             fontSize: 15,
+                                  //             fontWeight: FontWeight.w600))),
+                                  // Align(
+                                  //     alignment: Alignment.centerLeft,
+                                  //     child: Text(game.developers ?? "-",
+                                  //         style: TextStyle(
+                                  //             fontSize: 12,
+                                  //             fontWeight: FontWeight.w400))),
                                   const SizedBox(
                                     height: 10,
                                   ),
@@ -171,9 +172,9 @@ class _GameWikiPageState extends State<GameWikiPage>
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500))),
-                                  const Align(
+                                  Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text("4.5",
+                                      child: Text(game.averageRating.toString(),
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
@@ -204,7 +205,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 width: 150, // Size of image
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
-                                  image: NetworkImage(game.imageLink),
+                                  image: NetworkImage(game.gamePicture),
                                   fit: BoxFit.fill,
                                 )),
                               ),
@@ -255,7 +256,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w700),
                         ),
-                        if (game.platforms != null)
+                        if (game.platform != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -270,13 +271,13 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.platforms!,
+                                    text: game.platform!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.gameModes != null)
+                        if (game.mechanics != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -286,18 +287,18 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Game Modes: ",
+                                    text: "Mechanics: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.gameModes!,
+                                    text: game.mechanics!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.themes != null)
+                        if (game.universe != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -307,18 +308,18 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Themes: ",
+                                    text: "Universe: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.themes!,
+                                    text: game.universe!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.playerPerspective != null)
+                        if (game.playerNumber != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -328,18 +329,18 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Player Perspective: ",
+                                    text: "Player Number: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.playerPerspective!,
+                                    text: game.playerNumber!,
                                   )
                                 ],
                               )),
                             ),
                           ),
-                        if (game.artStyle != null)
+                        if (game.playtime != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -349,33 +350,12 @@ class _GameWikiPageState extends State<GameWikiPage>
                                 style: TextStyle(color: Colors.black),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: "Art Style: ",
+                                    text: "Playtime: ",
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.artStyle!,
-                                  )
-                                ],
-                              )),
-                            ),
-                          ),
-                        if (game.series != null)
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: RichText(
-                                  text: TextSpan(
-                                style: TextStyle(color: Colors.black),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: "Series: ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                  TextSpan(
-                                    text: game.series!,
+                                    text: game.playtime!,
                                   )
                                 ],
                               )),
@@ -408,7 +388,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                               // This next line does the trick.
                               scrollDirection: Axis.horizontal,
                               children: [
-                                for (var i = 0; i < 6; i++)
+                                for (var i = 0; i < game.similarGameList.length; i++)
                                   VerticalGameCard(
                                       game: game.similarGameList[i]),
                               ],
@@ -486,35 +466,35 @@ class _GameWikiPageState extends State<GameWikiPage>
   }
 }
 
-class VerticalGameCard extends StatelessWidget {
-  final Game game;
+// class VerticalGameCard extends StatelessWidget {
+//   final Game game;
 
-  const VerticalGameCard({super.key, required this.game});
+//   const VerticalGameCard({super.key, required this.game});
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, "/game", arguments: game.id);
-      },
-      child: SizedBox(
-        width: 130,
-        child: Column(children: [
-          Container(
-            height: 160,
-            width: 120,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: NetworkImage(game.imageLink),
-              fit: BoxFit.fill,
-            )),
-          ),
-          Text(
-            game.name,
-            maxLines: 3,
-          ),
-        ]),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: () {
+//         Navigator.pushNamed(context, "/game", arguments: game.id);
+//       },
+//       child: SizedBox(
+//         width: 130,
+//         child: Column(children: [
+//           Container(
+//             height: 160,
+//             width: 120,
+//             decoration: BoxDecoration(
+//                 image: DecorationImage(
+//               image: NetworkImage(game.imageLink),
+//               fit: BoxFit.fill,
+//             )),
+//           ),
+//           Text(
+//             game.name,
+//             maxLines: 3,
+//           ),
+//         ]),
+//       ),
+//     );
+//   }
+// }
