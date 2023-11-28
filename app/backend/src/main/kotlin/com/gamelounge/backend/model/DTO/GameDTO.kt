@@ -17,7 +17,7 @@ data class GameDTO(
         var totalRating: Int,
         var countRating: Int,
         var averageRating: Double,
-        var creationDate: Instant = Instant.now(),
+        var creationDate: Instant? = null,
         var tags: List<TagDTO>,
         var gamePicture: String? = null,
 )
