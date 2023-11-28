@@ -66,11 +66,12 @@ class PostPage extends StatelessWidget {
 
   Future<PostState> loadPostData(int postId) async {
     Post post = await postService.getPost(postId);
-    await post.loadContentSocialData();
     List<Comment> commentList = await postService.getComments(post.id);
-    commentList.forEach((element) async {
-      await element.loadContentSocialData();
-    });
+
+    await post.loadContentSocialData();
+    for (var comment in commentList) {
+      await comment.loadContentSocialData();
+    }
     post.commentList = commentList;
 
     return PostState(post);
@@ -85,7 +86,7 @@ class PostPage extends StatelessWidget {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
-            default:
+            case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -94,6 +95,8 @@ class PostPage extends StatelessWidget {
                   child: buildPage(),
                 );
               }
+            default:
+              return const Center(child: CircularProgressIndicator());
           }
         });
   }
@@ -151,7 +154,9 @@ class PostPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  userInformationSection(context, postState.currentUser.username,
+                  userInformationSection(
+                      context,
+                      postState.currentUser.username,
                       postState.currentUser.profilePicture),
                   postState.currentCommentParentId != 0
                       ? Flexible(

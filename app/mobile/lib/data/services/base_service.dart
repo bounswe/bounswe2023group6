@@ -92,7 +92,7 @@ class BaseNetworkService
     await manager.init();
     if (manager.checkString(SharedKeys.sessionId)) {
       String sessionID = manager.getString(SharedKeys.sessionId);
-      
+
       // add sessionid as a cookie to the request header
       customOptions.headers!['Cookie'] = "SESSIONID=$sessionID";
     }
@@ -110,17 +110,16 @@ class BaseNetworkService
 
       final dio.Response<Map<String, dynamic>> responseData =
           dio.Response<Map<String, dynamic>>(
-        requestOptions: response.requestOptions,
-        extra: response.extra,
-        headers: response.headers,
-        isRedirect: response.isRedirect,
-        redirects: response.redirects,
-        statusCode: response.statusCode,
-        statusMessage: response.statusMessage,
-        data: response.data is Map<String, dynamic>
-            ? response.data
-            : <String, dynamic>{"response": response.data}
-      );
+              requestOptions: response.requestOptions,
+              extra: response.extra,
+              headers: response.headers,
+              isRedirect: response.isRedirect,
+              redirects: response.redirects,
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              data: response.data is Map<String, dynamic>
+                  ? response.data
+                  : <String, dynamic>{"response": response.data});
 
       ServiceResponse<DTORes> serviceResponse = ServiceResponse(
         success: true,

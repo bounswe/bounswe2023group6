@@ -1,103 +1,212 @@
-import React from 'react';
-import 'tailwindcss/tailwind.css';
-import logo from '../../logo512.jpg';
-import gamelounge from '../../gamelounge.png'
-// import Sidebar from '../../components/Sidebar';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import 'tailwindcss/tailwind.css'
+import { Link } from 'react-router-dom'
+import Navbarx from '../../components/navbar/Navbar'
+import { useState, useEffect } from 'react'
+import { getGame, rateGame } from '../../services/gameServise'
+import { useParams } from 'react-router-dom'
+import { getAllGames } from '../../services/gameService'
+import { useNavigate } from 'react-router-dom'
 
 const GamePage = () => {
-  return (
-    <>
-      <div className='w-full flex flex-col'>
-        <div className='flex justify-center items-center p-1 bg-black'>
-          <img src={gamelounge} alt='Site Logo' className='h-24' />
-        </div>
-        <div className='flex flex-row grow bg-gray-100'>
-          {/* <div className='w-1/5 flex flex-col gap-4'>
-            <Sidebar />
-          </div> */}
-          <div className='w-full flex justify-center p-8 bg-gray-200 pb-20'>
-            <div className='w-9/10 flex flex-col'>
-              <div className="flex m-4">
-                <p className='text-gray-700'>Page created on: October 15, 2023</p>
-              </div>
-              <div className='w-full flex flex-row'>
-                <div className='w-3/5 flex flex-col'>
-                  <div className='card compact bg-gray-50 text-sky-800 shadow-xl m-2 p-4'>
-                    <div className="flex">
-                      <div className="w-2/5 pr-4">
-                        <img src={logo} alt='Game Cover' className='w-full' />
-                      </div>
-                      <div className="w-3/5">
-                        <h2 className='text-3xl font-bold'>FIFA 23</h2>
-                        <br />
-                        <p className='text-gray-700 text-justify'>
-                          FIFA 23 is one of the most popular football simulation games developed by EA Sports.
-                          It offers an immersive gaming experience with realistic graphics, player mechanics, and stadiums.
-                          The game features various modes including career mode, ultimate team, and volta football,
-                          providing a diverse range of experiences for all football enthusiasts.
-                        </p>
-                        <br />
-                        <p className='text-gray-700 font-bold'>Release Year: 2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='w-full flex flex-row'>
-                    <div className='w-1/2 card compact bg-gray-50 text-sky-800 shadow-xl m-1 p-4'>
-                    <div className='w-full flex flex-row'>
-                      <h2 className='text-xl font-bold'>Rating:</h2>
-                      <p className='text-gray-700 p-1'>4.5/5</p>
-                      <br/>
-                      </div>
-                      <div className="rating">
-                        <input type="radio" name="rating-1" className="mask mask-star" />
-                        <input type="radio" name="rating-1" className="mask mask-star" />
-                        <input type="radio" name="rating-1" className="mask mask-star" checked/>
-                        <input type="radio" name="rating-1" className="mask mask-star" />
-                        <input type="radio" name="rating-1" className="mask mask-star" />
-                      </div>
-                    </div>
-                    <div className='w-1/2 card compact bg-gray-50 text-sky-800 shadow-xl m-1 p-4'>
-                      <h2 className='text-xl font-bold'>Genre:</h2>
-                      <div className='flex flex-wrap'>
-                        <Link to="/genre/football" className='text-blue-500 hover:underline mr-4'>Football</Link>
-                        <Link to="/genre/sports" className='text-blue-500 hover:underline mr-4'>Sports</Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='w-2/5 flex flex-col'>
-                  <div className='h-full card compact bg-gray-50 text-sky-800 shadow-xl m-2 p-4'>
-                    <h2 className='text-2xl font-bold p-1'>Features:</h2>
-                    <p className='text-gray-700 border-b-2 border-gray-400 p-1'>Peer-to-Peer, Multiplayer</p>
-                    <h2 className='text-2xl font-bold p-1'>Platform:</h2>
-                    <p className='text-gray-700 border-b-2 border-gray-400 p-1'>PC, PS4, PS5, Xbox One, Xbox Series X/S</p>
-                    <h2 className='text-2xl font-bold p-1'>Games You May Like:</h2>
-                    <ul className='border-b-2 border-gray-400 p-1'>
-                      <li className='mb-2'>
-                        <Link to="/content/fifa-22" className='text-blue-500 hover:underline'>FIFA 22</Link>
-                      </li>
-                      <li className='mb-2'>
-                        <Link to="/content/uefa-euro-2020" className='text-blue-500 hover:underline'>UEFA Euro 2020</Link>
-                      </li>
-                      <li className='mb-2'>
-                        <Link to="/content/football-manager-2022" className='text-blue-500 hover:underline'>Football Manager 2022</Link>
-                      </li>
-                    </ul>
-                    <h2 className='text-2xl font-bold p-1'>Knowledge Base:</h2>
-                    <p className='text-gray-700 p-1'>Football, EA Sports, Career Mode, Ultimate Team, Volta Football</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-gray-400 text-white text-center p-8">
-          <p className="text-m">@2023 Game Lounge, All rights reserved.</p>
-        </div>
-      </div>
-    </>
-  );
-};
+	const navigate = useNavigate() // Use useNavigate instead of useHistory
 
-export default GamePage;
+	const { gameId } = useParams()
+	console.log(gameId)
+
+	const [game, setGames] = useState({
+		gameId: 0,
+		title: 'string',
+		description: 'string',
+		genre: 'string',
+		platform: 'string',
+		characters: [
+			{
+				characterId: 0,
+				name: 'string',
+				description: 'string',
+				gameID: 0
+			}
+		],
+		playerNumber: 'string',
+		releaseYear: 0,
+		universe: 'string',
+		mechanics: 'string',
+		playtime: 'string',
+		totalRating: 0,
+		countRating: 0,
+		averageRating: 0,
+		creationDate: '2023-11-27T15:17:41.937Z',
+		tags: [
+			{
+				tagId: 0,
+				name: 'string'
+			}
+		],
+		gamePicture: 'string'
+	})
+	
+	useEffect(() => {
+		const game = async () => {
+			try {
+				const response = await getGame(gameId)
+				setGames(response.data);
+				console.log(response.data)
+			} catch (error) {
+				console.error(error)
+			} finally {
+				console.log(game)
+			}
+		}
+		game()
+	}, [gameId])
+
+	const [rating, setRating] = useState(null)
+	const [hasRated, setHasRated] = useState(false)
+
+	const handleRatingChange = (selectedRating) => {
+		setRating(selectedRating)
+	}
+
+	const handleRateGame = async () => {
+		if (!hasRated && rating !== null) {
+			try {
+				await rateGame(gameId, rating) // Assuming gameId is 1, replace with actual gameId if necessary
+				setHasRated(true)
+			} catch (error) {
+				if (error.response && error.response.status === 403) {
+					alert('You cannot vote more than once.')
+				} else {
+					console.error('Error rating game:', error)
+				}
+			}
+		}
+	}
+	const [gamesmyliked, setGamesMyLiked] = useState([])
+	useEffect(() => {
+		const fetchGames = async () => {
+			try {
+				const response = await getAllGames()
+				setGamesMyLiked(response.data.slice(0, 4))
+			} catch (error) {
+				console.error(error)
+			} finally {
+				console.log('all games')
+			}
+		}
+
+		fetchGames()
+	}, [])
+
+	console.log(game);
+
+	return (
+		<>
+			<Navbarx></Navbarx>
+			<div className='w-full flex flex-col'>
+				<div className='flex flex-row grow bg-gray-100'>
+					<div className='w-full flex justify-center p-8 bg-gray-50 pb-20'>
+						<div className='w-9/10 flex flex-col'>
+							<div className='flex m-4'>
+								<p className='text-gray-600 mt-4'>Page created on: October 15, 2023 by @fifaloverr</p>
+							</div>
+							<div className='w-full flex flex-row'>
+								<div className='w-3/5 flex flex-col'>
+									<div className='card compact bg-gray-200 text-cyan-700 shadow-xl m-2 p-4'>
+										<div className='flex'>
+											<div className='w-2/5 pr-4'>
+												<img src={game.gamePicture} alt='Game Cover' className='w-full' />
+											</div>
+											<div className='w-3/5'>
+												<h2 className='text-3xl text-[#b46161] font-bold'>{game.title}</h2>
+												<br />
+												<h2 className='text-xl font-bold'>Description</h2>
+												<p className='text-gray-700 text-justify'>{game.description}</p>
+												<br />
+												<p className='text-gray-700 font-bold'>{game.releaseYear}</p>
+											</div>
+										</div>
+									</div>
+									<div className='w-full flex flex-row'>
+										<div className='w-1/2 card compact bg-gray-200 text-cyan-700 shadow-xl m-1 p-4'>
+											<div className='w-full flex flex-row'>
+												<h2 className='text-xl font-bold'>Rating:</h2>
+												<p className='text-gray-700 p-1'>{game.averageRating}</p>
+												<br />
+											</div>
+											<div className='rating w-full flex flex-row'>
+												{[1, 2, 3, 4, 5].map((value) => (
+													<input
+														key={value}
+														type='radio'
+														name='rating-1'
+														className='mask mask-star'
+														onChange={() => handleRatingChange(value)}
+														checked={value === rating}
+													/>
+												))}
+											</div>
+											<button className='btn btn-primary w-1/2 mt-2 ' onClick={() => handleRateGame()}>
+												Rate Game
+											</button>
+										</div>
+										<div className='w-1/2 card compact bg-gray-200 text-cyan-700 shadow-xl m-1 p-4'>
+											<h2 className='text-xl font-bold'>Genre:</h2>
+											<div className='flex flex-wrap'>
+												<Link to='/genre/football' className='text-gray-700 mr-4'>
+													{game.genre}
+												</Link>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className='w-2/5 flex flex-col'>
+									<div className='h-full card compact bg-gray-200 text-cyan-700 shadow-xl m-2 p-4'>
+										<h2 className='text-xl font-bold p-2'>Features:</h2>
+										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Mechanics: {game.mechanics}</p>
+										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Universe : {game.universe}</p>
+										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Playtime: {game.playtime}</p>
+										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Player number : {game.playerNumber}</p>
+										<h2 className='text-xl font-bold p-2'>Platform:</h2>
+										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>{game.platform}</p>
+										<h2 className='text-xl font-bold p-2'>Game Details:</h2>
+
+										{game.characters.map((character) => (
+											<div key={character.characterId}>
+												<p className='text-gray-700 border-b-2 border-gray-400 p-2'> {character.name}</p>
+												<p className='text-gray-700 border-b-2 border-gray-400 p-2'>{character.description}</p>
+											</div>
+										))}
+									</div>
+								</div>
+								<div className='w-1/5 flex flex-col'>
+									<div className='h-full card compact bg-gray-200 text-cyan-700 shadow-xl m-2 p-4'>
+										<h2 className='text-xl font-bold p-1'>Games You May Like:</h2>
+										{gamesmyliked.map((game) => (
+											<li key={game.id} className='mb-2'>
+												<button
+													onClick={() => {
+														navigate(`/game/${game.gameId}`) // Use navigate for programmatic navigation
+													}}
+													className='text-gray-700 mr-4'
+												>
+													{game.title}
+												</button>
+											</li>
+										))}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className='bg-gray-400 text-white text-center p-8'>
+					<p className='text-m'>@2023 Game Lounge, All rights reserved.</p>
+				</div>
+			</div>
+		</>
+	)
+}
+
+export default GamePage
