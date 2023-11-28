@@ -13,7 +13,7 @@ class BackendApplication {
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
-					.allowedOrigins("http://localhost:3000")
+					.allowedOrigins("http://localhost:3000", "http://game-lounge.com")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowCredentials(true)
 					.allowedHeaders("*")
