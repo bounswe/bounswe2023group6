@@ -90,7 +90,7 @@ The primary source for annotation data will be our internal database. The platfo
 
 - [Ahmet Kudu](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-for-451-Milestone-2-Report-%E2%80%90-Ahmet-Kudu)
 - [Beyzanur Bektan](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-for-451-Milestone-2-Report-%E2%80%90-Beyzanur-Bektan)
-- [Emre Sin](https://github.com/bounswe/bounswe2023group6/wiki/Editing-Individual-Contribution-for-451-Milestone-2-Report-%E2%80%90-Emre-Sin)
+- [Emre Sin](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-Report-for-451-Milestone-2-%E2%80%90-Emre-Sin)
 - [Emre Türker](https://github.com/bounswe/bounswe2023group6/wiki/Emre-T%C3%BCrker-%7C-Individual-Contribution-Report-%E2%80%90-Milestone-2)
 - [Erkam Kavak](https://github.com/bounswe/bounswe2023group6/wiki/Individual-Contribution-for-451-Milestone-2-Report-%E2%80%90-Erkam-Kavak)
 - [Halis Ayberk Erdem](https://github.com/bounswe/bounswe2023group6/wiki/Halis-Ayberk-Erdem-%7C-Individual-Contribution-Page-%E2%80%90-Milestone-2)
