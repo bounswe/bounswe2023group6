@@ -49,6 +49,10 @@ You can see the all priorities depicted as (1) standing for first priority, (2) 
 |[Backend] Update Registration Endpoint |[#404](https://github.com/bounswe/bounswe2023group6/issues/404)| Emre Türker| 28.11.2023 | [#434](https://github.com/bounswe/bounswe2023group6/pull/434) | 3hr| 3hr |
 |[Backend] Implementing Profile Page Related Endpoints |[#403](https://github.com/bounswe/bounswe2023group6/issues/403)| Emre Türker | 28.11.2023 | [#443](https://github.com/bounswe/bounswe2023group6/pull/443) | 3hr| 4hr |
 |[Backend] Gamepage related backend layers |[#393](https://github.com/bounswe/bounswe2023group6/issues/393)| Ahmet Kudu | 28.11.2023 | [#457](https://github.com/bounswe/bounswe2023group6/pull/457) | 3hr| 4hr |
+|Preparing a part of Milestone 2 Report: Adding Generated Unit Test Reports |[#497](https://github.com/bounswe/bounswe2023group6/issues/497)| Emre Sin | 28.11.2023 | - | 3hr| 4hr |
+|[Backend] Refactoring Old Unit Tests and Writing New Unit Tests for the Project  |[#402](https://github.com/bounswe/bounswe2023group6/issues/402)| Emre Sin | 28.11.2023 | [#478](https://github.com/bounswe/bounswe2023group6/pull/478) | 3hr| 4hr |
+|[Backend] Preparing Scripts to Populate Database Entities with Mock Data |[#401](https://github.com/bounswe/bounswe2023group6/issues/401)| Emre Sin | 28.11.2023 | - | 3hr| 4hr |
+
 
 
 
