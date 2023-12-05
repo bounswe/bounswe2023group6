@@ -46,8 +46,8 @@ You can see the all priorities depicted as (1) standing for first priority, (2) 
 |[Backend] Implementing Authentication and Authorization Middlewares |[#407](https://github.com/bounswe/bounswe2023group6/issues/407)| Ömer Bahadıroğlu | 23.11.2023 | [#435](https://github.com/bounswe/bounswe2023group6/pull/435) | 1hr| 1hr |
 |[Backend] Implementation of "Comments" Related Endpoints |[#406](https://github.com/bounswe/bounswe2023group6/issues/406)| Ömer Bahadıroğlu | 23.11.2023 | [#436](https://github.com/bounswe/bounswe2023group6/pull/436) | 3hr| 3hr |
 |[Backend] Implementing Posts (Forum) Related Endpoints |[#405](https://github.com/bounswe/bounswe2023group6/issues/405)| Ömer Bahadıroğlu | 23.11.2023 | [#435](https://github.com/bounswe/bounswe2023group6/pull/435) | 3hr| 3hr |
-|[Backend] Update Registration Endpoint |[#404](https://github.com/bounswe/bounswe2023group6/issues/404)| Emre Türker| 28.11.2023 | - | 3hr| 3hr |
-|[Backend] Implementing Profile Page Related Endpoints |[#403](https://github.com/bounswe/bounswe2023group6/issues/403)| Emre Türker | 28.11.2023 | - | 3hr| 4hr |
+|[Backend] Update Registration Endpoint |[#404](https://github.com/bounswe/bounswe2023group6/issues/404)| Emre Türker| 28.11.2023 | [#434](https://github.com/bounswe/bounswe2023group6/pull/434) | 3hr| 3hr |
+|[Backend] Implementing Profile Page Related Endpoints |[#403](https://github.com/bounswe/bounswe2023group6/issues/403)| Emre Türker | 28.11.2023 | [#443](https://github.com/bounswe/bounswe2023group6/pull/443) | 3hr| 4hr |
 |[Backend] Gamepage related backend layers |[#393](https://github.com/bounswe/bounswe2023group6/issues/393)| Ahmet Kudu | 28.11.2023 | [#457](https://github.com/bounswe/bounswe2023group6/pull/457) | 3hr| 4hr |
 
 
