@@ -33,16 +33,16 @@ You can see the all priorities depicted as (1) standing for first priority, (2) 
 |[Mobile] Post Page Reply Section |[#424](https://github.com/bounswe/bounswe2023group6/issues/424)| Erkam Kavak | 28.11.2023 | - | 3hr| 2hr |
 |[Mobile] Post Page Missing Parts: Tag, Related Game, Original Poster, User Information |[#423](https://github.com/bounswe/bounswe2023group6/issues/423)| Erkam Kavak | 28.11.2023 | - | 2hr| 3hr |
 |[Mobile] Post Page CRUD Operations and Service Connections |[#422](https://github.com/bounswe/bounswe2023group6/issues/422)| Erkam Kavak | 28.11.2023 | - | 3hr| 3hr |
-|[Frontend] Rate the game |[#421](https://github.com/bounswe/bounswe2023group6/issues/421)| Ömer Talip Akalın | 28.11.2023 | - | 4hr| 3hr |
+|[Frontend] Rate the game |[#421](https://github.com/bounswe/bounswe2023group6/issues/421)| Ömer Talip Akalın | 28.11.2023 | [#486](https://github.com/bounswe/bounswe2023group6/pull/486) | 4hr| 3hr |
 |[Frontend] Edit Game Page |[#420](https://github.com/bounswe/bounswe2023group6/issues/420)| Halis Ayberk Erdem | 28.11.2023 | - | 4hr| 3hr |
-|[Frontend] Add game page |[#419](https://github.com/bounswe/bounswe2023group6/issues/419)| Ömer Talip Akalın | 28.11.2023 | - | 4hr| 3hr |
+|[Frontend] Add game page |[#419](https://github.com/bounswe/bounswe2023group6/issues/419)| Ömer Talip Akalın | 28.11.2023 | [#486](https://github.com/bounswe/bounswe2023group6/pull/486) | 4hr| 3hr |
 |[Frontend] Add like/dislike functionality  |[#418](https://github.com/bounswe/bounswe2023group6/issues/418)| Hüseyin Çivi | 28.11.2023 | - | 4hr| 3hr |
 |[Frontend] Comment Addition Functionality |[#417](https://github.com/bounswe/bounswe2023group6/issues/417)| Halis Ayberk Erdem | 28.11.2023 | - | 4hr| 3hr |
 |[Frontend] Edit post page |[#416](https://github.com/bounswe/bounswe2023group6/issues/416)| Ömer Talip Akalın | 28.11.2023 | - | 4hr| 3hr |
-|[Frontend] Add post page popup |[#415](https://github.com/bounswe/bounswe2023group6/issues/415)| Hüseyin Çivi | 28.11.2023 | - | 4hr| 3hr |
-|[Frontend] Improve Forum Page |[#414](https://github.com/bounswe/bounswe2023group6/issues/414)| Ömer Talip Akalın | 28.11.2023 | - | 4hr| 3hr |
+|[Frontend] Add post page popup |[#415](https://github.com/bounswe/bounswe2023group6/issues/415)| Hüseyin Çivi | 28.11.2023 | [#486](https://github.com/bounswe/bounswe2023group6/pull/486) | 4hr| 3hr |
+|[Frontend] Improve Forum Page |[#414](https://github.com/bounswe/bounswe2023group6/issues/414)| Ömer Talip Akalın | 28.11.2023 | [#452](https://github.com/bounswe/bounswe2023group6/pull/452) | 4hr| 3hr |
 |[Frontend] Add create game page |[#413](https://github.com/bounswe/bounswe2023group6/issues/413)| Halis Ayberk Erdem | 28.11.2023 | - | 4hr| 4hr |
-|[Frontend] Integrate profile page |[#411](https://github.com/bounswe/bounswe2023group6/issues/411)| Ömer Talip Akalın | 28.11.2023 | - | 4hr| 3hr |
+|[Frontend] Integrate profile page |[#411](https://github.com/bounswe/bounswe2023group6/issues/411)| Ömer Talip Akalın | 28.11.2023 | [#486](https://github.com/bounswe/bounswe2023group6/pull/486/commits/25dbf33c8d8714c7b057d0ac6d85825795c08780#diff-c1d6abd99918751beae8f519b0ff88dcfe0e3c3cd111fb2e781fcd3a2101d3c6) | 4hr| 3hr |
 |[Backend] Implementing Authentication and Authorization Middlewares |[#407](https://github.com/bounswe/bounswe2023group6/issues/407)| Ömer Bahadıroğlu | 23.11.2023 | [#435](https://github.com/bounswe/bounswe2023group6/pull/435) | 1hr| 1hr |
 |[Backend] Implementation of "Comments" Related Endpoints |[#406](https://github.com/bounswe/bounswe2023group6/issues/406)| Ömer Bahadıroğlu | 23.11.2023 | [#436](https://github.com/bounswe/bounswe2023group6/pull/436) | 3hr| 3hr |
 |[Backend] Implementing Posts (Forum) Related Endpoints |[#405](https://github.com/bounswe/bounswe2023group6/issues/405)| Ömer Bahadıroğlu | 23.11.2023 | [#435](https://github.com/bounswe/bounswe2023group6/pull/435) | 3hr| 3hr |
@@ -69,6 +69,9 @@ You can see the all priorities depicted as (1) standing for first priority, (2) 
 |[Backend] Initialize report and like features, some refactors to backend|[#437](https://github.com/bounswe/bounswe2023group6/issues/437)| Ömer Bahadıroğlu-Emre Türker | 23.11.2023 | [#438](https://github.com/bounswe/bounswe2023group6/pull/438) | 3hr| 3hr |
 |[Backend] Refactor Post and Comments Related Endpoints #441|[#441](https://github.com/bounswe/bounswe2023group6/issues/441)| Ömer Bahadıroğlu | 24.11.2023 | [#445](https://github.com/bounswe/bounswe2023group6/pull/445) | 3hr| 3hr |
 |[Backend] Adding tag feature usage for forum posts #448 |[#448](https://github.com/bounswe/bounswe2023group6/issues/448)| Ömer Bahadıroğlu | 25.11.2023 | [#451](https://github.com/bounswe/bounswe2023group6/pull/451) | 3hr| 3hr |
+|Develop hotfix deploy|-| Ömer Talip Akalin | 24.11.2023 | [#490](https://github.com/bounswe/bounswe2023group6/pull/490) | 1hr| 1hr |
+|Fix .env|-| Ömer Talip Akalin | 24.11.2023 | [#491](https://github.com/bounswe/bounswe2023group6/pull/491) | 1hr| 1hr |
+|Hotfix|-| Ömer Talip Akalin | 24.11.2023 | [#489](https://github.com/bounswe/bounswe2023group6/pull/489) | 1hr| 1hr |
 
 
 
