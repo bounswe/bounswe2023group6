@@ -118,8 +118,8 @@ Widget userInformationSection(
                       alignment: Alignment.centerLeft,
                       child: Text('Original Poster',
                           style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(context).cardColor)),
+                              fontSize: 14,
+                              color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5))),
                     ),
                   )
                 : Container(),
