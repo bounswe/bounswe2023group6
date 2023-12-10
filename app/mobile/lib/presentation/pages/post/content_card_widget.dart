@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/post_model.dart';
@@ -92,8 +94,8 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               content.type == ContentType.post
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
@@ -101,9 +103,15 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
                         ),
-                        Text((content as Post).category.toString().split('.').last,
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w300)),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        // show post category
+                        MaterialButton(
+                          onPressed: () {},
+                          child: Text((content as Post).category.toString().split('.').last.toUpperCase(),
+                              style: const TextStyle(fontSize: 18)),
+                        ),
                       ],
                     )
                   : const SizedBox.shrink(),
@@ -119,7 +127,6 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             alignment: Alignment.topLeft,
             child: Text(content.content, style: const TextStyle(fontSize: 16)),
           ),
-          // Text(post.timeAgo, style: const TextStyle(fontSize: 12,color: Colors.grey),overflow: TextOverflow.ellipsis,maxLines: 1),
           const SizedBox(
             height: 5,
           ),
@@ -227,15 +234,21 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
               children: [
                 // show tags
                 if (content.tags != null)
-                  for (String tag in content.tags!)
+                  for (String tag in content.tags!.sublist(0, min(4, content.tags!.length)))
                     Container(
                       margin: const EdgeInsets.only(right: 5),
                       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).primaryColorLight,
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                          backgroundColor: Theme.of(context).primaryIconTheme.color,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(tag, style: const TextStyle(fontSize: 12)),
                       ),
-                      child: Text(tag, style: const TextStyle(fontSize: 12)),
                     ),
               ],
             ),
