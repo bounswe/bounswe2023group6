@@ -11,16 +11,18 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import com.gamelounge.backend.entity.UserGameRating
+import com.gamelounge.backend.repository.UserGameRatingRepository
 
 @Service
 class GameService(
         private val gameRepository: GameRepository,
+        private val userGameRatingRepository: UserGameRatingRepository,
         private val sessionAuth: SessionAuth,
         private val userRepository: UserRepository,
         val s3Service: S3Service
 ) {
     fun createGame(sessionId: UUID, game: CreateGameRequest, image: MultipartFile?): Game {
-    //fun createGame(sessionId: UUID, game: CreateGameRequest): Game {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val newGame = Game(
@@ -33,8 +35,9 @@ class GameService(
                 universe = game.universe,
                 mechanics = game.mechanics,
                 playtime = game.playtime,
-                user = user,
+                user = user
         )
+        gameRepository.save(newGame) // save to get gameId for image name
         image?.let { saveImageInS3AndImageURLInDBForGame(image, newGame) }
         return gameRepository.save(newGame)
     }
@@ -84,6 +87,15 @@ class GameService(
         return gameRepository.findAll()
     }
 
+    fun getRatedGamesByUser(sessionId: UUID): List<Game> {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        val ratedGames = userGameRatingRepository.findByUser(user)
+                .filter { it.score >= 4 }
+        val ratedGameIds = ratedGames.map { it.game.gameId }
+        return gameRepository.findAllById(ratedGameIds)
+    }
+
     @Transactional
     fun rateGame(sessionId: UUID, gameId: Long, score: Long): Game {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -94,15 +106,20 @@ class GameService(
             throw WrongRatingGameException("Rating interval ranges from 5 to 1 for the game ID: $gameId")
         }
 
-        val alreadyRated = game.ratedUsers.contains(user)
-        if (alreadyRated){
+        //val alreadyRated = game.ratedUsers.contains(user)
+        val alreadyRated = userGameRatingRepository.findByUserAndGame(user, game)
+        if (alreadyRated.isNotEmpty()){
             throw DuplicatedRatingGameException("Not allowed to rate more than once")
         }
-        game.ratedUsers.add(user)
+
+        val userGameRating = UserGameRating(user = user, game = game, score = score.toInt())
+        //game.ratedUsers.add(user)
         game.countRating += 1
         game.totalRating += score.toInt()
         game.averageRating = game.totalRating.toDouble() / game.countRating.toDouble()
 
+        userGameRatingRepository.save(userGameRating)
         return gameRepository.save(game)
     }
+
 }

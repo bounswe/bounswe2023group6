@@ -54,14 +54,12 @@ class Game(
         )
         var tags: List<Tag> = mutableListOf(),
 
-        @ManyToMany
+        /*@ManyToMany
         @JoinTable(
                 name = "user_game_rating",
                 joinColumns = [JoinColumn(name = "gameId")],
                 inverseJoinColumns = [JoinColumn(name = "userId")]
         )
-        var ratedUsers: MutableList<User> = mutableListOf(),
-
-
+        var ratedUsers: MutableList<User> = mutableListOf(),*/
 
         )

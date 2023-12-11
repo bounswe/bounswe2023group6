@@ -63,4 +63,11 @@ class GameController(private val gameService: GameService) {
         val gameDTO = ConverterDTO.convertToGameDTO(game)
         return ResponseEntity.ok(gameDTO)
     }
+
+    @GetMapping("/rated")
+    fun getGamesRatedHighlyByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<GameDTO>> {
+        val games = gameService.getRatedGamesByUser(sessionId)
+        val gameDTO = ConverterDTO.convertBulkToGameDTO(games)
+        return ResponseEntity.ok(gameDTO)
+    }
 }
