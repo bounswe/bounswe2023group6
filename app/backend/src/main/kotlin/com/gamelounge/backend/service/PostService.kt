@@ -2,12 +2,14 @@ package com.gamelounge.backend.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gamelounge.backend.entity.Post
+import com.gamelounge.backend.entity.PostCategory
 import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.exception.PostNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedPostAccessException
 import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
+import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
 import com.gamelounge.backend.model.request.ReportRequest
@@ -26,7 +28,8 @@ class PostService(
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository,
     private val objectMapper: ObjectMapper,
-    private val tagService: TagService
+    private val tagService: TagService,
+    private val gameService: GameService
 ) {
     fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -154,5 +157,16 @@ class PostService(
         val post = getPost(postId)
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedPost = post)
         reportRepository.save(newReport)
+    }
+
+    fun getPostsByGame(gameId: Long): List<PostDTO> {
+        val game = gameService.getGame(gameId)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(game.posts)
+        return postsDTO
+    }
+    fun getPostsByCategory(category: PostCategory): List<PostDTO> {
+        val posts = postRepository.findAllByCategory(category)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(posts)
+        return postsDTO
     }
 }

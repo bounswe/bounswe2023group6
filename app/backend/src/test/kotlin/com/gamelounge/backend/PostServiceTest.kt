@@ -1,24 +1,19 @@
 package com.gamelounge.backend.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.gamelounge.backend.config.CustomProperties
 import com.gamelounge.backend.entity.*
 import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
-import com.gamelounge.backend.model.request.RegisterationRequest
 import com.gamelounge.backend.model.request.UpdatePostRequest
 import com.gamelounge.backend.repository.*
 import com.gamelounge.backend.util.ConverterDTO
-import com.gamelounge.backend.util.HashingUtil.generateHash
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
-import org.springframework.web.multipart.MultipartFile
 import java.util.*
-import kotlin.reflect.KClass
 
 
 class PostServiceTest {
@@ -30,6 +25,7 @@ class PostServiceTest {
     private val objectMapper: ObjectMapper = mock()
     private val tagService: TagService = mock()
     private val converterDto : ConverterDTO = mock()
+    private val gameService: GameService = mock()
 
     private val postService = PostService(
         postRepository,
@@ -37,7 +33,8 @@ class PostServiceTest {
         userRepository,
         reportRepository,
         objectMapper,
-        tagService
+        tagService,
+        gameService
     )
 
     @Test
