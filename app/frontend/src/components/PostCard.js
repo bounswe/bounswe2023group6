@@ -3,9 +3,11 @@ import React from 'react';
 import upvotelogo from '../upvote.png';
 import downvotelogo from '../downvote.png';
 import ReportIcon from "@mui/icons-material/Report";
+import EditPost from '../pages/ForumPage/EditPost';
 
 const PostCard = ({ post, onUpvote, onDownvote }) => (  
   <div key={post.id} className='card compact bg-gray-200 text-gray-800 shadow-xl m-2 p-4'>
+    <EditPost post={post}></EditPost>
     <div className='flex-col'>
       <h3 className="text-2xl font-bold text-[#b46161] link">
           <a href={`/posts/${post.postId}`}>{post.title}</a>
