@@ -16,10 +16,8 @@ class Content {
   final String ownerUsername;
   final String ownerProfileImage;
 
-  // final int userId;
-  // final String username;
   // final List<String>? annotations;
-  // final List<String>? tags;
+  final List<String>? tags;
   // final List<Report> reports;
   // final List<Content>? relatedContent;
   // final List<Content>? relatedGames;
@@ -52,7 +50,7 @@ class Content {
     required this.ownerProfileImage,
     required this.createdDate,
     // this.annotations,
-    // this.tags,
+    this.tags,
     // this.reports,
     // this.relatedContent,
     // this.relatedGames,
@@ -118,8 +116,8 @@ Widget userInformationSection(
                       alignment: Alignment.centerLeft,
                       child: Text('Original Poster',
                           style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(context).cardColor)),
+                              fontSize: 14,
+                              color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5))),
                     ),
                   )
                 : Container(),
