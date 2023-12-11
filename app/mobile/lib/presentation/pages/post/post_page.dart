@@ -22,9 +22,7 @@ class PostState extends ChangeNotifier {
   }
 
   void initState() async {
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    currentUser = CacheManager(manager).getUser();
+    currentUser = CacheManager().getUser();
     super.notifyListeners();
   }
 
