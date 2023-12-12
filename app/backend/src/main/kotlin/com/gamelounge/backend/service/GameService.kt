@@ -1,6 +1,7 @@
 package com.gamelounge.backend.service
 
 import com.gamelounge.backend.entity.Game
+import com.gamelounge.backend.entity.GameStatus
 import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.request.CreateGameRequest
@@ -35,7 +36,8 @@ class GameService(
                 universe = game.universe,
                 mechanics = game.mechanics,
                 playtime = game.playtime,
-                user = user
+                user = user,
+                status = GameStatus.PENDING_APPROVAL
         )
         gameRepository.save(newGame) // save to get gameId for image name
         image?.let { saveImageInS3AndImageURLInDBForGame(image, newGame) }
@@ -119,6 +121,52 @@ class GameService(
         game.averageRating = game.totalRating.toDouble() / game.countRating.toDouble()
 
         userGameRatingRepository.save(userGameRating)
+        return gameRepository.save(game)
+    }
+
+    fun getPendingGames(sessionId: UUID): List<Game> {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        if (user.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to get pending games")
+        }
+        val pendingGames = gameRepository.findByStatus(GameStatus.PENDING_APPROVAL)
+        val pendingGameIds = pendingGames.map { it.gameId }
+        return gameRepository.findAllById(pendingGameIds)
+    }
+
+    @Transactional
+    fun approveGame(sessionId: UUID, gameId: Long): Game {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        val game = getGame(gameId)
+
+        if (user.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to approve game with ID: $gameId")
+        }
+
+        if (game.status != GameStatus.PENDING_APPROVAL) {
+            throw WrongGameStatusException("Game with ID: $gameId is not pending approval")
+        }
+        game.status = GameStatus.APPROVED
+
+        return gameRepository.save(game)
+    }
+
+    fun rejectGame(sessionId: UUID, gameId: Long): Game {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        val game = getGame(gameId)
+
+        if (user.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to reject game with ID: $gameId")
+        }
+
+        if (game.status != GameStatus.PENDING_APPROVAL) {
+            throw WrongGameStatusException("Game with ID: $gameId is not pending approval")
+        }
+        game.status = GameStatus.REJECTED
+
         return gameRepository.save(game)
     }
 
