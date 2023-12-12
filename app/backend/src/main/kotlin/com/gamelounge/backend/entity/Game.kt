@@ -10,6 +10,12 @@ import jakarta.persistence.*
 import lombok.NoArgsConstructor
 import java.time.Instant
 
+enum class GameStatus {
+        PENDING_APPROVAL,
+        APPROVED,
+        REJECTED
+}
+
 @Entity
 @Table(name = "games")
 @NoArgsConstructor
@@ -32,6 +38,9 @@ class Game(
         var averageRating: Double = 0.0,
         var creationDate: Instant = Instant.now(),
         var gamePicture: String? = null,
+
+        @Enumerated(EnumType.STRING)
+        var status: GameStatus = GameStatus.PENDING_APPROVAL,
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "userId")

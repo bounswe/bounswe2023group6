@@ -6,4 +6,5 @@ data class GetUserInfoResponse(
     val email: String = "",
     val profilePicture: String? = null,
     val about: String? = null,
+    val isAdmin: Boolean = false
 )

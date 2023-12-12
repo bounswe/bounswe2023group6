@@ -19,5 +19,6 @@ class WrongRatingGameException(message: String) : RuntimeException(message)
 class DuplicatedRatingGameException(message: String) : RuntimeException(message)
 class CharacterNotFoundException(message: String) : RuntimeException(message)
 class UnauthorizedCharacterAccessException(message: String) : RuntimeException(message)
+class WrongGameStatusException(message: String) : RuntimeException(message)
 
 
