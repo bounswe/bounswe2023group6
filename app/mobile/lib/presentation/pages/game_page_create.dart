@@ -8,7 +8,9 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class GamePageCreate extends StatefulWidget {
-  const GamePageCreate({Key? key}) : super(key: key);
+  final Game? selectedGame;
+
+  const GamePageCreate({Key? key, this.selectedGame}) : super(key: key);
 
   @override
   State<GamePageCreate> createState() => _GameCreatePageState();
@@ -16,7 +18,8 @@ class GamePageCreate extends StatefulWidget {
 
 class _GameCreatePageState extends State<GamePageCreate> {
   File? _image;
-
+  var title = "Create Game Page";
+  var buttonLabel = "Create";
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -35,7 +38,7 @@ class _GameCreatePageState extends State<GamePageCreate> {
     "MMORPG",
     "Moba",
     "Platform",
-    "Sport"
+    "Sport",
   ];
   String? _selectedGenre;
 
@@ -44,7 +47,7 @@ class _GameCreatePageState extends State<GamePageCreate> {
     "PlayStation 4",
     "Nintendo Switch",
     "PC",
-    "XBOX Series X",
+    "XBOX",
     "Steam Deck"
   ];
   String? _selectedPlatform;
@@ -58,6 +61,7 @@ class _GameCreatePageState extends State<GamePageCreate> {
     "Postapocalyptic",
     "Future",
     "Antic",
+    "Football",
   ];
   String? _selectedUniverse;
 
@@ -65,10 +69,31 @@ class _GameCreatePageState extends State<GamePageCreate> {
   final _playTimeController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.selectedGame != null) {
+      title = "Update Game Page";
+      buttonLabel = "Update";
+      _titleController.text = widget.selectedGame!.title;
+      _descriptionController.text = widget.selectedGame!.description;
+      _selectedGenre = widget.selectedGame!.genre;
+      _selectedPlatform = widget.selectedGame!.platform;
+      _playerNumberController.text =
+          widget.selectedGame!.playerNumber.toString();
+      _releaseYearController.text = widget.selectedGame!.releaseYear.toString();
+      _selectedUniverse = widget.selectedGame!.universe;
+      _mechanicsController.text = widget.selectedGame!.mechanics!;
+      _playTimeController.text = widget.selectedGame!.playtime.toString();
+      _image = File(widget.selectedGame!.gamePicture);
+      // Initialize other fields with selected game properties
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create Game Page"),
+        title: Text(title),
         backgroundColor: ColorConstants.color3,
       ),
       body: SingleChildScrollView(
@@ -243,23 +268,27 @@ class _GameCreatePageState extends State<GamePageCreate> {
               ),
               const SizedBox(height: 16),
               Button(
-                label: "Create",
+                label: buttonLabel,
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    GameService().createGame(
-                      _titleController.text,
-                      _descriptionController.text,
-                      _selectedGenre,
-                      _selectedPlatform,
-                      _playerNumberController.text,
-                      _mechanicsController.text,
-                      int.parse(_releaseYearController.text),
-                      _selectedUniverse,
-                      _playTimeController.text,
-                      _image, // Pass the image path to your service method
-                    );
+                    if (widget.selectedGame != null) {
+                      //update service will be implemented.
+                    } else {
+                      GameService().createGame(
+                        _titleController.text,
+                        _descriptionController.text,
+                        _selectedGenre,
+                        _selectedPlatform,
+                        _playerNumberController.text,
+                        _mechanicsController.text,
+                        int.parse(_releaseYearController.text),
+                        _selectedUniverse,
+                        _playTimeController.text,
+                        _image, // Pass the image path to your service method
+                      );
 
-                    Navigator.of(context).pop("create");
+                      Navigator.of(context).pop("create");
+                    }
                   }
                 },
               ),
