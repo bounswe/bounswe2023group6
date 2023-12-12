@@ -44,7 +44,7 @@ export default function CreatePost() {
             title,
             content,
             category,
-            tag
+            tags: tag
         }, {
             withCredentials: true
         })
