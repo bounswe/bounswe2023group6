@@ -1,6 +1,7 @@
 import React from 'react'
 
 const GameCard = ({ game }) => (
+	console.log("+++++++", game),
 	<div key={game.gameId} className='card compact bg-gray-200 text-gray-800 shadow-xl m-2 p-4'>
 		<div className='flex-col'>
 			<h3 className='text-2xl font-bold text-[#b46161] link'>

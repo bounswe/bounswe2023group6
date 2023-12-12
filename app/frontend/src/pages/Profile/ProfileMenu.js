@@ -5,6 +5,7 @@ const ProfileMenu = ({ activeTab, onTabChange }) => {
         { label: 'Liked Posts', value: 'likedPosts' },
         { label: 'Liked Comments', value: 'likedComments' },
         { label: 'Created Posts', value: 'createdPosts' },
+        { label: 'Rated Games', value: 'ratedGames' },
     ];
 
     return (
@@ -12,9 +13,8 @@ const ProfileMenu = ({ activeTab, onTabChange }) => {
             {menuItems.map((item) => (
                 <button
                     key={item.value}
-                    className={`flex-1 p-2 ${
-                        activeTab === item.value ? 'bg-cyan-700 text-gray-200 rounded shadow-xl' : 'bg-gray-200'
-                    } hover:bg-cyan-700 hover:opacity-50 hover:text-gray-200`}
+                    className={`flex-1 p-2 ${activeTab === item.value ? 'bg-cyan-700 text-gray-200 rounded shadow-xl' : 'bg-gray-200'
+                        } hover:bg-cyan-700 hover:opacity-50 hover:text-gray-200`}
                     onClick={() => onTabChange(item.value)}
                 >
                     {item.label}
