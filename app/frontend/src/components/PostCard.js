@@ -8,7 +8,9 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
   <div key={post.id} className='card compact bg-gray-200 text-gray-800 shadow-xl m-2 p-4'>
     <div className='flex-col'>
       <h3 className="text-2xl font-bold text-[#b46161] link">
-          <a href={`/posts/${post.postId}`}>{post.title}</a>
+          <a href={`/posts/${post.postId}`} className="no-underline">
+              {post.title}
+          </a>
       </h3>
         <button className="p-2 text-black rounded absolute right-1 top-1">
             <ReportIcon/>
@@ -29,14 +31,14 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
           <div className='ml-2 text-[#B46060] font-bold'>{post.creatorUser.username}</div>
         </div>
         <div className='flex'>
-        <div className='flex mr-4'>{post.category}</div>
-        <div className='post-tags'>
-          {post.tags.map((tag, index) => (
-            <span key={index} className='post-tag'>
-              {tag}
-            </span>
-          ))}
-        </div>
+        <div className='flex mr-4'>
+                    {post.tags.map((tag, index) => (
+                        <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 ml-1" key={index}>
+                            {tag.name}
+                        </span>
+                    ))}
+                </div>
+        <div className='inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-gray-50 ring-1 ring-inset ring-gray-500/10 mr-4'>{post.category}</div>
         <div className='mr-12'>{post.totalComments} Comments</div>
           <button onClick={() => onUpvote()} className='w-6 h-6'>
             <img src={upvotelogo} alt='Thumbs Up'/>
