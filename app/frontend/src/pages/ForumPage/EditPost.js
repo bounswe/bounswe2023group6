@@ -16,6 +16,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import EditIcon from '@mui/icons-material/Edit'
 
 export default function EditPost(props) {
     const [open, setOpen] = useState(false)
@@ -32,8 +33,6 @@ export default function EditPost(props) {
 
     const handleClickOpen = () => {
         setOpen(true)
-        console.log(props)
-        console.log(postId)
     }
 
     const handleClose = () => {
@@ -69,8 +68,8 @@ export default function EditPost(props) {
 
     return (
         <div>
-            <Button variant='outlined' onClick={handleClickOpen}>
-                Edit Post
+            <Button onClick={handleClickOpen}>
+                <EditIcon sx={{ color: 'black'}} />
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
