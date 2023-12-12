@@ -10,7 +10,8 @@ import {
 	DropdownTrigger,
 	Dropdown,
 	DropdownMenu,
-	Avatar
+	Avatar,
+	Button
 } from '@nextui-org/react'
 import { SearchIcon } from '../../SearchIcon.js'
 import './Navbar.css'
@@ -24,14 +25,23 @@ const Navbarx = () => {
 
 	const [username, setUsername] = useState('')
 	const userImage = localStorage.getItem('userImage')
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
 
+	const navigateToLogin = () => {
+		navigate('/login')
+	}
+	const navigateToSignup = () => {
+		navigate('/signup')
+	}
 	useEffect(() => {
 		const storedUsername = localStorage.getItem('username')
 		if (storedUsername) {
 			setUsername(storedUsername)
+			setIsLoggedIn(true)
+		} else {
+			setIsLoggedIn(false)
 		}
 	}, [])
-
 	const handleLogout = async () => {
 		try {
 			const response = await axios.post(
@@ -46,8 +56,9 @@ const Navbarx = () => {
 			)
 
 			if (response.status === 200) {
+				setIsLoggedIn(false)
 				localStorage.removeItem('username')
-				navigate('/login')
+				navigate('/home')
 			}
 		} catch (err) {
 			console.error(err)
@@ -117,50 +128,65 @@ const Navbarx = () => {
 					startContent={<SearchIcon size={18} />}
 					type='search'
 				/>
-				<Dropdown placement='bottom-end' justify='end'>
-					<DropdownTrigger>
-						<Avatar
-							isBordered
-							as='button'
-							className='transition-transform'
-							color='secondary'
-							name='Jason Hughes'
-							size='sm'
-							src={userImage}
-						></Avatar>
-					</DropdownTrigger>
-					<DropdownMenu aria-label='Profile Actions' variant='flat' closeOnSelect={false}>
-						<DropdownItem key='profile' className='h-14 gap-2'>
-							<p className='font-semibold'>Signed in as </p>
-							<p className='font-semibold'>{username}</p>
-						</DropdownItem>
-						{windowWidth < 768 ? (
-							<DropdownItem key='search' onClick={handleInputClick}>
-								<Input
-									classNames={{
-										base: 'max-w-full nsm:hidden h-10',
-										mainWrapper: 'nsm:hidden h-full',
-										input: 'nsm:hidden text-small',
-										inputWrapper:
-											'nsm:hidden h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20'
-									}}
-									placeholder='Type to search...'
-									size='sm'
-									startContent={<SearchIcon size={18} />}
-									type='search'
-								/>
+				{isLoggedIn ? (
+					<Dropdown placement='bottom-end' justify='end'>
+						<DropdownTrigger>
+							<Avatar
+								isBordered
+								as='button'
+								className='transition-transform'
+								color='secondary'
+								name='Jason Hughes'
+								size='sm'
+								src={userImage}
+							></Avatar>
+						</DropdownTrigger>
+						<DropdownMenu aria-label='Profile Actions' variant='flat' closeOnSelect={false}>
+							<DropdownItem key='profile' className='h-14 gap-2'>
+								<p className='font-semibold'>Signed in as </p>
+								<p className='font-semibold'>{username}</p>
 							</DropdownItem>
-						) : null}
+							{windowWidth < 768 ? (
+								<DropdownItem key='search' onClick={handleInputClick}>
+									<Input
+										classNames={{
+											base: 'max-w-full nsm:hidden h-10',
+											mainWrapper: 'nsm:hidden h-full',
+											input: 'nsm:hidden text-small',
+											inputWrapper:
+												'nsm:hidden h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20'
+										}}
+										placeholder='Type to search...'
+										size='sm'
+										startContent={<SearchIcon size={18} />}
+										type='search'
+									/>
+								</DropdownItem>
+							) : null}
 
-						<DropdownItem key='settings' closeOnSelect='false' onClick={() => navigate('/profile-page')}>
-							My Profile
-						</DropdownItem>
-						<DropdownItem key='team_settings'>Account Settings</DropdownItem>
-						<DropdownItem key='logout' color='danger' onClick={handleLogout}>
-							Log Out
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
+							<DropdownItem key='settings' closeOnSelect='false' onClick={() => navigate('/profile-page')}>
+								My Profile
+							</DropdownItem>
+							<DropdownItem key='team_settings'>Account Settings</DropdownItem>
+							<DropdownItem key='logout' color='danger' onClick={handleLogout}>
+								Log Out
+							</DropdownItem>
+						</DropdownMenu>
+					</Dropdown>
+				) : windowWidth < 768 ? (
+					<Button color='primary' variant='shadow' size='md' onClick={navigateToLogin}>
+						Log In
+					</Button>
+				) : (
+					<div className='flex'>
+						<Button color='primary' variant='shadow' size='md' onClick={navigateToLogin}>
+							Log In
+						</Button>
+						<Button color='primary' variant='faded' size='md' style={{ marginLeft: 12 }} onClick={navigateToSignup}>
+							Sign Up
+						</Button>
+					</div>
+				)}
 			</NavbarContent>
 		</Navbar>
 	)
