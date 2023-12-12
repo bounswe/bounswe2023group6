@@ -27,6 +27,9 @@ class _ForumPageState extends State<ForumPage> {
           builder: (BuildContext context, AsyncSnapshot<List<Post>> snapshot) {
             if (snapshot.hasData) {
               List<Post> posts = snapshot.data!;
+              // Sort the posts by created date in descending order
+              posts.sort((a, b) => b.createdDate.compareTo(a.createdDate));
+  
               return ListView(
                 children: [
                   for (var i = 0; i < posts.length; i++) PostCard(post: posts[i]),
