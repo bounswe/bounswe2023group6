@@ -21,6 +21,7 @@ class User(
     var company: String? = null,
     var passwordHash: ByteArray = ByteArray(0),
     var salt: ByteArray = ByteArray(0),
+    var isAdmin: Boolean = false, // indicating whether the user is an admin
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val posts: List<Post> = mutableListOf(),
@@ -69,6 +70,8 @@ class User(
         joinColumns = [JoinColumn(name = "userId")],
         inverseJoinColumns = [JoinColumn(name = "tagId")]
     )
-    var tags: List<Tag> = mutableListOf()
+    var tags: List<Tag> = mutableListOf(),
+
+
 
     )

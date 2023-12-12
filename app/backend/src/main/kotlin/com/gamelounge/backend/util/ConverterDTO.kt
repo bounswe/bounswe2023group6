@@ -100,7 +100,8 @@ object ConverterDTO {
             game.averageRating,
             game.creationDate,
             convertBulkToTagDTO(game.tags),
-            game.gamePicture
+            game.gamePicture,
+            game.status.toString()
         )
     }
 

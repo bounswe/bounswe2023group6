@@ -26,4 +26,5 @@ data class GameDTO(
         var creationDate: Instant? = null,
         var tags: List<TagDTO>,
         var gamePicture: String? = null,
+        var status: String = "",
 )

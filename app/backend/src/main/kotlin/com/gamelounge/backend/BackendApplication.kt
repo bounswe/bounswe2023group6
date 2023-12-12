@@ -5,9 +5,14 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.context.event.EventListener
+import org.springframework.context.event.ContextRefreshedEvent
+import com.gamelounge.backend.entity.User
+import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.util.HashingUtil
 
 @SpringBootApplication
-class BackendApplication {
+class BackendApplication (val userRepository: UserRepository){
 	@Bean
 	fun corsFilter(): WebMvcConfigurer {
 		return object : WebMvcConfigurer {
@@ -19,6 +24,19 @@ class BackendApplication {
 					.allowedHeaders("*")
 					.exposedHeaders("Access-Control-Allow-Origin", "Cookie", "Set-Cookie")
 			}
+		}
+	}
+
+	@EventListener(ContextRefreshedEvent::class)
+	fun initAdminUser() {
+		val adminUsername = "admin"
+		val adminEmail = "admin@example.com"
+		val adminPassword = "adminPassword" // Change this to a secure password
+		val (passwordHash, salt) = HashingUtil.generateHash(adminPassword)
+
+		if (!userRepository.existsByUsername(adminUsername)) {
+			val adminUser = userRepository.save(User(username = adminUsername, email = adminEmail, passwordHash = passwordHash, salt = salt, isAdmin = true))
+			userRepository.save(adminUser)
 		}
 	}
 }
