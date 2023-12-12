@@ -1,18 +1,24 @@
 package com.gamelounge.backend.model.DTO
 
 import java.time.Instant
+import com.gamelounge.backend.constant.GameGenre
+import com.gamelounge.backend.constant.GamePlatform
+import com.gamelounge.backend.constant.NumberOfPlayers
+import com.gamelounge.backend.constant.UniverseInfo
+import com.gamelounge.backend.constant.GameMechanics
+
 
 data class GameDTO(
         var gameId: Long = 0,
         var title: String = "",
         var description: String = "",
-        var genre: String = "",
-        var platform: String = "",
+        var genre: GameGenre = GameGenre.EMPTY,
+        var platform: GamePlatform = GamePlatform.EMPTY,
         var characters: List<CharacterDTO>,
-        var playerNumber: String = "",
+        var playerNumber: NumberOfPlayers = NumberOfPlayers.EMPTY,
         var releaseYear: Int = 0,
-        var universe: String = "",
-        var mechanics: String = "",
+        var universe: UniverseInfo = UniverseInfo.EMPTY,
+        var mechanics: GameMechanics = GameMechanics.EMPTY,
         var playtime: String = "",
         var totalRating: Int,
         var countRating: Int,
