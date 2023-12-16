@@ -136,4 +136,15 @@ object ConverterDTO {
     fun convertToReportDTO(reports: List<Report>): List<ReportDTO>{
         return reports.map { report -> convertToReportDTO(report) }
     }
+
+    fun converToUserGameRatingDTO(userGameRating: UserGameRating): UserGameRatingDTO{
+        return UserGameRatingDTO(
+            convertToGameDTO(userGameRating.game),
+            userGameRating.score
+        )
+    }
+
+    fun convertBulkToUserGameRatingDTO(userGameRatings: List<UserGameRating>): List<UserGameRatingDTO>{
+        return userGameRatings.map { userGameRating -> converToUserGameRatingDTO(userGameRating) }
+    }
 }
