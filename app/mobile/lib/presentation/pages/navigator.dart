@@ -3,6 +3,7 @@ import 'package:mobile/presentation/pages/forum_page.dart';
 import 'package:mobile/presentation/pages/game_page.dart';
 import 'package:mobile/presentation/pages/game_page_create.dart';
 import 'package:mobile/presentation/pages/game_wiki_page.dart';
+import 'package:mobile/presentation/pages/group_page.dart';
 import 'package:mobile/presentation/pages/lfg_page_create.dart';
 import 'package:mobile/presentation/pages/post/post_create_page.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
@@ -40,6 +41,8 @@ class _CustomNavigatorState extends State<CustomNavigator> {
                   return const GamePageCreate();
                 case "/create_lfg_page":
                   return const LFGPageCreate();
+                case "/group":
+                  return GroupPage();
                 default:
                   return widget.defaultPage;
               }

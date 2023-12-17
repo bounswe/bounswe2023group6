@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/data/lfg_model.dart';
+import 'package:mobile/data/models/lfg_model.dart';
 
 class LFGCard extends StatelessWidget {
   final LFG lfg;
@@ -25,7 +25,7 @@ class LFGCard extends StatelessWidget {
                   child: SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(lfg.likes![0]),
+                      child: Text(lfg.title),
                     ),
                   )),
             ],
