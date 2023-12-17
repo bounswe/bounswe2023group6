@@ -45,6 +45,12 @@ class DisplayAvatar extends StatelessWidget {
                     child: Image.network(
                       imageLink!,
                       fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }                      
                     ))
             : ClipRRect(
                 borderRadius: BorderRadius.circular(120),

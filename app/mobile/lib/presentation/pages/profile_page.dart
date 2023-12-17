@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/constants/color_constants.dart';
+import 'package:mobile/constants/object_keys.dart';
 import 'package:mobile/constants/text_constants.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_service.dart';
@@ -49,11 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
       }
       await userService.getUserDetails(profileUser);
     }
+    print("Profile picture: ${profileUser.profilePicture}");
 
-    setState(() {
-      pageInitialized = true;
-      refreshPage = false;
-    });
+    pageInitialized = true;
+    refreshPage = false;
     return profileUser;
   }
 
@@ -65,23 +65,24 @@ class _ProfilePageState extends State<ProfilePage> {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
-            default:
+            case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
                 return buildProfilePage(profileUser);
               }
+            default:
+              return const Center(child: CircularProgressIndicator());
           }
         });
   }
 
   void updateProfileAvatar() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      userService.updateUser(profileUser, imageFilePath: pickedFile.path);
-
+      await userService.updateUser(profileUser, imageFilePath: pickedFile.path);
       setState(() {
         refreshPage = true;
       });
@@ -115,10 +116,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 "About Me",
                 isEditingAboutMe
                     ? TextField(
+                        key: GlobalStaticKeys.profilePageEditorKey,
                         controller: aboutMeController,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                         maxLines: null,
                       )
@@ -131,7 +133,20 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Colors.white,
                         ),
                       ),
-                () {},
+                () async {
+                  isEditingAboutMe = !isEditingAboutMe;
+                  if (!isEditingAboutMe) {
+                    profileUser.about = aboutMeController.text;
+                    await userService.updateUser(profileUser);
+                    setState(() {
+                      refreshPage = true;
+                    });
+                  } else {
+                    setState(() {
+                      aboutMeController.text = profileUser.about ?? '';
+                    });
+                  }
+                },
               ),
               buildProfileSection(
                 "Created Posts",
@@ -323,19 +338,6 @@ class _ProfilePageState extends State<ProfilePage> {
           size: 15,
         ),
         onPressed: () {
-          setState(() async {
-            isEditingAboutMe = !isEditingAboutMe;
-            if (!isEditingAboutMe) {
-              profileUser.about = aboutMeController.text;
-              // Add logic to save the updated about text in your database or backend if necessary
-              userService.updateUser(profileUser);
-              setState(() {
-                refreshPage = true;
-              });
-            } else {
-              aboutMeController.text = profileUser.about ?? '';
-            }
-          });
           onPressed();
         },
       ),
