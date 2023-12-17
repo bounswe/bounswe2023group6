@@ -326,10 +326,10 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
-              Button(
+              widget.selectedGame == null ?  Button(
                 onPressed: _pickImage,
                 label: "Choose Image",
-              ),
+              ) : SizedBox(),
               const SizedBox(height: 16),
               Button(
                 label: buttonLabel,
