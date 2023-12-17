@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:mobile/constants/network_constants.dart';
+import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/lfg_model.dart';
-import 'package:mobile/presentation/widgets/alert_widget.dart';
-import 'package:mobile/presentation/widgets/lfg_card_widget.dart';
+import 'package:mobile/data/services/base_service.dart';
 
-class GridViewState extends State {
-  int countValue = 2;
-  int aspectWidth = 2;
-  int aspectHeight = 1;
-  List<LFG> itemList = getImageDataList();
+class LFGService {
+  static const String serverUrl = NetworkConstants.BASE_LOCAL_URL;
 
-  static List<LFG> getImageDataList() {
-    return [
+  final BaseNetworkService service = BaseNetworkService();
+
+  static const String _getLFGs = "/lfg";
+
+  static List<LFG> lfgList =[
       LFG(
           lfgId: 1,
           title: "World of Warcraft",
@@ -42,54 +42,27 @@ class GridViewState extends State {
               "Ready to secure that Victory Royale in Fortnite? I'm searching for a skilled partner for some epic duos. If you can build, shoot, and adapt on the fly, we'll make an unbeatable duo. Let's drop into the action and conquer the battlefield.",
           user: "GalaxySeeker • 12min")
     ];
+
+  Future<List<LFG>> getLFGs() async {
+    return getLfgDataList();
   }
 
-  changeMode() {
-    if (countValue == 2) {
-      setState(() {
-        countValue = 1;
-        aspectWidth = 3;
-        aspectHeight = 1;
-      });
-    } else {
-      setState(() {
-        countValue = 2;
-        aspectWidth = 2;
-        aspectHeight = 1;
-      });
-    }
+  Future<LFG> getLFG(int lfgId) async {
+    return getLfgDataList()[lfgId - 1];
   }
 
-  getGridViewSelectedItem(BuildContext context, LFG gridItem) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertWidget(
-          title: gridItem.title,
-          content: gridItem.description,
-        );
-      },
-    );
+  Future<void> createComment (int lfgId) async {
+    
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(children: [
-      Expanded(
-        child: GridView.count(
-          crossAxisCount: countValue,
-          childAspectRatio: (aspectWidth / aspectHeight),
-          children: itemList
-              .map((data) => GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/group",
-                      arguments: data.lfgId);
-                  },
-                  child: LFGCard(lfg: data)))
-              .toList(),
-        ),
-      )
-    ]));
+
+  static LFG getGameStatic(int id) {
+    return getLfgDataList()[id];
   }
+
+  static List<LFG> getLfgDataList() {
+    return lfgList;
+  }
+
 }
+
