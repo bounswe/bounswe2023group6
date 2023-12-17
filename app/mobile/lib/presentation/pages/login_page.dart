@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
         updateSession(username);
         User user= (await UserService().getUser(username));
         await cacheManager.saveUser(user);
-        Navigator.pushNamed(context, '/');
+        Navigator.pushNamed(context, '/adminPanel');
         return;
       } else {
         title = "Error";

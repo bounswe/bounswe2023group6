@@ -9,6 +9,7 @@ class User {
   final String email;
   final String username;
 
+  bool? isAdmin;
   String? name;
   String? surname;
   String? about;
@@ -37,10 +38,12 @@ class User {
     this.about,
     this.title,
     this.company,
+    this.isAdmin,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      isAdmin: json['isAdmin'],
       userId: json['userId'],
       email: json['email'],
       username: json['username'],
@@ -53,6 +56,7 @@ class User {
 
   Map<String, dynamic> toJson() {
     return {
+      'isAdmin': isAdmin,
       'userId': userId,
       'email': email,
       'username': username,
