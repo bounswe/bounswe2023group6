@@ -222,7 +222,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     initialRating: 0,
                                     minRating: 0,
                                     direction: Axis.horizontal,
-                                    allowHalfRating: true,
+                                    allowHalfRating: false,
                                     itemSize: 30,
                                     itemCount: 5,
                                     itemPadding: const EdgeInsets.symmetric(
@@ -233,6 +233,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
+                                      gameService.rateGame(game.gameId, rating.round());
                                     },
                                   ),
                                 ],
