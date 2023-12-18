@@ -2,13 +2,12 @@ package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.middleware.SessionAuth
-import com.gamelounge.backend.model.DTO.CommentDTO
-import com.gamelounge.backend.model.DTO.GameDTO
-import com.gamelounge.backend.model.DTO.PostDTO
-import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.model.DTO.*
 import com.gamelounge.backend.model.request.UpdateUserRequest
 import com.gamelounge.backend.model.response.GetUserInfoResponse
+import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.UserService
+import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -78,5 +77,46 @@ class UserController (
 
         return userService.getLikedComments(userId)
     }
+
+    @PutMapping("/follow-user/{userIdToBeFollowed}")
+    @ResponseStatus(HttpStatus.OK)
+    fun followUser(
+            @CookieValue("SESSIONID") sessionId: UUID,
+            @PathVariable userIdToBeFollowed: Long
+    ): ResponseEntity<Map<String, String>>{
+        userService.followUser(sessionId, userIdToBeFollowed)
+        return ResponseEntity.ok().body(mapOf("message" to "User followed successfully"))
+    }
+
+    @PutMapping("/unfollow-user/{userIdToBeFollowed}")
+    @ResponseStatus(HttpStatus.OK)
+    fun unfollowUser(
+            @CookieValue("SESSIONID") sessionId: UUID,
+            @PathVariable userIdToBeFollowed: Long
+    ): ResponseEntity<Map<String, String>>{
+        userService.unfollowUser(sessionId, userIdToBeFollowed)
+        return ResponseEntity.ok().body(mapOf("message" to "User followed successfully"))
+    }
+
+    @GetMapping("/get-followings")
+    fun getFollowings(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<UserDTO>> {
+        val followedUsers = userService.getFollowings(sessionId)
+        val followedUserDTO = ConverterDTO.convertBulkToUserDTO(followedUsers)
+        return ResponseEntity.ok(followedUserDTO)
+    }
+
+    @GetMapping("/get-users")
+    fun getVisibleUsers(): ResponseEntity<List<UserDTO>> {
+        val visibleUsers = userService.getVisibleUsers()
+        val visibleUsersDTO = ConverterDTO.convertBulkToUserDTO(visibleUsers)
+        return ResponseEntity.ok(visibleUsersDTO)
+    }
+
+    @PutMapping("/delete")
+    fun deleteUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<ResponseMessage>{
+        userService.deleteUser(sessionId)
+        return ResponseEntity.ok(ResponseMessage(message = "User deleted successfully"))
+    }
+
 
 }
