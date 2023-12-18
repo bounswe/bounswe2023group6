@@ -7,12 +7,17 @@ enum SharedKeys {
 }
 
 class SharedManager {
+  SharedManager._init() {
+    // SharedPreferences.getInstance().then((value) => preferences = value);
+  }
+  
+  factory SharedManager() => _instance;
+  static final SharedManager _instance = SharedManager._init();
+
   SharedPreferences? preferences;
 
-  SharedManager();
-
-  Future<void> init() async {
-    preferences = await SharedPreferences.getInstance();
+  Future<void> initializePreferences() async {
+    preferences ??= await SharedPreferences.getInstance();
   }
 
   Future<void> saveString(SharedKeys key, String value) async {

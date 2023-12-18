@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile/constants/object_keys.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/presentation/pages/game_wiki_page.dart';
@@ -20,10 +21,10 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
-    _homeNavigatorKey,
-    _forumNavigatorKey,
-    _gameNavigatorKey,
-    _lfgNavigatorKey,
+    GlobalStaticKeys.homeNavigatorKey,
+    GlobalStaticKeys.forumNavigatorKey,
+    GlobalStaticKeys.gameNavigatorKey,
+    GlobalStaticKeys.lfgNavigatorKey,
   ];
 
   Future<bool> _systemBackButtonPressed() {
@@ -37,11 +38,11 @@ class _MainScreenState extends State<MainScreen> {
     return Future.value(false);
   }
 
-  final List<Widget> _widgetOptions = <Widget>[
-    const HomePage(),
-    const ForumPage(),
-    GamePage(),
-    LFGPage()
+  final List<Widget> navigators = <Widget>[
+    CustomNavigator(defaultKey: GlobalStaticKeys.homeNavigatorKey, defaultPage: const HomePage(),),
+    CustomNavigator(defaultKey: GlobalStaticKeys.forumNavigatorKey, defaultPage: const ForumPage(),),
+    CustomNavigator(defaultKey: GlobalStaticKeys.gameNavigatorKey, defaultPage: GamePage(),),
+    CustomNavigator(defaultKey: GlobalStaticKeys.lfgNavigatorKey, defaultPage: LFGPage(),),
   ];
 
   @override
@@ -72,21 +73,10 @@ class _MainScreenState extends State<MainScreen> {
             top: false,
             child: IndexedStack(
               index: _selectedIndex,
-              children:  <Widget>[
-                CustomNavigator(defaultKey: _homeNavigatorKey,defaultPage: const HomePage(),),
-                CustomNavigator(defaultKey: _forumNavigatorKey,defaultPage: const ForumPage(),),
-                CustomNavigator(defaultKey: _gameNavigatorKey,defaultPage: GamePage(),),
-                CustomNavigator(defaultKey: _lfgNavigatorKey,defaultPage: LFGPage(),),
-              ],
+              children: navigators,
             ),
         )
       ),
     );
   }
 }
-
-
-GlobalKey<NavigatorState> _gameNavigatorKey = GlobalKey<NavigatorState>();
-GlobalKey<NavigatorState> _forumNavigatorKey = GlobalKey<NavigatorState>();
-GlobalKey<NavigatorState> _homeNavigatorKey = GlobalKey<NavigatorState>();
-GlobalKey<NavigatorState> _lfgNavigatorKey = GlobalKey<NavigatorState>();

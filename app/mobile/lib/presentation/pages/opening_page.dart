@@ -16,7 +16,7 @@ class _OpeningPageState extends State<OpeningPage> {
   late String username = '';
   User? currentuser;
 
-  late final CacheManager cacheManager;
+  final CacheManager cacheManager = CacheManager();
 
   @override
   void initState() {
@@ -27,11 +27,6 @@ class _OpeningPageState extends State<OpeningPage> {
   }
 
   Future<void> initializeCache() async {
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    cacheManager = CacheManager(manager);
-  
-
     print(cacheManager.getSessionId());
 
     setState(() {

@@ -218,7 +218,6 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
         playtime: playTime);
 
     final SharedManager manager = SharedManager();
-    await manager.init();
     if (!manager.checkString(SharedKeys.sessionId)) {
       throw Exception('Session id is null');
     }

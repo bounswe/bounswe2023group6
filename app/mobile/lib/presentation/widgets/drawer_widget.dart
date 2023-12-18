@@ -30,7 +30,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   final UserAuthenticationService authService = UserAuthenticationService();
 
-  late final CacheManager cacheManager;
+  final CacheManager cacheManager = CacheManager();
 
 
   @override
@@ -42,11 +42,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   Future<void> initializeCache() async {
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    cacheManager = CacheManager(manager);
-  
-
     print(cacheManager.getSessionId());
 
     setState(() {
@@ -84,7 +79,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
     else {
     
-      return LoggedDrawer(username: username, pp: DisplayAvatar(byteData: currentuser!.profileImage, onPressed: () {
+      return LoggedDrawer(username: username, pp: DisplayAvatar(imageLink: currentuser!.profilePicture, onPressed: () {
         // go to profile page
         Navigator.pushNamed(context, '/profile', arguments: username);
       }));
