@@ -45,6 +45,7 @@ class User {
     this.followers = 0,
     this.following = 0,
     this.followersList = const [],
+    this.isAdmin,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {

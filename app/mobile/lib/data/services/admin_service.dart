@@ -52,7 +52,7 @@ class AdminService {
   ];
 
   Future<List<Game>> getPendingGames() async {
-    if (NetworkConstants.useMockGameData) {
+    if (NetworkConstants.useMockAdminData) {
       return getGameDataList();
     }
 
