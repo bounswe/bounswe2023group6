@@ -6,6 +6,7 @@ import { getAllPosts } from '../../services/postService';
 import SelectTags from './SelectTags';
 import SortIcon from '@mui/icons-material/Sort';
 import { upvotePost, downvotePost } from '../../services/postService';
+import { getUserInfoBySessionId } from '../../services/userService';
 
 export default function ForumPage() {
     const [forumPosts, setForumPosts] = useState([]);
@@ -15,6 +16,7 @@ export default function ForumPage() {
     const [selectedTags, setSelectedTags] = useState([]);
     const tags = ['gamer', 'rpg', 'moba', 'lol', 'fifa', 'gta', 'fortnite', 'horror'];
     const [sortOrder, setSortOrder] = useState('asc');
+    const [currentUser, setCurrentUser] = useState(null);
 
     const handleSortChange = () => {
         const newSortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
@@ -68,6 +70,20 @@ export default function ForumPage() {
 
         fetchPosts();
     }, []);
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+          try {
+            const response = await getUserInfoBySessionId();
+            const userData = response.data;
+            setCurrentUser(userData);
+            console.log('Current User:', userData);
+          } catch (error) {
+            console.error('Error fetching user info:', error);
+          }
+        };
+        fetchUserInfo();
+      }, []);
 
     const handleCategoryChange = (category) => {
       setSelectedCategory(category);
@@ -132,6 +148,7 @@ export default function ForumPage() {
                                 {filteredPosts.map((post) => (
                                     <PostCard key={post.postId} post={post} tags={post.tags} category={post.category} onUpvote={() => handleUpvote(post.postId)}
                                                                                                                                         onDownvote={() => handleDownvote(post.postId)}
+                                                                                                                                        currentUser={currentUser}
                                                                                                                                         />
                                 ))}
                             </div>

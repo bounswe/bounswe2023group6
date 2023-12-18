@@ -3,16 +3,22 @@ import React from 'react';
 import ReportIcon from "@mui/icons-material/Report";
 import EditPost from '../pages/ForumPage/EditPost';
 
-const PostCard = ({ post, onUpvote, onDownvote }) => (
+const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 
-  <div key={post.id} className='card compact bg-neutral-200 text-neutral-800 shadow-xl m-2 p-2'>
+const isCurrentUserCreator = post.creatorUser.username === currentUser.username;
+
+return (
+  <div key={post.id} className='card compact bg-neutral-200 text-neutral-800 shadow-xl m-4 p-2'>
   <div className='absolute top-2 right-2 flex'>
-          <EditPost post={post}/>
-          <button className="p-2 text-black rounded ">
-            <ReportIcon sx={{ color: '#404040'}} />
-          </button>
+          {isCurrentUserCreator ? (
+                    <EditPost post={post} />
+                  ) : (
+                    <button className="p-2 text-black rounded">
+                      <ReportIcon sx={{ color: '#404040'}} />
+                    </button>
+                  )}
         </div>
-    <div className='flex-col'>
+    <div className='flex-col m-4'>
       <h3 className="text-2xl font-bold text-[#b46161]">
           <a href={`/posts/${post.postId}`} className="no-underline link">
               {post.title}
@@ -62,5 +68,5 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
     </div>
   </div>
 );
-
+};
 export default PostCard;

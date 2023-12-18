@@ -2,13 +2,21 @@ import React from 'react';
 import userlogo from '../user.jpg';
 import ReportIcon from "@mui/icons-material/Report";
 
-const CommentCard = ({ comment, onUpvote, onDownvote }) => (  
+const CommentCard = ({ comment, onUpvote, onDownvote, currentUser }) => {
+const isCurrentUserCreator = comment.creatorUser.username === currentUser.username;
+
+return(
+
   <div key={comment.commentId} className='card compact bg-neutral-300 text-zinc-800 shadow-xl m-4 p-4'>
     <div className='flex-col'>
-        <p className='text-zinc-700 mb-4'>{comment.content}</p>
-        <button className="p-2 text-black rounded absolute right-1 top-1">
-          <ReportIcon sx={{ color: '#404040'}} />
-        </button>
+    <div className='flex flex-row mb-2'>
+        <p className='text-zinc-700 m-2 mb-4 w-full'>{comment.content}</p>
+        {isCurrentUserCreator ? null : (
+            <button className="text-black rounded mb-4">
+              <ReportIcon sx={{ color: '#404040'}} />
+            </button>
+          )}
+          </div>
       <div className='flex justify-between items-center'>
         <div className="flex items-center">
           <div className="avatar">
@@ -32,5 +40,5 @@ const CommentCard = ({ comment, onUpvote, onDownvote }) => (
     </div>
   </div>
 );
-
+};
 export default CommentCard;

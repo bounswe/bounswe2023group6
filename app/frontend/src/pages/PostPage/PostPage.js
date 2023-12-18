@@ -8,6 +8,7 @@ import { getPostById, upvotePost, downvotePost } from '../../services/postServic
 import { useParams } from 'react-router-dom';
 import { getAllCommentsForPost, createComment } from '../../services/commentService';
 import { upvoteComment, downvoteComment } from '../../services/commentService';
+import { getUserInfoBySessionId } from '../../services/userService';
 
 const PostPage = () => {
   const { postId } = useParams();
@@ -15,6 +16,8 @@ const PostPage = () => {
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   // const comments = [
   //   {
@@ -81,6 +84,20 @@ const PostPage = () => {
     }
   }, [postId]);
 
+  useEffect(() => {
+          const fetchUserInfo = async () => {
+            try {
+              const response = await getUserInfoBySessionId();
+              const userData = response.data;
+              setCurrentUser(userData);
+              console.log('Current User:', userData);
+            } catch (error) {
+              console.error('Error fetching user info:', error);
+            }
+          };
+          fetchUserInfo();
+        }, []);
+
   const [newComment, setNewComment] = useState('');
 
   const handleNewComment = async (e) => {
@@ -100,7 +117,7 @@ const PostPage = () => {
       <div className='w-full flex flex-col bg-neutral-100 items-center pt-8'>
         <div className='w-3/4 flex flex-col p-2 pb-20'>
           {post && (
-            <PostCard post={post} onUpvote={handleUpvote} onDownvote={handleDownvote} />
+            <PostCard post={post} onUpvote={handleUpvote} onDownvote={handleDownvote} currentUser={currentUser}/>
           )}
           <div className='mt-6'>
             {comments.map((comment) => (
@@ -108,7 +125,8 @@ const PostPage = () => {
                 key={comment.commentId} 
                 comment={comment} 
                 onUpvote={() => handleUpvoteComment(comment.commentId)} 
-                onDownvote={() => handleDownvoteComment(comment.commentId)} 
+                onDownvote={() => handleDownvoteComment(comment.commentId)}
+                currentUser={currentUser}
               />
             ))}
           </div>
