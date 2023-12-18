@@ -104,15 +104,15 @@ const GamePage = () => {
 		<>
 			<Navbarx></Navbarx>
 			<div className='w-full flex flex-col'>
-				<div className='flex flex-row grow bg-gray-100'>
-					<div className='w-full flex justify-center p-8 bg-gray-50 pb-20'>
+				<div className='flex flex-row grow bg-zinc-100'>
+					<div className='w-full flex justify-center p-8 bg-zinc-50 pb-20'>
 						<div className='w-9/10 flex flex-col'>
 							<div className='flex m-4'>
-								<p className='text-gray-600 mt-4'>Page created on: October 15, 2023 by @fifaloverr</p>
+								<p className='text-zinc-600 mt-4'>Page created on: October 15, 2023 by @fifaloverr</p>
 							</div>
 							<div className='w-full flex flex-row'>
 								<div className='w-3/5 flex flex-col'>
-									<div className='card compact bg-gray-200 text-cyan-700 shadow-xl m-2 p-4'>
+									<div className='card compact bg-zinc-200 text-cyan-700 shadow-xl m-2 p-4'>
 										<div className='flex'>
 											<div className='w-2/5 pr-4'>
 												<img src={game.gamePicture} alt='Game Cover' className='w-full' />
@@ -121,17 +121,17 @@ const GamePage = () => {
 												<h2 className='text-3xl text-[#b46161] font-bold'>{game.title}</h2>
 												<br />
 												<h2 className='text-xl font-bold'>Description</h2>
-												<p className='text-gray-700 text-justify'>{game.description}</p>
+												<p className='text-zinc-700 text-justify'>{game.description}</p>
 												<br />
-												<p className='text-gray-700 font-bold'>{game.releaseYear}</p>
+												<p className='text-zinc-700 font-bold'>{game.releaseYear}</p>
 											</div>
 										</div>
 									</div>
 									<div className='w-full flex flex-row'>
-										<div className='w-1/2 card compact bg-gray-200 text-cyan-700 shadow-xl m-1 p-4'>
+										<div className='w-1/2 card compact bg-zinc-200 text-cyan-700 shadow-xl m-1 p-4'>
 											<div className='w-full flex flex-row'>
 												<h2 className='text-xl font-bold'>Rating:</h2>
-												<p className='text-gray-700 p-1'>{game.averageRating}</p>
+												<p className='text-zinc-700 p-1'>{game.averageRating}</p>
 												<br />
 											</div>
 											<div className='rating w-full flex flex-row'>
@@ -150,10 +150,10 @@ const GamePage = () => {
 												Rate Game
 											</button>
 										</div>
-										<div className='w-1/2 card compact bg-gray-200 text-cyan-700 shadow-xl m-1 p-4'>
+										<div className='w-1/2 card compact bg-zinc-200 text-cyan-700 shadow-xl m-1 p-4'>
 											<h2 className='text-xl font-bold'>Genre:</h2>
 											<div className='flex flex-wrap'>
-												<Link to='/genre/football' className='text-gray-700 mr-4'>
+												<Link to='/genre/football' className='text-zinc-700 mr-4'>
 													{game.genre}
 												</Link>
 											</div>
@@ -161,26 +161,26 @@ const GamePage = () => {
 									</div>
 								</div>
 								<div className='w-2/5 flex flex-col'>
-									<div className='h-full card compact bg-gray-200 text-cyan-700 shadow-xl m-2 p-4'>
+									<div className='h-full card compact bg-zinc-200 text-cyan-700 shadow-xl m-2 p-4'>
 										<h2 className='text-xl font-bold p-2'>Features:</h2>
-										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Mechanics: {game.mechanics}</p>
-										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Universe : {game.universe}</p>
-										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Playtime: {game.playtime}</p>
-										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>Player number : {game.playerNumber}</p>
+										<p className='text-zinc-700 border-b-2 border-zinc-400 p-2'>Mechanics: {game.mechanics}</p>
+										<p className='text-zinc-700 border-b-2 border-zinc-400 p-2'>Universe : {game.universe}</p>
+										<p className='text-zinc-700 border-b-2 border-zinc-400 p-2'>Playtime: {game.playtime}</p>
+										<p className='text-zinc-700 border-b-2 border-zinc-400 p-2'>Player number : {game.playerNumber}</p>
 										<h2 className='text-xl font-bold p-2'>Platform:</h2>
-										<p className='text-gray-700 border-b-2 border-gray-400 p-2'>{game.platform}</p>
+										<p className='text-zinc-700 border-b-2 border-zinc-400 p-2'>{game.platform}</p>
 										<h2 className='text-xl font-bold p-2'>Game Details:</h2>
 
 										{game.characters.map((character) => (
 											<div key={character.characterId}>
-												<p className='text-gray-700 border-b-2 border-gray-400 p-2'> {character.name}</p>
-												<p className='text-gray-700 border-b-2 border-gray-400 p-2'>{character.description}</p>
+												<p className='text-zinc-700 border-b-2 border-zinc-400 p-2'> {character.name}</p>
+												<p className='text-zinc-700 border-b-2 border-zinc-400 p-2'>{character.description}</p>
 											</div>
 										))}
 									</div>
 								</div>
 								<div className='w-1/5 flex flex-col'>
-									<div className='h-full card compact bg-gray-200 text-cyan-700 shadow-xl m-2 p-4'>
+									<div className='h-full card compact bg-zinc-200 text-cyan-700 shadow-xl m-2 p-4'>
 										<h2 className='text-xl font-bold p-1'>Games You May Like:</h2>
 										{gamesmyliked.map((game) => (
 											<li key={game.id} className='mb-2'>
@@ -188,7 +188,7 @@ const GamePage = () => {
 													onClick={() => {
 														navigate(`/game/${game.gameId}`) // Use navigate for programmatic navigation
 													}}
-													className='text-gray-700 mr-4'
+													className='text-zinc-700 mr-4'
 												>
 													{game.title}
 												</button>
@@ -201,7 +201,7 @@ const GamePage = () => {
 					</div>
 				</div>
 
-				<div className='bg-gray-400 text-white text-center p-8'>
+				<div className='bg-black text-white text-center p-8'>
 					<p className='text-m'>@2023 Game Lounge, All rights reserved.</p>
 				</div>
 			</div>
