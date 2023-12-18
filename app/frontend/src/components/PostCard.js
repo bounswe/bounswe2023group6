@@ -6,7 +6,8 @@ import ReportIcon from "@mui/icons-material/Report";
 import EditPost from '../pages/ForumPage/EditPost';
 
 const PostCard = ({ post, onUpvote, onDownvote }) => (
-  <div key={post.id} className='card compact bg-gray-200 text-gray-800 shadow-xl m-2 p-4'>
+
+  <div key={post.id} className='card compact bg-neutral-200 text-neutral-800 shadow-xl m-2 p-2'>
   <div className='absolute top-2 right-2 flex'>
           <EditPost post={post}/>
           <button className="p-2 text-black rounded ">
@@ -14,13 +15,13 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
           </button>
         </div>
     <div className='flex-col'>
-      <h3 className="text-2xl font-bold text-[#b46161] link">
-          <a href={`/posts/${post.postId}`} className="no-underline">
+      <h3 className="text-2xl font-bold text-[#b46161]">
+          <a href={`/posts/${post.postId}`} className="no-underline link">
               {post.title}
           </a>
       </h3>
-      <p className='text-gray-700 mb-4'>{post.content}</p>
-      <div className='flex flex-wrap border-b-2 border-gray-200 pb-2 opacity-75 mb-4'>
+      <p className='text-neutral-700 mb-4'>{post.content}</p>
+      <div className='flex flex-wrap border-b-2 border-neutral-400 pb-2 opacity-75 mb-4'>
         {/* {post.tags.map((tag) => (
           <span key={tag} className='badge badge-secondary mr-2'>#{tag}</span>
         ))} */}
@@ -32,18 +33,24 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
               <img src={post.creatorUser.profilePicture || '/default-user.jpg'} alt='User'/>
             </div>
           </div>
-          <div className='ml-2 text-[#B46060] font-bold'>{post.creatorUser.username}</div>
+          <div className='ml-2 text-[#B46060] font-bold'><a href={`/users/${post.creatorUser.username}`} className="no-underline link">
+               {post.creatorUser.username}
+                </a>
+          </div>
         </div>
         <div className='flex'>
-        <div className='flex mr-4'>
+        <div className='flex mr-2'>
+              <p className='text-neutral-600'>{new Date(post.creationDate).toLocaleDateString()}</p>
                     {post.tags.map((tag, index) => (
-                        <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 ml-1" key={index}>
-                            {tag.name}
+                        <span className="inline-flex items-center rounded-md bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 ml-1" key={index}>
+                            #{tag.name}
                         </span>
                     ))}
                 </div>
-        <div className='inline-flex items-center rounded-md bg-gray-500 px-2 py-1 text-xs font-medium text-gray-50 ring-1 ring-inset ring-gray-500/10 mr-4'>{post.category}</div>
-        <div className='mr-12'>{post.totalComments} Comments</div>
+        <div className='inline-flex items-center rounded-md bg-neutral-500 px-2 py-1 text-xs font-medium text-neutral-50 ring-1 ring-inset ring-neutral-500/10 mr-4'>{post.category}</div>
+        <div className='mr-8 text-neutral-600'><a href={`/posts/${post.postId}`} className="no-underline link">
+                                                            {post.totalComments} Comments
+                                                             </a></div>
           <button onClick={() => onUpvote()} className='w-6 h-6'>
             <img src={upvotelogo} alt='Thumbs Up'/>
           </button>

@@ -73,7 +73,8 @@ export default function CreatePost() {
 
 	return (
 		<div>
-			<Button variant='outlined' onClick={handleClickOpen}>
+			<Button variant='outlined' onClick={handleClickOpen}
+			 sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#b57979', border: 'none'} }}>
 				Create Post
 			</Button>
 			<Dialog open={open} onClose={handleClose}>
