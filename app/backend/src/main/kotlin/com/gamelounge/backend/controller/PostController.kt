@@ -1,6 +1,7 @@
 package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.entity.Post
+import com.gamelounge.backend.entity.PostCategory
 import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
@@ -92,6 +93,13 @@ class PostController(private val postService: PostService) {
     fun reportPost(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<ResponseMessage> {
         postService.reportPost(sessionId, id, reqBody)
         return ResponseEntity.ok(ResponseMessage(message = "Post reported successfully"))
+    }
+
+    @GetMapping("/filteredCategory/{category}")
+    fun filteredCategory(@PathVariable category: PostCategory): ResponseEntity<List<PostDTO>> {
+        val posts = postService.filteredCategory(category)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(posts)
+        return ResponseEntity.ok(postsDTO)
     }
 
 }

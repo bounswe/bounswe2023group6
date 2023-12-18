@@ -89,7 +89,6 @@ class BaseNetworkService
       ..headers ??= <String, dynamic>{};
 
     final SharedManager manager = SharedManager();
-    await manager.init();
     if (manager.checkString(SharedKeys.sessionId)) {
       String sessionID = manager.getString(SharedKeys.sessionId);
 

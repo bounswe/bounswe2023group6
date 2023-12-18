@@ -7,6 +7,7 @@ import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/post/report_widget.dart';
 import 'package:mobile/presentation/pages/post/update_widget.dart';
+import 'package:mobile/presentation/widgets/annotatable_text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -125,7 +126,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: Text(content.content, style: const TextStyle(fontSize: 16)),
+            child: AnnotatableTextWidget(text: content.content, contentId: content.id),
           ),
           const SizedBox(
             height: 5,

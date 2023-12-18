@@ -193,8 +193,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       String description,
       String? genre,
       String? platform,
-      String numberOfPlayer,
-      String mechanics,
+      String? numberOfPlayer,
+      String? mechanics,
       int year,
       String? universe,
       String playTime,
@@ -218,7 +218,6 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
         playtime: playTime);
 
     final SharedManager manager = SharedManager();
-    await manager.init();
     if (!manager.checkString(SharedKeys.sessionId)) {
       throw Exception('Session id is null');
     }
@@ -247,5 +246,65 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     );
 
     return response.data['gameId'];
+  }
+
+  Future<bool> rateGame(int gameid, int score) async {
+      final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/game/$gameid/rating/$score",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to rate game');
+    }
+  }
+
+  Future<bool> updateGame(
+      String title,
+      String description,
+      String? genre,
+      String? platform,
+      String? numberOfPlayer,
+      String? mechanics,
+      int year,
+      String? universe,
+      String playTime,
+      int gameid) async {
+    if (NetworkConstants.useMockData) {
+      gameList.add(Game(
+          gameId: gameList.length + 1,
+          title: title,
+          description: description,
+          gamePicture: ""));
+    }
+    GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
+        title: title,
+        description: description,
+        genre: genre,
+        platform: platform,
+        numberOfPlayer: numberOfPlayer,
+        year: year,
+        universe: universe,
+        mechanics: mechanics,
+        playtime: playTime);
+
+    ServiceResponse<EmptyResponse> response =
+        await service.sendRequestSafe<GameCreateDTORequest, EmptyResponse>(
+      "/game/$gameid",
+      gameCreateDTORequest,
+      EmptyResponse(),
+      'PUT',
+    );
+
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to update game');
+    }
   }
 }

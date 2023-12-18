@@ -10,6 +10,6 @@ import java.util.*
 @Repository
 interface SessionRepository : JpaRepository<Session, String> {
     fun findById(id: UUID): Optional<Session>
-    fun findByUser(user: User): Session?
+    fun findByUser(user: User): Session
 
 }

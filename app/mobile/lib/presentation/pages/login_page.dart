@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  late final CacheManager cacheManager;
+  final CacheManager cacheManager = CacheManager();
 
   // Create an instance of UserAuthenticationService
   final UserAuthenticationService authService = UserAuthenticationService();
@@ -30,14 +30,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    initializeCache();
   }
 
-  Future<void> initializeCache() async {
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    cacheManager = CacheManager(manager);
-  }
 
   Future<void> loginUser() async {
     final String username = userNameController.text;

@@ -5,6 +5,7 @@ import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/game_page_create.dart';
+import 'package:mobile/presentation/widgets/annotatable_image_widget.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -222,7 +223,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     initialRating: 0,
                                     minRating: 0,
                                     direction: Axis.horizontal,
-                                    allowHalfRating: true,
+                                    allowHalfRating: false,
                                     itemSize: 30,
                                     itemCount: 5,
                                     itemPadding: const EdgeInsets.symmetric(
@@ -233,19 +234,12 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
+                                      gameService.rateGame(game.gameId, rating.round());
                                     },
                                   ),
                                 ],
                               )),
-                              Container(
-                                height: 200,
-                                width: 150, // Size of image
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                  image: NetworkImage(game.gamePicture),
-                                  fit: BoxFit.fill,
-                                )),
-                              ),
+                              AnnotatableImageWidget(imageUrl: game.gamePicture),
                             ],
                           ),
                         ],
