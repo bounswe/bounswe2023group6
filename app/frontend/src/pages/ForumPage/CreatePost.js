@@ -8,10 +8,11 @@ import {
 	Button,
 	IconButton,
 	MenuItem,
-	OutlinedInput,
 	FormControl,
 	Select,
-	InputLabel
+	InputLabel,
+	Chip,
+	Input
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { useForm } from 'react-hook-form'
@@ -22,8 +23,9 @@ export default function CreatePost() {
 	const { handleSubmit } = useForm()
 	const [title, setTitle] = useState(false)
 	const [content, setContent] = useState(false)
-	const [tag, setTag] = useState([])
 	const [category, setCategory] = useState(false)
+	const [tags, setTags] = useState([]);
+	const [currTag, setCurrTag] = useState("");
 
 	const axiosInstance = axios.create({
 		baseURL: `${process.env.REACT_APP_API_URL}`
@@ -44,7 +46,7 @@ export default function CreatePost() {
             title,
             content,
             category,
-            tags: tag
+            tags: tags
         }, {
             withCredentials: true
         })
@@ -63,11 +65,27 @@ export default function CreatePost() {
 	const clearData = () => {
 		setTitle('')
 		setContent('')
-		setTag([])
+		setTags([])
 		setCategory('')
 	}
 
-	const tags = ['gamer', 'rpg', 'moba', 'lol', 'fifa', 'gta', 'fortnite', 'horror']
+	const handleChange = (e) => {
+		setCurrTag(e.target.value);
+	};
+
+	const handleDeleteTag = (item, index) => {
+		let arr = [...tags];
+		arr.splice(index, 1);
+		console.log(item);
+		setTags(arr);
+	};
+
+	const handleKeyUp = (e) => {
+		if (e.keyCode === 13) {
+			setTags((oldState) => [...oldState, e.target.value]);
+			setCurrTag("");
+		}
+	};
 
 	const categories = ['GUIDE', 'REVIEW', 'DISCUSSION']
 
@@ -105,21 +123,35 @@ export default function CreatePost() {
 						}}
 					/>
 					<FormControl fullWidth margin='normal'>
-						<InputLabel id='demo-multiple-name-label'>Tags</InputLabel>
-						<Select
-							multiple
-							value={tag}
-							onChange={(event) => {
-								setTag(event.target.value)
+						<h3 style={{ display: "flex", alignItems: "flex-start" }}>Tags:</h3>
+						<FormControl
+							sx={{
+								display: "flex",
+								alignItems: "center",
+								gap: "20px",
+								flexWrap: "wrap",
+								flexDirection: "row",
+								border: "2px solid lightgray",
+								padding: 1,
+								borderRadius: "4px",
 							}}
-							input={<OutlinedInput label='Name' />}
 						>
-							{tags.map((name) => (
-								<MenuItem key={name} value={name}>
-									{name}
-								</MenuItem>
-							))}
-						</Select>
+							<div className={"container"}>
+								{tags.map((item, index) => (
+									<Chip
+										key={index}
+										size="small"
+										onDelete={() => handleDeleteTag(item, index)}
+										label={item}
+									/>
+								))}
+							</div>
+							<Input fullWidth
+								value={currTag}
+								onChange={handleChange}
+								onKeyDown={handleKeyUp}
+							/>
+						</FormControl>
 					</FormControl>
 					<FormControl fullWidth margin='normal'>
 						<InputLabel htmlFor='max-width'>Category</InputLabel>
