@@ -158,7 +158,7 @@ export default function CreateGame() {
 		<div>
 			<Button variant='outlined' onClick={handleClickOpen}
             			 sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
-            				Create Post
+            				Create Game
             			</Button>
 			<Dialog open={open} onClose={handleClose} fullWidth>
 				<DialogTitle>
