@@ -7,7 +7,7 @@ const CommentCard = ({ comment, onUpvote, onDownvote }) => (
     <div className='flex-col'>
         <p className='text-zinc-700 mb-4'>{comment.content}</p>
         <button className="p-2 text-black rounded absolute right-1 top-1">
-          <ReportIcon />
+          <ReportIcon sx={{ color: '#404040'}} />
         </button>
       <div className='flex justify-between items-center'>
         <div className="flex items-center">

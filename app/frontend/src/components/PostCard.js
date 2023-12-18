@@ -9,7 +9,7 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
   <div className='absolute top-2 right-2 flex'>
           <EditPost post={post}/>
           <button className="p-2 text-black rounded ">
-            <ReportIcon/>
+            <ReportIcon sx={{ color: '#404040'}} />
           </button>
         </div>
     <div className='flex-col'>
