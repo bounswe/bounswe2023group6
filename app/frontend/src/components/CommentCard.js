@@ -1,7 +1,5 @@
 import React from 'react';
 import userlogo from '../user.jpg';
-import upvotelogo from '../upvote.png';
-import downvotelogo from '../downvote.png';
 import ReportIcon from "@mui/icons-material/Report";
 
 const CommentCard = ({ comment, onUpvote, onDownvote }) => (  
@@ -21,13 +19,13 @@ const CommentCard = ({ comment, onUpvote, onDownvote }) => (
           <div className='ml-2 text-[#B46060] font-bold'>{comment.creatorUserId}</div>
         </div>
         <div className='flex'>
-        <button onClick={() => onUpvote(comment.commentId)} className='w-6 h-6'>
-          <img src={upvotelogo} alt='Thumbs Up'/>
-        </button>
+        <button onClick={() => onUpvote(comment.commentId)} className="btn btn-circle btn-sm bg-[#b46161] border-[#b46161] text-neutral-100 hover:bg-[#8c4646] hover:border-[#8c4646]">
+                              <i className="i pi pi-thumbs-up" />
+                            </button>
         <p className='text-black ml-1 mr-4'>{comment.upvotes}</p>
-        <button onClick={() => onDownvote(comment.commentId)} className='w-6 h-6'>
-          <img src={downvotelogo} alt='Thumbs Down'/>
-        </button>
+       <button onClick={() => onDownvote(comment.commentId)} className="btn btn-circle btn-sm bg-[#b46161] border-[#b46161] text-neutral-100 hover:bg-[#8c4646] hover:border-[#8c4646]">
+                             <i className="i pi pi-thumbs-up" />
+                           </button>
         <p className='text-black ml-1'>{comment.downvotes}</p>
         </div>
       </div>
