@@ -1,7 +1,5 @@
 import React from 'react';
 // import userlogo from '../user.jpg';
-import upvotelogo from '../upvote.png';
-import downvotelogo from '../downvote.png';
 import ReportIcon from "@mui/icons-material/Report";
 import EditPost from '../pages/ForumPage/EditPost';
 
@@ -51,12 +49,12 @@ const PostCard = ({ post, onUpvote, onDownvote }) => (
         <div className='mr-8 text-neutral-600'><a href={`/posts/${post.postId}`} className="no-underline link">
                                                             {post.totalComments} Comments
                                                              </a></div>
-          <button onClick={() => onUpvote()} className='w-6 h-6'>
-            <img src={upvotelogo} alt='Thumbs Up'/>
-          </button>
+          <button onClick={() => onUpvote(post.postId)} className="btn btn-circle btn-sm bg-[#b46161] border-[#b46161] text-neutral-100 hover:bg-[#8c4646] hover:border-[#8c4646]">
+                      <i className="i pi pi-thumbs-up" />
+                    </button>
           <p className='text-black ml-1 mr-4'>{post.upvotes}</p>
-          <button onClick={() => onDownvote()} className='w-6 h-6'>
-            <img src={downvotelogo} alt='Thumbs Down'/>
+          <button onClick={() => onDownvote(post.postId)} className="btn btn-circle btn-sm bg-[#b46161] border-[#b46161] text-neutral-100 hover:bg-[#8c4646] hover:border-[#8c4646]">
+            <i className="i pi pi-thumbs-down" />
           </button>
           <p className='text-black ml-1'>{post.downvotes}</p>
         </div>

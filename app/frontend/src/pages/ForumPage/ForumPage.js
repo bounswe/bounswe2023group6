@@ -5,6 +5,7 @@ import PostCard from '../../components/PostCard';
 import { getAllPosts } from '../../services/postService';
 import SelectTags from './SelectTags';
 import SortIcon from '@mui/icons-material/Sort';
+import { upvotePost, downvotePost } from '../../services/postService';
 
 export default function ForumPage() {
     const [forumPosts, setForumPosts] = useState([]);
@@ -28,6 +29,28 @@ export default function ForumPage() {
 
         setFilteredPosts(sortedPosts);
     };
+
+    const handleUpvote = async (postId) => {
+        try {
+          const response = await upvotePost(postId);
+          setFilteredPosts((prevPosts) =>
+            prevPosts.map((post) => (post.postId === postId ? response.data : post))
+          );
+        } catch (error) {
+          console.error("Error upvoting post:", error);
+        }
+      };
+
+      const handleDownvote = async (postId) => {
+        try {
+          const response = await downvotePost(postId);
+          setFilteredPosts((prevPosts) =>
+            prevPosts.map((post) => (post.postId === postId ? response.data : post))
+          );
+        } catch (error) {
+          console.error("Error downvoting post:", error);
+        }
+      };
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -70,8 +93,6 @@ export default function ForumPage() {
       setFilteredPosts(filtered);
     };
 
-
-
     if (isLoading) {
         return <div className='items-center justify-center flex'>Loading...</div>;
     }
@@ -109,7 +130,9 @@ export default function ForumPage() {
                         <div className='w-full flex flex-row'>
                             <div className='w-full flex flex-col'>
                                 {filteredPosts.map((post) => (
-                                    <PostCard key={post.postId} post={post} tags={post.tags} category={post.category} />
+                                    <PostCard key={post.postId} post={post} tags={post.tags} category={post.category} onUpvote={() => handleUpvote(post.postId)}
+                                                                                                                                        onDownvote={() => handleDownvote(post.postId)}
+                                                                                                                                        />
                                 ))}
                             </div>
                         </div>
