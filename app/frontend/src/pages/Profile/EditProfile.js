@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Dialog,
     DialogTitle,
@@ -24,6 +24,15 @@ export default function EditProfile(props) {
     const axiosInstance = axios.create({
         baseURL: `${process.env.REACT_APP_API_URL}`
     })
+
+    useEffect(() => {
+        setFormData({
+            title: props.user.title || '',
+            company: props.user.company || '',
+            about: props.user.about || '',
+            image: props.user.profilePicture || null
+        });
+    }, [props.user]);
 
     const handleClickOpen = () => {
         setOpen(true)

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbarx from '../../components/navbar/Navbar';
 import CreatePost from './CreatePost';
 import PostCard from '../../components/PostCard';
-import { getAllPosts } from '../../services/postService';
+import {getAllPosts, getAllTags} from '../../services/postService';
 import SelectTags from './SelectTags';
 import SortIcon from '@mui/icons-material/Sort';
 import { upvotePost, downvotePost } from '../../services/postService';
@@ -14,7 +14,7 @@ export default function ForumPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedTags, setSelectedTags] = useState([]);
-    const tags = ['gamer', 'rpg', 'moba', 'lol', 'fifa', 'gta', 'fortnite', 'horror'];
+    const [tags, setTags] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
     const [currentUser, setCurrentUser] = useState(null);
 
@@ -68,7 +68,18 @@ export default function ForumPage() {
             }
         };
 
+        const fetchTags = async () => {
+            try {
+                const response = await getAllTags();
+                setTags(response.data)
+                console.log(tags)
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
         fetchPosts();
+        fetchTags();
     }, []);
 
     useEffect(() => {

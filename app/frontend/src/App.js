@@ -8,6 +8,7 @@ import { ForumPage } from './pages/ForumPage'
 import { PostPage } from './pages/PostPage'
 import { NextUIProvider } from '@nextui-org/react'
 import { GameForum } from './pages/GameForum'
+import {LfgPage} from "./pages/LfgPage";
 
 const App = () => (
 	<NextUIProvider disableBaseline='true'>
@@ -21,6 +22,7 @@ const App = () => (
 				<Route path='/reset-password' element={<ResetPassword />} />
 				<Route path='/home' element={<HomePage />} />
 				<Route path='/forum' element={<ForumPage />} />
+				<Route path='/groups' element={<LfgPage />} />
 				<Route path='/game' element={<GameForum />} />
 				<Route path='/game/:gameId' element={<GamePage />} />
 
