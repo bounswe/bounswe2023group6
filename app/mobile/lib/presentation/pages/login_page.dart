@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         updateSession(username);
         User user= (await UserService().getUser(username));
         await cacheManager.saveUser(user);
-        Navigator.pushNamed(context, '/adminPanel');
+        Navigator.pushNamed(context, '/');
         return;
       } else {
         title = "Error";
