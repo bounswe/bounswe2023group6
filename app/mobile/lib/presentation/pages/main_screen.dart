@@ -39,10 +39,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   final List<Widget> navigators = <Widget>[
-    CustomNavigator(defaultKey: GlobalStaticKeys.homeNavigatorKey, defaultPage: const HomePage(),),
-    CustomNavigator(defaultKey: GlobalStaticKeys.forumNavigatorKey, defaultPage: const ForumPage(),),
-    CustomNavigator(defaultKey: GlobalStaticKeys.gameNavigatorKey, defaultPage: GamePage(),),
-    CustomNavigator(defaultKey: GlobalStaticKeys.lfgNavigatorKey, defaultPage: LFGPage(),),
+    CustomNavigator(defaultPage: const HomePage(),),
+    CustomNavigator(defaultPage: const ForumPage(),),
+    CustomNavigator(defaultPage: GamePage(),),
+    CustomNavigator(defaultPage: LFGPage(),),
   ];
 
   @override
