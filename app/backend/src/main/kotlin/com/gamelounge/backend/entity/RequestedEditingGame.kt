@@ -16,21 +16,15 @@ import lombok.NoArgsConstructor
 import java.time.Instant
 
 
-enum class GameStatus {
-        PENDING_APPROVAL,
-        APPROVED,
-        REJECTED,
-        EMPTY
-}
-
 @Entity
-@Table(name = "games")
+@Table(name = "requested_editing_games")
 @NoArgsConstructor
-class Game(
+class RequestedEditingGame(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val gameId: Long = 0,
+        val id: Long = 0,
 
+        val gameId: Long = 0,
         var title: String = "",
         var description: String = "",
         @Enumerated(EnumType.STRING)
@@ -45,43 +39,9 @@ class Game(
         @Enumerated(EnumType.STRING)
         var mechanics: GameMechanics = GameMechanics.EMPTY,
         var playtime: String = "",
-        var totalRating: Int = 0,
-        var countRating: Int = 0,
-        var averageRating: Double = 0.0,
         var creationDate: Instant = Instant.now(),
         var gamePicture: String? = null,
-        var isDeleted: Boolean = false,
 
-        @Enumerated(EnumType.STRING)
-        var status: GameStatus = GameStatus.PENDING_APPROVAL,
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "userId")
-        val user: User? = null,
-
-        @OneToMany(mappedBy = "relatedGame")
-        val lfgs: List<LFG> = mutableListOf(),
-
-        @OneToMany(mappedBy = "relatedGame")
-        val posts: List<Post> = mutableListOf(),
-
-        @OneToMany(mappedBy = "relatedGame")
-        val characters: List<Character> = mutableListOf(),
-
-        @ManyToMany
-        @JoinTable(
-                name = "game_tags",
-                joinColumns = [JoinColumn(name = "gameId")],
-                inverseJoinColumns = [JoinColumn(name = "tagId")]
-        )
-        var tags: List<Tag> = mutableListOf(),
-
-        /*@ManyToMany
-        @JoinTable(
-                name = "user_game_rating",
-                joinColumns = [JoinColumn(name = "gameId")],
-                inverseJoinColumns = [JoinColumn(name = "userId")]
-        )
-        var ratedUsers: MutableList<User> = mutableListOf(),*/
 
         )

@@ -2,6 +2,7 @@ package com.gamelounge.backend.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gamelounge.backend.entity.Post
+import com.gamelounge.backend.entity.PostCategory
 import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.exception.PostNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedPostAccessException
@@ -154,5 +155,9 @@ class PostService(
         val post = getPost(postId)
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedPost = post)
         reportRepository.save(newReport)
+    }
+
+    fun filteredCategory(category: PostCategory): List<Post> {
+        return postRepository.findByCategory(category)
     }
 }

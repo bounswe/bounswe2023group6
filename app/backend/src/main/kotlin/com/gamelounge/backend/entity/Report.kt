@@ -23,6 +23,10 @@ class Report(
     var reportedPost: Post? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gameId")
+    var reportedGame: Game? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lfgId")
     var reportedLFG: LFG? = null,
 

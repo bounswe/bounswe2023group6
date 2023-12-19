@@ -17,4 +17,7 @@ data class UpdateUserRequest(
 
     @JsonProperty("company")
     val company: String?,
+
+    @JsonProperty("isVisible")
+    val isVisible: Boolean?,
 ) 
