@@ -28,9 +28,7 @@ class _GroupPageState extends State<GroupPage> {
   }
 
   Future<void> initializeUser() async {
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    currentUser = CacheManager(manager).getUser();
+    currentUser = CacheManager().getUser();
   }
 
   Future<LFG> loadlfg(int lfgId) async {
