@@ -37,8 +37,8 @@ Over the past week, the team made significant progress on various aspects of the
 | [Frontend] Guest restrictions should be added| [#543](https://github.com/bounswe/bounswe2023group6/issues/543) | Halis Ayberk Erdem | 19.12.2023 |--| 3hr | 2hr |
 | [Mobile] Implement Admin Panel | [#545](https://github.com/bounswe/bounswe2023group6/issues/545) | Süleyman Melih Portakal | 19.12.2023 |--| 3hr | 2hr |
 | [Mobile] Refactor Model Class for Groups| [#547](https://github.com/bounswe/bounswe2023group6/issues/547) | Umut Demir | 19.12.2023 |[#576](https://github.com/bounswe/bounswe2023group6/pull/576)| 3hr | 2hr |
-| [Backend] Complete the Requirements Relating to the Guest and Admin | [#550](https://github.com/bounswe/bounswe2023group6/issues/550) | Ahmet Kudu | 19.12.2023 |--| 4hr | 3hr |
-| [Backend] Complete the Requirements Relating to the User| [#559](https://github.com/bounswe/bounswe2023group6/issues/559) | Ahmet Kudu | 19.12.2023 |--| 4hr | 3hr |
+| [Backend] Complete the Requirements Relating to the Guest and Admin| [#550](https://github.com/bounswe/bounswe2023group6/issues/550) | Ahmet Kudu | 19.12.2023 |[#593](https://github.com/bounswe/bounswe2023group6/pull/593)| 4hr | 3hr |
+| [Backend] Complete the Requirements Relating to the User| [#559](https://github.com/bounswe/bounswe2023group6/issues/559) | Ahmet Kudu | 19.12.2023 |[#572](https://github.com/bounswe/bounswe2023group6/pull/572)| 4hr | 6hr |
 | [Mobile] Implement Update Game Service | [#551](https://github.com/bounswe/bounswe2023group6/issues/551) | Süleyman Melih Portakal | 19.12.2023 |-- | 3hr | 2hr |
 | [Mobile] Implement Searchbar | [#553](https://github.com/bounswe/bounswe2023group6/issues/553) | Muhammet Mustafa Küçük | 19.12.2023 | --| 3hr | 2hr |
 | [Frontend] Add LFG Page| [#554](https://github.com/bounswe/bounswe2023group6/issues/554) | Hüseyin Çivi | 19.12.2023 |[#576](https://github.com/bounswe/bounswe2023group6/pull/576)| 4hr | 3hr |
@@ -87,7 +87,8 @@ Due to numerous updates made in the project last week, many features require rea
 | [Mobile] Refactor Model Class for Groups| [#547](https://github.com/bounswe/bounswe2023group6/issues/547) | Umut Demir | 26.12.2023 | 1.5hr |
 | [Mobile] Create Service for LFG| [#548](https://github.com/bounswe/bounswe2023group6/issues/548) | Umut Demir | 26.12.2023 | 2hr |
 | [Mobile] Update Service for LFG| [#549](https://github.com/bounswe/bounswe2023group6/issues/549) | Umut Demir | 26.12.2023 | 1hr |
-| [Backend] Complete the Requirements Relating to the Guest and Admin | [#550](https://github.com/bounswe/bounswe2023group6/issues/550) | Ahmet Kudu | 26.12.2023 | 1.5hr |
+| [Backend] Changes and Requests Given by Mobile and Frontend Teams | [#596](https://github.com/bounswe/bounswe2023group6/issues/596) | Ahmet Kudu | 25.12.2023 | 2hr |
+| [Backend] Complete InCompleted Requirements and Test Completed Ones | [#597](https://github.com/bounswe/bounswe2023group6/issues/597) | Ahmet Kudu | 25.12.2023 | 4hr |
 | [Mobile] Implement Update Game Service | [#551](https://github.com/bounswe/bounswe2023group6/issues/551) | Süleyman Melih Portakal | 26.12.2023 | 1hr |
 | [Mobile] Update Page for LFG | [#552](https://github.com/bounswe/bounswe2023group6/issues/552) | Umut Demir | 26.12.2023 | 1hr |
 | [Mobile] Add Guest User Option | [#587](https://github.com/bounswe/bounswe2023group6/issues/587) | Umut Demir | 26.12.2023 | 3hr |
