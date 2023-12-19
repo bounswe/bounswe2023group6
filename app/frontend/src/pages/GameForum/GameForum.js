@@ -33,9 +33,9 @@ const GameForum = () => {
 		<>
 			<Navbarx></Navbarx>
 			<div className='w-full flex flex-col'>
-				<div className='w-full flex justify-center p-4 bg-zinc-50 pb-20'>
+				<div className='w-full flex justify-center p-4 bg-neutral-50 pb-20'>
 					<div className='w-3/6 flex flex-col'>
-						<h1 className='text-4xl font-bold text-zinc-700 text-center'>Games</h1>
+						<h1 className='text-4xl font-bold text-neutral-700 text-center'>Games</h1>
 						<CreateGame />
 						<div className='w-full flex flex-row'>
 							<div className='w-full flex flex-col'>

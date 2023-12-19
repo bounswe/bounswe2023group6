@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
 
@@ -11,14 +12,22 @@ class LFGPageCreate extends StatefulWidget {
 
 class _LFGCreatePageState extends State<LFGPageCreate> {
   final _descriptionController = TextEditingController();
-  final List<String> _gameList = [
-    "World of Warcraft",
-    "Apex Legends",
-    "Borderlands 3",
-    "Destiny 2",
-    "Fortnite",
+  final _titleController = TextEditingController();
+  final List<String> _platformList = [
+    "XBOX",
+    "COMPUTER",
+    "PS", // PlayStation
+    "ONBOARD",
+    "EMPTY"
   ];
-  String? _selectedGame;
+  String? _selectedPlatform;
+  final List<String> _languageList = [
+    "TUR",
+    "EN",
+  ];
+  String? _selectedLanguage;
+  bool micCamRequired = false;
+  final _capacityController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +42,18 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
           child: Form(
             child: Column(children: [
               TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  hintText: "Title",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the title";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
                 controller: _descriptionController,
                 minLines: 3,
                 maxLines: 10,
@@ -41,36 +62,88 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter a description";
+                    return "Please enter the description";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField(
-                value: _selectedGame,
-                items: _gameList.map((game) {
+                value: _selectedPlatform,
+                items: _platformList.map((platform) {
                   return DropdownMenuItem(
-                    value: game,
-                    child: Text(game),
+                    value: platform,
+                    child: Text(platform),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedGame = value as String;
+                    _selectedPlatform = value as String;
                   });
                 },
                 decoration: const InputDecoration(
-                  hintText: "Game",
+                  hintText: "Platform",
                 ),
                 validator: (value) {
                   if (value == null) {
-                    return "Please select a game";
+                    return "Please select a platform";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
+              DropdownButtonFormField(
+                value: _selectedLanguage,
+                items: _languageList.map((language) {
+                  return DropdownMenuItem(
+                    value: language,
+                    child: Text(language),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedLanguage = value as String;
+                  });
+                },
+                decoration: const InputDecoration(
+                  hintText: "Language",
+                ),
+                validator: (value) {
+                  if (value == null) {
+                    return "Please select a language";
+                  }
+                  return null;
+                },
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: micCamRequired,
+                    onChanged: (value) {
+                      setState(() {
+                        micCamRequired = value!;
+                      });
+                    },
+                  ),
+                  const Text("Mic/Cam Required"),
+                ],
+              ),
+              TextFormField(
+                controller: _capacityController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: const InputDecoration(
+                  hintText: "Group Capacity",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the capacity of the group";
+                  }
+                  return null;
+                },
+              ),
               Button(
                 label: "Create",
                 onPressed: () async {},

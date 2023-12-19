@@ -89,7 +89,7 @@ export default function EditPost(props) {
     return (
         <div>
             <Button onClick={handleClickOpen}>
-                <EditIcon sx={{ color: 'black'}} />
+                <EditIcon sx={{ color: '#404040'}} />
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>

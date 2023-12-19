@@ -29,6 +29,10 @@ class User {
   ByteData? profileImage;
   String profilePicture = '';
 
+  int followers;
+  int following;
+  List<User> followersList = [];
+
   User({
     required this.userId,
     required this.email,
@@ -37,6 +41,9 @@ class User {
     this.about,
     this.title,
     this.company,
+    this.followers = 0,
+    this.following = 0,
+    this.followersList = const [],
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -48,6 +55,9 @@ class User {
       about: json['about'],
       title: json['title'] ?? '',
       company: json['company'] ?? '',
+      followers: json['followers'] ?? 0,
+      following: json['following'] ?? 0,
+      // followersList: json['followersList'] ?? [],
     );
   }
 
@@ -60,6 +70,9 @@ class User {
       'about': about,
       'title': title,
       'company': company,
+      'followers': followers,
+      'following': following,
+      'followersList': followersList,
     };
   }
 }

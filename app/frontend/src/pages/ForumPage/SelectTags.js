@@ -18,17 +18,17 @@ const TagSelection = ({ tags, selectedTags, handleTagChange }) => {
 
   const tagCheckboxes = tags.map((tag) => (
     <FormControlLabel
-      key={tag}
+      key={tag.name}
       control={
         <Checkbox
-          checked={selectedTags.includes(tag)}
-          onChange={(event) => handleCheckboxChange(event, tag)}
-          name={tag}
+          checked={selectedTags.includes(tag.name)}
+          onChange={(event) => handleCheckboxChange(event, tag.name)}
+          name={tag.name}
           style={{ color: grey[800] }}
         />
       }
       style={{ color: grey[800] }}
-      label={tag}
+      label={tag.name}
     />
   ));
 

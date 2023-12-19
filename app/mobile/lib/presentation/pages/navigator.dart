@@ -9,9 +9,9 @@ import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
 
 class CustomNavigator extends StatefulWidget {
-  const CustomNavigator(
-      {super.key, required this.defaultKey, required this.defaultPage});
-  final GlobalKey<NavigatorState> defaultKey;
+  CustomNavigator(
+      {super.key, required this.defaultPage});
+  final GlobalKey<NavigatorState> defaultKey = GlobalObjectKey(UniqueKey());
   final Widget defaultPage;
 
   @override
