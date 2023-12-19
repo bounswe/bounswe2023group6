@@ -25,7 +25,7 @@ class LFGCard extends StatelessWidget {
                   child: SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(lfg.title),
+                      child: Text(lfg.title![0]),
                     ),
                   )),
             ],

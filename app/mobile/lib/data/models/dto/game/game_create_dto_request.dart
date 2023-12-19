@@ -6,11 +6,11 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
   String description;
   String? genre;
   String? platform;
-  String numberOfPlayer;
+  String? numberOfPlayer;
   int year;
   String? universe;
   String playtime;
-  String mechanics;
+  String? mechanics;
 
 
   GameCreateDTORequest({
