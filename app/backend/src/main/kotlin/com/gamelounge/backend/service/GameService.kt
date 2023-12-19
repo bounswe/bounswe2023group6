@@ -141,7 +141,7 @@ class GameService(
     }
 
     fun getAllGames(): List<Game> {
-        return gameRepository.findAll().filter { !it.isDeleted }
+        return gameRepository.findAll().filter { !it.isDeleted && it.status == GameStatus.APPROVED }
     }
 
     fun getRatedGamesByUser(sessionId: UUID): List<Game> {
@@ -304,12 +304,31 @@ class GameService(
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val game = getGame(gameId)
 
+        //check if report is not duplicated
+        val existedReport = reportRepository.findByReportedGame(game)
+        val alreadyReported = existedReport.filter { it.reportingUser?.userId == user.userId }
+
+        if (alreadyReported.isNotEmpty()) {
+            throw DuplicateGameException("Not allowed to report more than once")
+        }
+
         if (game.isDeleted) {
             throw DeletedGameException("Game with ID: ${game.gameId} is deleted")
         }
 
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedGame = game)
         reportRepository.save(newReport)
+    }
+
+    fun getReportedGames(sessionId: UUID): List<Game> {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        if (user.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to get reported games")
+        }
+        val reportedGames = reportRepository.findAll()
+        val reportedGameIds = reportedGames.map { it.reportedGame?.gameId }
+        return gameRepository.findAllById(reportedGameIds).filter { !it.isDeleted }
     }
 
 

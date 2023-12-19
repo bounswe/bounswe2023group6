@@ -1,10 +1,12 @@
 package com.gamelounge.backend.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.gamelounge.backend.entity.Game
 import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.entity.PostCategory
 import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.exception.PostNotFoundException
+import com.gamelounge.backend.exception.UnauthorizedGameAccessException
 import com.gamelounge.backend.exception.UnauthorizedPostAccessException
 import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.repository.PostRepository
@@ -153,11 +155,28 @@ class PostService(
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val post = getPost(postId)
+
+        //check if report is not duplicated
+        val alreadyReported = post.reports.any { it.reportingUser?.userId == userId }
+        if (alreadyReported) {
+            throw UnauthorizedPostAccessException("Not allowed to report more than once")
+        }
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedPost = post)
         reportRepository.save(newReport)
     }
 
     fun filteredCategory(category: PostCategory): List<Post> {
         return postRepository.findByCategory(category)
+    }
+
+    fun getReportedPosts(sessionId: UUID): List<Post> {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        if (user.isAdmin != true) {
+            throw UnauthorizedPostAccessException("Unauthorized to get reported posts")
+        }
+        val reportedPosts = reportRepository.findAll()
+        val reportedPostIds = reportedPosts.map { it.reportedPost?.postId }
+        return postRepository.findAllById(reportedPostIds)
     }
 }

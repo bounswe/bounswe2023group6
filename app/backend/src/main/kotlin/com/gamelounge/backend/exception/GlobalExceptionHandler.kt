@@ -170,5 +170,12 @@ class GlobalExceptionHandler {
                 .body(mapOf("errorMessage" to exception.message))
     }
 
+    @ExceptionHandler(DuplicateGameException::class)
+    fun handleDuplicateGameException(exception: DuplicateGameException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+
 
 }
