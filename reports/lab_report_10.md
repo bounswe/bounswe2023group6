@@ -32,7 +32,7 @@ Over the past week, the team made significant progress on various aspects of the
 | [Mobile] Add filtering to post page| [#509](https://github.com/bounswe/bounswe2023group6/issues/509) | Muhammet Mustafa Küçük | 19.12.2023 |-- | 2hr | 1hr |
 | [Mobile] Implement LFG Page| [#516](https://github.com/bounswe/bounswe2023group6/issues/516) | Süleyman Melih Portakal | 19.12.2023 | --| 4hr | 2hr |
 | [Mobile] Game Missing Parts| [#526](https://github.com/bounswe/bounswe2023group6/issues/526) | Süleyman Melih Portakal | 19.12.2023 |--| 4hr | 2hr |
-| [Frontend] Improve General Styling| [#517](https://github.com/bounswe/bounswe2023group6/issues/517) | Beyzanur Bektan | 19.12.2023 |--| 4hr | 3hr |
+| [Frontend] Improve General Styling| [#517](https://github.com/bounswe/bounswe2023group6/issues/517) | Beyzanur Bektan | 19.12.2023 |[#571](https://github.com/bounswe/bounswe2023group6/pull/571)| 4hr | 3hr |
 | [Backend] Implementing Annotations | [#541](https://github.com/bounswe/bounswe2023group6/issues/541) | Emre Sin | 19.12.2023 |--| 4hr | 2hr |
 | [Frontend] Guest restrictions should be added| [#543](https://github.com/bounswe/bounswe2023group6/issues/543) | Halis Ayberk Erdem | 19.12.2023 |--| 3hr | 2hr |
 | [Mobile] Implement Admin Panel | [#545](https://github.com/bounswe/bounswe2023group6/issues/545) | Süleyman Melih Portakal | 19.12.2023 |--| 3hr | 2hr |
@@ -50,7 +50,8 @@ Over the past week, the team made significant progress on various aspects of the
 ## Completed tasks that were not planned for the week
 
 | Description  | Issue | Assignee | Due | PR |
-| -------- | ----- | -------- | --- | --- |
+| --- | --- | --- | --- | --- |
+| [Frontend] Modify some forum post functionalities | [#574](https://github.com/bounswe/bounswe2023group6/issues/574) | Beyzanur Bektan | 19.12.2023  | [#582](https://github.com/bounswe/bounswe2023group6/pull/582) |
 
 ## Planned vs. Actual
 Due to numerous updates made in the project last week, many features require reassessment and adaptation to their new versions. As several issues are dependent to each other, we were unable to fully complete the two-week plan we had initially designed. However, a significant part of the plan has been accomplished even though they require minor updates to be finalized and closed. 
@@ -63,7 +64,6 @@ Due to numerous updates made in the project last week, many features require rea
 | [Mobile] Fix Profile Page Role Tags, Titles, and Visibility Issues | [#588](https://github.com/bounswe/bounswe2023group6/issues/588) | Erkam Kavak | 26.12.2023  | 3hr | 
 | [Backend] Update Rated Games Endpoint | [#565](https://github.com/bounswe/bounswe2023group6/issues/565) | Emre Türker | 26.12.2023  | 2hr | 
 | [Backend] Implementing the Recommendation Feature| [#567](https://github.com/bounswe/bounswe2023group6/issues/567) | Emre Türker | 26.12.2023  | 3hr | 
-| [Frontend] Modify some forum post functionalities| [#574](https://github.com/bounswe/bounswe2023group6/issues/567) | Beyza Bektan | 26.12.2023  | 2hr |
 | [Frontend] Forum and Profile Page Missing Parts| [#577](https://github.com/bounswe/bounswe2023group6/issues/577) | Hüseyin Çivi | 26.12.2023  | 3hr |
 | [CI/CD] Adding deployment to workflow yaml| [#584](https://github.com/bounswe/bounswe2023group6/issues/584) | Muhammet Mustafa Küçük | 26.12.2023  | 3hr |
 | Preparing Lab Report 10 | [#585](https://github.com/bounswe/bounswe2023group6/issues/585) | Halis Ayberk Erdem| 26.12.2023  | 3hr |
@@ -79,7 +79,7 @@ Due to numerous updates made in the project last week, many features require rea
 | [Mobile] Add filtering to post page| [#509](https://github.com/bounswe/bounswe2023group6/issues/509) | Muhammet Mustafa Küçük | 26.12.2023 | 1hr |
 | [Mobile] Implement LFG Page| [#516](https://github.com/bounswe/bounswe2023group6/issues/516) | Süleyman Melih Portakal | 26.12.2023 | 2hr |
 | [Mobile] Game Missing Parts| [#526](https://github.com/bounswe/bounswe2023group6/issues/526) | Süleyman Melih Portakal | 26.12.2023 |1.5hr |
-| [Frontend] Improve General Styling| [#517](https://github.com/bounswe/bounswe2023group6/issues/517) | Beyzanur Bektan | 26.12.2023 | 2hr |
+| [Frontend] Enhance Profile Page| [#595](https://github.com/bounswe/bounswe2023group6/issues/595) | Beyzanur Bektan | 26.12.2023 | 3hr |
 | [Mobile] Post/Comment Add Image| [#527](https://github.com/bounswe/bounswe2023group6/issues/527) | Umut Demir | 26.12.2023 | 1.5hr |
 | [Backend] Implementing Annotations | [#541](https://github.com/bounswe/bounswe2023group6/issues/541) | Emre Sin | 26.12.2023 | 2hr |
 | [Frontend] Guest restrictions should be added| [#543](https://github.com/bounswe/bounswe2023group6/issues/543) | Halis Ayberk Erdem | 26.12.2023 | 1.5hr |
