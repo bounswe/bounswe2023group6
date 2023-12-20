@@ -1,11 +1,11 @@
-name: Frontend Docker Build
+name: Frontend CI/CD
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches: [ develop ]
-  #   paths: 
-  #     - 'app/frontend/**'
+  #workflow_dispatch:
+  push:
+    branches: [ develop ]
+    paths: 
+      - 'app/frontend/**'
 
 jobs:
 
