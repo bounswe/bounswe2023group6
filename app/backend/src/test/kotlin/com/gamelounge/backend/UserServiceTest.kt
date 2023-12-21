@@ -3,11 +3,13 @@ package com.gamelounge.backend
 import com.gamelounge.backend.entity.Tag
 import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.exception.UsernameNotFoundException
+import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.request.UpdateUserRequest
 import com.gamelounge.backend.repository.GameRepository
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.repository.SessionRepository
 import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.service.AccessService
 import com.gamelounge.backend.service.S3Service
 import com.gamelounge.backend.service.TagService
 import com.gamelounge.backend.service.UserService
@@ -28,13 +30,18 @@ class UserServiceTest {
     private val gameRepository: GameRepository = mock()
     private val s3Service: S3Service = mock()
     private val tagService: TagService = mock()
+    private val sessionAuth: SessionAuth = mock()
+    private val accessService: AccessService = mock()
+
     private val userService = UserService(
         sessionRepository,
         userRepository,
         postRepository,
         gameRepository,
+        sessionAuth,
         s3Service,
-        tagService
+        tagService,
+        accessService
     )
     @Test
     fun `updateUser should update all fields when provided`() {
@@ -46,7 +53,8 @@ class UserServiceTest {
             about = "new about",
             tags = listOf("tag1", "tag2"),
             title = "new title",
-            company = "new company"
+            company = "new company",
+            isVisible = true
         )
         val newImageUrl = "imageurl"
         val newTags = listOf(Tag(name = "tag1"), Tag(name = "tag2"))
@@ -77,7 +85,8 @@ class UserServiceTest {
             about = "new about",
             tags = listOf("tag1", "tag2"),
             title = "new title",
-            company = "new company"
+            company = "new company",
+            isVisible = true
         )
 
         whenever(userRepository.findByUserId(userId)).thenReturn(null)

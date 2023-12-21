@@ -1,11 +1,11 @@
 package com.gamelounge.backend
 
+import com.gamelounge.backend.constant.*
 import com.gamelounge.backend.entity.Game
 import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.request.CreateGameRequest
-import com.gamelounge.backend.repository.GameRepository
-import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.repository.*
 import com.gamelounge.backend.service.GameService
 import com.gamelounge.backend.service.S3Service
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,13 +19,19 @@ import java.util.*
 
 class GameServiceTest {
     private val gameRepository: GameRepository = mock()
+    private val editedGameRepository: EditedGameRepository = mock()
+    private val userGameRatingRepository: UserGameRatingRepository = mock()
     private val sessionAuth: SessionAuth = mock()
     private val userRepository: UserRepository = mock()
+    private val reportRepository: ReportRepository = mock()
     private val s3Service: S3Service = mock()
     private val gameService = GameService(
         gameRepository,
+        editedGameRepository,
+        userGameRatingRepository,
         sessionAuth,
         userRepository,
+        reportRepository,
         s3Service
     )
     @Test
@@ -35,12 +41,12 @@ class GameServiceTest {
         val gameRequest = CreateGameRequest(
             title = "Game Title",
             description = "Description",
-            genre = "Genre",
-            platform = "Platform",
-            playerNumber = "Player Number",
+            genre = GameGenre.FIGHTING,
+            platform = GamePlatform.COMPUTER,
+            playerNumber = NumberOfPlayers.MULTIPLE,
             releaseYear = 2020,
-            universe = "Universe",
-            mechanics = "Mechanics",
+            universe = UniverseInfo.FANTASY,
+            mechanics = GameMechanics.CHANCE_BASED,
             playtime = "100",
             totalRating = 0,
             countRating = 0,
@@ -78,12 +84,12 @@ class GameServiceTest {
         val gameRequest = CreateGameRequest(
             title = "Game Title",
             description = "Description",
-            genre = "Genre",
-            platform = "Platform",
-            playerNumber = "Player Number",
+            genre = GameGenre.FIGHTING,
+            platform = GamePlatform.COMPUTER,
+            playerNumber = NumberOfPlayers.MULTIPLE,
             releaseYear = 2020,
-            universe = "Universe",
-            mechanics = "Mechanics",
+            universe = UniverseInfo.FANTASY,
+            mechanics = GameMechanics.CHANCE_BASED,
             playtime = "100",
             totalRating = 0,
             countRating = 0,
