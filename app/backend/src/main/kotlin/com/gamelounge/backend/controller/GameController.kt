@@ -1,20 +1,17 @@
 package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.model.DTO.GameDTO
-import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.request.CreateGameRequest
-import com.gamelounge.backend.model.request.CreatePostRequest
-import com.gamelounge.backend.model.request.RegisterationRequest
 import com.gamelounge.backend.model.request.UpdateGameRequest
 import com.gamelounge.backend.service.GameService
 import com.gamelounge.backend.util.ConverterDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
-
 
 @RestController
 @RequestMapping("/game")
@@ -51,10 +48,15 @@ class GameController(private val gameService: GameService) {
     }
 
     @GetMapping
-    fun getAllPosts(): ResponseEntity<List<GameDTO>> {
-        val games = gameService.getAllGames()
-        val gameDTO = ConverterDTO.convertBulkToGameDTO(games)
-        return ResponseEntity.ok(gameDTO)
+    fun getAllGames(): ResponseEntity<List<GameDTO>> {
+        val gameDTOs = convertBulkToGameDTO(gameService.getAllGames())
+        return ResponseEntity.ok(gameDTOs)
+    }
+
+    @GetMapping("/recommended")
+    fun getRecommendedGames(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<List<GameDTO>> {
+        val gameDTOs = gameService.getRecommendedGames(sessionId)
+        return ResponseEntity.ok(gameDTOs)
     }
 
     @PutMapping("/{id}/rating/{score}")
