@@ -5,9 +5,16 @@ import 'package:mobile/utils/shared_manager.dart';
 import '../data/models/user_model.dart';
 
 class CacheManager {
-  late final SharedManager sharedManager;
+  CacheManager._init() {
+    sharedManager = SharedManager();
+  }
+  
+  factory CacheManager() => _instance;
+  static final CacheManager _instance = CacheManager._init();
 
-  CacheManager(this.sharedManager);
+  static CacheManager get instance => _instance;
+
+  late final SharedManager sharedManager;
 
   Future<void> saveUser(User user) async {
     await sharedManager.saveString(SharedKeys.user, jsonEncode(user.toJson()));

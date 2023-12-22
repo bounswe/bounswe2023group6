@@ -33,9 +33,9 @@ const GameForum = () => {
 		<>
 			<Navbarx></Navbarx>
 			<div className='w-full flex flex-col'>
-				<div className='w-full flex justify-center p-4 bg-gray-50 pb-20'>
+				<div className='w-full flex justify-center p-4 bg-neutral-50 pb-20'>
 					<div className='w-3/6 flex flex-col'>
-						<h1 className='text-4xl font-bold text-gray-700 text-center'>Games</h1>
+						<h1 className='text-4xl font-bold text-neutral-700 text-center'>Games</h1>
 						<CreateGame />
 						<div className='w-full flex flex-row'>
 							<div className='w-full flex flex-col'>
@@ -46,7 +46,7 @@ const GameForum = () => {
 						</div>
 					</div>
 				</div>
-				<div className='bg-gray-400 text-white text-center p-8'>
+				<div className='bg-black text-white text-center p-8'>
 					<p className='text-m'>@2023 Game Lounge, All rights reserved.</p>
 				</div>
 			</div>
