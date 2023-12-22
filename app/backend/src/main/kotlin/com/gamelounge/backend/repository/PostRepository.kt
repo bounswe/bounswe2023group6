@@ -10,4 +10,6 @@ interface PostRepository : JpaRepository<Post, Long>{
     fun findByUser(user: User): List<Post>
     fun findByCategory(category: PostCategory): List<Post>
 
+    fun findAllByCategory(category: PostCategory): List<Post>
+
 }
