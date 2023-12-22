@@ -1,13 +1,13 @@
 package com.gamelounge.backend.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.gamelounge.backend.entity.Game
 import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.entity.Report
-import com.gamelounge.backend.exception.PostNotFoundException
-import com.gamelounge.backend.exception.UnauthorizedPostAccessException
-import com.gamelounge.backend.exception.UsernameNotFoundException
+import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
+import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
 import com.gamelounge.backend.model.request.ReportRequest
@@ -15,6 +15,7 @@ import com.gamelounge.backend.model.request.UpdatePostRequest
 import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.ConverterDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToPostDTO
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -26,7 +27,8 @@ class PostService(
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository,
     private val objectMapper: ObjectMapper,
-    private val tagService: TagService
+    private val tagService: TagService,
+    private val recommendationService: RecommendationService
 ) {
     fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -155,4 +157,22 @@ class PostService(
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedPost = post)
         reportRepository.save(newReport)
     }
+
+    fun getRecommendedPosts(sessionId: UUID?): List<PostDTO>{
+        var postDTOs = convertBulkToPostDTO(getAllPosts())
+
+        sessionId?.let {
+            postDTOs = try{
+                val userId = sessionAuth.getUserIdFromSession(sessionId)
+                val user = userRepository.findByUserId(userId)
+                convertBulkToPostDTO(recommendationService.getRecommendedPosts(user!!))
+            }catch (e: SessionNotFoundException){
+                convertBulkToPostDTO(getAllPosts())
+            }
+        }
+
+        return postDTOs
+    }
+
+
 }
