@@ -119,4 +119,28 @@ class UserController (
     }
 
 
+    @GetMapping("/created-posts/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getCreatedPosts(@PathVariable username: String): List<PostDTO>{
+        return userService.getCreatedPosts(username)
+    }
+
+    @GetMapping("/created-games/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getCreatedGames(@PathVariable username: String): List<GameDTO>{
+        return userService.getCreatedGames(username)
+    }
+
+    @GetMapping("/liked-posts/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getLikedPosts(@PathVariable username: String): List<PostDTO>{
+        return userService.getLikedPosts(username)
+    }
+
+    @GetMapping("/liked-comments/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getLikedComments(@PathVariable username: String): List<CommentDTO>{
+        return userService.getLikedComments(username)
+    }
+
 }
