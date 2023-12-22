@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile/constants/color_constants.dart';
+import 'package:mobile/constants/object_keys.dart';
 import 'package:mobile/constants/text_constants.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_service.dart';
@@ -20,35 +22,39 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final UserService userService = UserService();
+  final TextEditingController aboutMeController = TextEditingController();
 
-  late User currentUser;
+  User currentUser = CacheManager().getUser();
   late User profileUser;
   bool pageInitialized = false;
+  bool refreshPage = false;
   bool isProfileOfCurrentUser = false;
+  bool isEditingAboutMe = false;
 
-  Future<void> loadUser(String profileUsername) async {
+  Future<User> loadUser(String profileUsername) async {
     if (pageInitialized) {
-      return;
-    }
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    User currentUserLocal = CacheManager(manager).getUser();
-
-    User profileUserLocal;
-    if (currentUserLocal.username == profileUsername) {
-      profileUserLocal = currentUserLocal;
-      isProfileOfCurrentUser = true;
+      if (refreshPage) {
+        profileUser = await userService.getUser(profileUsername);
+        if (isProfileOfCurrentUser) {
+          // Update the user in the cache
+          await CacheManager().saveUser(profileUser);
+        }
+        await userService.getUserDetails(profileUser);
+      }
     } else {
-      profileUserLocal = (await userService.getUser(profileUsername));
+      if (currentUser.username == profileUsername) {
+        profileUser = currentUser;
+        isProfileOfCurrentUser = true;
+      } else {
+        profileUser = (await userService.getUser(profileUsername));
+      }
+      await userService.getUserDetails(profileUser);
     }
-    await userService.getUserDetails(profileUserLocal);
-
-    setState(() {
-      currentUser = currentUserLocal;
-      profileUser = profileUserLocal;
-    });
+    print("Profile picture: ${profileUser.profilePicture}");
 
     pageInitialized = true;
+    refreshPage = false;
+    return profileUser;
   }
 
   @override
@@ -59,81 +65,132 @@ class _ProfilePageState extends State<ProfilePage> {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
-            default:
+            case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return buildProfilePage(currentUser);
+                return buildProfilePage(profileUser);
               }
+            default:
+              return const Center(child: CircularProgressIndicator());
           }
         });
   }
 
+  void updateProfileAvatar() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      await userService.updateUser(profileUser, imageFilePath: pickedFile.path);
+      setState(() {
+        refreshPage = true;
+      });
+    }
+  }
+
   Widget buildProfilePage(User user) => Scaffold(
-      appBar: CustomAppBar(title: TextConstants.titleText),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            DisplayAvatar(
-                byteData: user.profileImage, 
-                onPressed: isProfileOfCurrentUser 
-                  ? () {}
-                  : null, 
-                size: 50
-              ),
-            Text(
-              user.name ?? 'Name',
-              style: const TextStyle(fontSize: 15),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              "@${user.username}",
-              style: const TextStyle(fontSize: 15),
-              textAlign: TextAlign.center,
-            ),
-            buildProfileSection(
-              "About Me",
+        appBar: CustomAppBar(title: TextConstants.titleText),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              DisplayAvatar(
+                  imageLink: user.profilePicture,
+                  onPressed:
+                      isProfileOfCurrentUser ? updateProfileAvatar : null,
+                  size: 50),
               Text(
-                user.about ?? 'About Me',
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.4,
-                  fontFamily: 'Roboto Mono',
-                  color: Colors.white,
-                ),
+                user.name ?? 'Name',
+                style: const TextStyle(fontSize: 15),
+                textAlign: TextAlign.center,
               ),
-              () {},
-            ),
-            buildProfileSection(
-              "Liked Posts",
-              user.likedPosts.isEmpty
-                  ? const Text("No Liked Posts")
-                  : ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: [
-                        for (var i = 0; i < user.likedPosts.length; i++)
-                          PostCard(post: user.likedPosts[i]),
-                      ],
-                    ),
-            ),
-            buildProfileSection(
-              "Games",
-              user.likedGames.isEmpty
-                  ? const Text("No Games")
-                  : ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: [
-                        for (var i = 0; i < user.likedGames.length; i++)
-                          GameCard(game: user.likedGames[i]),
-                      ],
-                    ),
-            ),
-          ],
+              Text(
+                "@${user.username}",
+                style: const TextStyle(fontSize: 15),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              buildFollowSection(),
+              const SizedBox(height: 10),
+              buildProfileSection(
+                "About Me",
+                isEditingAboutMe
+                    ? TextField(
+                        key: GlobalStaticKeys.profilePageEditorKey,
+                        controller: aboutMeController,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                        maxLines: null,
+                      )
+                    : Text(
+                        user.about ?? 'About Me',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          height: 1.4,
+                          fontFamily: 'Roboto Mono',
+                          color: Colors.white,
+                        ),
+                      ),
+                () async {
+                  isEditingAboutMe = !isEditingAboutMe;
+                  if (!isEditingAboutMe) {
+                    profileUser.about = aboutMeController.text;
+                    await userService.updateUser(profileUser);
+                    setState(() {
+                      refreshPage = true;
+                    });
+                  } else {
+                    setState(() {
+                      aboutMeController.text = profileUser.about ?? '';
+                    });
+                  }
+                },
+              ),
+              buildProfileSection(
+                "Created Posts",
+                user.createdPosts.isEmpty
+                    ? const Text("No Created Posts")
+                    : ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: [
+                          for (var i = 0; i < user.createdPosts.length; i++)
+                            PostCard(post: user.createdPosts[i]),
+                        ],
+                      ),
+              ),
+              buildProfileSection(
+                "Liked Posts",
+                user.likedPosts.isEmpty
+                    ? const Text("No Liked Posts")
+                    : ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: [
+                          for (var i = 0; i < user.likedPosts.length; i++)
+                            PostCard(post: user.likedPosts[i]),
+                        ],
+                      ),
+              ),
+              buildProfileSection(
+                "Games",
+                user.likedGames.isEmpty
+                    ? const Text("No Games")
+                    : ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: [
+                          for (var i = 0; i < user.likedGames.length; i++)
+                            GameCard(game: user.likedGames[i]),
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 
   Widget buildProfileSection(String sectionName, Widget child,
           [VoidCallback? editCallback]) =>
@@ -180,6 +237,75 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ));
 
+  Widget buildFollowSection() => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          if (!isProfileOfCurrentUser)
+            TextButton(
+              onPressed: () {
+                // Add logic to follow the user
+                userService.followUser(profileUser.username);
+                setState(() {
+                  profileUser.followers++;
+                });
+              },
+              child: Container(
+                width: 150,
+                height: 30,
+                padding: const EdgeInsets.only(
+                    left: 15, right: 1, top: 5, bottom: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: ColorConstants.buttonColor,
+                ),
+                child: const Text(
+                  "Follow",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          const SizedBox(height: 10),
+          // Show followers and following count
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 150,
+                height: 30,
+                padding: const EdgeInsets.only(
+                    left: 15, right: 1, top: 5, bottom: 5),
+                child: Text(
+                  "Followers: ${profileUser.followers}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Container(
+                width: 150,
+                height: 30,
+                padding: const EdgeInsets.only(
+                    left: 15, right: 1, top: 5, bottom: 5),
+                child: Text(
+                  "Following: ${profileUser.following}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+
   Widget textAsButton(String text) => TextButton(
         onPressed: () {},
         child: Container(
@@ -202,16 +328,19 @@ class _ProfilePageState extends State<ProfilePage> {
       );
 
   Widget buildEditIcon(Color color, VoidCallback onPressed,
-          [Color? background]) =>
-      CircleAvatar(
-          // radius: 100,
-          backgroundColor: background,
-          child: IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: color,
-              size: 15,
-            ),
-            onPressed: onPressed,
-          ));
+      [Color? background]) {
+    return CircleAvatar(
+      backgroundColor: background,
+      child: IconButton(
+        icon: Icon(
+          isEditingAboutMe ? Icons.check : Icons.edit,
+          color: color,
+          size: 15,
+        ),
+        onPressed: () {
+          onPressed();
+        },
+      ),
+    );
+  }
 }

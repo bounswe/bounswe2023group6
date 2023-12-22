@@ -44,7 +44,8 @@ object ConverterDTO {
             about = user.about,
             title = user.title,
             company = user.company,
-            tags = convertBulkToTagDTO(user.tags)
+            tags = convertBulkToTagDTO(user.tags),
+            isVisible = user.isVisible
         )
     }
     fun convertBulkToUserDTO(users: List<User>): List<UserDTO> {
@@ -100,7 +101,9 @@ object ConverterDTO {
             game.averageRating,
             game.creationDate,
             convertBulkToTagDTO(game.tags),
-            game.gamePicture
+            game.gamePicture,
+            game.status.toString(),
+            game.isDeleted
         )
     }
 
@@ -127,6 +130,7 @@ object ConverterDTO {
             report.reason,
             convertToUserDTO(report.reportingUser!!),
             report.reportedPost?.let { convertToPostDTO(it) },
+            report.reportedGame?.let { convertToGameDTO(it) },
             report.reportedLFG?.let { convertToLFGDTO(it) },
             report.reportedComment?.let { convertToCommentDTO(it) }
         )
@@ -134,5 +138,38 @@ object ConverterDTO {
 
     fun convertToReportDTO(reports: List<Report>): List<ReportDTO>{
         return reports.map { report -> convertToReportDTO(report) }
+    }
+
+
+    fun converToUserGameRatingDTO(userGameRating: UserGameRating): UserGameRatingDTO{
+        return UserGameRatingDTO(
+            convertToGameDTO(userGameRating.game),
+            userGameRating.score
+        )
+    }
+
+    fun convertBulkToUserGameRatingDTO(userGameRatings: List<UserGameRating>): List<UserGameRatingDTO>{
+        return userGameRatings.map { userGameRating -> converToUserGameRatingDTO(userGameRating) }
+
+    fun convertBulkToEditedGameDTO(editedGames: List<RequestedEditingGame>): List<EditedGameDTO>{
+        return editedGames.map { editedGame -> convertToEditedGameDTO(editedGame) }
+    }
+
+    fun convertToEditedGameDTO(requestedEditingGame: RequestedEditingGame): EditedGameDTO{
+        return EditedGameDTO(
+                requestedEditingGame.gameId,
+                requestedEditingGame.title,
+                requestedEditingGame.description,
+                requestedEditingGame.genre,
+                requestedEditingGame.platform,
+                requestedEditingGame.playerNumber,
+                requestedEditingGame.releaseYear,
+                requestedEditingGame.universe,
+                requestedEditingGame.mechanics,
+                requestedEditingGame.playtime,
+                requestedEditingGame.creationDate,
+                requestedEditingGame.gamePicture,
+        )
+
     }
 }

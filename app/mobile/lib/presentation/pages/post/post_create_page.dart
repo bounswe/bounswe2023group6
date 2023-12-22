@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/post_service.dart';
@@ -14,9 +15,10 @@ class PostCreatePage extends StatefulWidget {
 }
 
 class _PostCreatePageState extends State<PostCreatePage> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalObjectKey<FormState>(UniqueKey());
   final _contentController = TextEditingController();
   final _titleController = TextEditingController();
+  final _tagController = TextEditingController();
   // final List<Game> _gameList = [
   //   Game(id: 1, name: "League of Legends", description: "MOBA", imageLink: "https://cdn1.dotesports.com/wp-content/uploads/2020/01/10105952/league-of-legends-1.jpg"),
   //   Game(id: 2, name: "Valorant", description: "FPS", imageLink: "https://cdn1.dotesports.com/wp-content/uploads/2020/03/10105952/valorant-1.jpg"),
@@ -50,15 +52,17 @@ class _PostCreatePageState extends State<PostCreatePage> {
   //   Game(id: 30, name: "Escape from Tarkov", description: "FPS", imageLink: "https://cdn1.dotesports.com/wp-content/uploads/2020/01/10105952/escape-from-tarkov-1.jpg"),
   // ];
   int? _selectedGame;
+  String? _selectedCategory;
+  List<String> _tags = [];
 
   Future<List<Game>> loadGameData() async {
-    return await GameService().getGames(); 
+    return await GameService().getGames();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: loadGameData(), 
+      future: loadGameData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return buildPostCreatePage(context, snapshot.data as List<Game>);
@@ -112,16 +116,24 @@ class _PostCreatePageState extends State<PostCreatePage> {
               // Option selection for game
               buildGameDropdown(gameList),
               const SizedBox(height: 16),
+              // Option selection for category
+              buildCategoryDropdown(),
+              const SizedBox(height: 16),
+              // Add tags
+              buildTagInput(),
+              const SizedBox(height: 16),
 
+              // Create button
               Button(
                 label: "Create",
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     await PostService().createPost(
-                        _titleController.text, 
-                        _contentController.text, 
-                        _selectedGame!
-                      );
+                        _titleController.text,
+                        _contentController.text,
+                        _selectedGame!,
+                        _selectedCategory!, 
+                        _tags);
                     Navigator.of(context).pop("create");
                   }
                 },
@@ -162,6 +174,80 @@ class _PostCreatePageState extends State<PostCreatePage> {
         }
         return null;
       },
+    );
+  }
+
+  Widget buildCategoryDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _selectedCategory,
+      decoration: const InputDecoration(
+        hintText: "Select a category",
+      ),
+      items: PostCategory.values
+          .map((e) => e.toString().split(".").last.toUpperCase())
+          .map((category) {
+        return DropdownMenuItem<String>(
+          value: category,
+          child: Text(category),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedCategory = value;
+        });
+      },
+      validator: (value) {
+        if (value == null) {
+          return "Please select a category";
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget buildTagInput() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _tagController,
+                decoration: const InputDecoration(
+                  hintText: "Add tags",
+                ),
+                onFieldSubmitted: (value) {
+                  setState(() {
+                    _tags.add(value);
+                    // clear the text field
+                    _tagController.clear();
+                  });
+                },
+              ),
+            ),
+            Wrap(
+              children: _tags
+                  .map((tag) => Chip(
+                        label: Text(tag),
+                        onDeleted: () {
+                          setState(() {
+                            _tags.remove(tag);
+                          });
+                        },
+                      ))
+                  .toList(),
+            ),            
+            // IconButton(
+            //   onPressed: () {
+            //     setState(() {
+            //       _tags.add(_tags.last);
+            //     });
+            //   },
+            //   icon: const Icon(Icons.add),
+            // ),
+          ],
+        ),
+      ],
     );
   }
 }

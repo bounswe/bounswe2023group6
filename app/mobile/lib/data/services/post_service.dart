@@ -63,6 +63,7 @@ class PostService {
           dislikes: 2,
           relatedGameId: 1,
           comments: 8,
+          category: PostCategory.review,
         ),
         Post(
           createdDate: DateTime.now().subtract(const Duration(days: 1)),
@@ -77,6 +78,7 @@ class PostService {
           dislikes: 1,
           relatedGameId: 2,
           comments: 3,
+          category: PostCategory.guide,
         ),
         Post(
           createdDate: DateTime.now().subtract(const Duration(days: 2)),
@@ -91,6 +93,7 @@ class PostService {
           dislikes: 0,
           relatedGameId: 3,
           comments: 1,
+          category: PostCategory.discussion,
         ),
         Post(
           createdDate: DateTime.now().subtract(const Duration(hours: 5)),
@@ -105,6 +108,7 @@ class PostService {
           dislikes: 1,
           relatedGameId: 4,
           comments: 17,
+          category: PostCategory.discussion,
         ),
         Post(
           createdDate: DateTime.now().subtract(const Duration(minutes: 12)),
@@ -119,6 +123,7 @@ class PostService {
           dislikes: 0,
           relatedGameId: 5,
           comments: 2,
+          category: PostCategory.guide,
         ),
         Post(
           createdDate: DateTime.now().subtract(const Duration(hours: 16)),
@@ -133,6 +138,7 @@ class PostService {
           dislikes: 3,
           relatedGameId: 6,
           comments: 10,
+          category: PostCategory.discussion,
         ),
       ];
     }
@@ -175,7 +181,13 @@ class PostService {
     }
   }
 
-  Future<Post> createPost(String title, String content, int relatedGameId) async {
+  Future<Post> createPost(
+    String title, 
+    String content, 
+    int relatedGameId, 
+    String postCategory,
+    List<String> tags,  
+  ) async {
     if (NetworkConstants.useMockData) {
       return Post(
         id: 1,
@@ -189,6 +201,7 @@ class PostService {
         dislikes: 0,
         comments: 0,
         relatedGameId: null,
+        category: PostCategory.discussion,
       );
     }
 
@@ -196,7 +209,8 @@ class PostService {
       title: title,
       content: content,
       relatedGameId: relatedGameId,
-      category: "DISCUSSION"
+      category: postCategory, 
+      tags: tags,
     );
     ServiceResponse<SingleContentDTO> response =
         await service.sendRequestSafe<PostCreateDTORequest, SingleContentDTO>(

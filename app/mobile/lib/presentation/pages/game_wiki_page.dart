@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/post_service.dart';
+import 'package:mobile/presentation/pages/game_page_create.dart';
+import 'package:mobile/presentation/widgets/annotatable_image_widget.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -21,6 +24,7 @@ class GameWiki extends StatefulWidget {
 }
 
 class _GameWikiState extends State<GameWiki> {
+  var isLoggedIn = true;
   @override
   Widget build(BuildContext context) {
     final int gameId = ModalRoute.of(context)!.settings.arguments as int;
@@ -29,6 +33,38 @@ class _GameWikiState extends State<GameWiki> {
       body: GameWikiPage(
         gameId: gameId,
       ),
+      floatingActionButton: isLoggedIn
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        GamePageCreate(selectedGame: _GameWikiPageState.game),
+                  ),
+                ).then((value) {
+                  if (value != null && value == "create") {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Game created"),
+                      ),
+                    );
+                    // refresh the current page
+                    Navigator.pushReplacementNamed(context, '/');
+                  }
+                });
+              },
+              child: const Icon(
+                Icons.edit,
+                color: ColorConstants.buttonColor,
+              ),
+            )
+          : FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: const Icon(Icons.login),
+            ),
     );
   }
 }
@@ -62,14 +98,13 @@ class _GameWikiPageState extends State<GameWikiPage>
   }
 
   // late List<Post> relatedPosts;
-  // late Game game;
-
-  // Future<void> loadGameData(int gameId) async {
-  //   Game gameData = await gameService.getGame(gameId);
-  //   setState(() {
-  //     game =  gameData;
-  //   });
-  // }
+  //static late Game game;
+  //Future<void> loadGameData(int gameId) async {
+  //  Game gameData = await gameService.getGame(gameId);
+  //  setState(() {
+  //    game = gameData;
+  //  });
+  //}
 
   // Future<void> loadRelatedPosts() async {
   //   List<Post> postList = await postService.getPosts();
@@ -77,6 +112,8 @@ class _GameWikiPageState extends State<GameWikiPage>
   //     relatedPosts =  postList;
   //   });
   // }
+
+  static late Game game;
 
   Future<Game> loadGame(int gameId) async {
     Game game = await gameService.getGame(gameId);
@@ -97,7 +134,7 @@ class _GameWikiPageState extends State<GameWikiPage>
         future: loadGame(widget.gameId),
         builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
           if (snapshot.hasData) {
-            Game game = snapshot.data!;
+            game = snapshot.data!;
             return ListView(
               children: [
                 Card(
@@ -129,7 +166,8 @@ class _GameWikiPageState extends State<GameWikiPage>
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(game.releaseYear!.toString() ?? "-",
+                                      child: Text(
+                                          game.releaseYear!.toString() ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
@@ -185,7 +223,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     initialRating: 0,
                                     minRating: 0,
                                     direction: Axis.horizontal,
-                                    allowHalfRating: true,
+                                    allowHalfRating: false,
                                     itemSize: 30,
                                     itemCount: 5,
                                     itemPadding: const EdgeInsets.symmetric(
@@ -196,19 +234,12 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
+                                      gameService.rateGame(game.gameId, rating.round());
                                     },
                                   ),
                                 ],
                               )),
-                              Container(
-                                height: 200,
-                                width: 150, // Size of image
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                  image: NetworkImage(game.gamePicture),
-                                  fit: BoxFit.fill,
-                                )),
-                              ),
+                              AnnotatableImageWidget(imageUrl: game.gamePicture),
                             ],
                           ),
                         ],
@@ -388,7 +419,9 @@ class _GameWikiPageState extends State<GameWikiPage>
                               // This next line does the trick.
                               scrollDirection: Axis.horizontal,
                               children: [
-                                for (var i = 0; i < game.similarGameList.length; i++)
+                                for (var i = 0;
+                                    i < game.similarGameList.length;
+                                    i++)
                                   VerticalGameCard(
                                       game: game.similarGameList[i]),
                               ],

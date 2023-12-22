@@ -1,7 +1,11 @@
 package com.gamelounge.backend.controller
 
+import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.model.DTO.EditedGameDTO
 import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.service.AccessService
+import com.gamelounge.backend.service.GameService
+import com.gamelounge.backend.util.ConverterDTO
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
@@ -14,7 +18,8 @@ import java.util.UUID
 
 @RestController
 class AccessController(
-    val accessService: AccessService
+    val accessService: AccessService,
+    val gameService: GameService
 ) {
 
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
@@ -84,6 +89,48 @@ class AccessController(
     fun resetPassword(@RequestBody request: ResetPasswordRequest): ResponseEntity<Map<String, String>> {
         accessService.resetPassword(token = request.token, newPassword = request.newPassword, confirmNewPassword = request.confirmNewPassword)
         return ResponseEntity.ok().body(mapOf("message" to "Password reset successfully."))
+    }
+
+    @GetMapping("/admin/pendingGames")
+    fun getPendingGames(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<GameDTO>> {
+        val game = gameService.getPendingGames(sessionId)
+        val gameDTO = ConverterDTO.convertBulkToGameDTO(game)
+        return ResponseEntity.ok(gameDTO)
+    }
+
+    @GetMapping("/admin/editedGames")
+    fun getEditedGames(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<EditedGameDTO>> {
+        val editedGame = gameService.getEditedGames(sessionId)
+        val editedGameDTO = ConverterDTO.convertBulkToEditedGameDTO(editedGame)
+        return ResponseEntity.ok(editedGameDTO)
+    }
+
+    @PutMapping("/admin/approveEditingGame/{editingGameId}")
+    fun approveEditingGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable editingGameId: Long): ResponseEntity<GameDTO> {
+        val game = gameService.approveEditingGame(sessionId, editingGameId)
+        val gameDTO = ConverterDTO.convertToGameDTO(game)
+        return ResponseEntity.ok(gameDTO)
+    }
+
+    @PutMapping("/admin/rejectEditingGame/{editingGameId}")
+    fun rejectEditingGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable editingGameId: Long): ResponseEntity<GameDTO> {
+        val game = gameService.rejectEditingGame(sessionId, editingGameId)
+        val gameDTO = ConverterDTO.convertToGameDTO(game)
+        return ResponseEntity.ok(gameDTO)
+    }
+
+    @PutMapping("/admin/approveGame/{gameId}")
+    fun approveGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable gameId: Long): ResponseEntity<GameDTO> {
+        val game = gameService.approveGame(sessionId, gameId)
+        val gameDTO = ConverterDTO.convertToGameDTO(game)
+        return ResponseEntity.ok(gameDTO)
+    }
+
+    @PutMapping("/admin/rejectGame/{gameId}")
+    fun rejectGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable gameId: Long): ResponseEntity<GameDTO> {
+        val game = gameService.rejectGame(sessionId, gameId)
+        val gameDTO = ConverterDTO.convertToGameDTO(game)
+        return ResponseEntity.ok(gameDTO)
     }
 
 }

@@ -7,7 +7,7 @@ import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
-import 'package:mobile/presentation/widgets/grid_widget.dart';
+import 'package:mobile/presentation/widgets/game_grid_widget.dart';
 
 class GamePage extends StatefulWidget {
   GamePage({Key? key}) : super(key: key);

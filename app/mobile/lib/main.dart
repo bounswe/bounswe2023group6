@@ -6,14 +6,20 @@ import 'package:mobile/presentation/pages/opening_page.dart';
 import 'package:mobile/presentation/pages/post/post_create_page.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
+import 'package:mobile/utils/shared_manager.dart';
 import 'presentation/pages/auth_page_demo.dart';
 import 'presentation/pages/registration_page.dart';
 import 'presentation/pages/login_page.dart';
 import 'constants/color_constants.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
+Future<void> initiliazeAll() async {
+  await SharedManager().initializePreferences();
+}
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initiliazeAll();
   runApp(Phoenix(child: const MainApp()));
 }
 

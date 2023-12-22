@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/post/report_widget.dart';
 import 'package:mobile/presentation/pages/post/update_widget.dart';
+import 'package:mobile/presentation/widgets/annotatable_text_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 enum ContentMoreOptions {
   edit,
@@ -43,6 +48,8 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
     bool isReply = widget.isReply;
     Content? parentContent = widget.parentContent;
     connectedPostState = context.watch<PostState>();
+    bool isContentOfOriginalPoster = !isPost && content.ownerUserId ==
+        connectedPostState.post.ownerUserId;
 
     return Card(
       key: !isPost && !isReply ? content.globalKey : null,
@@ -54,8 +61,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           userInformationSection(
               context, content.ownerUsername, content.ownerProfileImage,
-              isContentOfOriginalPoster: content.ownerUsername ==
-                  connectedPostState.post.ownerUsername),
+              isContentOfOriginalPoster: isContentOfOriginalPoster),
           contentSection(content,
               parentContent: parentContent, isReply: isReply),
         ]),
@@ -89,11 +95,25 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               content.type == ContentType.post
-                  ? Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(content.title!,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(content.title!,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        // show post category
+                        MaterialButton(
+                          onPressed: () {},
+                          child: Text((content as Post).category.toString().split('.').last.toUpperCase(),
+                              style: const TextStyle(fontSize: 18)),
+                        ),
+                      ],
                     )
                   : const SizedBox.shrink(),
               !isReply
@@ -106,9 +126,8 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: Text(content.content, style: const TextStyle(fontSize: 16)),
+            child: AnnotatableTextWidget(text: content.content, contentId: content.id),
           ),
-          // Text(post.timeAgo, style: const TextStyle(fontSize: 12,color: Colors.grey),overflow: TextOverflow.ellipsis,maxLines: 1),
           const SizedBox(
             height: 5,
           ),
@@ -207,77 +226,124 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
   Widget contentSocialSection(Content content) {
     bool isLikedByCurrentUser = content.likeIds.contains(connectedPostState.currentUser.userId);
     bool isDislikedByCurrentUser = content.dislikeIds.contains(connectedPostState.currentUser.userId);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-              icon: Icon(
-                isLikedByCurrentUser
-                    ? Icons.thumb_up_alt_rounded
-                    : Icons.thumb_up_alt_outlined,
-                color: isLikedByCurrentUser ? Colors.blue : Colors.black,
-              ),
-              onPressed: () {
-                if (content.type == ContentType.post) {
-                  postService.upvotePost(content.id);
-                } else {
-                  postService.upvoteComment(content.id);
-                }
-                if (isLikedByCurrentUser) {
-                  setState(() {
-                    widget.content.likes--;
-                    widget.content.likeIds.remove(connectedPostState.currentUser.userId);
-                  });
-                } else {
-                  setState(() {
-                    widget.content.likes++;
-                    widget.content.likeIds.add(connectedPostState.currentUser.userId);
-                  });
-                }
-              },
+            Row(
+              children: [
+                // show tags
+                if (content.tags != null)
+                  for (String tag in content.tags!.sublist(0, min(4, content.tags!.length)))
+                    Container(
+                      margin: const EdgeInsets.only(right: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                          backgroundColor: Theme.of(context).primaryIconTheme.color,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(tag, style: const TextStyle(fontSize: 12)),
+                      ),
+                    ),
+              ],
             ),
-            const SizedBox(
-              width: 10,
+            Row(
+              children: [
+                // comment button
+                if (content.type == ContentType.post)
+                  IconButton(
+                    icon: const Icon(Icons.comment_outlined),
+                    onPressed: () {},
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(content.comments.toString()),
+                // upvote button
+                IconButton(
+                  icon: Icon(
+                    isLikedByCurrentUser
+                        ? Icons.thumb_up_alt_rounded
+                        : Icons.thumb_up_alt_outlined,
+                    color: isLikedByCurrentUser ? Colors.blue : Colors.black,
+                  ),
+                  onPressed: () {
+                    if (content.type == ContentType.post) {
+                      postService.upvotePost(content.id);
+                    } else {
+                      postService.upvoteComment(content.id);
+                    }
+                    if (isLikedByCurrentUser) {
+                      setState(() {
+                        widget.content.likes--;
+                        widget.content.likeIds.remove(connectedPostState.currentUser.userId);
+                      });
+                    } else {
+                      setState(() {
+                        widget.content.likes++;
+                        widget.content.likeIds.add(connectedPostState.currentUser.userId);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(content.likes.toString()),
+
+                // downvote button
+                IconButton(
+                  icon: Icon(
+                    isDislikedByCurrentUser
+                        ? Icons.thumb_down_alt_rounded
+                        : Icons.thumb_down_alt_outlined,
+                    color: isDislikedByCurrentUser ? Colors.blue : Colors.black,
+                  ),
+                  onPressed: () {
+                    if (content.type == ContentType.post) {
+                      postService.downvotePost(content.id);
+                    } else {
+                      postService.downvoteComment(content.id);
+                    }
+                    if (isDislikedByCurrentUser) {
+                      setState(() {
+                        widget.content.dislikes--;
+                        widget.content.dislikeIds.remove(connectedPostState.currentUser.userId);
+                      });
+                    } else {
+                      setState(() {
+                        widget.content.dislikes++;
+                        widget.content.dislikeIds.add(connectedPostState.currentUser.userId);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(content.dislikes.toString()),
+              ],
             ),
-            Text(content.likes.toString()),
           ],
         ),
+        const Divider(
+          thickness: 1,
+        ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            IconButton(
-              icon: Icon(
-                isDislikedByCurrentUser
-                    ? Icons.thumb_down_alt_rounded
-                    : Icons.thumb_down_alt_outlined,
-                color: isDislikedByCurrentUser ? Colors.blue : Colors.black,
-              ),
-              onPressed: () {
-                if (content.type == ContentType.post) {
-                  postService.downvotePost(content.id);
-                } else {
-                  postService.downvoteComment(content.id);
-                }
-                if (isDislikedByCurrentUser) {
-                  setState(() {
-                    widget.content.dislikes--;
-                    widget.content.dislikeIds.remove(connectedPostState.currentUser.userId);
-                  });
-                } else {
-                  setState(() {
-                    widget.content.dislikes++;
-                    widget.content.dislikeIds.add(connectedPostState.currentUser.userId);
-                  });
-                }
-              },
+            Text(
+              timeago.format(content.createdDate),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(content.dislikes.toString()),
           ],
-        )
+        ),
       ],
     );
   }

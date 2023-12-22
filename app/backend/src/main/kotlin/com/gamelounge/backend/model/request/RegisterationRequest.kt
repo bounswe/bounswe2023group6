@@ -10,5 +10,5 @@ data class RegisterationRequest (
     val password: String,
 
     @JsonProperty("email")
-    val email: String
+    val email: String,
 )

@@ -8,6 +8,7 @@ import { getPostById, upvotePost, downvotePost } from '../../services/postServic
 import { useParams } from 'react-router-dom';
 import { getAllCommentsForPost, createComment } from '../../services/commentService';
 import { upvoteComment, downvoteComment } from '../../services/commentService';
+import { getUserInfoBySessionId } from '../../services/userService';
 
 const PostPage = () => {
   const { postId } = useParams();
@@ -15,6 +16,8 @@ const PostPage = () => {
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   // const comments = [
   //   {
@@ -81,6 +84,20 @@ const PostPage = () => {
     }
   }, [postId]);
 
+  useEffect(() => {
+          const fetchUserInfo = async () => {
+            try {
+              const response = await getUserInfoBySessionId();
+              const userData = response.data;
+              setCurrentUser(userData);
+              console.log('Current User:', userData);
+            } catch (error) {
+              console.error('Error fetching user info:', error);
+            }
+          };
+          fetchUserInfo();
+        }, []);
+
   const [newComment, setNewComment] = useState('');
 
   const handleNewComment = async (e) => {
@@ -97,10 +114,10 @@ const PostPage = () => {
   return (
     <>  
       <Navbarx />
-      <div className='w-full flex flex-col items-center'>
-        <div className='w-3/4 flex flex-col p-4 bg-gray-50 pb-20'>
+      <div className='w-full flex flex-col bg-neutral-100 items-center pt-8'>
+        <div className='w-3/4 flex flex-col p-2 pb-20'>
           {post && (
-            <PostCard post={post} onUpvote={handleUpvote} onDownvote={handleDownvote} />
+            <PostCard post={post} onUpvote={handleUpvote} onDownvote={handleDownvote} currentUser={currentUser}/>
           )}
           <div className='mt-6'>
             {comments.map((comment) => (
@@ -108,23 +125,28 @@ const PostPage = () => {
                 key={comment.commentId} 
                 comment={comment} 
                 onUpvote={() => handleUpvoteComment(comment.commentId)} 
-                onDownvote={() => handleDownvoteComment(comment.commentId)} 
+                onDownvote={() => handleDownvoteComment(comment.commentId)}
+                currentUser={currentUser}
               />
             ))}
           </div>
           <textarea 
-            className='w-full h-24 p-2 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:border-green-400' 
+            className='w-full h-24 p-2 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:border-gray-500'
             placeholder='Add a comment...'
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           ></textarea>
-
+           <div className='pt-4'>
           <button 
-            className='w-20 h-10 p-2 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500 focus:outline-none'
+            className='w-20 h-10 p-2 bg-cyan-700 text-white rounded-lg shadow-md hover:bg-cyan-900 focus:outline-none'
             onClick={handleNewComment}
           >Send</button>
+          </div>
         </div>
       </div>
+      <div className='bg-black text-white text-center p-8'>
+                          <p className='text-m'>@2023 Game Lounge, All rights reserved.</p>
+                      </div>
     </>
   );
 };

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/post_model.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -49,12 +50,22 @@ Widget postContentSection(Post post) {
   return Flexible(
     child: Column(
       children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Text(post.title!,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(post.title!,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2),
+            ),
+            Text(
+              timeago.format(post.createdDate), 
+              style: const TextStyle(fontSize: 12,color: Colors.grey),
+              overflow: TextOverflow.ellipsis,maxLines: 1
+            ),
+          ],
         ),
         const SizedBox(
           height: 5,
@@ -66,7 +77,6 @@ Widget postContentSection(Post post) {
               overflow: TextOverflow.ellipsis,
               maxLines: 3),
         ),
-        // Text(post.timeAgo, style: const TextStyle(fontSize: 12,color: Colors.grey),overflow: TextOverflow.ellipsis,maxLines: 1),
         const SizedBox(
           height: 5,
         ),

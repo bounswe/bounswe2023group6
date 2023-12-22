@@ -22,9 +22,7 @@ class PostState extends ChangeNotifier {
   }
 
   void initState() async {
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    currentUser = CacheManager(manager).getUser();
+    currentUser = CacheManager().getUser();
     super.notifyListeners();
   }
 
@@ -38,6 +36,8 @@ class PostState extends ChangeNotifier {
 
   void addComment(Comment comment) {
     post.commentList.add(comment);
+    // Sort the comments by created date
+    post.commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
     currentCommentParentId = 0;
 
     notifyListeners();
@@ -67,6 +67,9 @@ class PostPage extends StatelessWidget {
   Future<PostState> loadPostData(int postId) async {
     Post post = await postService.getPost(postId);
     List<Comment> commentList = await postService.getComments(post.id);
+
+    // Sort the comments by created date
+    commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
 
     await post.loadContentSocialData();
     for (var comment in commentList) {

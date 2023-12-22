@@ -21,6 +21,11 @@ class User(
     var company: String? = null,
     var passwordHash: ByteArray = ByteArray(0),
     var salt: ByteArray = ByteArray(0),
+    var isAdmin: Boolean = false, // indicating whether the user is an admin
+    var isVisible: Boolean = true, // indicating whether the user is visible to other users
+    var isDeleted: Boolean = false, // indicating whether the user is deleted
+    @Column(columnDefinition = "integer default 0")
+    var followerCount: Int = 0,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val posts: List<Post> = mutableListOf(),
@@ -69,6 +74,17 @@ class User(
         joinColumns = [JoinColumn(name = "userId")],
         inverseJoinColumns = [JoinColumn(name = "tagId")]
     )
-    var tags: List<Tag> = mutableListOf()
+    var tags: List<Tag> = mutableListOf(),
+
+    // user can follow other users
+    @ManyToMany
+    @JoinTable(
+            name = "user_follows",
+            joinColumns = [JoinColumn(name = "userId")],
+            inverseJoinColumns = [JoinColumn(name = "followedUserId")]
+    )
+    var following: List<User> = mutableListOf(),
+
+
 
     )

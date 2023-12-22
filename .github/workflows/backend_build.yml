@@ -1,11 +1,11 @@
-name: Backend Docker Build
+name: Backend CI/CD
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches: [ develop ]
-  #   paths: 
-  #     - 'app/backend/**'
+  #workflow_dispatch:
+  push:
+    branches: [ develop ]
+    paths: 
+      - 'app/backend/**'
 
 jobs:
 
@@ -22,11 +22,25 @@ jobs:
     - name: Build Docker image
       working-directory: ${{env.working-directory}}
       run: |
-        docker build -t erkamkavak/gamelounge-backend:${{ github.run_number }} .
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-backend:${{ github.run_number }} .
 
     - name: Login to Docker Hub
-      run: echo "gameLounge2019" | docker login -u "erkamkavak" --password-stdin
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
     - name: Push Docker image
       run: |
-        docker push erkamkavak/gamelounge-backend:${{ github.run_number }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-backend:${{ github.run_number }}
+
+    # SSH and Deploy to Server
+    - name: Setup SSH Agent
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to Server
+      run: |
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} \
+        "docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-backend:${{ github.run_number }} && \
+         docker stop gamelounge-backend || true && \
+         docker rm gamelounge-backend || true && \
+         docker run -d --name gamelounge-backend -p 8080:8080 -e SPRING_DATASOURCE_URL="jdbc:postgresql://${{ secrets.SERVER_IP }}:5432/postgres" -e SPRING_DATASOURCE_USERNAME="postgres" -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DOCKERHUB_PASSWORD }}"  -e MAIL_URL="http://${{ secrets.SERVER_IP }}:8080/" -e CLOUD_AWS_S3_BUCKET="${{ secrets.CLOUD_AWS_S3_BUCKET }}" -e CLOUD_AWS_CREDENTIALS_ACCESSKEY="${{ secrets.CLOUD_AWS_CREDENTIALS_ACCESSKEY }}" -e CLOUD_AWS_CREDENTIALS_SECRETKEY="${{ secrets.CLOUD_AWS_CREDENTIALS_SECRETKEY }}" ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-backend:${{ github.run_number }}"

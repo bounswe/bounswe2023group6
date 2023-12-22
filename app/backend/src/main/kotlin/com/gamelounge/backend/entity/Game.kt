@@ -5,10 +5,23 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
+import com.gamelounge.backend.constant.GameGenre
+import com.gamelounge.backend.constant.GamePlatform
+import com.gamelounge.backend.constant.NumberOfPlayers
+import com.gamelounge.backend.constant.UniverseInfo
+import com.gamelounge.backend.constant.GameMechanics
 
 import jakarta.persistence.*
 import lombok.NoArgsConstructor
 import java.time.Instant
+
+
+enum class GameStatus {
+        PENDING_APPROVAL,
+        APPROVED,
+        REJECTED,
+        EMPTY
+}
 
 @Entity
 @Table(name = "games")
@@ -20,18 +33,27 @@ class Game(
 
         var title: String = "",
         var description: String = "",
-        var genre: String = "",
-        var platform: String = "",
-        var playerNumber: String = "",
+        @Enumerated(EnumType.STRING)
+        var genre: GameGenre = GameGenre.EMPTY,
+        @Enumerated(EnumType.STRING)
+        var platform: GamePlatform = GamePlatform.EMPTY,
+        @Enumerated(EnumType.STRING)
+        var playerNumber: NumberOfPlayers = NumberOfPlayers.EMPTY,
         var releaseYear: Int = 0,
-        var universe: String = "",
-        var mechanics: String = "",
+        @Enumerated(EnumType.STRING)
+        var universe: UniverseInfo = UniverseInfo.EMPTY,
+        @Enumerated(EnumType.STRING)
+        var mechanics: GameMechanics = GameMechanics.EMPTY,
         var playtime: String = "",
         var totalRating: Int = 0,
         var countRating: Int = 0,
         var averageRating: Double = 0.0,
         var creationDate: Instant = Instant.now(),
         var gamePicture: String? = null,
+        var isDeleted: Boolean = false,
+
+        @Enumerated(EnumType.STRING)
+        var status: GameStatus = GameStatus.PENDING_APPROVAL,
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "userId")
@@ -54,14 +76,12 @@ class Game(
         )
         var tags: List<Tag> = mutableListOf(),
 
-        @ManyToMany
+        /*@ManyToMany
         @JoinTable(
                 name = "user_game_rating",
                 joinColumns = [JoinColumn(name = "gameId")],
                 inverseJoinColumns = [JoinColumn(name = "userId")]
         )
-        var ratedUsers: MutableList<User> = mutableListOf(),
-
-
+        var ratedUsers: MutableList<User> = mutableListOf(),*/
 
         )

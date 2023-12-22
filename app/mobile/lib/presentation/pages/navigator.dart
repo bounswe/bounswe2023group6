@@ -3,14 +3,16 @@ import 'package:mobile/presentation/pages/forum_page.dart';
 import 'package:mobile/presentation/pages/game_page.dart';
 import 'package:mobile/presentation/pages/game_page_create.dart';
 import 'package:mobile/presentation/pages/game_wiki_page.dart';
+import 'package:mobile/presentation/pages/group_page.dart';
+import 'package:mobile/presentation/pages/lfg_page_create.dart';
 import 'package:mobile/presentation/pages/post/post_create_page.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
 
 class CustomNavigator extends StatefulWidget {
-  const CustomNavigator(
-      {super.key, required this.defaultKey, required this.defaultPage});
-  final GlobalKey<NavigatorState> defaultKey;
+  CustomNavigator(
+      {super.key, required this.defaultPage});
+  final GlobalKey<NavigatorState> defaultKey = GlobalObjectKey(UniqueKey());
   final Widget defaultPage;
 
   @override
@@ -37,6 +39,10 @@ class _CustomNavigatorState extends State<CustomNavigator> {
                   return const ProfilePage();
                 case "/create_game_page":
                   return const GamePageCreate();
+                case "/create_lfg_page":
+                  return const LFGPageCreate();
+                case "/group":
+                  return GroupPage();
                 default:
                   return widget.defaultPage;
               }
