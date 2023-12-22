@@ -221,7 +221,7 @@ class GameService(
             throw DeletedGameException("Game with ID: ${game.gameId} is deleted")
         }
 
-        if (user.isAdmin != true) {
+        if (!user.isAdmin) {
             throw UnauthorizedGameAccessException("Unauthorized to approve editing game with ID: ${game.gameId}")
         }
 

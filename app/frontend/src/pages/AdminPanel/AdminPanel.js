@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllGames, createEditingRequest } from '../../services/gameService';
+import { getAllGames, approveGame } from '../../services/gameService';
 import Navbarx from '../../components/navbar/Navbar';
 
 const AdminPanel = () => {
@@ -19,17 +19,19 @@ const AdminPanel = () => {
 
   const handleApprove = async (gameId) => {
     if (!window.confirm('Are you sure you want to approve this game?')) return;
-    const updatedGames = games.map(game =>
-      game.gameId === gameId ? { ...game, status: 'APPROVED' } : game
-    );
-    setGames(updatedGames);
-    // Implement API call to approve the game here if needed
+    try {
+      await approveGame(gameId);
+      setGames(games.map(game => game.gameId === gameId ? { ...game, status: 'APPROVED' } : game)); // Update the state
+      console.log('Game approved successfully!');
+    } catch (error) {
+      console.error(error);
+    }
   };
-
   const handleSave = async (gameId) => {
     const game = games.find(game => game.gameId === gameId);
+    game.status = "APPROVED";
     try {
-      await createEditingRequest(gameId, game);
+      await approveGame(gameId, game);
       console.log('Game updated successfully!');
     } catch (error) {
       console.error(error);

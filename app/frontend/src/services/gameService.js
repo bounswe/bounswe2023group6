@@ -35,11 +35,9 @@ export const rateGame = (gameId, score) => {
 	return axiosInstance.put(`/game/${gameId}/rating/${score}`)
 }
 
-export const createEditingRequest = (gameId, gameData, imageData) => {
-	const formData = new FormData()
-	formData.append('request', JSON.stringify(gameData))
-	formData.append('image', imageData)
-	return axiosInstance.post(`/game/${gameId}`, formData, {
-		headers: { 'Content-Type': 'multipart/form-data' }
-	})
+export const approveGame = (gameId) => {
+	return axiosInstance.put(`/admin/approveGame/${gameId}`, {}, {
+		withCredentials: true,
+		headers: { 'Content-Type': 'application/json' }
+	});
 }
