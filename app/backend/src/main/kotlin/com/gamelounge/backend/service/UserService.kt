@@ -18,6 +18,7 @@ import com.gamelounge.backend.util.ConverterDTO.convertBulkToCommentDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToPostDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToUserDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToTagDTO
 import com.gamelounge.backend.util.ConverterDTO.convertToUserDTO
 import jakarta.servlet.http.Cookie
 import org.springframework.http.ResponseEntity
@@ -85,13 +86,40 @@ class UserService(
         return convertBulkToCommentDTO(user.likedComments)
     }
 
+    fun getCreatedPosts(username: String): List<PostDTO>{
+        val user = userRepository.findByUsername(username) ?: throw UserNotFoundException("User does not exist.")
+        return convertBulkToPostDTO(postRepository.findByUser(user))
+    }
+
+    fun getCreatedGames(username: String): List<GameDTO>{
+        val user = userRepository.findByUsername(username) ?: throw UsernameNotFoundException("User does not exist.")
+        return convertBulkToGameDTO(gameRepository.findByUser(user))
+    }
+
+    fun getLikedPosts(username: String): List<PostDTO>{
+        val user = userRepository.findByUsername(username) ?: throw UserNotFoundException("User does not exist.")
+        return convertBulkToPostDTO(user.likedPosts)
+    }
+
+    fun getLikedComments(username: String): List<CommentDTO>{
+        val user = userRepository.findByUsername(username) ?: throw UserNotFoundException("User does not exist.")
+        return convertBulkToCommentDTO(user.likedComments)
+    }
+
     fun fromUserToGetUserInfoResponse(user: User): GetUserInfoResponse {
         return GetUserInfoResponse(
-                user.userId,
-                user.username,
-                user.email,
-                user.profilePicture,
-                user.about
+            user.userId,
+            user.username,
+            user.email,
+            user.profilePicture,
+            user.about,
+            user.isAdmin,
+            convertBulkToTagDTO(user.tags),
+            user.title,
+            user.company,
+            user.isVisible,
+            user.followerCount,
+            user.following.size
         )
     }
 
@@ -109,7 +137,9 @@ class UserService(
                 user.following = user.following.toMutableList().apply {
                     add(userToBeFollowed)
                 }
+                userToBeFollowed.followerCount += 1;
                 userRepository.save(user)
+                userRepository.save(userToBeFollowed)
             } else {
                 throw DuplicatedUserFollowing("User is already following.")
             }
@@ -123,11 +153,13 @@ class UserService(
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val userToBeFollowed = userRepository.findById(userIdToBeFollowed).orElseThrow { UsernameNotFoundException("User to be unfollowed not found") }
 
-        if (!user.following.contains(userToBeFollowed)) {
+        if (user.following.contains(userToBeFollowed)) {
             user.following = user.following.toMutableList().apply {
                 remove(userToBeFollowed)
             }
+            userToBeFollowed.followerCount -= 1;
             userRepository.save(user)
+            userRepository.save(userToBeFollowed)
         } else {
             throw DuplicatedUserFollowing("No user is already following.")
         }

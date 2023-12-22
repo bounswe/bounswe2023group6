@@ -78,7 +78,8 @@ class GridViewState extends State {
           children: itemList
               .map((data) => GestureDetector(
                   onTap: () {
-                    getGridViewSelectedItem(context, data);
+                    Navigator.pushNamed(context, "/group",
+                      arguments: data.lfgId);
                   },
                   child: LFGCard(lfg: data)))
               .toList(),
