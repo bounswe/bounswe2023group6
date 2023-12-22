@@ -26,6 +26,7 @@ const Navbarx = () => {
 	const [username, setUsername] = useState('')
 	const userImage = localStorage.getItem('userImage')
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [isAdmin, setIsAdmin] = useState(false)
 
 	const navigateToLogin = () => {
 		navigate('/login')
@@ -73,6 +74,7 @@ const Navbarx = () => {
 			input.focus()
 		}
 	}
+
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 	useEffect(() => {
 		const handleResize = () => {
@@ -85,6 +87,13 @@ const Navbarx = () => {
 			window.removeEventListener('resize', handleResize)
 		}
 	}, [])
+
+	useEffect(() => {
+		const storedUser = JSON.parse(localStorage.getItem('user'))
+		if (storedUser && storedUser.is_admin) {
+		  setIsAdmin(true)
+		}
+	  }, [])
 
 	return (
 		<Navbar isBordered className='bg-black'>
@@ -186,6 +195,13 @@ const Navbarx = () => {
 							Sign Up
 						</Button>
 					</div>
+				)}
+				{isAdmin && (
+					<NavbarItem>
+						<Link href='/admin' aria-current='page' className='text-[#fff4e0]'>
+						Admin Panel
+						</Link>
+					</NavbarItem>
 				)}
 			</NavbarContent>
 		</Navbar>

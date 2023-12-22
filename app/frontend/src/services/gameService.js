@@ -35,3 +35,12 @@ export const getAllGames = () => {
 export const rateGame = (gameId, score) => {
 	return axiosInstance.put(`/game/${gameId}/rating/${score}`)
 }
+
+export const createEditingRequest = (gameId, gameData, imageData) => {
+	const formData = new FormData()
+	formData.append('request', JSON.stringify(gameData))
+	formData.append('image', imageData)
+	return axiosInstance.post(`/game/${gameId}`, formData, {
+	  headers: { 'Content-Type': 'multipart/form-data' }
+	})
+  }
