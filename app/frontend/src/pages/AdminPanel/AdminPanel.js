@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllGames, approveGame } from '../../services/gameService';
+import { getPendingGames, getEditedGames, approveGame, rejectGame } from '../../services/gameService';
 import Navbarx from '../../components/navbar/Navbar';
 
 const AdminPanel = () => {
@@ -8,8 +8,11 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await getAllGames();
-        setGames(response.data);
+        const pendingResponse = await getPendingGames();
+        const editedResponse = await getEditedGames();
+        const allGames = [...pendingResponse.data, ...editedResponse.data];
+        const uniqueGames = Array.from(new Map(allGames.map(game => [game.gameId, game])).values());
+        setGames(uniqueGames);
       } catch (error) {
         console.error(error);
       }
@@ -21,18 +24,17 @@ const AdminPanel = () => {
     if (!window.confirm('Are you sure you want to approve this game?')) return;
     try {
       await approveGame(gameId);
-      setGames(games.map(game => game.gameId === gameId ? { ...game, status: 'APPROVED' } : game)); // Update the state
-      console.log('Game approved successfully!');
+      setGames(games.map(game => game.gameId === gameId ? { ...game, status: 'APPROVED' } : game));
     } catch (error) {
       console.error(error);
     }
   };
-  const handleSave = async (gameId) => {
-    const game = games.find(game => game.gameId === gameId);
-    game.status = "APPROVED";
+
+  const handleReject = async (gameId) => {
+    if (!window.confirm('Are you sure you want to reject this game?')) return;
     try {
-      await approveGame(gameId, game);
-      console.log('Game updated successfully!');
+      await rejectGame(gameId);
+      setGames(games.map(game => game.gameId === gameId ? { ...game, status: 'REJECTED' } : game));
     } catch (error) {
       console.error(error);
     }
@@ -40,15 +42,14 @@ const AdminPanel = () => {
 
   return (
     <>
-      <Navbarx></Navbarx>
+      <Navbarx />
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto">
           <thead className="bg-gray-200">
             <tr>
               <th className="px-4 py-2">Title</th>
               <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Approve</th>
-              <th className="px-4 py-2">Save</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -56,25 +57,21 @@ const AdminPanel = () => {
               <tr key={game.gameId} className="text-center">
                 <td className="border px-4 py-2">{game.title}</td>
                 <td className="border px-4 py-2">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${game.status === 'APPROVED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                    {game.status.replace('_', ' ')}
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${game.status ? (game.status === 'APPROVED' ? 'bg-green-100 text-green-800' : game.status === 'REJECTED' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') : 'bg-green-100 text-green-800'}`}>
+                    {game.status ? game.status : 'APPROVED'}
                   </span>
                 </td>
                 <td className="border px-4 py-2">
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={game.status === 'APPROVED'}
-                      onChange={() => handleApprove(game.gameId)}
-                      className="form-checkbox h-5 w-5 text-blue-600"
-                    />
-                    <span className="slider round"></span>
-                  </label>
-                </td>
-                <td className="border px-4 py-2">
-                  <button onClick={() => handleSave(game.gameId)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Save
-                  </button>
+                  {game.status === 'PENDING_APPROVAL' && (
+                    <>
+                      <button onClick={() => handleApprove(game.gameId)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+                        Approve
+                      </button>
+                      <button onClick={() => handleReject(game.gameId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        Reject
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

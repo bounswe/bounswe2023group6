@@ -40,4 +40,5 @@ class RequestedEditingGame(
         var playtime: String = "",
         var creationDate: Instant = Instant.now(),
         var gamePicture: String? = null,
+        var status : GameStatus = GameStatus.PENDING_APPROVAL
 )

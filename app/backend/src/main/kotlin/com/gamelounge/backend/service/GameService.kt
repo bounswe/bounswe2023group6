@@ -201,7 +201,7 @@ class GameService(
     fun getEditedGames(sessionId: UUID): List<RequestedEditingGame> {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
-        if (user.isAdmin != true) {
+        if (!user.isAdmin) {
             throw UnauthorizedGameAccessException("Unauthorized to get edited games")
         }
         val editedGames = editedGameRepository.findAll()
