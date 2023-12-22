@@ -9,9 +9,14 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import com.gamelounge.backend.entity.UserGameRating
+import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.model.DTO.UserGameRatingDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToUserGameRatingDTO
 import com.gamelounge.backend.model.request.CreateEditingRequest
 import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.repository.*
+
 
 @Service
 class GameService(
@@ -144,14 +149,12 @@ class GameService(
         return gameRepository.findAll().filter { !it.isDeleted }
     }
 
-    fun getRatedGamesByUser(sessionId: UUID): List<Game> {
+    fun getRatedGamesByUser(sessionId: UUID): List<UserGameRatingDTO> {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
-        val ratedGames = userGameRatingRepository.findByUser(user)
-                .filter { it.score >= 4 }
-        val ratedGameIds = ratedGames.map { it.game.gameId }
+        val userGameRatings = userGameRatingRepository.findByUser(user)
 
-        return gameRepository.findAllById(ratedGameIds).filter { !it.isDeleted }
+        return convertBulkToUserGameRatingDTO(userGameRatings)
     }
 
     @Transactional

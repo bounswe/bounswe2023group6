@@ -1,7 +1,9 @@
 package com.gamelounge.backend.controller
 
+import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.GameDTO
 import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.model.DTO.UserGameRatingDTO
 import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.GameService
@@ -16,7 +18,10 @@ import java.util.*
 
 @RestController
 @RequestMapping("/game")
-class GameController(private val gameService: GameService) {
+class GameController(
+    private val gameService: GameService
+) {
+
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun createGame(@CookieValue("SESSIONID") sessionId: UUID,
@@ -56,10 +61,9 @@ class GameController(private val gameService: GameService) {
     }
 
     @GetMapping("/rated")
-    fun getGamesRatedHighlyByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<GameDTO>> {
-        val games = gameService.getRatedGamesByUser(sessionId)
-        val gameDTO = ConverterDTO.convertBulkToGameDTO(games)
-        return ResponseEntity.ok(gameDTO)
+    fun getGamesRatedByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<UserGameRatingDTO>> {
+        val userGameRatingDTOs = gameService.getRatedGamesByUser(sessionId)
+        return ResponseEntity.ok(userGameRatingDTOs)
     }
 
     @PostMapping("/{id}/report")
