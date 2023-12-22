@@ -59,7 +59,9 @@ const Navbarx = () => {
 			if (response.status === 200) {
 				setIsLoggedIn(false)
 				localStorage.removeItem('username')
+				localStorage.removeItem('isAdmin')
 				navigate('/home')
+				window.location.reload();
 			}
 		} catch (err) {
 			console.error(err)
@@ -89,8 +91,8 @@ const Navbarx = () => {
 	}, [])
 
 	useEffect(() => {
-		const storedUser = JSON.parse(localStorage.getItem('user'))
-		if (storedUser && storedUser.is_admin) {
+		const isAdmin = JSON.parse(localStorage.getItem('isAdmin'))
+		if (isAdmin) {
 		  setIsAdmin(true)
 		}
 	  }, [])
@@ -122,6 +124,13 @@ const Navbarx = () => {
 							Groups
 						</Link>
 					</NavbarItem>
+					{isAdmin && (
+						<NavbarItem>
+							<Link href='/admin-panel' aria-current='page' className='text-[#fff4e0]'>
+							Admin Panel
+							</Link>
+						</NavbarItem>
+					)}
 				</NavbarContent>
 			</NavbarContent>
 			<NavbarContent as='div' className=' items-center  ' justify='end'>
@@ -195,13 +204,6 @@ const Navbarx = () => {
 							Sign Up
 						</Button>
 					</div>
-				)}
-				{isAdmin && (
-					<NavbarItem>
-						<Link href='/admin' aria-current='page' className='text-[#fff4e0]'>
-						Admin Panel
-						</Link>
-					</NavbarItem>
 				)}
 			</NavbarContent>
 		</Navbar>

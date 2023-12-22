@@ -4,8 +4,7 @@ const axiosInstance = axios.create({
 	baseURL: process.env.REACT_APP_API_URL
 })
 
-axiosInstance.defaults.withCredentials = true;
-
+axiosInstance.defaults.withCredentials = true
 
 export const createGame = (gameData, imageData) => {
 	const formData = new FormData()
@@ -41,6 +40,6 @@ export const createEditingRequest = (gameId, gameData, imageData) => {
 	formData.append('request', JSON.stringify(gameData))
 	formData.append('image', imageData)
 	return axiosInstance.post(`/game/${gameId}`, formData, {
-	  headers: { 'Content-Type': 'multipart/form-data' }
+		headers: { 'Content-Type': 'multipart/form-data' }
 	})
-  }
+}
