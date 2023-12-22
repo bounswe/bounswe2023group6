@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 import com.gamelounge.backend.entity.UserGameRating
+import com.gamelounge.backend.model.DTO.GameDTO
 import com.gamelounge.backend.repository.UserGameRatingRepository
+import com.gamelounge.backend.util.ConverterDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 
 @Service
 class GameService(
@@ -21,7 +24,8 @@ class GameService(
         private val userGameRatingRepository: UserGameRatingRepository,
         private val sessionAuth: SessionAuth,
         private val userRepository: UserRepository,
-        val s3Service: S3Service
+        val s3Service: S3Service,
+        private val recommendationService: RecommendationService
 ) {
     fun createGame(sessionId: UUID, game: CreateGameRequest, image: MultipartFile?): Game {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -165,9 +169,26 @@ class GameService(
         if (game.status != GameStatus.PENDING_APPROVAL) {
             throw WrongGameStatusException("Game with ID: $gameId is not pending approval")
         }
+
         game.status = GameStatus.REJECTED
 
         return gameRepository.save(game)
+    }
+
+    fun getRecommendedGames(sessionId: UUID?): List<GameDTO>{
+        var gameDTOs = convertBulkToGameDTO(getAllGames())
+
+        sessionId?.let {
+            gameDTOs = try{
+                val userId = sessionAuth.getUserIdFromSession(sessionId)
+                val user = userRepository.findByUserId(userId)
+                convertBulkToGameDTO(recommendationService.getRecommendedGames(user!!))
+            }catch (e: SessionNotFoundException){
+                convertBulkToGameDTO(getAllGames())
+            }
+        }
+
+        return gameDTOs
     }
 
 }
