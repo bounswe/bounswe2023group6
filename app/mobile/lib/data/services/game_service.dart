@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mobile/constants/network_constants.dart';
+import 'package:mobile/data/models/dto/content/post_report_dto_request.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
 import 'package:mobile/data/models/dto/game/game_create_dto_request.dart';
 import 'package:mobile/data/models/dto/game/game_request.dart';
@@ -305,6 +306,27 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       return true;
     } else {
       throw Exception('Failed to update game');
+    }
+  }
+
+  Future<bool> reportGame(int gameid, String reason, String description ) async {
+
+      PostReportDTORequest gameReportDTORequest = PostReportDTORequest(
+        reason: "$reason : $description",
+      );
+
+      final response =
+        await service.sendRequestSafe<PostReportDTORequest, EmptyResponse>(
+      "/game/$gameid/report",
+      gameReportDTORequest,
+      EmptyResponse(),
+      'POST',
+    );
+
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to report game');
     }
   }
 }

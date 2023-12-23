@@ -5,6 +5,7 @@ import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/game_page_create.dart';
+import 'package:mobile/presentation/pages/post/report_widget.dart';
 import 'package:mobile/presentation/widgets/annotatable_image_widget.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
@@ -146,18 +147,29 @@ class _GameWikiPageState extends State<GameWikiPage>
                       width: 500,
                       child: Column(
                         children: [
+                          Text(game.title,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700)),
+                          Align(
+                                  alignment: Alignment.centerRight,
+                                  child: InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return ReportWidgetForGame(gameid: game.gameId,);
+                                        },
+                                      );
+                                    },
+                                    child: Text("Report"),
+                                  ),
+                                ),
                           Row(
                             children: [
                               Expanded(
-                                  child: Column(
+                                child: Column(
                                 children: [
-                                  Text(game.title,
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700)),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
                                   const Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text("Release Year: ",
