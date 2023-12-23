@@ -11,12 +11,12 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.*
 import com.gamelounge.backend.entity.UserGameRating
 import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import com.gamelounge.backend.model.DTO.UserGameRatingDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToUserGameRatingDTO
 import com.gamelounge.backend.model.request.CreateEditingRequest
 import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.repository.*
-
 
 @Service
 class GameService(
@@ -25,6 +25,7 @@ class GameService(
         private val userGameRatingRepository: UserGameRatingRepository,
         private val sessionAuth: SessionAuth,
         private val userRepository: UserRepository,
+        private val recommendationService: RecommendationService,
         private val reportRepository: ReportRepository,
         val s3Service: S3Service
 ) {
@@ -297,9 +298,26 @@ class GameService(
         if (game.status != GameStatus.PENDING_APPROVAL) {
             throw WrongGameStatusException("Game with ID: $gameId is not pending approval")
         }
+
         game.status = GameStatus.REJECTED
 
         return gameRepository.save(game)
+    }
+
+    fun getRecommendedGames(sessionId: UUID?): List<GameDTO>{
+        var gameDTOs = convertBulkToGameDTO(getAllGames())
+
+        sessionId?.let {
+            gameDTOs = try{
+                val userId = sessionAuth.getUserIdFromSession(sessionId)
+                val user = userRepository.findByUserId(userId)
+                convertBulkToGameDTO(recommendationService.getRecommendedGames(user!!))
+            }catch (e: SessionNotFoundException){
+                convertBulkToGameDTO(getAllGames())
+            }
+        }
+
+        return gameDTOs
     }
 
     fun reportGame(sessionId: UUID, gameId: Long, reqBody: ReportRequest) {
@@ -314,6 +332,5 @@ class GameService(
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedGame = game)
         reportRepository.save(newReport)
     }
-
 
 }

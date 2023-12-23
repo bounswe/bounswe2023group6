@@ -1,6 +1,7 @@
 package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.model.DTO.LFGDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToLFGDTO
 import com.gamelounge.backend.model.request.CreateLFGRequest
 import com.gamelounge.backend.model.request.UpdateLFGRequest
 import com.gamelounge.backend.model.response.ResponseMessage
@@ -46,5 +47,11 @@ class LFGController(private val lfgService: LFGService) {
         val lfgs = lfgService.getAllLFGs()
         val lfgDTOs = ConverterDTO.convertBulkToLFGDTO(lfgs)
         return ResponseEntity.ok(lfgDTOs)
+    }
+    
+    @GetMapping("/recommended")
+    fun getRecommendedLFGs(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<List<LFGDTO>> {
+        val LFGDTOs = lfgService.getRecommendedLFGs(sessionId)
+        return ResponseEntity.ok(LFGDTOs)
     }
 }

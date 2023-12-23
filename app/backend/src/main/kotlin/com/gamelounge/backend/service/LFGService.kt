@@ -1,5 +1,9 @@
 package com.gamelounge.backend.service
 
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToLFGDTO  
+import com.gamelounge.backend.model.DTO.LFGDTO
+import com.gamelounge.backend.exception.SessionNotFoundException  
+import com.gamelounge.backend.entity.Game
 import com.gamelounge.backend.entity.LFG
 import com.gamelounge.backend.exception.LFGNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedLFGAccessException
@@ -16,6 +20,7 @@ import java.util.*
 class LFGService(
     private val sessionAuth: SessionAuth,
     private val userRepository: UserRepository,
+    private val recommendationService: RecommendationService,
     private val lfgRepository: LFGRepository,
     private val gameService: GameService,
     private val tagService: TagService
@@ -69,10 +74,30 @@ class LFGService(
             throw UnauthorizedLFGAccessException("Unauthorized to delete LFG with ID: $lfgId")
         }
         lfgRepository.delete(lfg)
+
+    }
+    
+    fun getRecommendedLFGs(sessionId: UUID?): List<LFGDTO>{
+        var LFGDTOs = convertBulkToLFGDTO(getAllLFGs())
+
+        sessionId?.let {
+            LFGDTOs = try{
+                val userId = sessionAuth.getUserIdFromSession(sessionId)
+                val user = userRepository.findByUserId(userId)
+                convertBulkToLFGDTO(recommendationService.getRecommendedLFGs(user!!))
+            }catch (e: SessionNotFoundException){
+                convertBulkToLFGDTO(getAllLFGs())
+            }
+        }
+
+        return LFGDTOs
     }
 
     fun getAllLFGs(): List<LFG> {
         return lfgRepository.findAll()
     }
+   
+    fun getLFGsByGame(game: Game): List<LFG>{
+        return lfgRepository.findByRelatedGame(game)
+    }
 }
-
