@@ -1,42 +1,77 @@
 import LikedPosts from './LikedPosts';
 import Navbarx from '../../components/navbar/Navbar';
 import ProfileMenu from './ProfileMenu.js';
-import { getUserInfoBySessionId, getLikedPosts, getCreatedPosts, getLikedComments } from '../../services/userService';
+import { getUserInfoByUsername, getLikedPosts, getCreatedPosts, getLikedComments, getLikedPostsByUserId, getCreatedPostsByUserId, getLikedCommentsByUserId } from '../../services/userService';
 import { React, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom'
 import EditProfile from "./EditProfile";
 
 const ProfilePage = () => {
-
-
+    const { username } = useParams();
     const [activeTab, setActiveTab] = useState('likedPosts'); // Initial active tab
     const [user, setUser] = useState({});
     const [postData, setPostData] = useState([]);
 
+    //useEffect(() => {
+    //    const fetchUserInfo = async () => {
+    //        const response = await getUserInfoBySessionId();
+    //        setUser(response.data);
+    //        console.log('55555555555555', user);
+    //    };
+    //
+    //    const fetchPosts = async () => {
+    //        let response;
+    //        switch (activeTab) {
+    //            case 'createdPosts':
+    //                response = await getCreatedPosts();
+    //                break;
+    //            case 'likedComments':
+    //                response = await getLikedComments();
+    //                break;
+    //            default:
+    //                response = await getLikedPosts();
+    //        }
+    //        setPostData(response.data);
+    //    };
+    //
+    //    fetchUserInfo();
+    //    fetchPosts();
+    //}, [username, act]);
+
     useEffect(() => {
-        const fetchUserInfo = async () => {
-            const response = await getUserInfoBySessionId();
-            setUser(response.data);
-            console.log('55555555555555', user);
-        };
+        		const user = async () => {
+        			try {
+        				const response = await getUserInfoByUsername(username)
+        				setUser(response.data);
+        				console.log(response.data)
+        			} catch (error) {
+                        console.error("Error fetching user information:", error.response.data);
+        			} finally {
+        				console.log(username)
+        				console.log(await getLikedPostsByUserId(1));
+                        console.log(await getLikedCommentsByUserId(1));
+                        console.log(await getCreatedPostsByUserId(1));
+        			}
+        		};
 
-        const fetchPosts = async () => {
-            let response;
-            switch (activeTab) {
-                case 'createdPosts':
-                    response = await getCreatedPosts();
-                    break;
-                case 'likedComments':
-                    response = await getLikedComments();
-                    break;
-                default:
-                    response = await getLikedPosts();
-            }
-            setPostData(response.data);
-        };
+        	const fetchPosts = async () => {
+                        let response;
+                        switch (activeTab) {
+                            case 'createdPosts':
+                                response = await getCreatedPosts();
+                                break;
+                            case 'likedComments':
+                                response = await getLikedComments();
+                                break;
+                            default:
+                                response = await getLikedPosts();
+                        }
+                        setPostData(response.data);
+                    };
+                    user();
+                    fetchPosts();
+                }, [username, activeTab])
 
-        fetchUserInfo();
-        fetchPosts();
-    }, [activeTab]);
 
     return (
         <>
@@ -77,7 +112,7 @@ const ProfilePage = () => {
                         </div>
                         <ProfileMenu activeTab={activeTab} onTabChange={setActiveTab} className='w-full mt-4' />
                         {activeTab === 'likedPosts' && (
-                            <div className='compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl'>
+                            <div className='compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex w-full mb-2 rounded-xl'>
                                 <div className='flex flex-col justify-center items-center w-full '>
                                     {postData.map((item, key) => (
                                         <LikedPosts item={item} key={key} />
@@ -86,7 +121,7 @@ const ProfilePage = () => {
                             </div>
                         )}
                         {activeTab === 'likedComments' && (
-                            <div className='compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl'>
+                            <div className='compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex w-full mb-2 rounded-xl'>
                                 <div className='flex flex-col justify-center items-center w-full '>
                                     {postData.map((item, key) => (
                                         <LikedPosts item={item} key={key} />
@@ -95,7 +130,7 @@ const ProfilePage = () => {
                             </div>
                         )}
                         {activeTab === 'createdPosts' && (
-                            <div className='compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex h-1/4 mb-2 rounded-xl'>
+                            <div className='compact text-cyan-800 bg-gray-200 shadow-xl p-4 flex w-full mb-2 rounded-xl'>
                                 <div className='flex flex-col justify-center items-center w-full '>
                                     {postData.map((item, key) => (
                                         <LikedPosts item={item} key={key} />
@@ -106,7 +141,7 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </div>
-            <div className='bg-gray-400 text-white text-center p-8'>
+            <div className='bg-black text-white text-center p-8'>
                 <p className='text-m'>@2023 Game Lounge, All rights reserved.</p>
             </div>
         </>

@@ -45,3 +45,19 @@ export const getCreatedGames = (sessionId) => {
     headers: { Cookie: `SESSIONID=${sessionId}` }
   });
 };
+
+export const getCreatedPostsByUserId = (userId) => {
+  return axiosInstance.get(`/user/created-posts/${userId}`);
+  };
+
+export const getLikedPostsByUserId = (userId) => {
+  return axiosInstance.get(`/user/liked-posts/${userId}`);
+};
+
+export const getLikedCommentsByUserId = (userId) => {
+  return axiosInstance.get(`/user/liked-posts/${userId}`);
+};
+
+
+
+
