@@ -61,7 +61,9 @@ class User {
       title: json['title'] ?? '',
       company: json['company'] ?? '',
       isProfileVisible: json['isVisible'] ?? true,
-      tags: json['tags'].cast<String>()  ?? [],
+      tags: json['tags'] != null 
+        ? json['tags'].cast<String>()
+        : [],
       followers: json['followerCount'] ?? 0,
       following: json['followingCount'] ?? 0,
       // followersList: json['followersList'] ?? [],
