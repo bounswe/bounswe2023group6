@@ -3,26 +3,8 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-// import 'package:mobile/data/models/annotation_model.dart';
+import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/presentation/widgets/crop_image_widget.dart';
-
-class ImageAnnotation {
-  final double x;
-  final double y;
-  final double width;
-  final double height;
-  final String authorUsername;
-  final String annotation;
-
-  ImageAnnotation({
-    required this.x,
-    required this.y,
-    required this.width,
-    required this.height,
-    required this.authorUsername,
-    required this.annotation,
-  });
-}
 
 class AnnotatableImageWidget extends StatelessWidget {
   final String imageUrl;
@@ -159,10 +141,11 @@ class AnnotatableImageWidget extends StatelessWidget {
                         annotation.width,
                         annotation.height,
                       ),
+                      scale: 80 / min(annotation.width, annotation.height),
                     ),
                     child: SizedBox(
-                      width: annotation.width,
-                      height: annotation.height,
+                      width: min(annotation.width, 100),
+                      height: min(annotation.height, 100),
                     ),
                   ),
                   Text(annotation.annotation),
@@ -225,6 +208,8 @@ class AnnotatableImageWidget extends StatelessWidget {
         topLeft = convertPointToImageCoordinates(topLeft, image);
         Offset bottomRightOffset =
             convertPointToImageCoordinates(bottomRight.value, image);
+        double width = (bottomRightOffset.dx - topLeft.dx).abs();
+        double height = (bottomRightOffset.dy - topLeft.dy).abs();
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -241,10 +226,11 @@ class AnnotatableImageWidget extends StatelessWidget {
                       topLeft,
                       bottomRightOffset,
                     ),
+                    scale: 80 / min(width, height),
                   ),
                   child: SizedBox(
-                    width: (bottomRightOffset.dx - topLeft.dx).abs(),
-                    height: (bottomRightOffset.dy - topLeft.dy).abs(),
+                    width: min(width, 100),
+                    height: min(height, 100),
                   ),
                 ),
                 const SizedBox(height: 8),
