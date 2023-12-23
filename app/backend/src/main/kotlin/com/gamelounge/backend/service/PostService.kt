@@ -40,6 +40,7 @@ class PostService(
             content = post.content,
             category = post.category,
             user = user,
+            relatedGame = post.gameId?.let { gameService.getGame(it) },
             postTags = tagService.createAndReturnTagsFromTagNames(post.tags) ?: emptyList()
         )
         return postRepository.save(newPost)
@@ -60,6 +61,7 @@ class PostService(
         post.title = updatedPost.title ?: post.title
         post.content = updatedPost.content ?: post.content
         post.category = updatedPost.category ?: post.category
+        post.relatedGame = updatedPost.gameId?.let { gameService.getGame(it) } ?: post.relatedGame
         post.postTags = tagService.createAndReturnTagsFromTagNames(updatedPost.tags) ?: post.postTags
         // TODO
 

@@ -14,6 +14,7 @@ object ConverterDTO {
             downvotes = post.downvotes,
             totalComments = post.totalComments,
             category = post.category,
+            relatedGame = post.relatedGame?.let { convertToGameDTO(it) },
             tags = convertBulkToTagDTO(post.postTags)
         )
     }

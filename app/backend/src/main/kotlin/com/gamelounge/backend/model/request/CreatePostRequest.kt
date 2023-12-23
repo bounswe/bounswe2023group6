@@ -10,6 +10,8 @@ data class CreatePostRequest(
     val content: String,
     @JsonProperty("category")
     val category: PostCategory,
+    @JsonProperty("gameId")
+    val gameId: Long? = null,
     @JsonProperty("tags")
     val tags: List<String>? = emptyList()
 )
