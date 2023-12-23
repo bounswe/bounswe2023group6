@@ -88,10 +88,10 @@ class UserService {
     }
   }
 
-  Future<List<Post>> getCreatedPosts(String username) async {
+  Future<List<Post>> getCreatedPosts(int userId) async {
     ServiceResponse<MultipleContentAsDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
-      "$_getCreatedPosts/$username",
+      "$_getCreatedPosts/$userId",
       null,
       MultipleContentAsDTO(),
       'GET',
@@ -107,10 +107,10 @@ class UserService {
     }
   }
 
-  Future<List<Game>> getCreatedGames(String username) async {
+  Future<List<Game>> getCreatedGames(int userId) async {
     ServiceResponse<MultipleGameAsDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleGameAsDTO>(
-      "$_getCreatedGames/$username",
+      "$_getCreatedGames/$userId",
       null,
       MultipleGameAsDTO(),
       'GET',
@@ -126,10 +126,10 @@ class UserService {
     }
   }
 
-  Future<List<Post>> getLikedPosts(String username) async {
+  Future<List<Post>> getLikedPosts(int userId) async {
     ServiceResponse<MultipleContentAsDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
-      "$_getLikedPosts/$username",
+      "$_getLikedPosts/$userId",
       null,
       MultipleContentAsDTO(),
       'GET',
@@ -168,9 +168,9 @@ class UserService {
     if (NetworkConstants.useMockData) {
       loadMockData(user);
     }
-    user.createdPosts = await getCreatedPosts(user.username);
-    user.likedPosts = await getLikedPosts(user.username);
-    user.createdGames = await getCreatedGames(user.username);
+    user.createdPosts = await getCreatedPosts(user.userId);
+    user.likedPosts = await getLikedPosts(user.userId);
+    user.createdGames = await getCreatedGames(user.userId);
     // user.likedGames = await getLikedGames();
   }
 
