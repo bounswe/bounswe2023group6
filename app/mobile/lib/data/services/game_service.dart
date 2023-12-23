@@ -6,6 +6,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/content/post_report_dto_request.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
+import 'package:mobile/data/models/dto/game/character_create_request.dart';
 import 'package:mobile/data/models/dto/game/game_create_dto_request.dart';
 import 'package:mobile/data/models/dto/game/game_request.dart';
 import 'package:mobile/data/models/dto/game/game_response.dart';
@@ -327,6 +328,67 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       return true;
     } else {
       throw Exception('Failed to report game');
+    }
+  }
+
+  Future<bool> createCharacter(int gameid, String name, String description ) async {
+
+      CharacterCreateRequest characterCreateRequest = CharacterCreateRequest(
+        name: name,
+        description: description
+      );
+
+      final response =
+        await service.sendRequestSafe<CharacterCreateRequest, EmptyResponse>(
+      "/character/$gameid",
+      characterCreateRequest,
+      EmptyResponse(),
+      'POST',
+    );
+
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to create character');
+    }
+  }
+
+  Future<bool> updateCharacter(int gameid, int characterId, String name, String description ) async {
+
+      CharacterCreateRequest characterCreateRequest = CharacterCreateRequest(
+        name: name,
+        description: description
+      );
+
+      final response =
+        await service.sendRequestSafe<CharacterCreateRequest, EmptyResponse>(
+      "/character/$gameid/$characterId",
+      characterCreateRequest,
+      EmptyResponse(),
+      'POST',
+    );
+
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to update character');
+    }
+  }
+
+  Future<bool> deleteCharacter(int gameid, int characterId, String name, String description ) async {
+
+      final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/character/$gameid/$characterId",
+      null,
+      EmptyResponse(),
+      'DELETE',
+    );
+
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to delete character');
     }
   }
 }
