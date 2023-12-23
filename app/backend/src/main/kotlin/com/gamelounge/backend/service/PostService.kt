@@ -29,7 +29,7 @@ class PostService(
     private val reportRepository: ReportRepository,
     private val objectMapper: ObjectMapper,
     private val tagService: TagService,
-    private val recommendationService: RecommendationService
+    private val recommendationService: RecommendationService,
     private val gameService: GameService
 ) {
     fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
