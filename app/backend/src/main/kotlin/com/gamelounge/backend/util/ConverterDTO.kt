@@ -14,6 +14,7 @@ object ConverterDTO {
             downvotes = post.downvotes,
             totalComments = post.totalComments,
             category = post.category,
+            relatedGame = post.relatedGame?.let { convertToGameDTO(it) },
             tags = convertBulkToTagDTO(post.postTags)
         )
     }
@@ -73,7 +74,7 @@ object ConverterDTO {
             lfg.micCamRequirement,
             lfg.memberCapacity,
             lfg.creationDate,
-            lfg.user,
+            lfg.user?.let { convertToUserDTO(it) },
             lfg.relatedGame?.let { convertToGameDTO(it) },
             convertBulkToTagDTO(lfg.tags)
         )
@@ -150,6 +151,7 @@ object ConverterDTO {
 
     fun convertBulkToUserGameRatingDTO(userGameRatings: List<UserGameRating>): List<UserGameRatingDTO>{
         return userGameRatings.map { userGameRating -> converToUserGameRatingDTO(userGameRating) }
+    }
 
     fun convertBulkToEditedGameDTO(editedGames: List<RequestedEditingGame>): List<EditedGameDTO>{
         return editedGames.map { editedGame -> convertToEditedGameDTO(editedGame) }
@@ -170,6 +172,5 @@ object ConverterDTO {
                 requestedEditingGame.creationDate,
                 requestedEditingGame.gamePicture,
         )
-
     }
 }

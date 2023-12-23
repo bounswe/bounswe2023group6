@@ -57,7 +57,7 @@ class UserService(
 
         user.email = request.email ?: user.email
         user.about = request.about ?: user.about
-        user.profilePicture = image?.let { s3Service.uploadProfilePictureAndReturnURL(it, user.userId) }
+        user.profilePicture = image?.let { s3Service.uploadProfilePictureAndReturnURL(it, user.userId) } ?: user.profilePicture
         user.tags = tagService.createAndReturnTagsFromTagNames(request.tags) ?: user.tags
         user.title = request.title ?: user.title
         user.company = request.company ?: user.company

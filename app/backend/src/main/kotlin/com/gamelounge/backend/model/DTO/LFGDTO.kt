@@ -12,7 +12,7 @@ data class LFGDTO(
     var micCamRequirement: Boolean = true,
     var memberCapacity: Int = 0,
     var creationDate: Instant = Instant.now(),
-    var user: User? = null,
+    var user: UserDTO? = null,
     var relatedGame: GameDTO? = null,
     var tags: List<TagDTO> = mutableListOf()
 )
