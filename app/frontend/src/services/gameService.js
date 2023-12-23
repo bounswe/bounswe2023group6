@@ -4,8 +4,7 @@ const axiosInstance = axios.create({
 	baseURL: process.env.REACT_APP_API_URL
 })
 
-axiosInstance.defaults.withCredentials = true;
-
+axiosInstance.defaults.withCredentials = true
 
 export const createGame = (gameData, imageData) => {
 	const formData = new FormData()
