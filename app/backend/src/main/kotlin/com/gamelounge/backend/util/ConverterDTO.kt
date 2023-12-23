@@ -102,9 +102,7 @@ object ConverterDTO {
             game.creationDate,
             convertBulkToTagDTO(game.tags),
             game.gamePicture,
-            // Game status toString if exists, else pending approval
             (game.status ?: GameStatus.PENDING_APPROVAL).toString(),
-//            game.status.toString()
             game.isDeleted
         )
     }
