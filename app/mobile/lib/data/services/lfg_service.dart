@@ -99,6 +99,7 @@ class LFGService {
       createdDate: DateTime.now(),
       likes: 0,
       dislikes: 0,
+      parentContentId: parentContentId,
     );
   }
 

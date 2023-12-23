@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class MainContentState extends ChangeNotifier {
   Content mainContent;
   int currentCommentParentId = 0;
-  final commentDataKey = GlobalKey<FormState>();
+  final commentDataKey = GlobalObjectKey(UniqueKey());
   late User currentUser;
   bool mainContentDeleted = false;
 

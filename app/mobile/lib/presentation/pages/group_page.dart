@@ -331,6 +331,7 @@ class _GroupPageState extends State<GroupPage> {
     return Consumer<MainContentState>(
       builder: (context, lfgState, child) {
         return Card(
+          key: lfgState.commentDataKey,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Padding(
