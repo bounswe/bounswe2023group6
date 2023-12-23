@@ -394,7 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
         child: Container(
           width: 150,
-          height: 30,
+          height: 50,
           padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom: 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
