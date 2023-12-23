@@ -300,7 +300,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       "/game/$gameid",
       gameCreateDTORequest,
       EmptyResponse(),
-      'PUT',
+      'POST',
     );
 
     if (response.success) {
@@ -308,5 +308,64 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     } else {
       throw Exception('Failed to update game');
     }
+  }
+
+  Future<void> updateGameNew(
+      String title,
+      String description,
+      String? genre,
+      String? platform,
+      String? numberOfPlayer,
+      String? mechanics,
+      int year,
+      String? universe,
+      String playTime,
+      int gameid) async {
+    if (NetworkConstants.useMockData) {
+      gameList.add(Game(
+          gameId: gameList.length + 1,
+          title: title,
+          description: description,
+          gamePicture: ""));
+    }
+    GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
+        title: title,
+        description: description,
+        genre: genre,
+        platform: platform,
+        numberOfPlayer: numberOfPlayer,
+        year: year,
+        universe: universe,
+        mechanics: mechanics,
+        playtime: playTime);
+
+    final SharedManager manager = SharedManager();
+    if (!manager.checkString(SharedKeys.sessionId)) {
+      throw Exception('Session id is null');
+    }
+    String sessionID = manager.getString(SharedKeys.sessionId);
+
+    FormData formData = FormData.fromMap({
+     "request": await MultipartFile.fromString(
+      jsonEncode(gameCreateDTORequest.toJson()),
+      contentType: MediaType.parse('application/json'),
+    ),
+      "image": null,
+    },
+    ListFormat.multiCompatible,
+    );
+    
+    Response response = await Dio().post(
+      service.options.baseUrl + "/game/$gameid",
+      data: formData,
+      options: Options(
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Cookie': 'SESSIONID=$sessionID'
+        },
+      ),
+    );
+
+    return response.data['gameId'];
   }
 }

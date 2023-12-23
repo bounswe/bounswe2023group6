@@ -72,6 +72,27 @@ class AdminService {
     }
   }
 
+  Future<List<Game>> getEditedGames() async {
+    if (NetworkConstants.useMockAdminData) {
+      return getGameDataList();
+    }
+
+    ServiceResponse<MultipleGameAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleGameAsDTO>(
+      "/admin/editedGames",
+      null,
+      MultipleGameAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Game> games = response.responseConverted!.games!.map((e) => e.game!).toList();
+      return games;
+    } else {
+      throw Exception('Failed to load games');
+    }
+  }
+
   static List<Game> getGameDataList() {
     return gameList;
   }

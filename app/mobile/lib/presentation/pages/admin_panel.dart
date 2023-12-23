@@ -18,6 +18,9 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
 
   late TabController tabController;
 
+  bool showCreatedGames = true;
+  
+
   Future<List<Game>> loadGames() async {
 
     List<Game> gameList = await adminService.getPendingGames();
@@ -25,13 +28,23 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
     return gameList;
   }
 
+  Future<List<Game>> loadEditedGames() async {
+
+    List<Game> gameList = await adminService.getEditedGames();
+
+    return gameList;
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
-    super.initState();
-
-    setState(() {
-      tabController = TabController(length: 2, vsync: this);
-    });
+      super.initState();
+      tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -42,9 +55,13 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
         children: [
           TabBar(
             controller: tabController,
+            isScrollable: true,
             tabs: [
               Tab(
-                text: 'Pending Games',
+                text: 'Created Games',
+              ),
+              Tab(
+                text: 'Updated Games',
               ),
               Tab(
                 text: 'Reports',
@@ -66,6 +83,38 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
                       return Center(child: Text("Error: ${snapshot.error}"));
                     } else {
                       List<Game> gameList = snapshot.data ?? [];
+                      return ListView(
+                        children: [
+                          for (var game in gameList)
+                            GestureDetector(
+                              onTap: () {
+                                // Open a new page with game information
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminGamePage(game: game),
+                                  ),
+                                );
+                              },
+                              child: GameCard(game: game),
+                            )
+                        ],
+                      );
+                    }
+                  },
+                ),
+                FutureBuilder<List<Game>>(
+                  future: loadEditedGames(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else {
+                      List<Game> gameList = snapshot.data ?? [];
+                      if (gameList.isEmpty) {
+                        return Center(child: Text("Nothing to show"));
+                      }
                       return ListView(
                         children: [
                           for (var game in gameList)
