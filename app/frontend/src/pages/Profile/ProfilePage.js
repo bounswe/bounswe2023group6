@@ -84,22 +84,24 @@ const ProfilePage = () => {
                                 <img src={user.profilePicture} className='rounded-full shadow-2xl' />
                             </div>
                             <div className='flex justify-end w-4/5'>
-                                <div className='h-0.7'>
-                                    <h1 className='text-3xl text-[#b46161] mb-2'>{user.username}</h1>
-                                    <span className='py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mr-3 mt-2 shadow-xl'>
-                                        {user.title}
-                                    </span>
-                                    <span className='py-2 px-4 text-gray-700 rounded-2xl bg-gray-50 w-auto mt-2 shadow-xl'>
-                                        {user.company}
-                                    </span>
-                                </div>
-                                <div className='card-actions flex justify-end items-end'>
-                                    <button className='btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl hover:bg-gray-300'>
-                                        {42} following
-                                    </button>
-                                    <button className='btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl hover:bg-gray-300'>
-                                        {31415926535} followers
-                                    </button>
+                            <h1 className='text-3xl text-[#b46161] mb-2'>{user.username}</h1>
+                                <div className='flex justify-center'>
+                                    <div className='card-actions flex justify-end items-end'>
+                                        <button className='btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl'>
+                                            {user.title}
+                                        </button>
+                                        <button className='btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl'>
+                                            {user.company}
+                                        </button>
+                                    </div>
+                                    <div className='card-actions flex justify-end items-end'>
+                                        <button className='btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl'>
+                                            {42} following
+                                        </button>
+                                        <button className='btn bg-gray-50 hover:bg-gray-50 text-gray-700 border-0 shadow-xl'>
+                                            {31415926535} followers
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className='card-actions justify-end h-0.05 mb-0'>
                                     <EditProfile user={user}/>

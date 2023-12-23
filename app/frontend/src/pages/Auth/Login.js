@@ -34,6 +34,8 @@ const Login = () => {
 				localStorage.setItem('username', username)
 				const userResponse = await axios.get(`${api_url}/user/${username}`)
 				const userImage = userResponse.data.profilePicture
+				const isAdmin = userResponse.data.admin;
+				localStorage.setItem('isAdmin', isAdmin)
 				localStorage.setItem('userImage', userImage)
 
 				navigate('/home')

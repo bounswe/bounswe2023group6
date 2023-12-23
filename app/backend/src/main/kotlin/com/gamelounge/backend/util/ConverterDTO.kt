@@ -103,7 +103,9 @@ object ConverterDTO {
             game.creationDate,
             convertBulkToTagDTO(game.tags),
             game.gamePicture,
-            game.status.toString(),
+            // Game status toString if exists, else pending approval
+            (game.status ?: GameStatus.PENDING_APPROVAL).toString(),
+//            game.status.toString()
             game.isDeleted
         )
     }
@@ -149,7 +151,7 @@ object ConverterDTO {
         )
     }
 
-    fun convertBulkToUserGameRatingDTO(userGameRatings: List<UserGameRating>): List<UserGameRatingDTO>{
+    fun convertBulkToUserGameRatingDTO(userGameRatings: List<UserGameRating>): List<UserGameRatingDTO> {
         return userGameRatings.map { userGameRating -> converToUserGameRatingDTO(userGameRating) }
     }
 
