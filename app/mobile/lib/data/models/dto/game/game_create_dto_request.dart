@@ -60,7 +60,7 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
         "countRating": 0,
         "averageRating": 0,
       };
-
+      
   @override
   GameCreateDTORequest fromJson(Map<String, dynamic> json) =>
       GameCreateDTORequest.fromJson(json);

@@ -153,7 +153,9 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     );
 
     if (response.success) {
-      List<Game> games = response.responseConverted!.games!.map((e) => e.game!).toList();
+      List<Game> games = response.responseConverted!.games!.map((e) => e.game!)
+      .where((game) => game.status == "APPROVED")
+      .toList();
       return games;
     } else {
       throw Exception('Failed to load games');

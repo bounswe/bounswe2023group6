@@ -37,7 +37,7 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Admin Panel",),
+      appBar: CustomAppBar(title: "Admin Panel",showBackButton: false,),
       body: Column(
         children: [
           TabBar(
