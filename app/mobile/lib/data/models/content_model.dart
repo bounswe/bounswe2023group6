@@ -17,7 +17,7 @@ class Content {
   final String ownerProfileImage;
 
   // final List<String>? annotations;
-  final List<String>? tags;
+  List<String>? tags;
   // final List<Report> reports;
   // final List<Content>? relatedContent;
   // final List<Content>? relatedGames;
