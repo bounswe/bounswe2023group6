@@ -6,18 +6,17 @@ import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/post/content_card_widget.dart';
-import 'package:mobile/utils/shared_manager.dart';
 import 'package:mobile/utils/cache_manager.dart';
 import 'package:provider/provider.dart';
 
-class PostState extends ChangeNotifier {
-  Post post;
+class MainContentState extends ChangeNotifier {
+  Content mainContent;
   int currentCommentParentId = 0;
   final commentDataKey = GlobalKey<FormState>();
   late User currentUser;
-  bool postDeleted = false;
+  bool mainContentDeleted = false;
 
-  PostState(this.post) {
+  MainContentState(this.mainContent) {
     initState();
   }
 
@@ -35,9 +34,9 @@ class PostState extends ChangeNotifier {
   }
 
   void addComment(Comment comment) {
-    post.commentList.add(comment);
+    mainContent.commentList.add(comment);
     // Sort the comments by created date
-    post.commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
+    mainContent.commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
     currentCommentParentId = 0;
 
     notifyListeners();
@@ -45,10 +44,10 @@ class PostState extends ChangeNotifier {
 
   void deleteContent(Content content) {
     if (content.type == ContentType.post) {
-      postDeleted = true;
+      mainContentDeleted = true;
     } else {
-      post.commentList.remove(content);
-      post.commentList.forEach((element) {
+      mainContent.commentList.remove(content);
+      mainContent.commentList.forEach((element) {
         if (element.parentContentId == content.id) {
           deleteContent(element);
         }
@@ -64,7 +63,7 @@ class PostPage extends StatelessWidget {
   final TextEditingController _commentController = TextEditingController();
   PostPage({Key? key}) : super(key: key);
 
-  Future<PostState> loadPostData(int postId) async {
+  Future<MainContentState> loadPostData(int postId) async {
     Post post = await postService.getPost(postId);
     List<Comment> commentList = await postService.getComments(post.id);
 
@@ -77,7 +76,7 @@ class PostPage extends StatelessWidget {
     }
     post.commentList = commentList;
 
-    return PostState(post);
+    return MainContentState(post);
   }
 
   @override
@@ -85,7 +84,7 @@ class PostPage extends StatelessWidget {
     final int postId = ModalRoute.of(context)!.settings.arguments as int;
     return FutureBuilder(
         future: loadPostData(postId),
-        builder: (BuildContext context, AsyncSnapshot<PostState> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<MainContentState> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
@@ -105,19 +104,19 @@ class PostPage extends StatelessWidget {
   }
 
   Widget buildPage() {
-    return Consumer<PostState>(
+    return Consumer<MainContentState>(
       builder: (context, postState, child) {
-        if (postState.postDeleted) {
+        if (postState.mainContentDeleted) {
           Future.microtask(() => Navigator.of(context).pop("delete"));
         }
         return Scaffold(
           appBar: AppBar(
-            title: Text(postState.post.title!),
+            title: Text(postState.mainContent.title!),
           ),
           body: SingleChildScrollView(
             child: Column(
               children: [
-                ContentCardWidget(content: postState.post, isPost: true),
+                ContentCardWidget(content: postState.mainContent, isPost: true),
                 const SizedBox(
                   height: 10,
                 ),
@@ -128,13 +127,13 @@ class PostPage extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                leaveNewCommentSection(postState.post),
-                for (var comment in postState.post.commentList)
+                leaveNewCommentSection(postState.mainContent),
+                for (var comment in postState.mainContent.commentList)
                   ContentCardWidget(
                       content: comment,
                       parentContent: comment.parentContentId != null &&
                               comment.parentContentId != 0
-                          ? postState.post.commentList.firstWhere((element) =>
+                          ? postState.mainContent.commentList.firstWhere((element) =>
                               element.id == comment.parentContentId)
                           : null),
               ],
@@ -145,8 +144,8 @@ class PostPage extends StatelessWidget {
     );
   }
 
-  Widget leaveNewCommentSection(Post post) {
-    return Consumer<PostState>(
+  Widget leaveNewCommentSection(Content post) {
+    return Consumer<MainContentState>(
       builder: (context, postState, child) {
         return Card(
           key: postState.commentDataKey,
@@ -166,14 +165,14 @@ class PostPage extends StatelessWidget {
                           child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            contentAsAReplySection(postState.post.commentList
+                            contentAsAReplySection(postState.mainContent.commentList
                                 .firstWhere((element) =>
                                     element.id ==
                                     postState.currentCommentParentId)),
-                            newCommentSection(postState.post),
+                            newCommentSection(postState.mainContent),
                           ],
                         ))
-                      : newCommentSection(postState.post),
+                      : newCommentSection(postState.mainContent),
                 ],
               )),
         );
@@ -181,8 +180,8 @@ class PostPage extends StatelessWidget {
     );
   }
 
-  Widget newCommentSection(Post post) {
-    return Consumer<PostState>(builder: (context, postState, child) {
+  Widget newCommentSection(Content post) {
+    return Consumer<MainContentState>(builder: (context, postState, child) {
       return Flexible(
         fit: FlexFit.loose,
         child: Column(

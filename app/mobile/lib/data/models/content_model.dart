@@ -34,7 +34,7 @@ class Content {
   List<int> commentIds = [];
 
   List<Comment> commentList = [];
-  int? parentContentId;
+  int? parentContentId; // for comment
 
   int? relatedGameId;
   String? title; // For post and lfg
