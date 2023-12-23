@@ -15,4 +15,5 @@ interface PostRepository : JpaRepository<Post, Long>{
     fun findByCategory(category: PostCategory): List<Post>
 
     fun findAllByCategory(category: PostCategory): List<Post>
+    fun findByTitleContainingOrContentContaining(title: String, content: String): List<Post>
 }
