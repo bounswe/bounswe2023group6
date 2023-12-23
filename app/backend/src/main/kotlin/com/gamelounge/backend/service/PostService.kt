@@ -3,6 +3,7 @@ package com.gamelounge.backend.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gamelounge.backend.entity.Game
 import com.gamelounge.backend.entity.Post
+import com.gamelounge.backend.entity.PostCategory
 import com.gamelounge.backend.entity.Report
 import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.PostRepository
@@ -29,6 +30,7 @@ class PostService(
     private val objectMapper: ObjectMapper,
     private val tagService: TagService,
     private val recommendationService: RecommendationService
+    private val gameService: GameService
 ) {
     fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -173,6 +175,16 @@ class PostService(
 
         return postDTOs
     }
-
+    
+    fun getPostsByGame(gameId: Long): List<PostDTO> {
+        val game = gameService.getGame(gameId)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(game.posts)
+        return postsDTO
+    }
+    fun getPostsByCategory(category: PostCategory): List<PostDTO> {
+        val posts = postRepository.findAllByCategory(category)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(posts)
+        return postsDTO
+    }
 
 }

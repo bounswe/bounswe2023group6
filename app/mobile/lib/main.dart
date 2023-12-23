@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/presentation/pages/admin_panel.dart';
 import 'package:mobile/presentation/pages/forgot_password_page.dart';
 import 'package:mobile/presentation/pages/game_wiki_page.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
@@ -6,14 +7,20 @@ import 'package:mobile/presentation/pages/opening_page.dart';
 import 'package:mobile/presentation/pages/post/post_create_page.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
+import 'package:mobile/utils/shared_manager.dart';
 import 'presentation/pages/auth_page_demo.dart';
 import 'presentation/pages/registration_page.dart';
 import 'presentation/pages/login_page.dart';
 import 'constants/color_constants.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
+Future<void> initiliazeAll() async {
+  await SharedManager().initializePreferences();
+}
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initiliazeAll();
   runApp(Phoenix(child: const MainApp()));
 }
 
@@ -69,6 +76,7 @@ class MainApp extends StatelessWidget {
         '/registration': (context) => RegistrationPage(),
         '/login': (context) => LoginPage(),
         '/forgot': (context) => ForgotPage(),
+        '/adminPanel': (context) => AdminPanel(),
         //'/profile': (context) => const ProfilePage(),
         //'/post': (context) => PostPage(),
         //'/create_post': (context) => const PostCreatePage(),

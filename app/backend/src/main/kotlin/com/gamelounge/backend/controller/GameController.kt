@@ -1,8 +1,13 @@
 package com.gamelounge.backend.controller
 
+import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.GameDTO
 import com.gamelounge.backend.model.request.CreateGameRequest
 import com.gamelounge.backend.model.request.UpdateGameRequest
+import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.model.DTO.UserGameRatingDTO
+import com.gamelounge.backend.model.request.*
+import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.GameService
 import com.gamelounge.backend.util.ConverterDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
@@ -15,7 +20,10 @@ import java.util.*
 
 @RestController
 @RequestMapping("/game")
-class GameController(private val gameService: GameService) {
+class GameController(
+    private val gameService: GameService
+) {
+
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun createGame(@CookieValue("SESSIONID") sessionId: UUID,
@@ -34,17 +42,10 @@ class GameController(private val gameService: GameService) {
         return ResponseEntity.ok(gameDTO)
     }
 
-    @PutMapping("/{id}")
-    fun updateGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody updatedGame: UpdateGameRequest): ResponseEntity<GameDTO> {
-        val game = gameService.updateGame(sessionId, id, updatedGame)
-        val gameDTO = ConverterDTO.convertToGameDTO(game)
-        return ResponseEntity.ok(gameDTO)
-    }
-
-    @DeleteMapping("/{id}")
-    fun deleteGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<Void> {
+    @PutMapping("/delete/{id}")
+    fun deleteGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<ResponseMessage> {
         gameService.deleteGame(sessionId, id)
-        return ResponseEntity.noContent().build<Void>()
+        return ResponseEntity.ok(ResponseMessage(message = "Game deleted successfully"))
     }
 
     @GetMapping
@@ -67,9 +68,26 @@ class GameController(private val gameService: GameService) {
     }
 
     @GetMapping("/rated")
-    fun getGamesRatedHighlyByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<GameDTO>> {
-        val games = gameService.getRatedGamesByUser(sessionId)
-        val gameDTO = ConverterDTO.convertBulkToGameDTO(games)
-        return ResponseEntity.ok(gameDTO)
+    fun getGamesRatedByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<UserGameRatingDTO>> {
+        val userGameRatingDTOs = gameService.getRatedGamesByUser(sessionId)
+        return ResponseEntity.ok(userGameRatingDTOs)
     }
+
+    @PostMapping("/{id}/report")
+    fun reportGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @RequestBody reqBody: ReportRequest): ResponseEntity<ResponseMessage> {
+        gameService.reportGame(sessionId, id, reqBody)
+        return ResponseEntity.ok(ResponseMessage(message = "Game reported successfully"))
+    }
+
+    @PostMapping("/{id}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createEditingRequest(@CookieValue("SESSIONID") sessionId: UUID,
+                   @RequestPart("request") editedGame: CreateEditingRequest,
+                   @RequestPart("image") image: MultipartFile?,
+                   @PathVariable id: Long
+    ): ResponseEntity<ResponseMessage> {
+        gameService.createEditingRequest(sessionId, editedGame, image, id)
+        return ResponseEntity.ok(ResponseMessage(message = "Editing game was requested successfully."))
+    }
+
 }

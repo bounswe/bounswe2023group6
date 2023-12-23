@@ -1,6 +1,7 @@
 package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.model.DTO.EditedGameDTO
 import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.service.AccessService
 import com.gamelounge.backend.service.GameService
@@ -96,6 +97,28 @@ class AccessController(
         val gameDTO = ConverterDTO.convertBulkToGameDTO(game)
         return ResponseEntity.ok(gameDTO)
     }
+
+    @GetMapping("/admin/editedGames")
+    fun getEditedGames(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<EditedGameDTO>> {
+        val editedGame = gameService.getEditedGames(sessionId)
+        val editedGameDTO = ConverterDTO.convertBulkToEditedGameDTO(editedGame)
+        return ResponseEntity.ok(editedGameDTO)
+    }
+
+    @PutMapping("/admin/approveEditingGame/{editingGameId}")
+    fun approveEditingGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable editingGameId: Long): ResponseEntity<GameDTO> {
+        val game = gameService.approveEditingGame(sessionId, editingGameId)
+        val gameDTO = ConverterDTO.convertToGameDTO(game)
+        return ResponseEntity.ok(gameDTO)
+    }
+
+    @PutMapping("/admin/rejectEditingGame/{editingGameId}")
+    fun rejectEditingGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable editingGameId: Long): ResponseEntity<GameDTO> {
+        val game = gameService.rejectEditingGame(sessionId, editingGameId)
+        val gameDTO = ConverterDTO.convertToGameDTO(game)
+        return ResponseEntity.ok(gameDTO)
+    }
+
     @PutMapping("/admin/approveGame/{gameId}")
     fun approveGame(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable gameId: Long): ResponseEntity<GameDTO> {
         val game = gameService.approveGame(sessionId, gameId)

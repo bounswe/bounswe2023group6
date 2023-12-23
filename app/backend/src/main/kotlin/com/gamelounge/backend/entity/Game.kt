@@ -19,7 +19,8 @@ import java.time.Instant
 enum class GameStatus {
         PENDING_APPROVAL,
         APPROVED,
-        REJECTED
+        REJECTED,
+        EMPTY
 }
 
 @Entity
@@ -49,6 +50,7 @@ class Game(
         var averageRating: Double = 0.0,
         var creationDate: Instant = Instant.now(),
         var gamePicture: String? = null,
+        var isDeleted: Boolean = false,
 
         @Enumerated(EnumType.STRING)
         var status: GameStatus = GameStatus.PENDING_APPROVAL,

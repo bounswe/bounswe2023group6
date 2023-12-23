@@ -9,6 +9,7 @@ class User {
   final String email;
   final String username;
 
+  bool? isAdmin;
   String? name;
   String? surname;
   String? about;
@@ -29,6 +30,10 @@ class User {
   ByteData? profileImage;
   String profilePicture = '';
 
+  int followers;
+  int following;
+  List<User> followersList = [];
+
   User({
     required this.userId,
     required this.email,
@@ -37,10 +42,15 @@ class User {
     this.about,
     this.title,
     this.company,
+    this.followers = 0,
+    this.following = 0,
+    this.followersList = const [],
+    this.isAdmin,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      isAdmin: json['isAdmin'],
       userId: json['userId'],
       email: json['email'],
       username: json['username'],
@@ -48,11 +58,15 @@ class User {
       about: json['about'],
       title: json['title'] ?? '',
       company: json['company'] ?? '',
+      followers: json['followers'] ?? 0,
+      following: json['following'] ?? 0,
+      // followersList: json['followersList'] ?? [],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'isAdmin': isAdmin,
       'userId': userId,
       'email': email,
       'username': username,
@@ -60,6 +74,9 @@ class User {
       'about': about,
       'title': title,
       'company': company,
+      'followers': followers,
+      'following': following,
+      'followersList': followersList,
     };
   }
 }

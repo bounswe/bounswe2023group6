@@ -50,3 +50,7 @@ export const reportPost = (postId, reportData, sessionId) => {
     headers: { Cookie: `SESSIONID=${sessionId}` }
   });
 };
+
+export const getAllTags = () => {
+  return axiosInstance.get('/tags');
+};

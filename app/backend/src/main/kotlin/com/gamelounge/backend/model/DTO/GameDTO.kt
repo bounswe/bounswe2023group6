@@ -27,4 +27,5 @@ data class GameDTO(
         var tags: List<TagDTO>,
         var gamePicture: String? = null,
         var status: String = "",
+        var isDeleted: Boolean = false
 )

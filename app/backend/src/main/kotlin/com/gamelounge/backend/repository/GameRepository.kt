@@ -10,4 +10,5 @@ interface GameRepository: JpaRepository<Game, Long> {
     fun findByUser(user: User): List<Game>
 
     fun findByStatus(status: GameStatus): List<Game>
+
 }

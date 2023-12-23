@@ -20,5 +20,13 @@ class DuplicatedRatingGameException(message: String) : RuntimeException(message)
 class CharacterNotFoundException(message: String) : RuntimeException(message)
 class UnauthorizedCharacterAccessException(message: String) : RuntimeException(message)
 class WrongGameStatusException(message: String) : RuntimeException(message)
+class DuplicatedEditingRequestException(message: String) : RuntimeException(message)
+class DuplicatedUserFollowing(message: String) : RuntimeException(message)
+class DeletedGameException(message: String) : RuntimeException(message)
+class UnauthorizedLFGAccessException(message: String) : RuntimeException(message)
+class LFGNotFoundException(message: String) : RuntimeException(message)
+
+
+
 
 

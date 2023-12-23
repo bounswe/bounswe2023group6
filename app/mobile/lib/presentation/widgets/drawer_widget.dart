@@ -5,6 +5,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_authentication_service.dart';
 import 'package:mobile/data/services/user_service.dart';
+import 'package:mobile/presentation/pages/admin_panel.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
 import 'package:mobile/presentation/pages/opening_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
@@ -30,7 +31,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   final UserAuthenticationService authService = UserAuthenticationService();
 
-  late final CacheManager cacheManager;
+  final CacheManager cacheManager = CacheManager();
 
 
   @override
@@ -42,11 +43,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   Future<void> initializeCache() async {
-    final SharedManager manager = SharedManager();
-    await manager.init();
-    cacheManager = CacheManager(manager);
-  
-
     print(cacheManager.getSessionId());
 
     setState(() {
@@ -84,7 +80,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
     else {
     
-      return LoggedDrawer(username: username, pp: DisplayAvatar(byteData: currentuser!.profileImage, onPressed: () {
+      return LoggedDrawer(username: username, pp: DisplayAvatar(imageLink: currentuser!.profilePicture, onPressed: () {
         // go to profile page
         Navigator.pushNamed(context, '/profile', arguments: username);
       }));
@@ -163,6 +159,19 @@ class LoggedDrawer extends StatelessWidget {
                 const ListTile(
                   leading: Icon(Icons.settings_outlined),
                   title: Text('Settings'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings_outlined),
+                  title: Text('Admin Panel'),
+                  onTap: () {
+                                // Open a new page with game information
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminPanel(),
+                                  ),
+                                );
+                              },
                 ),
                 ListTile(
                   leading: const Icon(Icons.logout_outlined),

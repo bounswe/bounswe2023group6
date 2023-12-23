@@ -8,10 +8,9 @@ import {
     Button,
     IconButton,
     MenuItem,
-    OutlinedInput,
     FormControl,
     Select,
-    InputLabel
+    InputLabel, Chip, Input
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { useForm } from 'react-hook-form'
@@ -23,9 +22,10 @@ export default function EditPost(props) {
     const { handleSubmit } = useForm()
     const [title, setTitle] = useState(props.post.title)
     const [content, setContent] = useState(props.post.content)
-    const [tag, setTag] = useState(props.post.tags)
     const [category, setCategory] = useState(props.post.category)
     const postId = props.post.postId;
+    const [tags, setTags] = useState([]);
+    const [currTag, setCurrTag] = useState("");
 
     const axiosInstance = axios.create({
         baseURL: `${process.env.REACT_APP_API_URL}`
@@ -40,13 +40,18 @@ export default function EditPost(props) {
     }
 
     const onSubmit = () => {
+        const updateRequest = {
+            title: title,
+            content: content,
+            category: category,
+            tags: tags
+        };
+
+        const formData = new FormData();
+        formData.append('request', JSON.stringify(updateRequest));
+
         axiosInstance.defaults.withCredentials = true;
-        axiosInstance.put(`/forum/posts/${postId}`, {
-            title,
-            content,
-            category,
-            tag
-        }, {
+        axiosInstance.put(`/forum/posts/${postId}`, updateRequest, {
             withCredentials: true
         })
             .then((response) => {
@@ -61,15 +66,30 @@ export default function EditPost(props) {
             });
     };
 
+    const handleChange = (e) => {
+        setCurrTag(e.target.value);
+    };
 
-    const tags = ['gamer', 'rpg', 'moba', 'lol', 'fifa', 'gta', 'fortnite', 'horror']
+    const handleDeleteTag = (item, index) => {
+        let arr = [...tags];
+        arr.splice(index, 1);
+        console.log(item);
+        setTags(arr);
+    };
+
+    const handleKeyUp = (e) => {
+        if (e.keyCode === 13) {
+            setTags((oldState) => [...oldState, e.target.value]);
+            setCurrTag("");
+        }
+    };
 
     const categories = ['GUIDE', 'REVIEW', 'DISCUSSION']
 
     return (
         <div>
             <Button onClick={handleClickOpen}>
-                <EditIcon sx={{ color: 'black'}} />
+                <EditIcon sx={{ color: '#404040'}} />
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
@@ -102,21 +122,35 @@ export default function EditPost(props) {
                         }}
                     />
                     <FormControl fullWidth margin='normal'>
-                        <InputLabel id='demo-multiple-name-label'>Tags</InputLabel>
-                        <Select
-                            multiple
-                            value={tag}
-                            onChange={(event) => {
-                                setTag(event.target.value)
+                        <h3 style={{ display: "flex", alignItems: "flex-start" }}>Tags:</h3>
+                        <FormControl fullWidth
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "20px",
+                                flexWrap: "wrap",
+                                flexDirection: "row",
+                                border: "2px solid lightgray",
+                                padding: 1,
+                                borderRadius: "4px",
                             }}
-                            input={<OutlinedInput label='Name' />}
                         >
-                            {tags.map((name) => (
-                                <MenuItem key={name} value={name}>
-                                    {name}
-                                </MenuItem>
-                            ))}
-                        </Select>
+                            <div className={"container"}>
+                                {tags.map((item, index) => (
+                                    <Chip
+                                        key={index}
+                                        size="small"
+                                        onDelete={() => handleDeleteTag(item, index)}
+                                        label={item}
+                                    />
+                                ))}
+                            </div>
+                            <Input fullWidth
+                                value={currTag}
+                                onChange={handleChange}
+                                onKeyDown={handleKeyUp}
+                            />
+                        </FormControl>
                     </FormControl>
                     <FormControl fullWidth margin='normal'>
                         <InputLabel htmlFor='max-width'>Category</InputLabel>

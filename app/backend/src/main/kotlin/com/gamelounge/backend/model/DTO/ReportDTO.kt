@@ -5,6 +5,7 @@ data class ReportDTO(
     val reason: String = "",
     var reportingUser: UserDTO,
     var reportedPost: PostDTO? = null,
+    var reportedGame: GameDTO? = null,
     var reportedLFG: LFGDTO? = null,
     var reportedComment: CommentDTO? = null
 )

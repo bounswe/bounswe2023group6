@@ -32,6 +32,7 @@ class UserService {
   static const String _getLikedPosts = '/user/liked-posts';
   static const String _getLikedGames = '/user/liked-games';
   static const String _getLikedComments = '/user/liked-comments';
+  static const String _followUser = '/user/follow';
 
   Future<User> getUser(String username) async {
     ServiceResponse<UserDTOResponse> response =
@@ -49,14 +50,12 @@ class UserService {
     }
   }
 
-  // TODO: add image in update user
-  Future<bool> updateUser(User user) async {
+  Future<bool> updateUser(User user, {String? imageFilePath}) async {
     final SharedManager manager = SharedManager();
-    await manager.init();
     if (!manager.checkString(SharedKeys.sessionId)) {
       throw Exception('Session id is null');
     }
-    String sessionID = manager.getString(SharedKeys.sessionId);    
+    String sessionID = manager.getString(SharedKeys.sessionId);
 
     Map<String, dynamic> request = user.toJson();
     var formData = FormData.fromMap({
@@ -64,6 +63,8 @@ class UserService {
         jsonEncode(request),
         contentType: MediaType("application", "json"),
       ),
+      if (imageFilePath != null)
+        'image': await MultipartFile.fromFile(imageFilePath)
     });
 
     Response response = await Dio().post(
@@ -113,9 +114,8 @@ class UserService {
     );
 
     if (response.success) {
-      List<Game> games = response.responseConverted!.games!
-          .map((e) => e.game!)
-          .toList();
+      List<Game> games =
+          response.responseConverted!.games!.map((e) => e.game!).toList();
 
       return games;
     } else {
@@ -169,6 +169,20 @@ class UserService {
     user.likedPosts = await getLikedPosts();
     user.createdGames = await getCreatedGames();
     // user.likedGames = await getLikedGames();
+  }
+
+  Future<void> followUser(String username) async {
+    // ServiceResponse<EmptyResponse> response =
+    //     await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+    //   "$_followUser/$username",
+    //   null,
+    //   EmptyResponse(),
+    //   'POST',
+    // );
+
+    // if (!response.success) {
+    //   throw Exception('Failed to follow user ${response.errorMessage}');
+    // }
   }
 
   void loadMockData(User user) async {

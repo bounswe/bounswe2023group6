@@ -149,5 +149,38 @@ class GlobalExceptionHandler {
                 .body(mapOf("errorMessage" to exception.message))
     }
 
+    @ExceptionHandler(DuplicatedEditingRequestException::class)
+    fun handleDuplicatedEditingRequestException(exception: DuplicatedEditingRequestException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+
+    @ExceptionHandler(DuplicatedUserFollowing::class)
+    fun handleDuplicatedUserFollowing(exception: DuplicatedUserFollowing): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+
+    @ExceptionHandler(DeletedGameException::class)
+    fun handleDeletedGameException(exception: DeletedGameException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(UnauthorizedLFGAccessException::class)
+    fun handleUnauthorizedLFGAccessException(exception: UnauthorizedLFGAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(LFGNotFoundException::class)
+    fun handleLFGNotFoundException(exception: LFGNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+
 
 }

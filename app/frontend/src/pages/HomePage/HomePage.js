@@ -114,7 +114,7 @@ export default function HomePage() {
   return (
     <>
     <Navbarx></Navbarx>
-    <div className='flex flex-row grow bg-gray-50 justify-center items-center'>
+    <div className='flex flex-row grow bg-neutral-100 justify-center items-center'>
       {/* Make elements flex, these will be in a row */}
       {/* <div className='w-1/5 flex flex-col gap-4'> */}
         {/* Take 1/5 width of the screen, flex elements in a column, add gap between elements */}
@@ -131,7 +131,7 @@ export default function HomePage() {
         </div>
         <div className='flex flex-row mx-4'>
           {/* Flex elements in a row, add margin on the left and right */}
-          <div className='flex flex-col w-1/3 ml-12 mr-12'>
+          <div className='flex flex-col w-1/3 ml-12 mr-12 pb-8'>
 		  <div className='flex w-full items-center justify-center mt-4'><h1><b>Games</b></h1></div>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
             <div>
@@ -140,7 +140,7 @@ export default function HomePage() {
 				))}
 			</div>
           </div>
-          <div className='flex flex-col w-1/3 ml-12 mr-12'>
+          <div className='flex flex-col w-1/3 ml-12 mr-12 pb-8'>
 		  <div className='flex w-full items-center justify-center mt-4'><h1><b>Groups</b></h1></div>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
             {groupData.map((item, key) => (
@@ -148,7 +148,7 @@ export default function HomePage() {
             ))}
           </div>
 
-		  	<div className='flex flex-col w-1/3 ml-12 mr-12'>
+		  	<div className='flex flex-col w-1/3 ml-12 mr-12 pb-8'>
 			  <div className='flex w-full items-center justify-center mt-4'><h1><b>Posts</b></h1></div>
 				{postData.map((post) => (
 					<Post key={post.postId} post={post} />
@@ -158,9 +158,9 @@ export default function HomePage() {
       </div>
 
     </div>
-    <div className="bg-gray-400 text-white text-center mt-4 p-8">
-      <p className="text-m">@2023 Game Lounge, All rights reserved.</p>
-    </div>
+    <div className='bg-black text-white text-center p-8'>
+                        <p className='text-m'>@2023 Game Lounge, All rights reserved.</p>
+                    </div>
 	</>
   )
 };
