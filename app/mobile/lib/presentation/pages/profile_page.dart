@@ -503,8 +503,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Wrap(
+                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   for (String tag in profileUser.tags)
                     Container(
@@ -512,6 +512,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 30,
                       padding: const EdgeInsets.only(
                           left: 15, right: 1, top: 5, bottom: 5),
+                      margin: const EdgeInsets.only(right: 10, bottom: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: ColorConstants.color1,
