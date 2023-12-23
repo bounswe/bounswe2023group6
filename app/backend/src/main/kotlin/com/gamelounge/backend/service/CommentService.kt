@@ -3,19 +3,13 @@ package com.gamelounge.backend.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gamelounge.backend.entity.Comment
 import com.gamelounge.backend.entity.Report
-import com.gamelounge.backend.repository.CommentRepository
-import com.gamelounge.backend.repository.PostRepository
+import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.middleware.SessionAuth
-import com.gamelounge.backend.exception.CommentNotFoundException
-import com.gamelounge.backend.exception.PostNotFoundException
-import com.gamelounge.backend.exception.UnauthorizedCommentAccessException
-import com.gamelounge.backend.exception.UserNotFoundException
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreateCommentRequest
 import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.model.request.UpdateCommentRequest
-import com.gamelounge.backend.repository.ReportRepository
-import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.repository.*
 import com.gamelounge.backend.util.ConverterDTO
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -28,6 +22,7 @@ class CommentService(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository,
+    private val lfgRepository: LFGRepository,
     private val objectMapper: ObjectMapper
 ) {
     fun createComment(sessionId: UUID, postId: Long, comment: CreateCommentRequest): Comment {
@@ -40,6 +35,18 @@ class CommentService(
         newComment.user = user
         newComment.post = post
         postRepository.save(post)
+        return commentRepository.save(newComment)
+    }
+    fun createCommentLFG(sessionId: UUID, lfgId: Long, comment: CreateCommentRequest): Comment {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
+        val lfg = lfgRepository.findById(lfgId).orElseThrow { LFGNotFoundException("LFG not found") }
+        lfg.totalComments += 1
+        val replyToComment = comment.replyToCommentId?.let { commentRepository.findById(it).orElseThrow { CommentNotFoundException("Comment not found") } }
+        val newComment = Comment(content = comment.content, replyToComment = replyToComment)
+        newComment.user = user
+        newComment.lfg = lfg
+        lfgRepository.save(lfg)
         return commentRepository.save(newComment)
     }
 
@@ -81,6 +88,9 @@ class CommentService(
 
     fun getAllCommentsForPost(postId: Long): List<Comment> {
         return commentRepository.findAll().filter { it.post?.postId == postId }
+    }
+    fun getAllCommentsForLFG(lfgId: Long): List<Comment> {
+        return commentRepository.findAll().filter { it.lfg?.lfgId == lfgId }
     }
     @Transactional
     fun upvoteComment(sessionId: UUID, commentId: Long): Comment {

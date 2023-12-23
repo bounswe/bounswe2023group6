@@ -24,6 +24,13 @@ class CommentController(private val commentService: CommentService) {
         return ResponseEntity.ok(newCommentDTO)
     }
 
+    @PostMapping("/lfg/{lfgId}")
+    fun createCommentLFG(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable lfgId: Long, @RequestBody comment: CreateCommentRequest): ResponseEntity<CommentDTO> {
+        val newComment = commentService.createCommentLFG(sessionId, lfgId, comment)
+        val newCommentDTO = ConverterDTO.convertToCommentDTO(newComment)
+        return ResponseEntity.ok(newCommentDTO)
+    }
+
     @GetMapping("/{id}")
     fun getComment(@PathVariable id: Long): ResponseEntity<CommentDTO> {
         val comment = commentService.getComment(id)
@@ -50,8 +57,13 @@ class CommentController(private val commentService: CommentService) {
         val commentsDTO = ConverterDTO.convertBulkToCommentDTO(comments)
         return ResponseEntity.ok(commentsDTO)
     }
+    @GetMapping("/lfg/{lfgId}")
+    fun getAllCommentsForLFG(@PathVariable lfgId: Long): ResponseEntity<List<CommentDTO>> {
+        val comments = commentService.getAllCommentsForLFG(lfgId)
+        val commentsDTO = ConverterDTO.convertBulkToCommentDTO(comments)
+        return ResponseEntity.ok(commentsDTO)
+    }
 
-    // implement upvote endpoint
     @PutMapping("/{id}/upvote")
     fun upvoteComment(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<CommentDTO> {
         val comment = commentService.upvoteComment(sessionId, id)
