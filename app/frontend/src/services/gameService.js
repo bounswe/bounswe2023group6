@@ -20,6 +20,12 @@ export const getGame = (gameId) => {
 	return axiosInstance.get(`/game/${gameId}`)
 }
 
+export const editGame = (gameID, gameData, sessionId) => {
+	return axiosInstance.put(`/games/${gameID}`, gameData, {
+		headers: { Cookie: `SESSIONID=${sessionId}` }
+	})
+}
+
 export const updateGame = (gameId, updatedGameData) => {
 	return axiosInstance.put(`/game/${gameId}`, updatedGameData)
 }
@@ -32,6 +38,13 @@ export const getAllGames = () => {
 	return axiosInstance.get('/game')
 }
 
-export const rateGame = (gameId, score) => {
-	return axiosInstance.put(`/game/${gameId}/rating/${score}`)
+export const rateGame = (gameID, rateData, sessionId) => {
+	return axiosInstance.put(`/game/${gameID}/rating/${rateData}`, rateData, {
+		headers: { Cookie: `SESSIONID=${sessionId}`, withCredentials: true }
+	})
+}
+export const postChar = (gameID, chardata, sessionId) => {
+	return axiosInstance.post(`/character/${gameID}`, {
+		headers: { Cookie: `SESSIONID=${sessionId}` }
+	})
 }

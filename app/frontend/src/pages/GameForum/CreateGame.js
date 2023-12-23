@@ -18,7 +18,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-//import { postChar } from '../../services/gameServise'
+//import { postChar } from '../../services/gameService'
 
 export default function CreateGame() {
 	const api_url = process.env.REACT_APP_API_URL

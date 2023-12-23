@@ -3,9 +3,8 @@ import 'tailwindcss/tailwind.css'
 import { Link } from 'react-router-dom'
 import Navbarx from '../../components/navbar/Navbar'
 import { useState, useEffect } from 'react'
-import { getGame, rateGame } from '../../services/gameServise'
 import { useParams } from 'react-router-dom'
-import { getAllGames } from '../../services/gameService'
+import { getAllGames,  getGame, rateGame } from '../../services/gameService'
 import { useNavigate } from 'react-router-dom'
 
 const GamePage = () => {
