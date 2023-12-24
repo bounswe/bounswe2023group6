@@ -106,7 +106,7 @@ object ConverterDTO {
             game.creationDate,
             convertBulkToTagDTO(game.tags),
             game.gamePicture,
-            game.status.toString(),
+            (game.status ?: GameStatus.PENDING_APPROVAL).toString(),
             game.isDeleted,
             game.similarGames.map { it.gameId }
         )

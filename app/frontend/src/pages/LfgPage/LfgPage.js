@@ -1,28 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import Navbarx from '../../components/navbar/Navbar';
-import { getAllPosts } from '../../services/postService';
+// import { getAllPosts } from '../../services/postService';
 import LfgCard from "./LfgCard";
-import {Button} from "@mui/material";
+import {getUserInfoBySessionId} from "../../services/userService";
+import {getAllGroups} from "../../services/lfgService";
+import CreateLfg from "./CreateLfg";
 
 export default function LfgPage() {
 
-    const [forumPosts, setForumPosts] = useState([]);
+    const [groups, setGroups] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+//    const [filteredPosts, setFilteredPosts] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
 
-    const mockGroupData =
-        {
-            title: '"Looking for a co-op adventure in Hyrule!"',
-            content: 'Need a skilled squad for high-intensity chicken dinners! Who\'s in for some PUBG action? Let\'s conquer the battleground together! 🍗🔫',
-            tags: ['tag1', 'tag2'],
-            playerNumber: 3
-        }
+
 
     useEffect(() => {
-        const fetchPosts = async () => {
+        const fetchUserInfo = async () => {
+            try {
+                const response = await getUserInfoBySessionId();
+                const userData = response.data;
+                setCurrentUser(userData);
+                console.log('Current User:', userData);
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        };
+        fetchUserInfo();
+    }, []);
+
+    useEffect(() => {
+        const fetchGroups = async () => {
             setIsLoading(true);
             try {
-                const response = await getAllPosts();
-                setForumPosts(response.data.sort((a, b) => a.postId - b.postId));
+                const response = await getAllGroups();
+                setGroups(response.data);
+                console.log(groups)
+                console.log("ss")
             } catch (error) {
                 console.error(error);
             } finally {
@@ -30,10 +44,8 @@ export default function LfgPage() {
             }
         };
 
-        fetchPosts();
+        fetchGroups();
     }, []);
-
-
 
 
 
@@ -51,17 +63,14 @@ export default function LfgPage() {
                         <h1 className='text-4xl font-bold text-neutral-700 text-center'>Groups</h1>
                         <div className='h-18 w-full flex flex-row pt-2 center-items'>
                             <div className='flex flex-row h-full w-1/2 p-4'>
-                                <Button variant='outlined'
-                                        sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
-                                    Post a Lfg
-                                </Button>
+                                <CreateLfg />
                             </div>
 
                         </div>
                         <div className='w-full flex flex-row'>
                             <div className='w-full flex flex-col'>
-                                {forumPosts.map((post) => (
-                                    <LfgCard key={post.postId} post={post} tags={post.tags} category={post.category} mockGroupData={mockGroupData}/>
+                                {groups.map((group) => (
+                                    <LfgCard key={group.lfgId} group={group} currentUser={currentUser}/>
                                 ))}
                             </div>
                         </div>
