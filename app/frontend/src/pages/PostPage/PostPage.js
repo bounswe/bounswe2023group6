@@ -16,19 +16,7 @@ const PostPage = () => {
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
-
   const [currentUser, setCurrentUser] = useState(null);
-
-  // const comments = [
-  //   {
-  //     commentId: 1,
-  //     creatorUserId: "alice123",
-  //     content: "Chess is all about practice and strategy. Start by learning the basics.",
-  //     creationDate: '2023-01-01T12:00:00.000Z',
-  //     upvotes: 5,
-  //     downvotes: 1,
-  //   },
-  // ];
 
   const handleUpvote = async () => {
     try {

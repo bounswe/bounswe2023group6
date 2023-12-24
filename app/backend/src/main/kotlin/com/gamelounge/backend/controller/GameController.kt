@@ -1,20 +1,25 @@
 package com.gamelounge.backend.controller
 
+
+import com.gamelounge.backend.entity.UserGameRating
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.model.request.CreateGameRequest
+import com.gamelounge.backend.model.request.UpdateGameRequest
 import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserGameRatingDTO
 import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.GameService
 import com.gamelounge.backend.util.ConverterDTO
+import io.swagger.v3.core.util.Json
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
-
 
 @RestController
 @RequestMapping("/game")
@@ -48,9 +53,14 @@ class GameController(
 
     @GetMapping
     fun getAllGames(): ResponseEntity<List<GameDTO>> {
-        val games = gameService.getAllGames()
-        val gameDTO = ConverterDTO.convertBulkToGameDTO(games)
-        return ResponseEntity.ok(gameDTO)
+        val gameDTOs = convertBulkToGameDTO(gameService.getAllGames())
+        return ResponseEntity.ok(gameDTOs)
+    }
+
+    @GetMapping("/recommended")
+    fun getRecommendedGames(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<List<GameDTO>> {
+        val gameDTOs = gameService.getRecommendedGames(sessionId)
+        return ResponseEntity.ok(gameDTOs)
     }
 
     @PutMapping("/{id}/rating/{score}")
@@ -58,6 +68,13 @@ class GameController(
         val game = gameService.rateGame(sessionId, id, score)
         val gameDTO = ConverterDTO.convertToGameDTO(game)
         return ResponseEntity.ok(gameDTO)
+    }
+
+    @GetMapping("/{id}/getRating")
+    fun getRating(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<UserGameRatingDTO> {
+        val userGameRating = gameService.getRating(sessionId, id)
+        val userGameRatingDTO = ConverterDTO.convertToUserInfoGameRatingDTO(userGameRating)
+        return ResponseEntity.ok(userGameRatingDTO)
     }
 
     @GetMapping("/rated")
@@ -76,10 +93,10 @@ class GameController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createEditingRequest(@CookieValue("SESSIONID") sessionId: UUID,
                    @RequestPart("request") editedGame: CreateEditingRequest,
-                   @RequestPart("image") image: MultipartFile?,
+                   @RequestPart("image") editedImage: MultipartFile?,
                    @PathVariable id: Long
     ): ResponseEntity<ResponseMessage> {
-        gameService.createEditingRequest(sessionId, editedGame, image, id)
+        gameService.createEditingRequest(sessionId, editedGame, editedImage, id)
         return ResponseEntity.ok(ResponseMessage(message = "Editing game was requested successfully."))
     }
 

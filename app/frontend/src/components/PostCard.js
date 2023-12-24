@@ -2,17 +2,46 @@ import React from 'react'
 // import userlogo from '../user.jpg';
 import ReportIcon from '@mui/icons-material/Report'
 import EditPost from '../pages/ForumPage/EditPost'
+import { deletePost } from '../services/postService'
+import { useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
-	const isCurrentUserCreator = post.creatorUser.username === currentUser.username
+	const isCurrentUserCreator = currentUser && post.creatorUser.username === currentUser.username ? true : false
+
+	const navigate = useNavigate()
+
+	const params = useParams()
+	// console.log('===>', params)
+
+	const handleDeletePost = async (postId) => {
+		try {
+			await deletePost(postId)
+			navigate('/forum')
+		} catch (error) {
+			console.error('Error deleting post:', error)
+		}
+	}
 
 	return (
-		<div key={post.id} className='card compact bg-neutral-200 text-neutral-800 shadow-xl m-4 p-2'>
+		<div key={post.postId} className='card compact bg-neutral-200 text-neutral-800 shadow-xl m-4 p-2'>
 			<div className='absolute top-2 right-2 flex'>
-				{isCurrentUserCreator ? (
-					<EditPost post={post} />
-				) : (
-					<button className='p-2 text-black rounded'>
+				{isCurrentUserCreator && (
+					<>
+						<EditPost post={post} />
+						{params.postId && (
+							<button
+								onClick={() => handleDeletePost(post.postId)}
+								className='btn btn-circle btn-sm bg-red-600 text-white hover:bg-red-800'
+								title='Delete Post'
+							>
+								🗑️
+							</button>
+						)}
+					</>
+				)}
+				{!isCurrentUserCreator && (
+          <button className='p-2 text-black rounded'>
 						<ReportIcon sx={{ color: '#404040' }} />
 					</button>
 				)}

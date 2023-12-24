@@ -1,6 +1,7 @@
 package com.gamelounge.backend.controller
 
 import com.gamelounge.backend.entity.Post
+import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.entity.PostCategory
 import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
@@ -10,6 +11,7 @@ import com.gamelounge.backend.model.request.UpdatePostRequest
 import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.PostService
 import com.gamelounge.backend.util.ConverterDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToPostDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -47,9 +49,14 @@ class PostController(private val postService: PostService) {
 
     @GetMapping
     fun getAllPosts(): ResponseEntity<List<PostDTO>> {
-        val posts = postService.getAllPosts()
-        val postsDTO = ConverterDTO.convertBulkToPostDTO(posts)
-        return ResponseEntity.ok(postsDTO)
+        val postDTOs = convertBulkToPostDTO(postService.getAllPosts())
+        return ResponseEntity.ok(postDTOs)
+    }
+
+    @GetMapping("/recommended")
+    fun getRecommendedPosts(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<List<PostDTO>> {
+        val postDTOs = postService.getRecommendedPosts(sessionId)
+        return ResponseEntity.ok(postDTOs)
     }
 
     // implement upvote endpoint

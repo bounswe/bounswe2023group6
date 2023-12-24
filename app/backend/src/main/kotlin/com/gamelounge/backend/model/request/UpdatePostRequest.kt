@@ -10,6 +10,8 @@ data class UpdatePostRequest(
     val content: String?,
     @JsonProperty("category")
     val category: PostCategory?,
+    @JsonProperty("gameId")
+    val gameId: Long?,
     @JsonProperty("tags")
     val tags: List<String>?
 )
