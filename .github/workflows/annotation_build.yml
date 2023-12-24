@@ -43,4 +43,4 @@ jobs:
         "docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-annotation:${{ github.run_number }} && \
          docker stop gamelounge-annotation || true && \
          docker rm gamelounge-annotation || true && \
-         docker run -d --name gamelounge-annotation -p 6000:6000 -e SPRING_DATASOURCE_URL="jdbc:postgresql://${{ secrets.SERVER_IP }}:5433/annotation" -e SPRING_DATASOURCE_USERNAME="annotation" -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DOCKERHUB_PASSWORD }}" ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-annotation:${{ github.run_number }}"
+         docker run -d --name gamelounge-annotation -p 8081:8080 -e SPRING_DATASOURCE_URL="jdbc:postgresql://${{ secrets.SERVER_IP }}:5433/annotation" -e SPRING_DATASOURCE_USERNAME="annotation" -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DOCKERHUB_PASSWORD }}" ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-annotation:${{ github.run_number }}"
