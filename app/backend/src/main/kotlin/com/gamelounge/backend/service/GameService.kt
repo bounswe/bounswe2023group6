@@ -27,7 +27,8 @@ class GameService(
         private val userRepository: UserRepository,
         private val recommendationService: RecommendationService,
         private val reportRepository: ReportRepository,
-        val s3Service: S3Service
+        val s3Service: S3Service,
+        private val gameSimilarityService: GameSimilarityService
 ) {
     fun createGame(sessionId: UUID, game: CreateGameRequest, image: MultipartFile?): Game {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -45,8 +46,10 @@ class GameService(
                 user = user,
                 status = GameStatus.PENDING_APPROVAL
         )
+        gameSimilarityService.updateSimilarGamesField(newGame)
         gameRepository.save(newGame) // save to get gameId for image name
         image?.let { saveImageInS3AndImageURLInDBForGame(image, newGame) }
+
         return gameRepository.save(newGame)
     }
 
