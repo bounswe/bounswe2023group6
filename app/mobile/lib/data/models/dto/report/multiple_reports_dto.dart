@@ -14,12 +14,12 @@ class MultipleReportDTO extends BaseDTOObject<MultipleReportDTO> {
   factory MultipleReportDTO.fromJson(Map<String, dynamic> json) =>
       MultipleReportDTO(
         reports: List<ReportDTO>.from(
-            json["annotations"].map((x) => ReportDTO.fromJson(x))),
+            json["response"].map((x) => ReportDTO.fromJson(x))),
       );
 
   @override
   Map<String, dynamic> toJson() => {
-        "annotations": List<dynamic>.from(reports!.map((x) => x.toJson())),
+        "response": List<dynamic>.from(reports!.map((x) => x.toJson())),
       };
 
   @override

@@ -313,8 +313,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
   Future<void> updateGameNew(
       String title,
       String description,
-      String? genre,
-      String? platform,
+      List<String?>? genres,
+      List<String?>? platforms,
       String? numberOfPlayer,
       String? mechanics,
       int year,
@@ -331,8 +331,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
         title: title,
         description: description,
-        genre: genre,
-        platform: platform,
+        genres: genres,
+        platforms: platforms,
         numberOfPlayer: numberOfPlayer,
         year: year,
         universe: universe,

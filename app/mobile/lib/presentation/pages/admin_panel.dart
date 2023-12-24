@@ -1,10 +1,12 @@
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/report_model.dart';
 import 'package:mobile/data/services/admin_service.dart';
 import 'package:mobile/presentation/pages/admin_game_page.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
+import 'package:mobile/presentation/widgets/post_card_widget.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key});
@@ -34,6 +36,13 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
 
     return gameList;
   }
+
+  Future<List<Report>> loadPostReports() async {
+
+    List<Report> postReportList = await adminService.getPostReports();
+
+    return postReportList;
+  } 
 
   @override
   void dispose() {
@@ -135,14 +144,32 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
                     }
                   },
                 ),
-                // Tab 2
-                const Center(
-                  child: Text("Nothing to show",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      )),
-                ),
+                FutureBuilder<List<Report>>(
+                  future: loadPostReports(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else {
+                      List<Report> postReportList = snapshot.data ?? [];
+                      if (postReportList.isEmpty) {
+                        return Center(child: Text("Nothing to show"));
+                      }
+                      return ListView(
+                        children: [
+                          for (var report in postReportList)
+                            GestureDetector(
+                              onTap: () {
+                                // Open a new page with game information
+                              },
+                              child: PostCard(post: report.reportedPost!,),
+                            )
+                        ],
+                      );
+                    }
+                  },
+                ),                
               ],
             ),
           ),

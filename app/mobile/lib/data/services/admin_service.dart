@@ -135,7 +135,7 @@ class AdminService {
 
     ServiceResponse<MultipleReportDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleReportDTO>(
-      "/admin/reportedPosts",
+      "/admin/all-post-reports",
       null,
       MultipleReportDTO(),
       'GET',
