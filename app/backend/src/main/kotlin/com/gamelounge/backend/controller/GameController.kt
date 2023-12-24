@@ -100,4 +100,11 @@ class GameController(
         return ResponseEntity.ok(ResponseMessage(message = "Editing game was requested successfully."))
     }
 
+    @PostMapping("/update-similar-games")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun updateSimilarGamesFields(): ResponseEntity<ResponseMessage>{
+        gameService.updateSimilarGamesFields()
+        return ResponseEntity.ok(ResponseMessage("Games' similar games fields updated successfully!"))
+    }
+
 }

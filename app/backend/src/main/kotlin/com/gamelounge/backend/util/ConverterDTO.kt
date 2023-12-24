@@ -32,6 +32,7 @@ object ConverterDTO {
             downvotes = comment.downvotes,
         )
     }
+
     fun convertBulkToCommentDTO(comments: List<Comment>) : List<CommentDTO> {
         return comments.map { convertToCommentDTO(it) }
     }
@@ -106,7 +107,8 @@ object ConverterDTO {
             convertBulkToTagDTO(game.tags),
             game.gamePicture,
             (game.status ?: GameStatus.PENDING_APPROVAL).toString(),
-            game.isDeleted
+            game.isDeleted,
+            convertBulkToGameDTO(game.similarGames)
         )
     }
 

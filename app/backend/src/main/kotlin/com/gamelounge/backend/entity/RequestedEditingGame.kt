@@ -30,12 +30,12 @@ class RequestedEditingGame(
         @ElementCollection(targetClass = GameGenre::class)
         @Enumerated(EnumType.STRING)
         @CollectionTable(name = "edited_game_genres", joinColumns = [JoinColumn(name = "gameId")])
-        var genres: Set<GameGenre> = emptySet(),
+        var genres: MutableSet<GameGenre> = mutableSetOf(),
 
         @ElementCollection(targetClass = GamePlatform::class)
         @Enumerated(EnumType.STRING)
         @CollectionTable(name = "edited_game_platforms", joinColumns = [JoinColumn(name = "gameId")])
-        var platforms: Set<GamePlatform> = emptySet(),
+        var platforms: MutableSet<GamePlatform> = mutableSetOf(),
 
         @Enumerated(EnumType.STRING)
         var playerNumber: NumberOfPlayers = NumberOfPlayers.Empty,
