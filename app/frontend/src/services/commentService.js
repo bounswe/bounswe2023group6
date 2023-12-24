@@ -10,8 +10,18 @@ export const getAllCommentsForPost = (postId) => {
 	return axiosInstance.get(`/comments/post/${postId}`)
 }
 
+export const getAllCommentsForLfg = (lfgId) => {
+	return axiosInstance.get(`/comments/lfg/${lfgId}`)
+}
+
 export const createComment = (postId, commentData, sessionId) => {
 	return axiosInstance.post(`/comments/post/${postId}`, commentData, {
+		headers: { Cookie: `SESSIONID=${sessionId}` }
+	})
+}
+
+export const createCommentForLfg = (lfgId, commentData, sessionId) => {
+	return axiosInstance.post(`/comments/lfg/${lfgId}`, commentData, {
 		headers: { Cookie: `SESSIONID=${sessionId}` }
 	})
 }
