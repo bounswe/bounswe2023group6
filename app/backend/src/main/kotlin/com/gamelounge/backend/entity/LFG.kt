@@ -20,6 +20,7 @@ class LFG(
     var memberCapacity: Int = 0,
     var creationDate: Instant = Instant.now(),
     var totalComments: Int = 0,
+    var totalMembers: Int = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -38,5 +39,13 @@ class LFG(
     joinColumns = [JoinColumn(name = "lfgId")],
     inverseJoinColumns = [JoinColumn(name = "tagId")]
     )
-    var tags: List<Tag> = mutableListOf()
+    var tags: List<Tag> = mutableListOf(),
+
+    @ManyToMany
+    @JoinTable(
+        name = "lfg_members",
+        joinColumns = [JoinColumn(name = "lfgId")],
+        inverseJoinColumns = [JoinColumn(name = "userId")]
+    )
+    var members: List<User> = mutableListOf()
 )
