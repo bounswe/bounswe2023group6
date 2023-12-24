@@ -163,7 +163,13 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
                               onTap: () {
                                 // Open a new page with game information
                               },
-                              child: PostCard(post: report.reportedPost!,),
+                              child: Card(
+                                child: Column(
+                                  children: [
+                                    Text(report.reason),
+                                    PostCard(post: report.reportedPost!,),
+                                  ],
+                                )),
                             )
                         ],
                       );
