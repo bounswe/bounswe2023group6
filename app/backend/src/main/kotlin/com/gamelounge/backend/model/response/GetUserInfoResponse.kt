@@ -6,5 +6,7 @@ data class GetUserInfoResponse(
     val email: String = "",
     val profilePicture: String? = null,
     val about: String? = null,
-    val isAdmin: Boolean = false
+    val isAdmin: Boolean = false,
+    val isVisible: Boolean = false,
+    val isDeleted: Boolean = false,
 )

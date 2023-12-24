@@ -45,7 +45,9 @@ object ConverterDTO {
             title = user.title,
             company = user.company,
             tags = convertBulkToTagDTO(user.tags),
-            isVisible = user.isVisible
+            isVisible = user.isVisible,
+            isDeleted = user.isDeleted,
+            isAdmin = user.isAdmin
         )
     }
     fun convertBulkToUserDTO(users: List<User>): List<UserDTO> {
@@ -88,8 +90,8 @@ object ConverterDTO {
             game.gameId,
             game.title,
             game.description,
-            game.genre,
-            game.platform,
+            game.genres.toList(),
+            game.platforms.toList(),
             convertBulkToCharacterDTO(game.characters),
             game.playerNumber,
             game.releaseYear,
@@ -149,8 +151,8 @@ object ConverterDTO {
                 requestedEditingGame.gameId,
                 requestedEditingGame.title,
                 requestedEditingGame.description,
-                requestedEditingGame.genre,
-                requestedEditingGame.platform,
+                requestedEditingGame.genres.toList(),
+                requestedEditingGame.platforms.toList(),
                 requestedEditingGame.playerNumber,
                 requestedEditingGame.releaseYear,
                 requestedEditingGame.universe,
@@ -158,6 +160,14 @@ object ConverterDTO {
                 requestedEditingGame.playtime,
                 requestedEditingGame.creationDate,
                 requestedEditingGame.gamePicture,
+        )
+    }
+
+    fun convertToUserGameRatingDTO(userGameRating: UserGameRating): UserGameRatingDTO{
+        return UserGameRatingDTO(
+                convertToUserDTO(userGameRating.user),
+                convertToGameDTO(userGameRating.game),
+                userGameRating.score
         )
     }
 }

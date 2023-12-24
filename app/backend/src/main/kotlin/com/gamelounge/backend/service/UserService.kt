@@ -91,7 +91,10 @@ class UserService(
                 user.username,
                 user.email,
                 user.profilePicture,
-                user.about
+                user.about,
+                user.isAdmin,
+                user.isVisible,
+                user.isDeleted,
         )
     }
 

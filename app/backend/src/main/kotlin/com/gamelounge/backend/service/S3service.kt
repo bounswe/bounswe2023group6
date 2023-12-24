@@ -1,5 +1,6 @@
 package com.gamelounge.backend.service
 
+import com.gamelounge.backend.constant.S3Constants.EDITED_GAME_PICTURE_DIRECTORY
 import com.gamelounge.backend.constant.S3Constants.GAME_PICTURE_DIRECTORY
 import com.gamelounge.backend.constant.S3Constants.PROFILE_PICTURE_DIRECTORY
 import org.springframework.beans.factory.annotation.Value
@@ -37,6 +38,14 @@ class S3Service(
         return createGamePicturesURL(gameId)
     }
 
+    fun uploadEditedGamePictureAndReturnURL(editedImage: MultipartFile, gameId: Long): String{
+        val s3 = createS3Client()
+
+        putImageToS3Bucket(s3, editedImage, "edited-game-pictures/$gameId")
+
+        return createEditedGamePicturesURL(gameId)
+    }
+
     private fun createS3Client(): S3Client{
         return S3Client.builder()
             .region(Region.EU_NORTH_1)
@@ -63,5 +72,9 @@ class S3Service(
 
     private fun createGamePicturesURL(gameId: Long): String{
         return GAME_PICTURE_DIRECTORY + gameId
+    }
+
+    private fun createEditedGamePicturesURL(gameId: Long): String{
+        return EDITED_GAME_PICTURE_DIRECTORY + gameId
     }
 }
