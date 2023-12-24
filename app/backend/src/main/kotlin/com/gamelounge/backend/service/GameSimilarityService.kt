@@ -13,16 +13,13 @@ class GameSimilarityService(
     private val gameRepository: GameRepository
 ) {
 
-    fun updateAllSimilarGamesFields() = runBlocking{
+    fun updateAllSimilarGamesFields(){
         val allGames = gameRepository.findAll()
 
-        val deferredUpdates = allGames.map { game ->
-            async(Dispatchers.IO) {
-                updateSimilarGamesField(game, allGames)
-                gameRepository.save(game)
-            }
+        allGames.forEach { game ->
+            updateSimilarGamesField(game, allGames)
+            gameRepository.save(game)
         }
-        deferredUpdates.awaitAll()
     }
 
     fun updateSimilarGamesField(game: Game){ // This could be wrong
