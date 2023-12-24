@@ -3,7 +3,6 @@ package com.gamelounge.backend.service
 import com.gamelounge.backend.entity.*
 import com.gamelounge.backend.repository.LFGRepository
 import com.gamelounge.backend.repository.PostRepository
-import kotlinx.coroutines.*
 import org.springframework.stereotype.Service
 
 
@@ -40,31 +39,33 @@ class RecommendationService(
         return mostFrequentGames
     }
 
-    fun getPostsRelatedToGames(games: List<Game>): List<Post> = runBlocking{
+    fun getPostsRelatedToGames(games: List<Game>): List<Post>{
 
-        val deferredRecommendedPosts = games.map { game ->
-            async(Dispatchers.IO) {postRepository.findByRelatedGame(game)}
-        }.awaitAll().flatten().distinct()
+        val recommendedPosts = games.map { game ->
+            postRepository.findByRelatedGame(game)
+        }.flatten().distinct()
 
-        return@runBlocking deferredRecommendedPosts
+        return recommendedPosts
     }
 
-    fun getLFGsRelatedToGames(games: List<Game>): List<LFG> = runBlocking{
+    fun getLFGsRelatedToGames(games: List<Game>): List<LFG>{
 
-        val deferredRecommendedLFGs = games.map { game ->
-            async(Dispatchers.IO) { lfgRepository.findByRelatedGame(game) }
-        }.awaitAll().flatten().distinct()
+        val recommendedLFGs = games.map { game ->
+             lfgRepository.findByRelatedGame(game)
+        }.flatten().distinct()
 
-        return@runBlocking deferredRecommendedLFGs
+        return recommendedLFGs
     }
 
-    fun getSimilarGamesBulk(games: List<Game>): List<Game> = runBlocking{
+    fun getSimilarGamesBulk(games: List<Game>): List<Game>{
 
-        val deferredRelatedGames = games.map { game ->
-            async(Dispatchers.IO) { game.similarGames }
-        }.awaitAll().flatten().distinct()
+        val similarGames = games.map { game ->
+             game.similarGames
+        }.flatten().distinct().toMutableList()
 
-        return@runBlocking deferredRelatedGames
+        games.forEach { similarGames.add(it) }
+
+        return similarGames
     }
 
     fun getGameOccurrences(posts: List<Post>): MutableMap<Game, Int>{
@@ -74,17 +75,13 @@ class RecommendationService(
             val game = post.relatedGame
             game?.let {occurrences[it] = occurrences.getOrDefault(it, 0) + 1}
         }
-        
         return occurrences
     }
 
-    fun getMostFrequentNGames(occurrences: MutableMap<Game, Int>, n: Int): List<Game>{
-
-        val sortedGames = occurrences.entries
+    fun getMostFrequentNGames(occurrences: MutableMap<Game, Int>, n: Int): List<Game> {
+        return occurrences.entries
             .sortedByDescending { it.value }
             .take(n)
             .map { it.key }
-
-        return sortedGames
     }
 }
