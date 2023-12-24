@@ -7,6 +7,6 @@ class NetworkConstants {
 
   static bool useMockData = false;
   static bool useMockGameData = false;
-  static bool useMockAdminData = true;
+  static bool useMockAdminData = false;
   
 }
