@@ -17,7 +17,7 @@ class Content {
   final String ownerProfileImage;
 
   // final List<String>? annotations;
-  final List<String>? tags;
+  List<String>? tags;
   // final List<Report> reports;
   // final List<Content>? relatedContent;
   // final List<Content>? relatedGames;
@@ -34,7 +34,7 @@ class Content {
   List<int> commentIds = [];
 
   List<Comment> commentList = [];
-  int? parentContentId;
+  int? parentContentId; // for comment
 
   int? relatedGameId;
   String? title; // For post and lfg
