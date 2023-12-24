@@ -146,6 +146,7 @@ object ConverterDTO {
 
     fun converToUserGameRatingDTO(userGameRating: UserGameRating): UserGameRatingDTO{
         return UserGameRatingDTO(
+            convertToUserDTO(userGameRating.user),
             convertToGameDTO(userGameRating.game),
             userGameRating.score
         )
@@ -184,4 +185,4 @@ object ConverterDTO {
         )
     }
 }
-}
+
