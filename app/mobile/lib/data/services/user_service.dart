@@ -6,6 +6,7 @@ import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/content/multiple_content_dto_response.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
 import 'package:mobile/data/models/dto/game/multiple_game_dto_response.dart';
+import 'package:mobile/data/models/dto/user/multiple_user_as_dto.dart';
 import 'package:mobile/data/models/dto/user/user_response.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/post_model.dart';
@@ -32,7 +33,9 @@ class UserService {
   static const String _getLikedPosts = '/user/liked-posts';
   static const String _getLikedGames = '/user/liked-games';
   static const String _getLikedComments = '/user/liked-comments';
-  static const String _followUser = '/user/follow';
+  static const String _followUser = '/user/follow-user';
+  static const String _unfollowUser = '/user/unfollow-user';
+  static const String _getFollowings = '/user/get-followings';
 
   Future<User> getUser(String username) async {
     ServiceResponse<UserDTOResponse> response =
@@ -85,10 +88,10 @@ class UserService {
     }
   }
 
-  Future<List<Post>> getCreatedPosts() async {
+  Future<List<Post>> getCreatedPosts(int userId) async {
     ServiceResponse<MultipleContentAsDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
-      _getCreatedPosts,
+      "$_getCreatedPosts/$userId",
       null,
       MultipleContentAsDTO(),
       'GET',
@@ -104,10 +107,10 @@ class UserService {
     }
   }
 
-  Future<List<Game>> getCreatedGames() async {
+  Future<List<Game>> getCreatedGames(int userId) async {
     ServiceResponse<MultipleGameAsDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleGameAsDTO>(
-      _getCreatedGames,
+      "$_getCreatedGames/$userId",
       null,
       MultipleGameAsDTO(),
       'GET',
@@ -123,10 +126,10 @@ class UserService {
     }
   }
 
-  Future<List<Post>> getLikedPosts() async {
+  Future<List<Post>> getLikedPosts(int userId) async {
     ServiceResponse<MultipleContentAsDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
-      _getLikedPosts,
+      "$_getLikedPosts/$userId",
       null,
       MultipleContentAsDTO(),
       'GET',
@@ -142,10 +145,10 @@ class UserService {
     }
   }
 
-  Future<List<Comment>> getLikedComments() async {
+  Future<List<Comment>> getLikedComments(String username) async {
     ServiceResponse<MultipleContentAsDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
-      _getLikedComments,
+      "$_getLikedComments/$username",
       null,
       MultipleContentAsDTO(),
       'GET',
@@ -165,24 +168,56 @@ class UserService {
     if (NetworkConstants.useMockData) {
       loadMockData(user);
     }
-    user.createdPosts = await getCreatedPosts();
-    user.likedPosts = await getLikedPosts();
-    user.createdGames = await getCreatedGames();
+    user.createdPosts = await getCreatedPosts(user.userId);
+    user.likedPosts = await getLikedPosts(user.userId);
+    user.createdGames = await getCreatedGames(user.userId);
     // user.likedGames = await getLikedGames();
   }
 
-  Future<void> followUser(String username) async {
-    // ServiceResponse<EmptyResponse> response =
-    //     await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
-    //   "$_followUser/$username",
-    //   null,
-    //   EmptyResponse(),
-    //   'POST',
-    // );
+  Future<void> followUser(User user) async {
+    ServiceResponse<EmptyResponse> response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "$_followUser/${user.userId}",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
 
-    // if (!response.success) {
-    //   throw Exception('Failed to follow user ${response.errorMessage}');
-    // }
+    if (!response.success) {
+      throw Exception('Failed to follow user ${response.errorMessage}');
+    }
+  }
+
+  Future<void> unfollowUser(User user) async {
+    ServiceResponse<EmptyResponse> response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "$_unfollowUser/${user.userId}",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+
+    if (!response.success) {
+      throw Exception('Failed to unfollow user ${response.errorMessage}');
+    }
+  }
+
+  Future<List<User>> getFollowings() async {
+    ServiceResponse<MultipleUserAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
+      _getFollowings,
+      null,
+      MultipleUserAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<User> users =
+          response.responseConverted!.users!.map((e) => e.user!).toList();
+      return users;
+    } else {
+      throw Exception('Failed to load followings ${response.errorMessage}');
+    }
   }
 
   void loadMockData(User user) async {

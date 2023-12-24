@@ -38,7 +38,7 @@ class DisplayAvatar extends StatelessWidget {
                 ? Icon(
                     Icons.account_circle,
                     color: color,
-                    size: 130,
+                    size: size.toDouble() * 2,
                   )
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(120),
