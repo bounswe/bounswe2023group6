@@ -1,7 +1,9 @@
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
 import 'package:mobile/data/models/dto/game/multiple_game_dto_response.dart';
+import 'package:mobile/data/models/dto/report/multiple_reports_dto.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/report_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
 
@@ -93,6 +95,8 @@ class AdminService {
     }
   }
 
+
+
   static List<Game> getGameDataList() {
     return gameList;
   }
@@ -127,4 +131,75 @@ class AdminService {
     }
   }
 
+  Future<List<Report>> getPostReports() async {
+
+    ServiceResponse<MultipleReportDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleReportDTO>(
+      "/admin/reportedPosts",
+      null,
+      MultipleReportDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Report> reports = response.responseConverted!.reports!.map((e) => e.report!).toList();
+      return reports;
+    } else {
+      throw Exception('Failed to load post reports');
+    }
+  }
+
+  Future<List<Report>> getGameReports() async {
+
+    ServiceResponse<MultipleReportDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleReportDTO>(
+      "/admin/reportedGames",
+      null,
+      MultipleReportDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Report> reports = response.responseConverted!.reports!.map((e) => e.report!).toList();
+      return reports;
+    } else {
+      throw Exception('Failed to load game reports');
+    }
+  }
+
+  Future<List<Report>> getLFGReports() async {
+
+    ServiceResponse<MultipleReportDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleReportDTO>(
+      "/admin/reportedLFGs",
+      null,
+      MultipleReportDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Report> reports = response.responseConverted!.reports!.map((e) => e.report!).toList();
+      return reports;
+    } else {
+      throw Exception('Failed to load lfg reports');
+    }
+  }
+
+  Future<List<Report>> getCommentReports() async {
+
+    ServiceResponse<MultipleReportDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleReportDTO>(
+      "/admin/reportedLFGs",
+      null,
+      MultipleReportDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Report> reports = response.responseConverted!.reports!.map((e) => e.report!).toList();
+      return reports;
+    } else {
+      throw Exception('Failed to load comment reports');
+    }
+  }
 }
