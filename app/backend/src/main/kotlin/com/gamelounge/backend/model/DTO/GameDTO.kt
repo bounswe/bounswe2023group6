@@ -28,5 +28,5 @@ data class GameDTO(
         var gamePicture: String? = null,
         var status: String = "",
         var isDeleted: Boolean = false,
-        var similarGames: List<GameDTO> = mutableListOf()
+        // var similarGames: List<GameDTO> = mutableListOf()
 )
