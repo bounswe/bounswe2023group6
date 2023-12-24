@@ -151,7 +151,7 @@ object ConverterDTO {
         )
     }
 
-    fun convertBulkToUserGameRatingDTO(userGameRatings: List<UserGameRating>): List<UserGameRatingDTO>{
+    fun convertBulkToUserGameRatingDTO(userGameRatings: List<UserGameRating>): List<UserGameRatingDTO> {
         return userGameRatings.map { userGameRating -> converToUserGameRatingDTO(userGameRating) }
     }
 
