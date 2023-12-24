@@ -15,20 +15,44 @@ class AnnotationService {
 
   static const String _getAnnotations = '/annotation';
   static const String _createAnnotation = '/annotation';
-  static const String _updateAnnotation = '/annotation';
+  // static const String _updateAnnotation = '/annotation';
   static const String _deleteAnnotation = '/annotation';
 
-  Future<List<Annotation>> getAnnotations(int contentId) async {
+  static const String _getAnnotationsByTargetId = "/get-annotations-by-target/";
+
+  // Future<List<Annotation>> getAnnotations(int contentId) async {
+  //   ServiceResponse<MultipleAnnotationDTO> response =
+  //       await service.sendRequestSafe<EmptyResponse, MultipleAnnotationDTO>(
+  //     "$_getAnnotations/$contentId",
+  //     null,
+  //     MultipleAnnotationDTO(),
+  //     'GET',
+  //   );
+
+  //   if (response.success) {
+  //     return response.responseConverted!.annotations!
+  //         .map((e) => e.annotation!)
+  //         .toList();
+  //   } else {
+  //     throw Exception('Failed to load annotations ${response.errorMessage}');
+  //   }
+  // }
+
+  Future<List<Annotation>> getAnnotationsByTargetId(
+      AnnotationContext context, int id) async {
+    String targetId = "${context}_${id.toString()}";
     ServiceResponse<MultipleAnnotationDTO> response =
         await service.sendRequestSafe<EmptyResponse, MultipleAnnotationDTO>(
-      "$_getAnnotations/$contentId",
+      "$_getAnnotationsByTargetId$targetId",
       null,
       MultipleAnnotationDTO(),
       'GET',
     );
 
     if (response.success) {
-      return response.responseConverted!.annotations!.map((e) => e.annotation!).toList();
+      return response.responseConverted!.annotations!
+          .map((e) => e.annotation!)
+          .toList();
     } else {
       throw Exception('Failed to load annotations ${response.errorMessage}');
     }
@@ -53,24 +77,24 @@ class AnnotationService {
     }
   }
 
-  Future<bool> updateAnnotation(Annotation annotation) async {
-    AnnotationDTO annotationDTO = AnnotationDTO();
-    annotationDTO.annotation = annotation;
+  // Future<bool> updateAnnotation(Annotation annotation) async {
+  //   AnnotationDTO annotationDTO = AnnotationDTO();
+  //   annotationDTO.annotation = annotation;
 
-    ServiceResponse<EmptyResponse> response =
-        await service.sendRequestSafe<AnnotationDTO, EmptyResponse>(
-      _updateAnnotation,
-      annotationDTO,
-      EmptyResponse(),
-      'PUT',
-    );
+  //   ServiceResponse<EmptyResponse> response =
+  //       await service.sendRequestSafe<AnnotationDTO, EmptyResponse>(
+  //     _updateAnnotation,
+  //     annotationDTO,
+  //     EmptyResponse(),
+  //     'PUT',
+  //   );
 
-    if (response.success) {
-      return true;
-    } else {
-      throw Exception('Failed to update annotation ${response.errorMessage}');
-    }
-  }
+  //   if (response.success) {
+  //     return true;
+  //   } else {
+  //     throw Exception('Failed to update annotation ${response.errorMessage}');
+  //   }
+  // }
 
   Future<bool> deleteAnnotation(int annotationId) async {
     ServiceResponse<EmptyResponse> response =

@@ -1,14 +1,27 @@
+import 'package:mobile/constants/network_constants.dart';
+
+enum AnnotationContext {
+  post,
+  lfg,
+  comment,
+  game,
+}
+
 class Annotation {
   final int startIndex;
   final int endIndex;
   final String authorUsername;
   final String annotation;
+  final int contextId; // post, lfg, comment, game
+  final AnnotationContext context;
 
   Annotation({
     required this.startIndex,
     required this.endIndex,
     required this.authorUsername,
     required this.annotation,
+    required this.contextId,
+    required this.context,
   });
 
   factory Annotation.fromJson(Map<String, dynamic> json) {
@@ -18,6 +31,9 @@ class Annotation {
       endIndex: json['target']['selector']['end'],
       authorUsername: json['creator']['name'],
       annotation: json['body']['value'],
+      contextId: int.parse(json['id'].split('_')[1]),
+      context: AnnotationContext.values.firstWhere(
+          (element) => element.toString() == json['body']['purpose']),
     );
   }
 
@@ -25,15 +41,17 @@ class Annotation {
     // convert to json-ld format
     return {
       "@context": "http://www.w3.org/ns/anno.jsonld",
-      "id": "http://example.org/anno1",
+      "id": "${context.toString()}_$contextId", // post_1, lfg_1, comment_1
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
         "value": annotation,
         "format": "text/plain",
+        "language": "en",
+        "purpose": context.toString(),
       },
       "target": {
-        "id": "http://example.org/page1",
+        "id": "${NetworkConstants.BASE_PROD_URL}/${context.toString()}/$contextId",
         "type": "Text",
         "selector": {
           "type": "TextPositionSelector",
@@ -42,7 +60,7 @@ class Annotation {
         },
       },
       "creator": {
-        "id": "http://example.org/user1",
+        "id": "${NetworkConstants.BASE_PROD_URL}/user/$authorUsername",
         "type": "Person",
         "name": authorUsername,
       },
