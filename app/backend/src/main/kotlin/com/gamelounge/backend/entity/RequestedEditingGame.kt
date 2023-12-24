@@ -23,7 +23,6 @@ class RequestedEditingGame(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0,
-
         val gameId: Long = 0,
         var title: String = "",
         var description: String = "",
@@ -48,7 +47,4 @@ class RequestedEditingGame(
         var playtime: String = "",
         var creationDate: Instant = Instant.now(),
         var gamePicture: String? = null,
-
-
-
-        )
+)
