@@ -10,6 +10,7 @@ import { NextUIProvider } from '@nextui-org/react'
 import { GameForum } from './pages/GameForum'
 import { LfgPage } from "./pages/LfgPage";
 import Lfg from "./pages/LfgPage/Lfg";
+import { AdminPanel } from './pages/AdminPanel'
 
 const App = () => (
 	<NextUIProvider disableBaseline='true'>
@@ -28,6 +29,7 @@ const App = () => (
 				<Route path='/game/:gameId' element={<GamePage />} />
 				<Route path='/posts/:postId' element={<PostPage />} />
 				<Route path='/lfg/:lfgId' element={<Lfg />} />
+				<Route path='/admin-panel' element={<AdminPanel />} />
 			</Routes>
 		</BrowserRouter>
 	</NextUIProvider>
