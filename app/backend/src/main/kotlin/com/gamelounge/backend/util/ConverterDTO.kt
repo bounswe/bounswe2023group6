@@ -108,7 +108,7 @@ object ConverterDTO {
             game.gamePicture,
             (game.status ?: GameStatus.PENDING_APPROVAL).toString(),
             game.isDeleted,
-            convertBulkToGameDTO(game.similarGames)
+            game.similarGames.map { it.gameId }
         )
     }
 
@@ -141,7 +141,7 @@ object ConverterDTO {
         )
     }
 
-    fun convertToReportDTO(reports: List<Report>): List<ReportDTO>{
+    fun convertBulkToReportDTO(reports: List<Report>): List<ReportDTO>{
         return reports.map { report -> convertToReportDTO(report) }
     }
 
