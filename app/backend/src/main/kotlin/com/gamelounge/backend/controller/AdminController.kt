@@ -1,12 +1,10 @@
 package com.gamelounge.backend.controller
 
-import com.gamelounge.backend.model.DTO.EditedGameDTO
-import com.gamelounge.backend.model.DTO.GameDTO
-import com.gamelounge.backend.model.DTO.PostDTO
-import com.gamelounge.backend.model.DTO.UserDTO
+import com.gamelounge.backend.model.DTO.*
 import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.GameService
 import com.gamelounge.backend.service.PostService
+import com.gamelounge.backend.service.ReportService
 import com.gamelounge.backend.service.UserService
 import com.gamelounge.backend.util.ConverterDTO
 import org.springframework.http.ResponseEntity
@@ -17,7 +15,8 @@ import java.util.*
 class AdminController(
         val gameService: GameService,
         val postService: PostService,
-        val userService: UserService
+        val userService: UserService,
+        val reportService: ReportService
 ) {
 
     @GetMapping("/admin/pendingGames")
@@ -114,7 +113,28 @@ class AdminController(
         val userDTO = ConverterDTO.convertToUserDTO(user)
         return ResponseEntity.ok(userDTO)
     }
-
-
-
+    @GetMapping("/admin/all-game-reports")
+    fun getAllGameReports(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<ReportDTO>> {
+        val reports = reportService.getAllGameReports(sessionId)
+        val reportDTO = ConverterDTO.convertBulkToReportDTO(reports)
+        return ResponseEntity.ok(reportDTO)
+    }
+    @GetMapping("/admin/all-post-reports")
+    fun getAllPostReports(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<ReportDTO>> {
+        val reports = reportService.getAllPostReports(sessionId)
+        val reportDTO = ConverterDTO.convertBulkToReportDTO(reports)
+        return ResponseEntity.ok(reportDTO)
+    }
+    @GetMapping("/admin/all-lfg-reports")
+    fun getAllLFGReports(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<ReportDTO>> {
+        val reports = reportService.getAllLFGReports(sessionId)
+        val reportDTO = ConverterDTO.convertBulkToReportDTO(reports)
+        return ResponseEntity.ok(reportDTO)
+    }
+    @GetMapping("/admin/all-comment-reports")
+    fun getAllCommentReports(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<ReportDTO>> {
+        val reports = reportService.getAllCommentReports(sessionId)
+        val reportDTO = ConverterDTO.convertBulkToReportDTO(reports)
+        return ResponseEntity.ok(reportDTO)
+    }
 }
