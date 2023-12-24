@@ -29,11 +29,11 @@ class GameService {
       title: "Witcher 3",
       gamePicture:
           "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
-      genre: "Adventure, Role-playing(RPG)",
+      genres: ["Adventure, Role-playing(RPG)"],
       developers: "CD Projekt RED",
       releaseYear: 2015,
-      platform:
-          " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
+      platforms:
+            [" Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S"],
       playerNumber: "Single Player",
       universe: "Fantasy",
       mechanics: "Third-person",
@@ -45,7 +45,7 @@ class GameService {
       title: "League of Legends",
       gamePicture:
           "https://cdn.ntvspor.net/047bed7cbad44a3dae8bdd7b643ab253.jpg?crop=158,0,782,624&w=800&h=800&mode=crop",
-      genre: "MOBA, Role-playing(RPG), Strategy",
+        genres: ["MOBA", "Role-playing(RPG)", "Strategy"],
       developers: "Riot Games",
       releaseYear: 2009,
     ),
@@ -56,7 +56,7 @@ class GameService {
       title: "Call of Duty: WWII",
       gamePicture:
           "https://upload.wikimedia.org/wikipedia/tr/8/85/Call_of_Duty_WIII_Kapak_Resmi.jpg",
-      genre: "Shooter",
+        genres: ["Shooter"],
       developers: "Sledgehammer Games",
       releaseYear: 2017,
     ),
@@ -110,7 +110,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       title: "Celeste",
       gamePicture:
           "https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png",
-      genre: "Adventure, Indie, Platform",
+      genres: ["Adventure, Indie, Platform"],
       developers: "Maddy Makes Games",
       releaseYear: 2018,
     ),
@@ -121,8 +121,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       title: "Baldur's Gate 3",
       gamePicture:
           "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png",
-      genre:
-          "Adventure, Role-playing (RPG), Strategy, Tactical, Turn-based strategy (TBS)",
+      genres:
+          ["Adventure, Role-playing (RPG), Strategy, Tactical, Turn-based strategy (TBS)"],
       developers: "Larian Studios",
       releaseYear: 2020,
     ),
@@ -133,7 +133,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       title: "Ori and The Will of The Wisps",
       gamePicture:
           "https://upload.wikimedia.org/wikipedia/en/9/94/Ori_and_the_Will_of_the_Wisps.jpg",
-      genre: "Adventure, Platform",
+      genres: ["Adventure, Platform"],
       developers: "Moon Studios",
       releaseYear: 2020,
     ),
@@ -191,8 +191,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
   Future<void> createGame(
       String title,
       String description,
-      String? genre,
-      String? platform,
+      List<String?>? genres,
+      List<String?>? platforms,
       String? numberOfPlayer,
       String? mechanics,
       int year,
@@ -209,8 +209,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
         title: title,
         description: description,
-        genre: genre,
-        platform: platform,
+        genres: genres,
+        platforms: platforms,
         numberOfPlayer: numberOfPlayer,
         year: year,
         universe: universe,
@@ -267,8 +267,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
   Future<bool> updateGame(
       String title,
       String description,
-      String? genre,
-      String? platform,
+      List<String?>? genres,
+      List<String?>? platforms,
       String? numberOfPlayer,
       String? mechanics,
       int year,
@@ -285,8 +285,8 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     GameCreateDTORequest gameCreateDTORequest = GameCreateDTORequest(
         title: title,
         description: description,
-        genre: genre,
-        platform: platform,
+        genres: genres,
+        platforms: platforms,
         numberOfPlayer: numberOfPlayer,
         year: year,
         universe: universe,

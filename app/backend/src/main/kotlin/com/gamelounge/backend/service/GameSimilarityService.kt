@@ -13,6 +13,7 @@ class GameSimilarityService(
     private val gameRepository: GameRepository
 ) {
 
+
     fun updateAllSimilarGamesFields(){
         val allGames = gameRepository.findAll()
 
