@@ -9,6 +9,8 @@ data class GetUserInfoResponse(
     val profilePicture: String? = null,
     val about: String? = null,
     val isAdmin: Boolean = false,
+    val isVisible: Boolean = false,
+    val isDeleted: Boolean = false,
     val tags: List<TagDTO>? = null,
     val title: String? = null,
     val company: String? = null,

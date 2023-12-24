@@ -11,4 +11,6 @@ data class UserDTO(
     var tags: List<TagDTO>? = null,
     var followers: List<UserDTO>? = null,
     var isVisible: Boolean = false,
+    var isDeleted: Boolean = false,
+    var isAdmin: Boolean = false
 )
