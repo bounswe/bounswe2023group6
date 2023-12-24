@@ -25,6 +25,9 @@ class User(
     var isVisible: Boolean = true, // indicating whether the user is visible to other users
     var isDeleted: Boolean = false, // indicating whether the user is deleted
     var isBanned: Boolean = false, // indicating whether the user is banned
+  
+    @Column(columnDefinition = "integer default 0")
+    var followerCount: Int = 0,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val posts: List<Post> = mutableListOf(),

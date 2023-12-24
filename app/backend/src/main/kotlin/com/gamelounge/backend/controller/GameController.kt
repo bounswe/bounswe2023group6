@@ -1,11 +1,16 @@
 package com.gamelounge.backend.controller
 
+import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.model.request.CreateGameRequest
+import com.gamelounge.backend.model.request.UpdateGameRequest
 import com.gamelounge.backend.model.DTO.PostDTO
+import com.gamelounge.backend.model.DTO.UserGameRatingDTO
 import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.GameService
 import com.gamelounge.backend.util.ConverterDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -13,10 +18,12 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
-
 @RestController
 @RequestMapping("/game")
-class GameController(private val gameService: GameService) {
+class GameController(
+    private val gameService: GameService
+) {
+
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun createGame(@CookieValue("SESSIONID") sessionId: UUID,
@@ -43,9 +50,14 @@ class GameController(private val gameService: GameService) {
 
     @GetMapping
     fun getAllGames(): ResponseEntity<List<GameDTO>> {
-        val games = gameService.getAllGames()
-        val gameDTO = ConverterDTO.convertBulkToGameDTO(games)
-        return ResponseEntity.ok(gameDTO)
+        val gameDTOs = convertBulkToGameDTO(gameService.getAllGames())
+        return ResponseEntity.ok(gameDTOs)
+    }
+
+    @GetMapping("/recommended")
+    fun getRecommendedGames(@CookieValue("SESSIONID") sessionId: UUID?): ResponseEntity<List<GameDTO>> {
+        val gameDTOs = gameService.getRecommendedGames(sessionId)
+        return ResponseEntity.ok(gameDTOs)
     }
 
     @PutMapping("/{id}/rating/{score}")
@@ -56,10 +68,9 @@ class GameController(private val gameService: GameService) {
     }
 
     @GetMapping("/rated")
-    fun getGamesRatedHighlyByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<GameDTO>> {
-        val games = gameService.getRatedGamesByUser(sessionId)
-        val gameDTO = ConverterDTO.convertBulkToGameDTO(games)
-        return ResponseEntity.ok(gameDTO)
+    fun getGamesRatedByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<UserGameRatingDTO>> {
+        val userGameRatingDTOs = gameService.getRatedGamesByUser(sessionId)
+        return ResponseEntity.ok(userGameRatingDTOs)
     }
 
     @PostMapping("/{id}/report")

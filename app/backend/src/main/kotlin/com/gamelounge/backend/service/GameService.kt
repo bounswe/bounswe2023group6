@@ -9,6 +9,11 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import com.gamelounge.backend.entity.UserGameRating
+import com.gamelounge.backend.model.DTO.GameDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
+import com.gamelounge.backend.model.DTO.UserGameRatingDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToUserGameRatingDTO
 import com.gamelounge.backend.model.request.CreateEditingRequest
 import com.gamelounge.backend.model.request.ReportRequest
 import com.gamelounge.backend.repository.*
@@ -20,6 +25,7 @@ class GameService(
         private val userGameRatingRepository: UserGameRatingRepository,
         private val sessionAuth: SessionAuth,
         private val userRepository: UserRepository,
+        private val recommendationService: RecommendationService,
         private val reportRepository: ReportRepository,
         val s3Service: S3Service
 ) {
@@ -144,14 +150,12 @@ class GameService(
         return gameRepository.findAll().filter { !it.isDeleted && it.status == GameStatus.APPROVED }
     }
 
-    fun getRatedGamesByUser(sessionId: UUID): List<Game> {
+    fun getRatedGamesByUser(sessionId: UUID): List<UserGameRatingDTO> {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
-        val ratedGames = userGameRatingRepository.findByUser(user)
-                .filter { it.score >= 4 }
-        val ratedGameIds = ratedGames.map { it.game.gameId }
+        val userGameRatings = userGameRatingRepository.findByUser(user)
 
-        return gameRepository.findAllById(ratedGameIds).filter { !it.isDeleted }
+        return convertBulkToUserGameRatingDTO(userGameRatings)
     }
 
     @Transactional
@@ -294,9 +298,26 @@ class GameService(
         if (game.status != GameStatus.PENDING_APPROVAL) {
             throw WrongGameStatusException("Game with ID: $gameId is not pending approval")
         }
+
         game.status = GameStatus.REJECTED
 
         return gameRepository.save(game)
+    }
+
+    fun getRecommendedGames(sessionId: UUID?): List<GameDTO>{
+        var gameDTOs = convertBulkToGameDTO(getAllGames())
+
+        sessionId?.let {
+            gameDTOs = try{
+                val userId = sessionAuth.getUserIdFromSession(sessionId)
+                val user = userRepository.findByUserId(userId)
+                convertBulkToGameDTO(recommendationService.getRecommendedGames(user!!))
+            }catch (e: SessionNotFoundException){
+                convertBulkToGameDTO(getAllGames())
+            }
+        }
+
+        return gameDTOs
     }
 
     fun reportGame(sessionId: UUID, gameId: Long, reqBody: ReportRequest) {
@@ -330,6 +351,5 @@ class GameService(
         val reportedGameIds = reportedGames.map { it.reportedGame?.gameId }
         return gameRepository.findAllById(reportedGameIds).filter { !it.isDeleted }
     }
-
 
 }

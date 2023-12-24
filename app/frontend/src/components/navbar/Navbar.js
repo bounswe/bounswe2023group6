@@ -109,7 +109,7 @@ const Navbarx = () => {
 						</Link>
 					</NavbarItem>
 					<NavbarItem>
-						<Link href='#' className='text-[#fff4e0]'>
+						<Link href='/groups' aria-current='page' className='text-[#fff4e0]'>
 							Groups
 						</Link>
 					</NavbarItem>

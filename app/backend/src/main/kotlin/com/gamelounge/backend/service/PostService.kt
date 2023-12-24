@@ -9,8 +9,10 @@ import com.gamelounge.backend.exception.PostNotFoundException
 import com.gamelounge.backend.exception.UnauthorizedGameAccessException
 import com.gamelounge.backend.exception.UnauthorizedPostAccessException
 import com.gamelounge.backend.exception.UsernameNotFoundException
+import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
+import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.CreatePostRequest
 import com.gamelounge.backend.model.request.ReportRequest
@@ -18,6 +20,7 @@ import com.gamelounge.backend.model.request.UpdatePostRequest
 import com.gamelounge.backend.repository.ReportRepository
 import com.gamelounge.backend.repository.UserRepository
 import com.gamelounge.backend.util.ConverterDTO
+import com.gamelounge.backend.util.ConverterDTO.convertBulkToPostDTO
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -29,7 +32,9 @@ class PostService(
     private val userRepository: UserRepository,
     private val reportRepository: ReportRepository,
     private val objectMapper: ObjectMapper,
-    private val tagService: TagService
+    private val tagService: TagService,
+    private val recommendationService: RecommendationService,
+    private val gameService: GameService
 ) {
     fun createPost(sessionId: UUID, post: CreatePostRequest): Post {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
@@ -39,6 +44,7 @@ class PostService(
             content = post.content,
             category = post.category,
             user = user,
+            relatedGame = post.gameId?.let { gameService.getGame(it) },
             postTags = tagService.createAndReturnTagsFromTagNames(post.tags) ?: emptyList()
         )
         return postRepository.save(newPost)
@@ -59,6 +65,7 @@ class PostService(
         post.title = updatedPost.title ?: post.title
         post.content = updatedPost.content ?: post.content
         post.category = updatedPost.category ?: post.category
+        post.relatedGame = updatedPost.gameId?.let { gameService.getGame(it) } ?: post.relatedGame
         post.postTags = tagService.createAndReturnTagsFromTagNames(updatedPost.tags) ?: post.postTags
         // TODO
 
@@ -165,8 +172,20 @@ class PostService(
         reportRepository.save(newReport)
     }
 
-    fun filteredCategory(category: PostCategory): List<Post> {
-        return postRepository.findByCategory(category)
+    fun getRecommendedPosts(sessionId: UUID?): List<PostDTO>{
+        var postDTOs = convertBulkToPostDTO(getAllPosts())
+
+        sessionId?.let {
+            postDTOs = try{
+                val userId = sessionAuth.getUserIdFromSession(sessionId)
+                val user = userRepository.findByUserId(userId)
+                convertBulkToPostDTO(recommendationService.getRecommendedPosts(user!!))
+            }catch (e: SessionNotFoundException){
+                convertBulkToPostDTO(getAllPosts())
+            }
+        }
+
+        return postDTOs
     }
 
     fun getReportedPosts(sessionId: UUID): List<Post> {
@@ -179,4 +198,16 @@ class PostService(
         val reportedPostIds = reportedPosts.map { it.reportedPost?.postId }
         return postRepository.findAllById(reportedPostIds)
     }
+    
+    fun getPostsByGame(gameId: Long): List<PostDTO> {
+        val game = gameService.getGame(gameId)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(game.posts)
+        return postsDTO
+    }
+    fun getPostsByCategory(category: PostCategory): List<PostDTO> {
+        val posts = postRepository.findAllByCategory(category)
+        val postsDTO = ConverterDTO.convertBulkToPostDTO(posts)
+        return postsDTO
+    }
+
 }

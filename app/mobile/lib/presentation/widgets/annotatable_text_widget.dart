@@ -4,18 +4,21 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/annotation_service.dart';
 import 'package:mobile/utils/cache_manager.dart';
 
 class AnnotatableTextWidget extends StatelessWidget {
+  final AnnotationService annotationService = AnnotationService();
+
   final String text;
   final int contentId;
 
-  const AnnotatableTextWidget(
-      {Key? key, required this.text, required this.contentId})
+  AnnotatableTextWidget({Key? key, required this.text, required this.contentId})
       : super(key: key);
 
-  List<Annotation> loadAnnotations() {
+  Future<List<Annotation>> loadAnnotations() async {
     // TODO: get annotations from the backend using contentId
+    // List<Annotation> annotations = await annotationService.getAnnotations(contentId);
     List<Annotation> annotations = [
       Annotation(
         startIndex: 0,
@@ -41,16 +44,38 @@ class AnnotatableTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SelectableText.rich(
-      loadTextWithAnnotations(context),
-      textAlign: TextAlign.justify,
-      contextMenuBuilder: (context, state) =>
-          getSelectionControls(context, state),
+    return FutureBuilder(
+      future: loadTextWithAnnotations(context),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Error"),
+              );
+            } else {
+              return SelectableText.rich(
+                snapshot.data as TextSpan,
+                textAlign: TextAlign.justify,
+                contextMenuBuilder: (context, state) =>
+                    getSelectionControls(context, state),
+              );
+            }
+          default:
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+        }
+      },
     );
   }
 
-  List<MultipleAnnotation> loadAndMergeAnnotations() {
-    List<Annotation> annotations = loadAnnotations();
+  Future<List<MultipleAnnotation>> loadAndMergeAnnotations() async {
+    List<Annotation> annotations = await loadAnnotations();
     annotations.sort((a, b) => a.startIndex.compareTo(b.startIndex));
     List<MultipleAnnotation> mergedAnnotations = [];
     int currentIndex = 0;
@@ -69,8 +94,8 @@ class AnnotatableTextWidget extends StatelessWidget {
     return mergedAnnotations;
   }
 
-  TextSpan loadTextWithAnnotations(BuildContext context) {
-    List<MultipleAnnotation> annotations = loadAndMergeAnnotations();
+  Future<TextSpan> loadTextWithAnnotations(BuildContext context) async {
+    List<MultipleAnnotation> annotations = await loadAndMergeAnnotations();
 
     final textSpans = <TextSpan>[];
     int currentIndex = 0;
@@ -240,6 +265,14 @@ class AnnotatableTextWidget extends StatelessWidget {
         TextButton(
           onPressed: () {
             // TODO: get and send the annotation to the backend using contentId
+            // await annotationService.createAnnotation(
+            //   Annotation(
+            //     startIndex: startIndex,
+            //     endIndex: endIndex,
+            //     authorUsername: CacheManager().getUser().username,
+            //     annotation: highlightedText,
+            //   ),
+            // );
             Navigator.pop(context);
           },
           child: const Text("Submit"),

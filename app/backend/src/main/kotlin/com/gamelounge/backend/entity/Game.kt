@@ -76,6 +76,15 @@ class Game(
         )
         var tags: List<Tag> = mutableListOf(),
 
+        @ManyToMany
+        @JoinTable(
+                name = "similar_games",
+                joinColumns = [JoinColumn(name = "gameId")],
+                inverseJoinColumns = [JoinColumn(name = "similar_gameId")]
+        )
+        var similarGames: List<Game> = mutableListOf(),
+
+
         /*@ManyToMany
         @JoinTable(
                 name = "user_game_rating",
