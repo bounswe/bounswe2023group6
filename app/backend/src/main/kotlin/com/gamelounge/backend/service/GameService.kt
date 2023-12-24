@@ -37,10 +37,10 @@ class GameService(
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
 
         // Convert genre strings to GameGenre enum values
-        val genres = game.genres.map { GameGenre.valueOf(it) }.toSet()
+        val genres = game.genres.map { GameGenre.valueOf(it) }.toHashSet()
 
         // Convert platform strings to GamePlatform enum values
-        val platforms = game.platforms.map { GamePlatform.valueOf(it) }.toSet()
+        val platforms = game.platforms.map { GamePlatform.valueOf(it) }.toHashSet()
 
         val newGame = Game(
                 title = game.title,
@@ -404,5 +404,9 @@ class GameService(
         val reportedGames = reportRepository.findAll()
         val reportedGameIds = reportedGames.map { it.reportedGame?.gameId }
         return gameRepository.findAllById(reportedGameIds).filter { !it.isDeleted }
+    }
+
+    fun updateSimilarGamesFields(){
+        gameSimilarityService.updateAllSimilarGamesFields()
     }
 }
