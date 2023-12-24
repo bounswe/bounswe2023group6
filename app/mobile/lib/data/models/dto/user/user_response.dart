@@ -11,13 +11,27 @@ class UserDTOResponse extends BaseDTOObject<UserDTOResponse> {
 
   @override
   void validate() {
-    ValidationUtil.validate(user!.username, ValidationPolicy.stringNotEmptyValidation());
+    ValidationUtil.validate(
+        user!.username, ValidationPolicy.stringNotEmptyValidation());
     ValidationUtil.validate(user!.email, ValidationPolicy.emailValidation());
   }
 
-  factory UserDTOResponse.fromJson(Map<String, dynamic> json) => UserDTOResponse(
-        user: User.fromJson(json),
-      );
+  factory UserDTOResponse.fromJson(Map<String, dynamic> json) {
+    if (json['tags'] != null) {
+      json['tags'] = json['tags']
+          .cast<Map<String, dynamic>>()
+          .map((tag) => tag['name'])
+          .toList()
+          .cast<String>();
+    }
+    if (json['visible'] != null) {
+      json['isVisible'] = json['visible'];
+      json.remove('visible');
+    }
+    return UserDTOResponse(
+      user: User.fromJson(json),
+    );
+  }
 
   @override
   Map<String, dynamic> toJson() => user!.toJson();

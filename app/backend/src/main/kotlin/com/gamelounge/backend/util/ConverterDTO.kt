@@ -108,7 +108,7 @@ object ConverterDTO {
             game.gamePicture,
             (game.status ?: GameStatus.PENDING_APPROVAL).toString(),
             game.isDeleted,
-            convertBulkToGameDTO(game.similarGames)
+            game.similarGames.map { it.gameId }
         )
     }
 

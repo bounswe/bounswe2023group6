@@ -4,8 +4,8 @@ import 'package:mobile/utils/service_validation_util.dart';
 class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
   String title;
   String description;
-  String? genre;
-  String? platform;
+  List<String?>? genres;
+  List<String?>? platforms;
   String? numberOfPlayer;
   int year;
   String? universe;
@@ -16,8 +16,8 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
   GameCreateDTORequest({
     required this.title,
     required this.description,
-    required this.genre,
-    required this.platform,
+    required this.genres,
+    required this.platforms,
     required this.numberOfPlayer,
     required this.year,
     required this.universe,
@@ -36,8 +36,8 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
       GameCreateDTORequest(
         title: json["title"],
         description: json["description"],
-        genre: json["genre"],
-        platform: json["platform"],
+        genres: json["genres"] != null ? List<String>.from(json["genres"].map((x) => x)) : [],
+        platforms: json["platforms"] != null ? List<String>.from(json["platforms"].map((x) => x)) : [],
         numberOfPlayer: json["playerNumber"],
         year: json["releaseYear"],
         universe: json["universe"],
@@ -49,8 +49,8 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
   Map<String, dynamic> toJson() => {
         "title": title,
         "description": description,
-        "genre": genre,
-        "platform": platform,
+        "genres": genres,
+        "platforms": platforms,
         "playerNumber": numberOfPlayer,
         "releaseYear": year,
         "mechanics": mechanics,
@@ -60,7 +60,7 @@ class GameCreateDTORequest extends BaseDTOObject<GameCreateDTORequest> {
         "countRating": 0,
         "averageRating": 0,
       };
-
+      
   @override
   GameCreateDTORequest fromJson(Map<String, dynamic> json) =>
       GameCreateDTORequest.fromJson(json);
