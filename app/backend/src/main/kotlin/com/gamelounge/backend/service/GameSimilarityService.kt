@@ -22,9 +22,7 @@ class GameSimilarityService(
                 gameRepository.save(game)
             }
         }
-
         deferredUpdates.awaitAll()
-
     }
 
     fun updateSimilarGamesField(game: Game){ // This could be wrong
@@ -57,12 +55,14 @@ class GameSimilarityService(
     }
 
     fun getFieldValuesAsSet(game: Game): HashSet<String>{
-        return hashSetOf(
-            game.genre.name,
-            game.platform.name,
-            game.playerNumber.name,
-            game.universe.name,
-            game.mechanics.name
-        )
+        val valuesSet = hashSetOf<String>()
+
+        valuesSet.addAll(game.genres.map { it.name })
+        valuesSet.addAll(game.platforms.map { it.name })
+        valuesSet.add(game.playerNumber.name)
+        valuesSet.add(game.universe.name)
+        valuesSet.add(game.mechanics.name)
+
+        return valuesSet
     }
 }
