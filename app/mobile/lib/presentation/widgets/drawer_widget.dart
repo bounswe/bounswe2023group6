@@ -5,6 +5,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/user_authentication_service.dart';
 import 'package:mobile/data/services/user_service.dart';
+import 'package:mobile/presentation/pages/admin_panel.dart';
 import 'package:mobile/presentation/pages/main_screen.dart';
 import 'package:mobile/presentation/pages/opening_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
@@ -158,6 +159,19 @@ class LoggedDrawer extends StatelessWidget {
                 const ListTile(
                   leading: Icon(Icons.settings_outlined),
                   title: Text('Settings'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings_outlined),
+                  title: Text('Admin Panel'),
+                  onTap: () {
+                                // Open a new page with game information
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminPanel(),
+                                  ),
+                                );
+                              },
                 ),
                 ListTile(
                   leading: const Icon(Icons.logout_outlined),

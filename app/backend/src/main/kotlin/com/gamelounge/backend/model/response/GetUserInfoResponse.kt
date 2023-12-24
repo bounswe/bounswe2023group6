@@ -1,5 +1,7 @@
 package com.gamelounge.backend.model.response
 
+import com.gamelounge.backend.model.DTO.TagDTO
+
 data class GetUserInfoResponse(
     val userId: Long = 0,
     val username: String = "",
@@ -9,4 +11,10 @@ data class GetUserInfoResponse(
     val isAdmin: Boolean = false,
     val isVisible: Boolean = false,
     val isDeleted: Boolean = false,
+    val tags: List<TagDTO>? = null,
+    val title: String? = null,
+    val company: String? = null,
+    val isVisible: Boolean? = true,
+    val followerCount: Int = 0,
+    val followingCount: Int = 0,
 )

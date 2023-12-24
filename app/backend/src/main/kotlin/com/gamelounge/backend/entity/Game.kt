@@ -64,7 +64,7 @@ class Game(
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "userId")
-        val user: User? = null,
+        val user: User = User(),
 
         @OneToMany(mappedBy = "relatedGame")
         val lfgs: List<LFG> = mutableListOf(),
@@ -82,6 +82,15 @@ class Game(
                 inverseJoinColumns = [JoinColumn(name = "tagId")]
         )
         var tags: List<Tag> = mutableListOf(),
+
+        @ManyToMany
+        @JoinTable(
+                name = "similar_games",
+                joinColumns = [JoinColumn(name = "gameId")],
+                inverseJoinColumns = [JoinColumn(name = "similar_gameId")]
+        )
+        var similarGames: List<Game> = mutableListOf(),
+
 
         /*@ManyToMany
         @JoinTable(

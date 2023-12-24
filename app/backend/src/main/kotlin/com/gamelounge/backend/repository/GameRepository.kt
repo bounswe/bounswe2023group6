@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface GameRepository: JpaRepository<Game, Long> {
 
     fun findByUser(user: User): List<Game>
-
     fun findByStatus(status: GameStatus): List<Game>
+    fun findByTitleContainingOrDescriptionContaining(title: String, description: String): List<Game>
 
 }

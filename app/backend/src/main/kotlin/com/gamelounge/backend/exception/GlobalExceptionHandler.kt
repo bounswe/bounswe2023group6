@@ -169,6 +169,25 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(mapOf("errorMessage" to exception.message))
     }
+    @ExceptionHandler(UnauthorizedLFGAccessException::class)
+    fun handleUnauthorizedLFGAccessException(exception: UnauthorizedLFGAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(LFGNotFoundException::class)
+    fun handleLFGNotFoundException(exception: LFGNotFoundException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+
+    @ExceptionHandler(DuplicateGameException::class)
+    fun handleDuplicateGameException(exception: DuplicateGameException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
 
 
 }

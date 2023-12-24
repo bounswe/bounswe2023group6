@@ -26,7 +26,7 @@ class Post(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    var user: User? = null,
+    var user: User = User(),
 
     @ManyToOne
     @JoinColumn(name = "gameId")
