@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
+import 'package:mobile/presentation/widgets/tag_input.dart';
 
 class LFGPageCreate extends StatefulWidget {
   const LFGPageCreate({Key? key}) : super(key: key);
@@ -26,8 +27,10 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
     "EN",
   ];
   String? _selectedLanguage;
+  List<String> _tags = [];
   bool micCamRequired = false;
   final _capacityController = TextEditingController();
+  final _tagController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +147,8 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
                   return null;
                 },
               ),
+              TagInput(tags: _tags, tagController: _tagController),
+              const SizedBox(height: 16),
               Button(
                 label: "Create",
                 onPressed: () async {},

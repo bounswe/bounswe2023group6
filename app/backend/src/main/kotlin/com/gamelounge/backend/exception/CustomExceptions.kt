@@ -23,8 +23,11 @@ class WrongGameStatusException(message: String) : RuntimeException(message)
 class DuplicatedEditingRequestException(message: String) : RuntimeException(message)
 class DuplicatedUserFollowing(message: String) : RuntimeException(message)
 class DeletedGameException(message: String) : RuntimeException(message)
+class DuplicateGameException(message: String) : RuntimeException(message)
 class UnauthorizedLFGAccessException(message: String) : RuntimeException(message)
 class LFGNotFoundException(message: String) : RuntimeException(message)
+class UnauthorizedReportsAccessException(message: String) : RuntimeException(message)
+
 
 
 

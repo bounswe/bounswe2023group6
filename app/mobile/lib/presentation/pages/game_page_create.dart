@@ -33,16 +33,27 @@ class _GameCreatePageState extends State<GamePageCreate> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final List<String> _genreList = [
-"MOBA", "FIGHTING", "STRATEGY", "SPORTS_AND_RACING", "RPG", "SHOOTER", "EMPTY"
+    "RGP",
+    "Strategy",
+    "Shooter",
+    "Sports",
+    "Fighting",
+    "MOBA",
+    "Action",
+    "Adventure",
+    "Simulation",
+    "Horror",
+    "Empty"
   ];
   String? _selectedGenre;
 
   final List<String> _platformList = [
-"XBOX",
-    "COMPUTER",
+    "XBOX",
+    "Computer",
     "PS", // PlayStation
-    "ONBOARD",
-    "EMPTY"
+    "Onboard",
+    "Mobile",
+    "Empty"
   ];
   String? _selectedPlatform;
 
@@ -51,32 +62,32 @@ class _GameCreatePageState extends State<GamePageCreate> {
 
 
   final List<String> _playerNumberList = [
-    "SINGLE",
-    "TEAMS",
-    "MULTIPLE",
+    "Single",
+    "Teams",
+    "Multiplayer",
     "MMO", // Massively Multiplayer Online
-    "EMPTY"
+    "Empty"
   ];
   String? _selectedPlayerNumber;
 
   final List<String> _universeList = [
-    "MEDIEVAL",
-    "FANTASY",
-    "SCIFI",
-    "CYBERPUNK",
-    "HISTORICAL",
-    "CONTEMPORARY",
-    "POST_APOCALYPTIC",
-    "ALTERNATE_REALITY",
-    "EMPTY"
-  ];
+    "Medieval",
+    "Fantasy",
+    "SciFi",
+    "Cyberpunk",
+    "Historical",
+    "Contemporary",
+    "PostApocalyptic",
+    "AlternateReality",
+    "Empty"  ];
 
   String? _selectedUniverse;
 
   final List<String> _gameMechanicsist = [
-    "TURN_BASED",
-    "CHANCE_BASED",
-    "EMPTY"
+    "TurnBased",
+    "ChangeBased",
+    "RealTime",
+    "Empty"
   ];
 
   String? _selectedGameMechanics;
@@ -92,8 +103,8 @@ class _GameCreatePageState extends State<GamePageCreate> {
       buttonLabel = "Update";
       _titleController.text = widget.selectedGame!.title;
       _descriptionController.text = widget.selectedGame!.description;
-      _selectedGenre = widget.selectedGame!.genre;
-      _selectedPlatform = widget.selectedGame!.platform;
+      _selectedGenre = widget.selectedGame!.genres![0];
+      _selectedPlatform = widget.selectedGame!.platforms![0];
       _selectedPlayerNumber = widget.selectedGame!.playerNumber;
       //_playerNumberController.text =
       //    widget.selectedGame!.playerNumber.toString();
@@ -341,8 +352,8 @@ class _GameCreatePageState extends State<GamePageCreate> {
                       GameService().updateGameNew(                        
                         _titleController.text,
                         _descriptionController.text,
-                        _selectedGenre,
-                        _selectedPlatform,
+                        [_selectedGenre],
+                        [_selectedPlatform],
                         _selectedPlayerNumber,
                         _selectedGameMechanics,
                         int.parse(_releaseYearController.text),
@@ -356,8 +367,8 @@ class _GameCreatePageState extends State<GamePageCreate> {
                       GameService().createGame(
                         _titleController.text,
                         _descriptionController.text,
-                        _selectedGenre,
-                        _selectedPlatform,
+                        [_selectedGenre],
+                        [_selectedPlatform],
                         _selectedPlayerNumber,
                         _selectedGameMechanics,
                         //_mechanicsController.text,

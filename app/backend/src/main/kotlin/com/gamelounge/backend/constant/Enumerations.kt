@@ -1,46 +1,52 @@
 package com.gamelounge.backend.constant
 
 enum class GameGenre {
-    RPG,
-    STRATEGY,
-    SHOOTER,
-    SPORTS_AND_RACING,
-    FIGHTING,
+    RGP,
+    Strategy,
+    Shooter,
+    Sports,
+    Fighting,
     MOBA,
-    EMPTY
+    Action,
+    Adventure,
+    Simulation,
+    Horror,
+    Empty
 }
 
 enum class GamePlatform {
     XBOX,
-    COMPUTER,
+    Computer,
     PS, // PlayStation
-    ONBOARD,
-    EMPTY
+    Onboard,
+    Mobile,
+    Empty
 }
 
 enum class NumberOfPlayers {
-    SINGLE,
-    TEAMS,
-    MULTIPLE,
+    Single,
+    Teams,
+    Multiplayer,
     MMO, // Massively Multiplayer Online
-    EMPTY
+    Empty
 }
 
 enum class UniverseInfo {
-    MEDIEVAL,
-    FANTASY,
-    SCIFI,
-    CYBERPUNK,
-    HISTORICAL,
-    CONTEMPORARY,
-    POST_APOCALYPTIC,
-    ALTERNATE_REALITY,
-    EMPTY
+    Medieval,
+    Fantasy,
+    SciFi,
+    Cyberpunk,
+    Historical,
+    Contemporary,
+    PostApocalyptic,
+    AlternateReality,
+    Empty
 }
 
 enum class GameMechanics {
-    TURN_BASED,
-    CHANCE_BASED,
-    EMPTY
+    TurnBased,
+    ChangeBased,
+    RealTime,
+    Empty
     // Add more mechanics as needed
 }

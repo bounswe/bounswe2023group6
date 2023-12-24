@@ -7,8 +7,8 @@ class Game {
   final String description;
   
   String? developers;
-  String? genre;
-  String? platform;
+  List<String>? genres;
+  List<String>? platforms;
   List<Character>? characters;
   String? playerNumber;
   int? releaseYear;
@@ -29,8 +29,8 @@ class Game {
     required this.gameId,
     required this.title,
     required this.description,
-    this.genre,
-    this.platform,
+    this.genres,
+    this.platforms,
     this.playerNumber,
     this.releaseYear,
     this.universe,
@@ -52,8 +52,8 @@ class Game {
       gameId: json['gameId'],
       title: json['title'],
       description: json['description'],
-      genre: json['genre'],
-      platform: json['platform'],
+      genres: json["genres"] != null ? List<String>.from(json["genres"].map((x) => x)) : [],
+      platforms: json["platforms"] != null ? List<String>.from(json["platforms"].map((x) => x)) : [],
       playerNumber: json['playerNumber'],
       releaseYear: json['releaseYear'],
       universe: json['universe'],
@@ -73,8 +73,8 @@ class Game {
       'gameId': gameId,
       'title': title,
       'description': description,
-      'genre': genre,
-      'platform': platform,
+      'genres': genres,
+      'platforms': platforms,
       'playerNumber': playerNumber,
       'universe': universe,
       'mechanics': mechanics,

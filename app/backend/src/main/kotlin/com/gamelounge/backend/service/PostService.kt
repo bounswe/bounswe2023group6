@@ -5,6 +5,10 @@ import com.gamelounge.backend.entity.Game
 import com.gamelounge.backend.entity.Post
 import com.gamelounge.backend.entity.PostCategory
 import com.gamelounge.backend.entity.Report
+import com.gamelounge.backend.exception.PostNotFoundException
+import com.gamelounge.backend.exception.UnauthorizedGameAccessException
+import com.gamelounge.backend.exception.UnauthorizedPostAccessException
+import com.gamelounge.backend.exception.UsernameNotFoundException
 import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.repository.PostRepository
 import com.gamelounge.backend.middleware.SessionAuth
@@ -40,6 +44,7 @@ class PostService(
             content = post.content,
             category = post.category,
             user = user,
+            relatedGame = post.gameId?.let { gameService.getGame(it) },
             postTags = tagService.createAndReturnTagsFromTagNames(post.tags) ?: emptyList()
         )
         return postRepository.save(newPost)
@@ -60,6 +65,7 @@ class PostService(
         post.title = updatedPost.title ?: post.title
         post.content = updatedPost.content ?: post.content
         post.category = updatedPost.category ?: post.category
+        post.relatedGame = updatedPost.gameId?.let { gameService.getGame(it) } ?: post.relatedGame
         post.postTags = tagService.createAndReturnTagsFromTagNames(updatedPost.tags) ?: post.postTags
         // TODO
 
@@ -156,6 +162,12 @@ class PostService(
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val post = getPost(postId)
+
+        //check if report is not duplicated
+        val alreadyReported = post.reports.any { it.reportingUser?.userId == userId }
+        if (alreadyReported) {
+            throw UnauthorizedPostAccessException("Not allowed to report more than once")
+        }
         var newReport = Report(reason = reqBody.reason, reportingUser = user, reportedPost = post)
         reportRepository.save(newReport)
     }
@@ -174,6 +186,17 @@ class PostService(
         }
 
         return postDTOs
+    }
+
+    fun getReportedPosts(sessionId: UUID): List<Post> {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        if (user.isAdmin != true) {
+            throw UnauthorizedPostAccessException("Unauthorized to get reported posts")
+        }
+        val reportedPosts = reportRepository.findAll()
+        val reportedPostIds = reportedPosts.map { it.reportedPost?.postId }
+        return postRepository.findAllById(reportedPostIds)
     }
     
     fun getPostsByGame(gameId: Long): List<PostDTO> {

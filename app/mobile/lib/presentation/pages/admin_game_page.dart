@@ -70,7 +70,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(widget.game.genre ?? "-",
+                                      child: Text(widget.game.genres![0] ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
@@ -126,7 +126,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w700),
                         ),
-                        if (widget.game.platform != null)
+                        if (widget.game.platforms != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -141,7 +141,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: widget.game.platform!,
+                                    text: widget.game.platforms![0],
                                   )
                                 ],
                               )),

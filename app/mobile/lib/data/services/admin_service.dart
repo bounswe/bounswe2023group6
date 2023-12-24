@@ -20,11 +20,11 @@ class AdminService {
         title: "Witcher 3",
         gamePicture:
             "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
-        genre: "Adventure, Role-playing(RPG)",
+        genres: ["Adventure, Role-playing(RPG)"],
         developers: "CD Projekt RED",
         releaseYear: 2015,
-        platform:
-            " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S",
+        platforms:
+            [" Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S"],
         playerNumber: "Single Player",
         universe: "Fantasy",
         mechanics: "Third-person",
@@ -36,7 +36,7 @@ class AdminService {
         title: "League of Legends",
         gamePicture:
             "https://cdn.ntvspor.net/047bed7cbad44a3dae8bdd7b643ab253.jpg?crop=158,0,782,624&w=800&h=800&mode=crop",
-        genre: "MOBA, Role-playing(RPG), Strategy",
+        genres: ["MOBA", "Role-playing(RPG)", "Strategy"],
         developers: "Riot Games",
         releaseYear: 2009,
       ),
@@ -47,7 +47,7 @@ class AdminService {
         title: "Call of Duty: WWII",
         gamePicture:
             "https://upload.wikimedia.org/wikipedia/tr/8/85/Call_of_Duty_WIII_Kapak_Resmi.jpg",
-        genre: "Shooter",
+        genres: ["Shooter"],
         developers: "Sledgehammer Games",
         releaseYear: 2017,
       ),
