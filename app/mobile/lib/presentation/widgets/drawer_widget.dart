@@ -161,19 +161,6 @@ class LoggedDrawer extends StatelessWidget {
                   title: Text('Settings'),
                 ),
                 ListTile(
-                  leading: Icon(Icons.settings_outlined),
-                  title: Text('Admin Panel'),
-                  onTap: () {
-                                // Open a new page with game information
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AdminPanel(),
-                                  ),
-                                );
-                              },
-                ),
-                ListTile(
                   leading: const Icon(Icons.logout_outlined),
                   title: const Text('Log Out'),
                   onTap:() {

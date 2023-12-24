@@ -348,7 +348,8 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   if (_formKey.currentState!.validate()) {
                     if (widget.selectedGame != null) {
                       //update service will be implemented.
-                      GameService().updateGame(                        
+                      
+                      GameService().updateGameNew(                        
                         _titleController.text,
                         _descriptionController.text,
                         [_selectedGenre],
@@ -358,7 +359,8 @@ class _GameCreatePageState extends State<GamePageCreate> {
                         int.parse(_releaseYearController.text),
                         _selectedUniverse,
                         _playTimeController.text,
-                        widget.selectedGame!.gameId,);
+                        widget.selectedGame!.gameId
+                        );
 
                         Navigator.of(context).pop("create");
                     } else {

@@ -5,6 +5,7 @@ class Game {
   final int gameId;
   final String title;
   final String description;
+  
   String? developers;
   List<String>? genres;
   List<String>? platforms;
@@ -22,6 +23,7 @@ class Game {
 
   List<Game> similarGameList;
   List<Post> relatedPosts;
+  String? status;
 
   Game({
     required this.gameId,
@@ -42,6 +44,7 @@ class Game {
     this.developers,
     this.similarGameList = const [],
     this.relatedPosts = const [],
+    this.status
   });
 
   factory Game.fromJson(Map<String, dynamic> json) {
@@ -61,6 +64,7 @@ class Game {
       averageRating: json['averageRating'],
       creationDate: json['creationDate'],
       gamePicture: json['gamePicture'],
+      status: json['status']
     );
   }
 
@@ -80,6 +84,7 @@ class Game {
       'averageRating': averageRating,
       'creationDate': creationDate,
       'gamePicture': gamePicture,
+      'status': status,
     };
   }
 }
