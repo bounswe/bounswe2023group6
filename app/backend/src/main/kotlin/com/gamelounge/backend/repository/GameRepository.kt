@@ -11,4 +11,5 @@ interface GameRepository: JpaRepository<Game, Long> {
     fun findByStatus(status: GameStatus): List<Game>
     fun findByTitleContainingOrDescriptionContaining(title: String, description: String): List<Game>
 
+    fun findByGameId(gameId: Long): Game
 }

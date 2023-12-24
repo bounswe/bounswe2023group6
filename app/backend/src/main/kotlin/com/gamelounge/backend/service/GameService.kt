@@ -37,10 +37,10 @@ class GameService(
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
 
         // Convert genre strings to GameGenre enum values
-        val genres = game.genres.map { GameGenre.valueOf(it) }.toHashSet()
+        val genres = game.genres.map { GameGenre.valueOf(it) }.toMutableSet()
 
         // Convert platform strings to GamePlatform enum values
-        val platforms = game.platforms.map { GamePlatform.valueOf(it) }.toHashSet()
+        val platforms = game.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
 
         val newGame = Game(
                 title = game.title,
@@ -82,10 +82,10 @@ class GameService(
         }
 
         // Convert genre strings to GameGenre enum values
-        val genres = editedGame.genres.map { GameGenre.valueOf(it) }.toSet()
+        val genres = editedGame.genres.map { GameGenre.valueOf(it) }.toMutableSet()
 
         // Convert platform strings to GamePlatform enum values
-        val platforms = editedGame.platforms.map { GamePlatform.valueOf(it) }.toSet()
+        val platforms = editedGame.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
 
         val requestEditingGame = RequestedEditingGame(
                 gameId = gameId,
@@ -140,10 +140,10 @@ class GameService(
         }
 
         // Convert genre strings to GameGenre enum values
-        val genres = updatedGame.genres.map { GameGenre.valueOf(it) }.toSet()
+        val genres = updatedGame.genres.map { GameGenre.valueOf(it) }.toMutableSet()
 
         // Convert platform strings to GamePlatform enum values
-        val platforms = updatedGame.platforms.map { GamePlatform.valueOf(it) }.toSet()
+        val platforms = updatedGame.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
 
         game.title = updatedGame.title
         game.description = updatedGame.description
@@ -282,8 +282,8 @@ class GameService(
 
         game.title = requestedEditingGame.title
         game.description = requestedEditingGame.description
-        game.genres = requestedEditingGame.genres
-        game.platforms = requestedEditingGame.platforms
+        game.genres = requestedEditingGame.genres.toHashSet()
+        game.platforms = requestedEditingGame.platforms.toHashSet()
         game.playerNumber = requestedEditingGame.playerNumber
         game.releaseYear = requestedEditingGame.releaseYear
         game.universe = requestedEditingGame.universe
