@@ -27,5 +27,6 @@ data class GameDTO(
         var tags: List<TagDTO>,
         var gamePicture: String? = null,
         var status: String = "",
-        var isDeleted: Boolean = false
+        var isDeleted: Boolean = false,
+        var similarGames: List<GameDTO> = mutableListOf()
 )
