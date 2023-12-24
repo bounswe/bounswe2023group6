@@ -8,7 +8,7 @@ COPY . $APP_HOME
 COPY build.gradle.kts settings.gradle.kts gradlew $APP_HOME
 COPY gradle $APP_HOME/gradle
 
-RUN ./gradlew build -x test || return 0 
+# RUN ./gradlew build -x test || return 0 
 COPY . .
 RUN ./gradlew build -x test
 
