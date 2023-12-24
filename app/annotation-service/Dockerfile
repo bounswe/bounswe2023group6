@@ -12,8 +12,6 @@ COPY gradle $APP_HOME/gradle
 # Set the script to be executable
 RUN chmod +x ./gradlew
 
-RUN ./gradlew build -x test || return 0 
-COPY . .
 RUN ./gradlew build -x test
 
 # Final stage
