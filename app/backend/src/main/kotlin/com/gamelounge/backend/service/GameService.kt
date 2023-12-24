@@ -29,17 +29,18 @@ class GameService(
         private val userRepository: UserRepository,
         private val recommendationService: RecommendationService,
         private val reportRepository: ReportRepository,
-        val s3Service: S3Service
+        val s3Service: S3Service,
+        private val gameSimilarityService: GameSimilarityService
 ) {
     fun createGame(sessionId: UUID, game: CreateGameRequest, image: MultipartFile?): Game {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
 
         // Convert genre strings to GameGenre enum values
-        val genres = game.genres.map { GameGenre.valueOf(it) }.toSet()
+        val genres = game.genres.map { GameGenre.valueOf(it) }.toMutableSet()
 
         // Convert platform strings to GamePlatform enum values
-        val platforms = game.platforms.map { GamePlatform.valueOf(it) }.toSet()
+        val platforms = game.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
 
         val newGame = Game(
                 title = game.title,
@@ -54,8 +55,10 @@ class GameService(
                 user = user,
                 status = GameStatus.PENDING_APPROVAL,
         )
+        gameSimilarityService.updateSimilarGamesField(newGame)
         gameRepository.save(newGame) // save to get gameId for image name
         image?.let { saveImageInS3AndImageURLInDBForGame(image, newGame) }
+
         return gameRepository.save(newGame)
     }
 
@@ -79,10 +82,10 @@ class GameService(
         }
 
         // Convert genre strings to GameGenre enum values
-        val genres = editedGame.genres.map { GameGenre.valueOf(it) }.toSet()
+        val genres = editedGame.genres.map { GameGenre.valueOf(it) }.toMutableSet()
 
         // Convert platform strings to GamePlatform enum values
-        val platforms = editedGame.platforms.map { GamePlatform.valueOf(it) }.toSet()
+        val platforms = editedGame.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
 
         val requestEditingGame = RequestedEditingGame(
                 gameId = gameId,
@@ -137,10 +140,10 @@ class GameService(
         }
 
         // Convert genre strings to GameGenre enum values
-        val genres = updatedGame.genres.map { GameGenre.valueOf(it) }.toSet()
+        val genres = updatedGame.genres.map { GameGenre.valueOf(it) }.toMutableSet()
 
         // Convert platform strings to GamePlatform enum values
-        val platforms = updatedGame.platforms.map { GamePlatform.valueOf(it) }.toSet()
+        val platforms = updatedGame.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
 
         game.title = updatedGame.title
         game.description = updatedGame.description
@@ -279,8 +282,8 @@ class GameService(
 
         game.title = requestedEditingGame.title
         game.description = requestedEditingGame.description
-        game.genres = requestedEditingGame.genres
-        game.platforms = requestedEditingGame.platforms
+        game.genres = requestedEditingGame.genres.toHashSet()
+        game.platforms = requestedEditingGame.platforms.toHashSet()
         game.playerNumber = requestedEditingGame.playerNumber
         game.releaseYear = requestedEditingGame.releaseYear
         game.universe = requestedEditingGame.universe
@@ -401,5 +404,9 @@ class GameService(
         val reportedGames = reportRepository.findAll()
         val reportedGameIds = reportedGames.map { it.reportedGame?.gameId }
         return gameRepository.findAllById(reportedGameIds).filter { !it.isDeleted }
+    }
+
+    fun updateSimilarGamesFields(){
+        gameSimilarityService.updateAllSimilarGamesFields()
     }
 }

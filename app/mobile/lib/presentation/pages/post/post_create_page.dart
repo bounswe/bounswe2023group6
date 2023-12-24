@@ -6,6 +6,7 @@ import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
+import 'package:mobile/presentation/widgets/tag_input.dart';
 
 class PostCreatePage extends StatefulWidget {
   const PostCreatePage({Key? key}) : super(key: key);
@@ -120,7 +121,7 @@ class _PostCreatePageState extends State<PostCreatePage> {
               buildCategoryDropdown(),
               const SizedBox(height: 16),
               // Add tags
-              buildTagInput(),
+              TagInput(tags: _tags, tagController: _tagController),
               const SizedBox(height: 16),
 
               // Create button
@@ -132,7 +133,7 @@ class _PostCreatePageState extends State<PostCreatePage> {
                         _titleController.text,
                         _contentController.text,
                         _selectedGame!,
-                        _selectedCategory!, 
+                        _selectedCategory!,
                         _tags);
                     Navigator.of(context).pop("create");
                   }
@@ -202,52 +203,6 @@ class _PostCreatePageState extends State<PostCreatePage> {
         }
         return null;
       },
-    );
-  }
-
-  Widget buildTagInput() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: _tagController,
-                decoration: const InputDecoration(
-                  hintText: "Add tags",
-                ),
-                onFieldSubmitted: (value) {
-                  setState(() {
-                    _tags.add(value);
-                    // clear the text field
-                    _tagController.clear();
-                  });
-                },
-              ),
-            ),
-            Wrap(
-              children: _tags
-                  .map((tag) => Chip(
-                        label: Text(tag),
-                        onDeleted: () {
-                          setState(() {
-                            _tags.remove(tag);
-                          });
-                        },
-                      ))
-                  .toList(),
-            ),            
-            // IconButton(
-            //   onPressed: () {
-            //     setState(() {
-            //       _tags.add(_tags.last);
-            //     });
-            //   },
-            //   icon: const Icon(Icons.add),
-            // ),
-          ],
-        ),
-      ],
     );
   }
 }
