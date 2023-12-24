@@ -1,7 +1,7 @@
 import React from 'react';
 import ReportIcon from "@mui/icons-material/Report";
-import EditIcon from '@mui/icons-material/Edit'
 import {Button} from "@mui/material";
+import EditLfg from './EditLfg'
 
 const LfgCard = ({ group, currentUser }) =>  {
 
@@ -12,9 +12,8 @@ const LfgCard = ({ group, currentUser }) =>  {
     <div key={group.lfgId} className='card compact bg-neutral-200 text-neutral-800 shadow-xl m-2 p-2'>
         <div className='absolute top-2 right-2 flex'>
             {isCurrentUserCreator && (
-                <button className="p-2 text-black rounded ">
-                    <EditIcon/>
-                </button>
+                    <EditLfg lfg={group} />
+
             )}
             {!isCurrentUserCreator && (
                 <button className="p-2 text-black rounded ">
