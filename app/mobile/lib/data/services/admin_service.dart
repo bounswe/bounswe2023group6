@@ -202,4 +202,94 @@ class AdminService {
       throw Exception('Failed to load comment reports');
     }
   }
+
+  Future<bool> deletePost(int postid) async {
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/admin/delete/post/$postid",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to delete post');
+    }
+  }
+
+  Future<bool> deleteGame(int gameid) async {
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/admin/delete/game/$gameid",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to delete game');
+    }
+  }
+
+  Future<bool> cancelPost(int postid) async {
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/admin/cancel/post/$postid",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+  }
+
+  Future<bool> cancelGame(int gameid) async {
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/admin/cancel/game/$gameid",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel game');
+    }
+  }
+
+  Future<bool> banUserPost(int postid) async {
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/admin/banUser/post/$postid",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to ban user of post');
+    }
+  }
+
+  Future<bool> banUserGame(int gameid) async {
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/admin/banUser/game/$gameid",
+      null,
+      EmptyResponse(),
+      'PUT',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to ban user of game');
+    }
+  }
 }
