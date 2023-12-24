@@ -99,11 +99,13 @@ const GameForum = () => {
                                                   <ImageListItem key={game.gameID} className='m-1'>
                                                     <img src={game.gamePicture} alt={game.title} loading="lazy" onError={handleImageError}/>
                                                     <ImageListItemBar
-                                                      title={<a href={`/game/${game.title}`} className='no-underline link'>{game.title}</a>}
+                                                      title={<a href={`/game/${game.gameID}`} className='no-underline link text-white'>{game.title}</a>}
                                                       actionIcon={
-                                                        <IconButton sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>
-                                                          <ArrowForwardIosIcon />
-                                                        </IconButton>
+                                                        <a href={`/game/${game.gameID}`} className='no-underline link'>
+                                                                                <IconButton sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+                                                                                  <ArrowForwardIosIcon />
+                                                                                </IconButton>
+                                                                              </a>
                                                       }
                                                     />
                                                   </ImageListItem>
