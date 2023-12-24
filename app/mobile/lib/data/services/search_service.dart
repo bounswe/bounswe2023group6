@@ -41,10 +41,6 @@ class SearchService {
       // List<LFG> lfgs = response.responseConverted!.lfgs!;
       List<LFG> lfgs = [];
 
-      // TODO: mock data, remove this
-      games = GameService.gameList;
-      lfgs = LFGService.lfgList;
-
       return {
         'posts': posts,
         'games': games,
