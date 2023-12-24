@@ -1,0 +1,46 @@
+name: Annotation CI/CD
+
+on:
+  #workflow_dispatch:
+  push:
+    branches: [ develop ]
+    paths: 
+      - 'app/annotation-service/**'
+
+jobs:
+
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      working-directory: ./app/annotation-service
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      working-directory: ${{env.working-directory}}
+      run: |
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-annotation:${{ github.run_number }} .
+
+    - name: Login to Docker Hub
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+    - name: Push Docker image
+      run: |
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-annotation:${{ github.run_number }}
+
+    # SSH and Deploy to Server
+    - name: Setup SSH Agent
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to Server
+      run: |
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} \
+        "docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-annotation:${{ github.run_number }} && \
+         docker stop gamelounge-annotation || true && \
+         docker rm gamelounge-annotation || true && \
+         docker run -d --name gamelounge-annotation -p 6000:6000 -e SPRING_DATASOURCE_URL="jdbc:postgresql://${{ secrets.SERVER_IP }}:5433/annotation" -e SPRING_DATASOURCE_USERNAME="annotation" -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DOCKERHUB_PASSWORD }}" ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-annotation:${{ github.run_number }}"

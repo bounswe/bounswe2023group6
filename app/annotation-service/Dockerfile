@@ -8,8 +8,10 @@ COPY . $APP_HOME
 COPY build.gradle.kts settings.gradle.kts gradlew $APP_HOME
 COPY gradle $APP_HOME/gradle
 
-RUN ./gradlew build -x test || return 0 
-COPY . .
+
+# Set the script to be executable
+RUN chmod +x ./gradlew
+
 RUN ./gradlew build -x test
 
 # Final stage
