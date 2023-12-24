@@ -1,7 +1,7 @@
 import LikedPosts from './LikedPosts';
 import Navbarx from '../../components/navbar/Navbar';
 import ProfileMenu from './ProfileMenu.js';
-import { getUserInfoByUsername, getLikedPosts, getCreatedPosts, getLikedComments, getLikedPostsByUserId, getCreatedPostsByUserId, getLikedCommentsByUserId } from '../../services/userService';
+import { getUserInfoByUsername, getLikedPostsByUserId, getCreatedPostsByUserId, getLikedCommentsByUserId } from '../../services/userService';
 import { React, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import EditProfile from "./EditProfile";
@@ -44,32 +44,30 @@ const ProfilePage = () => {
         				const response = await getUserInfoByUsername(username)
         				setUser(response.data);
         				console.log(response.data)
+        				const user = response.data
+        				fetchPosts(user);
         			} catch (error) {
                         console.error("Error fetching user information:", error.response.data);
         			} finally {
         				console.log(username)
-        				console.log(await getLikedPostsByUserId(1));
-                        console.log(await getLikedCommentsByUserId(1));
-                        console.log(await getCreatedPostsByUserId(1));
         			}
         		};
 
-        	const fetchPosts = async () => {
-                        let response;
+        	    const fetchPosts = async (user) => {
+                        let postResponse;
                         switch (activeTab) {
                             case 'createdPosts':
-                                response = await getCreatedPosts();
+                                postResponse = await getCreatedPostsByUserId(user.userId);
                                 break;
                             case 'likedComments':
-                                response = await getLikedComments();
+                                postResponse = await getLikedCommentsByUserId(user.userId);
                                 break;
                             default:
-                                response = await getLikedPosts();
+                                postResponse = await getLikedPostsByUserId(user.userId);
                         }
-                        setPostData(response.data);
+                        setPostData(postResponse.data);
                     };
                     user();
-                    fetchPosts();
                 }, [username, activeTab])
 
 
