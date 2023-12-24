@@ -141,7 +141,7 @@ object ConverterDTO {
         )
     }
 
-    fun convertToReportDTO(reports: List<Report>): List<ReportDTO>{
+    fun convertBulkToReportDTO(reports: List<Report>): List<ReportDTO>{
         return reports.map { report -> convertToReportDTO(report) }
     }
 
