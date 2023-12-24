@@ -41,7 +41,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 					</>
 				)}
 				{!isCurrentUserCreator && (
-          <button className='p-2 text-black rounded'>
+					<button className='p-2 text-black rounded'>
 						<ReportIcon sx={{ color: '#404040' }} />
 					</button>
 				)}

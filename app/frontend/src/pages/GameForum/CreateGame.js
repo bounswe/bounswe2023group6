@@ -27,8 +27,8 @@ export default function CreateGame() {
 	const [gameData, setGameData] = useState({
 		title: '',
 		description: '',
-		genre: [],
-		platform: [],
+		genres: [],
+		platforms: [],
 		playerNumber: '',
 		releaseYear: 0,
 		universe: '',
@@ -57,11 +57,18 @@ export default function CreateGame() {
 		document.getElementById('imageInput').click()
 	}
 
-	const predefinedGenres = ['Action', 'Adventure', 'Role-playing (RPG)', 'Simulation', 'Strategy', 'Sports', 'Horror']
-	const predefinedPlatforms = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile']
+
+	const predefinedGenres = ['RGP', 'Strategy', 'Shooter', 'Sports', 'Fighting', 'MOBA', 'Action', 'Adventure', 'Simulation', 'Horror', 'Empty'];
+	const predefinedPlatforms = ['XBOX', 'Computer', 'PS', 'Onboard', 'Mobile', 'Empty'];
+	const predefinedPlayerNumber = ['Single', 'Teams', 'Multiplayer', 'MMO', 'Empty'];
+	const predefinedUniverseInfo = ['Medieval', 'Fantasy', 'SciFi', 'Cyberpunk', 'Historical', 'Contemporary', 'PostApocalyptic', 'AlternateReality', 'Empty'];
+	const predefinedGameMechanics = ['TurnBased', 'ChangeBased', 'RealTime', 'Empty'];
 
 	const [selectedGenres, setSelectedGenres] = useState([])
 	const [selectedPlatforms, setSelectedPlatforms] = useState([])
+	const [selectedPlayerNumber, setSelectedPlayerNumber] = useState('');
+	const [selectedUniverseInfo, setSelectedUniverseInfo] = useState('');
+	const [selectedGameMechanics, setSelectedGameMechanics] = useState('');
 
 	const handleClickOpen = () => {
 		setOpen(true)
@@ -76,8 +83,11 @@ export default function CreateGame() {
 		const postData = {
 			...gameData,
 
-			genre: selectedGenres.toString(),
-			platform: selectedPlatforms.toString(),
+			genres: selectedGenres,
+			platforms: selectedPlatforms,
+			playerNumber: selectedPlayerNumber,
+			universe: selectedUniverseInfo,
+    		mechanics: selectedGameMechanics,
 			image: selectedImage
 		}
 		// //	if (postData.characters.length != 0) {
@@ -92,11 +102,11 @@ export default function CreateGame() {
 		// 		})
 		// 	}
 		delete postData.characters
-		const { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image } = postData
-		const request = { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image }
-		const formDataToSend = new FormData()
+		const { title, description, genres, platforms, playerNumber, releaseYear, universe, mechanics, playtime, image } = postData
+		const request = { title, description, genres, platforms, playerNumber, releaseYear, universe, mechanics, playtime, image }
+		let formDataToSend = new FormData()
 
-		formDataToSend.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
+        formDataToSend.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }));
 		if (selectedImage) {
 			const file = new File([selectedImage], 'image.png', { type: 'image/png' })
 			formDataToSend.append('image', file)
@@ -121,8 +131,8 @@ export default function CreateGame() {
 		setGameData({
 			title: '',
 			description: '',
-			genre: [],
-			platform: [],
+			genres: [],
+			platforms: [],
 			playerNumber: '',
 			releaseYear: 0,
 			universe: '',
@@ -139,13 +149,25 @@ export default function CreateGame() {
 		setGameData((prevData) => ({ ...prevData, [property]: value }))
 	}
 
-	const handleGenreChange = (event) => {
+	const handleGenresChange = (event) => {
 		setSelectedGenres(event.target.value)
 	}
 
-	const handlePlatformChange = (event) => {
+	const handlePlatformsChange = (event) => {
 		setSelectedPlatforms(event.target.value)
 	}
+
+	const handlePlayerNumberChange = (event) => {
+		setSelectedPlayerNumber(event.target.value);
+	};
+
+	const handleUniverseInfoChange = (event) => {
+		setSelectedUniverseInfo(event.target.value);
+	};
+	
+	const handleGameMechanicsChange = (event) => {
+		setSelectedGameMechanics(event.target.value);
+	};
 
 	const handleAddCharacter = () => {
 		setGameData((prevData) => ({
@@ -186,18 +208,18 @@ export default function CreateGame() {
 									fullWidth
 									margin='normal'
 									multiline
-									rowsMax={10}
+									rowsmax={10}
 									value={value}
 									onChange={(event) => handleChange(property, event.target.value)}
 								/>
-							) : property === 'genre' ? (
+							) : property === 'genres' ? (
 								<FormControl fullWidth margin='normal'>
-									<InputLabel id='genre-label'>Genres</InputLabel>
+									<InputLabel id='genres-label'>Genres</InputLabel>
 									<Select
 										label='Genres'
 										multiple
 										value={selectedGenres}
-										onChange={handleGenreChange}
+										onChange={handleGenresChange}
 										input={<OutlinedInput label='Genres' />}
 										renderValue={(selected) => selected.join(', ')}
 									>
@@ -209,14 +231,14 @@ export default function CreateGame() {
 										))}
 									</Select>
 								</FormControl>
-							) : property === 'platform' ? (
+							) : property === 'platforms' ? (
 								<FormControl fullWidth margin='normal'>
 									<InputLabel id='platform-label'>Platforms</InputLabel>
 									<Select
 										label='Platforms'
 										multiple
 										value={selectedPlatforms}
-										onChange={handlePlatformChange}
+										onChange={handlePlatformsChange}
 										input={<OutlinedInput label='Platforms' />}
 										renderValue={(selected) => selected.join(', ')}
 									>
@@ -224,6 +246,51 @@ export default function CreateGame() {
 											<MenuItem key={platform} value={platform}>
 												<Checkbox checked={selectedPlatforms.indexOf(platform) > -1} />
 												<ListItemText primary={platform} />
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+							) : property === 'playerNumber' ? (
+								<FormControl fullWidth margin='normal'>
+									<InputLabel id='playerNumber-label'>Number of Players</InputLabel>
+									<Select
+										label='Number of Players'
+										value={selectedPlayerNumber}
+										onChange={handlePlayerNumberChange}
+									>
+										{predefinedPlayerNumber.map((playerNumber) => (
+											<MenuItem key={playerNumber} value={playerNumber}>
+												{playerNumber}
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+							) : property === 'universe' ? (
+								<FormControl fullWidth margin='normal'>
+									<InputLabel id='universeInfo-label'>Universe Info</InputLabel>
+									<Select
+										label='Universe Info'
+										value={selectedUniverseInfo}
+										onChange={handleUniverseInfoChange}
+									>
+										{predefinedUniverseInfo.map((universeInfo) => (
+											<MenuItem key={universeInfo} value={universeInfo}>
+												{universeInfo}
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+							) : property === 'mechanics' ? (
+								<FormControl fullWidth margin='normal'>
+									<InputLabel id='gameMechanics-label'>Game Mechanics</InputLabel>
+									<Select
+										label='Game Mechanics'
+										value={selectedGameMechanics}
+										onChange={handleGameMechanicsChange}
+									>
+										{predefinedGameMechanics.map((gameMechanics) => (
+											<MenuItem key={gameMechanics} value={gameMechanics}>
+												{gameMechanics}
 											</MenuItem>
 										))}
 									</Select>

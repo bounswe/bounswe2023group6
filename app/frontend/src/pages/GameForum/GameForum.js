@@ -84,7 +84,7 @@ const GameForum = () => {
                                                     onError={handleImageError}
                                                     />
                                                     <ImageListItemBar
-                                                      title={<a href={`/games/${game.gameID}`} className='no-underline link'>{game.title}</a>}
+                                                      title={<a href={`/games/${game.gameId}`} className='no-underline link'>{game.title}</a>}
                                                       actionIcon={
                                                         <IconButton sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>
                                                           <ArrowForwardIosIcon />
@@ -96,12 +96,12 @@ const GameForum = () => {
                                             : games
                                                 .filter((game) => game.status === 'APPROVED')
                                                 .map((game) => (
-                                                  <ImageListItem key={game.gameID} className='m-1'>
+                                                  <ImageListItem key={game.gameId} className='m-1'>
                                                     <img src={game.gamePicture} alt={game.title} loading="lazy" onError={handleImageError}/>
                                                     <ImageListItemBar
-                                                      title={<a href={`/game/${game.gameID}`} className='no-underline link text-white'>{game.title}</a>}
+                                                      title={<a href={`/game/${game.gameId}`} className='no-underline link text-white'>{game.title}</a>}
                                                       actionIcon={
-                                                        <a href={`/game/${game.gameID}`} className='no-underline link'>
+                                                        <a href={`/game/${game.gameId}`} className='no-underline link'>
                                                                                 <IconButton sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>
                                                                                   <ArrowForwardIosIcon />
                                                                                 </IconButton>
