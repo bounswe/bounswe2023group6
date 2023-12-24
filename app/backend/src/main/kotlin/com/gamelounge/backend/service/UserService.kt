@@ -111,6 +111,7 @@ class UserService(
             user.profilePicture,
             user.about,
             user.isAdmin,
+            user.isDeleted,
             convertBulkToTagDTO(user.tags),
             user.title,
             user.company,
