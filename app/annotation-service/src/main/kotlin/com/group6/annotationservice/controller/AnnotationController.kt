@@ -15,13 +15,13 @@ class AnnotationController(
     private val annotationService: AnnotationService
 ) {
     @PostMapping("parse-selector")
-    @CrossOrigin(origins = ["*", "http://localhost:3000", "http://game-lounge.com"])
+    @CrossOrigin(origins = ["http://localhost:3000", "http://game-lounge.com"])
     fun parseSelector(@RequestBody selector: SelectorDto): ResponseEntity<String> {
 
         return ResponseEntity.ok("test")
     }
     @PostMapping("/create")
-    @CrossOrigin(origins = ["*", "http://localhost:3000", "http://game-lounge.com"])
+    @CrossOrigin(origins = ["http://localhost:3000", "http://game-lounge.com"])
     fun createAnnotation(@RequestBody annotationDto: AnnotationDto): ResponseEntity<AnnotationDto> {
 
         val responseAnnotation = DtoConverter
@@ -30,7 +30,7 @@ class AnnotationController(
     }
 
     @GetMapping("/{id}")
-    @CrossOrigin(origins = ["*", "http://localhost:3000", "http://game-lounge.com"])
+    @CrossOrigin(origins = ["http://localhost:3000", "http://game-lounge.com"])
     fun getAnnotation(@PathVariable id: String): ResponseEntity<AnnotationDto> {
         val annotation = annotationService.getAnnotation(id) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
 
@@ -40,7 +40,7 @@ class AnnotationController(
     }
 
     @PostMapping("/get-annotations-by-target")
-    @CrossOrigin(origins = ["*", "http://localhost:3000", "http://game-lounge.com"])
+    @CrossOrigin(origins = ["http://localhost:3000", "http://game-lounge.com"])
     fun getAnnotationsByTarget(@RequestBody request: GetAnnotationsByTargetIdRequest): ResponseEntity<List<AnnotationDto>> {
         val annotations = annotationService.getAnnotationsByTarget(request.targetId)
         val responseAnnotationList = annotations.map { DtoConverter.convertAnnotationToAnnotationDto(it) }
@@ -48,7 +48,7 @@ class AnnotationController(
     }
 
     @DeleteMapping("/{id}")
-    @CrossOrigin(origins = ["*", "http://localhost:3000", "http://game-lounge.com"])
+    @CrossOrigin(origins = ["http://localhost:3000", "http://game-lounge.com"])
     fun deleteAnnotation(@PathVariable id: String): ResponseEntity<Void> {
         return if (annotationService.deleteAnnotation(id)) {
             ResponseEntity<Void>(HttpStatus.NO_CONTENT)
