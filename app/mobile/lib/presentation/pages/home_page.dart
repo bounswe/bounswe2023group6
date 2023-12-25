@@ -23,7 +23,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var isLoggedIn = true;
   final GameService gameService = GameService();
   final PostService postService = PostService();
   final LFGService lfgService = LFGService();
