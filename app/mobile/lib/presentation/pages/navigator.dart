@@ -9,6 +9,7 @@ import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/post/post_create_page.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
+import 'package:mobile/presentation/widgets/searchbar_widget.dart';
 
 class CustomNavigator extends StatefulWidget {
   CustomNavigator({super.key, required this.defaultPage});
@@ -43,6 +44,8 @@ class _CustomNavigatorState extends State<CustomNavigator> {
                   return const LFGPageCreate();
                 case "/group":
                   return GroupPage();
+                case "/search":
+                  return const SearchWidget();
                 case "/login":
                   return LoginPage();
                 default:
