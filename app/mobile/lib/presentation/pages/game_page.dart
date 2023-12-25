@@ -39,7 +39,12 @@ class _GamePageState extends State<GamePage> {
       },
       key: _gridKey,
     );
-    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
+    try {
+      isLoggedIn = true;
+      CacheManager().getUser();
+    } catch (e) {
+      isLoggedIn = false;
+    }
   }
 
   @override

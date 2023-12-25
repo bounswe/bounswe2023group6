@@ -23,7 +23,12 @@ class _ForumPageState extends State<ForumPage> {
   @override
   void initState() {
     super.initState();
-    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
+    try {
+      isLoggedIn = true;
+      CacheManager().getUser();
+    } catch (e) {
+      isLoggedIn = false;
+    }
   }
 
   @override
