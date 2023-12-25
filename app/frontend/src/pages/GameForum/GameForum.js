@@ -79,45 +79,47 @@ const GameForum = () => {
                 <div className='w-full flex justify-center p-4 bg-neutral-50 pb-20'>
                     <div className='w-3/4 flex flex-col'>
                         <h1 className='text-4xl font-bold text-neutral-700 text-center'>Games</h1>
+                        <div className='w-full flex flex-row justify-between'>
                         <CreateGame />
-                        <div className='w-full justify-center items-center space-x-6 space-y-6 mb-6'>
-                            <select value={selectedPlatform} onChange={handlePlatformChange} className="p-2 border border-gray-300 rounded-md">
+                        <input
+                            type="text"
+                            placeholder="Search games..."
+                            value={searchQuery}
+                            onChange={handleSearchInputChange}
+                            className="p-2 border border-neutral-300 text-neutral-600 rounded-md hover:bg-neutral-200 shadow-2xl"
+                        />
+                        </div>
+                        <div className='flex w-full justify-between items-center mb-4 mt-4'>
+                            <select value={selectedPlatform} onChange={handlePlatformChange} className="p-2 text-neutral-100 border bg-cyan-600 hover:bg-cyan-800 rounded-md">
                                 <option value="">All Platforms</option>
                                 {predefinedPlatforms.map((platform) => (
                                     <option key={platform} value={platform}>{platform}</option>
                                 ))}
                             </select>
-                            <select value={selectedPlayerNumber} onChange={handlePlayerNumberChange} className="p-2 border border-gray-300 rounded-md">
+                            <select value={selectedPlayerNumber} onChange={handlePlayerNumberChange} className="p-2 text-neutral-100 border bg-cyan-600 hover:bg-cyan-800 rounded-md">
                                 <option value="">All Player Numbers</option>
                                 {predefinedPlayerNumber.map((playerNumber) => (
                                     <option key={playerNumber} value={playerNumber}>{playerNumber}</option>
                                 ))}
                             </select>
-                            <select value={selectedUniverseInfo} onChange={handleUniverseInfoChange} className="p-2 border border-gray-300 rounded-md">
+                            <select value={selectedUniverseInfo} onChange={handleUniverseInfoChange} className="p-2 text-neutral-100 border bg-cyan-600 hover:bg-cyan-800 rounded-md">
                                 <option value="">All Universe Info</option>
                                 {predefinedUniverseInfo.map((universeInfo) => (
                                     <option key={universeInfo} value={universeInfo}>{universeInfo}</option>
                                 ))}
                             </select>
-                            <select value={selectedGameMechanics} onChange={handleGameMechanicsChange} className="p-2 border border-gray-300 rounded-md">
+                            <select value={selectedGameMechanics} onChange={handleGameMechanicsChange} className="p-2 text-neutral-100 border bg-cyan-600 hover:bg-cyan-800 rounded-md">
                                 <option value="">All Game Mechanics</option>
                                 {predefinedGameMechanics.map((gameMechanics) => (
                                     <option key={gameMechanics} value={gameMechanics}>{gameMechanics}</option>
                                 ))}
                             </select>
-                            <select value={selectedGenre} onChange={handleGenreChange} className="p-2 border border-gray-300 rounded-md">
+                            <select value={selectedGenre} onChange={handleGenreChange} className="p-2 text-neutral-100 border bg-cyan-600 hover:bg-cyan-800 rounded-md">
                                 <option value="">All</option>
                                 {predefinedGenres.map((genre) => (
                                     <option key={genre} value={genre}>{genre}</option>
                                 ))}
                             </select>
-                            <input
-                                type="text"
-                                placeholder="Search games..."
-                                value={searchQuery}
-                                onChange={handleSearchInputChange}
-                                className="p-2 border border-gray-300 rounded-md"
-                            />
                         </div>
                         <ImageList className='w-full' cols={4} gap={8}>
                             {console.log(games)}
