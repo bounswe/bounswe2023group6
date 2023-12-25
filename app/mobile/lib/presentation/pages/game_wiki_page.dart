@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
+import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
@@ -234,12 +235,16 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
-                                      gameService.rateGame(game.gameId, rating.round());
+                                      gameService.rateGame(
+                                          game.gameId, rating.round());
                                     },
                                   ),
                                 ],
                               )),
-                              AnnotatableImageWidget(imageUrl: game.gamePicture),
+                              AnnotatableImageWidget(
+                                  imageUrl: game.gamePicture,
+                                  contentId: game.gameId,
+                                  contentContext: AnnotationContext.game),
                             ],
                           ),
                         ],
