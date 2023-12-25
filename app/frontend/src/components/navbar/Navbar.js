@@ -19,6 +19,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../gamelounge.png'
+import { getAllSearch } from '../../services/searchService.js'
+import {getUserInfoBySessionId} from "../../services/userService";
 const Navbarx = () => {
 	const api_url = process.env.REACT_APP_API_URL
 	const navigate = useNavigate()
@@ -27,6 +29,7 @@ const Navbarx = () => {
 	const userImage = localStorage.getItem('userImage')
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
 	const [isAdmin, setIsAdmin] = useState(false)
+	const [currentUser, setCurrentUser] = useState(null);
 
 	const navigateToLogin = () => {
 		navigate('/login')
@@ -95,7 +98,45 @@ const Navbarx = () => {
 		if (isAdmin) {
 		  setIsAdmin(true)
 		}
-	  }, [])
+	}, [])
+	const [searchResults, setSearchResults] = useState([])
+	const [searchQuery, setSearchQuery] = useState('')
+	const navigateToSearch = (result) => {
+		// Use the 'navigate' function from 'react-router-dom' to navigate to the Search component
+		navigate('/search', { state: { searchData: result } })
+	}
+	const handleSearch = async () => {
+		try {
+			const response = await getAllSearch(searchQuery)
+
+			if (response.status === 200) {
+				setSearchResults(response.data)
+				console.log(searchResults)
+				navigateToSearch(response.data)
+			}
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
+	const handleInputChange = (e) => {
+		setSearchQuery(e.target.value)
+		// Trigger search when the user stops typing for 300 milliseconds
+	}
+
+	  useEffect(() => {
+              const fetchUserInfo = async () => {
+                  try {
+                      const response = await getUserInfoBySessionId();
+                      const userData = response.data;
+                      setCurrentUser(userData);
+                      console.log('Current User:', userData);
+                  } catch (error) {
+                      console.error('Error fetching user info:', error);
+                  }
+              };
+              fetchUserInfo();
+          }, []);
 
 	return (
 		<Navbar isBordered className='bg-black'>
@@ -145,6 +186,12 @@ const Navbarx = () => {
 					size='sm'
 					startContent={<SearchIcon size={18} />}
 					type='search'
+					onChange={handleInputChange}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							handleSearch()
+						}
+					}}
 				/>
 				{isLoggedIn ? (
 					<Dropdown placement='bottom-end' justify='end'>
@@ -153,7 +200,7 @@ const Navbarx = () => {
 								isBordered
 								as='button'
 								className='transition-transform'
-								color='secondary'
+								color='default'
 								name='Jason Hughes'
 								size='sm'
 								src={userImage}
@@ -178,11 +225,16 @@ const Navbarx = () => {
 										size='sm'
 										startContent={<SearchIcon size={18} />}
 										type='search'
+										onKeyDown={(e) => {
+											if (e.key === 'Enter') {
+												handleSearch()
+											}
+										}}
 									/>
 								</DropdownItem>
 							) : null}
 
-							<DropdownItem key='settings' closeOnSelect='false' onClick={() => navigate('/profile-page')}>
+							<DropdownItem key='settings' closeOnSelect='false' onClick={() => navigate(`/users/${currentUser.username}`)}>
 								My Profile
 							</DropdownItem>
 							<DropdownItem key='team_settings'>Account Settings</DropdownItem>
@@ -192,15 +244,15 @@ const Navbarx = () => {
 						</DropdownMenu>
 					</Dropdown>
 				) : windowWidth < 768 ? (
-					<Button color='primary' variant='shadow' size='md' onClick={navigateToLogin}>
+					<Button color='default' variant='faded' size='md' onClick={navigateToLogin}>
 						Log In
 					</Button>
 				) : (
 					<div className='flex'>
-						<Button color='primary' variant='shadow' size='md' onClick={navigateToLogin}>
+						<Button color='default' variant='faded' size='md' onClick={navigateToLogin}>
 							Log In
 						</Button>
-						<Button color='primary' variant='faded' size='md' style={{ marginLeft: 12 }} onClick={navigateToSignup}>
+						<Button color='default' variant='faded' size='md' style={{ marginLeft: 12 }} onClick={navigateToSignup}>
 							Sign Up
 						</Button>
 					</div>

@@ -37,12 +37,13 @@ class _OpeningPageState extends State<OpeningPage> {
 
   @override
   Widget build(BuildContext context) {
+    return MainScreen();
 
-    if (username == '' || currentuser == null || username == 'admin') {
+    /*if (username == '' || currentuser == null || username == 'admin') {
       return const AuthPageDemo();
     } 
     else {
       return MainScreen();  
-    }
-}
+    }*/
+  }
 }

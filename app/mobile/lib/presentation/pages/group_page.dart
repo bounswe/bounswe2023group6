@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/data/services/post_service.dart';
+import 'package:mobile/presentation/pages/lfg_page_create.dart';
+import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/post/content_card_widget.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
@@ -26,7 +29,7 @@ class _GroupPageState extends State<GroupPage> {
   final PostService commentService = PostService();
   late User currentUser;
   final TextEditingController _commentController = TextEditingController();
-
+  static late LFG selectedLFG;
   @override
   void initState() {
     super.initState();
@@ -39,6 +42,7 @@ class _GroupPageState extends State<GroupPage> {
 
   Future<MainContentState> loadlfg(int lfgId) async {
     LFG lfg = await lfgService.getLFG(lfgId);
+    selectedLFG = lfg;
     List<Comment> commentList = await commentService.getComments(lfgId);
 
     commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
@@ -109,6 +113,30 @@ class _GroupPageState extends State<GroupPage> {
                         : null),
             ],
           )),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LFGPageCreate(
+                        selectedLFG: _GroupPageState.selectedLFG)),
+              ).then((value) {
+                if (value != null && value == "create") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Game created"),
+                    ),
+                  );
+                  // refresh the current page
+                  Navigator.pushReplacementNamed(context, '/');
+                }
+              });
+            },
+            child: const Icon(
+              Icons.edit,
+              color: ColorConstants.buttonColor,
+            ),
+          ),
         );
       },
     );
@@ -163,7 +191,8 @@ class _GroupPageState extends State<GroupPage> {
                             alignment: Alignment.centerLeft,
                             child: Text("Mic/Cam: ",
                                 style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600))),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600))),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -181,7 +210,8 @@ class _GroupPageState extends State<GroupPage> {
                                   border: Border.all(
                                     color: Colors.black,
                                   ),
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
                                 ),
                                 width: 100,
                                 height: 40,
@@ -209,7 +239,7 @@ class _GroupPageState extends State<GroupPage> {
       onSelected: (ContentMoreOptions result) {
         switch (result) {
           case ContentMoreOptions.edit:
-            // TODO: go to update page 
+            // TODO: go to update page
             // showDialog(
             //   context: context,
             //   builder: (BuildContext context) {
@@ -250,7 +280,7 @@ class _GroupPageState extends State<GroupPage> {
             print("go to game page ${lfg.relatedGameId}");
             // Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
             break;
-          default: 
+          default:
             break;
         }
       },
@@ -291,15 +321,19 @@ class _GroupPageState extends State<GroupPage> {
               children: [
                 // show tags
                 if (lfg.tags != null)
-                  for (String tag in lfg.tags!.sublist(0, min(4, lfg.tags!.length)))
+                  for (String tag
+                      in lfg.tags!.sublist(0, min(4, lfg.tags!.length)))
                     Container(
                       margin: const EdgeInsets.only(right: 5),
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 2),
                       child: TextButton(
                         onPressed: () {},
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                          backgroundColor: Theme.of(context).primaryIconTheme.color,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 2),
+                          backgroundColor:
+                              Theme.of(context).primaryIconTheme.color,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),

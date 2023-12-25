@@ -8,8 +8,10 @@ COPY . $APP_HOME
 COPY build.gradle.kts settings.gradle.kts gradlew $APP_HOME
 COPY gradle $APP_HOME/gradle
 
-RUN ./gradlew build -x test || return 0 
-COPY . .
+
+# Set the script to be executable
+RUN chmod +x ./gradlew
+
 RUN ./gradlew build -x test
 
 # Final stage
@@ -17,7 +19,7 @@ FROM amazoncorretto:17-alpine3.15
 ENV ARTIFACT_NAME=annotation-service-0.0.1-SNAPSHOT.jar
 ENV APP_HOME=/game-lounge-annotation-service/
 WORKDIR $APP_HOME
-EXPOSE 6000
+EXPOSE 8080
 RUN mkdir /annotation
 
 # Copy the JAR from the build stage to the final image

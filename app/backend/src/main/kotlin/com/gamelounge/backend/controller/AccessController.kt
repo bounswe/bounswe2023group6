@@ -23,7 +23,6 @@ class AccessController(
 
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
-//
     fun register(
         @RequestPart("request") request: RegisterationRequest,
         @RequestPart("image") image: MultipartFile?
@@ -40,7 +39,6 @@ class AccessController(
         val cookie = Cookie("SESSIONID", "$sessionId")
         cookie.path = "/"
         response.addCookie(cookie)
-
 
         response.setHeader("Access-Control-Allow-Credentials", "true")
     }

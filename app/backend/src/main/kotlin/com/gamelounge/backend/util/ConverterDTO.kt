@@ -69,17 +69,19 @@ object ConverterDTO {
 
     fun convertToLFGDTO(lfg: LFG): LFGDTO{
         return LFGDTO(
-            lfg.lfgId,
-            lfg.title,
-            lfg.description,
-            lfg.requiredPlatform,
-            lfg.requiredLanguage,
-            lfg.micCamRequirement,
-            lfg.memberCapacity,
-            lfg.creationDate,
-            lfg.user?.let { convertToUserDTO(it) },
-            lfg.relatedGame?.let { convertToGameDTO(it) },
-            convertBulkToTagDTO(lfg.tags)
+            lfgId = lfg.lfgId,
+            title = lfg.title,
+            description = lfg.description,
+            requiredPlatform = lfg.requiredPlatform,
+            requiredLanguage = lfg.requiredLanguage,
+            micCamRequirement = lfg.micCamRequirement,
+            memberCapacity = lfg.memberCapacity,
+            creationDate = lfg.creationDate,
+            user = lfg.user?.let { convertToUserDTO(it) },
+            relatedGame = lfg.relatedGame?.let { convertToGameDTO(it) },
+            tags = convertBulkToTagDTO(lfg.tags),
+            totalMembers = lfg.totalMembers,
+            members = convertBulkToUserDTO(lfg.members)
         )
     }
 
@@ -108,7 +110,7 @@ object ConverterDTO {
             game.gamePicture,
             (game.status ?: GameStatus.PENDING_APPROVAL).toString(),
             game.isDeleted,
-            convertBulkToGameDTO(game.similarGames)
+            game.similarGames.map { it.gameId }
         )
     }
 

@@ -90,3 +90,13 @@ export const rejectGame = (gameId) => {
 		}
 	)
 }
+export const getRecommendedGames = () => {
+	return axiosInstance.get(
+		`/game/recommended`,
+		{},
+		{
+			withCredentials: true,
+			headers: { 'Content-Type': 'application/json' }
+		}
+	)
+}

@@ -26,14 +26,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<Post>> loadPosts() async {
  
-    List<Post> postList = await postService.getPosts();
+    List<Post> postList = await postService.getRecommendedPosts();
 
     return postList;
   }
 
   Future<List<Game>> loadGames() async {
 
-    List<Game> gameList = await gameService.getGames();
+    List<Game> gameList = await gameService.getRecommendedGames();
 
     return gameList;
   }
@@ -51,37 +51,35 @@ class _HomePageState extends State<HomePage> {
               List<Game> games = snapshot.data![1];
               return ListView(
                 children: [
-                  SizedBox(height: 10,),
-                  SearchAnchor(
-                      builder: (BuildContext context, SearchController controller) {
-                    return SearchBar(
-                      controller: controller,
-                      padding: const MaterialStatePropertyAll<EdgeInsets>(
-                          EdgeInsets.symmetric(horizontal: 16.0)),
+                  const SizedBox(height: 10,),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: AbsorbPointer(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Search',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
                       onTap: () {
-                        controller.openView();
+                        Navigator.of(context).pushNamed('/search');
                       },
-                      onChanged: (_) {
-                        controller.openView();
-                      },
-                      leading: const Icon(Icons.search),
-                    );
-                  }, suggestionsBuilder:
-                          (BuildContext context, SearchController controller) {
-                    return List<ListTile>.generate(5, (int index) {
-                      final String item = '';
-                      return ListTile(
-                        title: Text(item),
-                        onTap: () {
-                          setState(() {
-                            controller.closeView(item);
-                          });
-                        },
-                      );
-                    });
-                  },
+                    ),
                   ),
-                  SizedBox(height: 15,),
+                  const SizedBox(height: 15,),
                   Card(
                     margin:
                       const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
