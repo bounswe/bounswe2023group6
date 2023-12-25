@@ -48,15 +48,17 @@ class BaseNetworkService
     String path,
     DTOReq? request,
     DTORes responseModel,
-    String requestType,
-  ) async {
+    String requestType, {
+    String baseUrl = _baseUrl,
+  }) async {
     try {
       if (requestType != "GET") {
         request?.validate();
       }
 
       final ServiceResponse<DTORes> serviceResponse =
-          await sendRequest<DTOReq, DTORes>(path, request, requestType);
+          await sendRequest<DTOReq, DTORes>(
+              path, request, requestType, baseUrl);
 
       if (serviceResponse.success) {
         DTORes? response = parseResponse<DTORes>(
@@ -81,12 +83,14 @@ class BaseNetworkService
     String path,
     DTOReq? requestDTO,
     String type,
+    String baseUrl,
   ) async {
     Options customOptions = Options();
     customOptions
       ..method = type
       ..extra ??= <String, dynamic>{}
       ..headers ??= <String, dynamic>{};
+    options.baseUrl = baseUrl;
 
     final SharedManager manager = SharedManager();
     if (manager.checkString(SharedKeys.sessionId)) {
