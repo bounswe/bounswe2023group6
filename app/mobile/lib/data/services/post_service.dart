@@ -48,6 +48,8 @@ class PostService {
   static const String _getDislikedUsersForComment =
       "/comments/{id}/downvotedUsers";
 
+  static const String _getPostsByGame = "/forum/posts/game/{id}";
+
   Future<List<Post>> getPosts() async {
     if (NetworkConstants.useMockData) {
       return [
@@ -206,11 +208,11 @@ class PostService {
   }
 
   Future<Post> createPost(
-    String title, 
-    String content, 
-    int relatedGameId, 
+    String title,
+    String content,
+    int relatedGameId,
     String postCategory,
-    List<String> tags,  
+    List<String> tags,
   ) async {
     if (NetworkConstants.useMockData) {
       return Post(
@@ -233,7 +235,7 @@ class PostService {
       title: title,
       content: content,
       relatedGameId: relatedGameId,
-      category: postCategory, 
+      category: postCategory,
       tags: tags,
     );
     ServiceResponse<SingleContentDTO> response =
@@ -624,6 +626,25 @@ class PostService {
       return userIds;
     } else {
       throw Exception('Failed to load disliked users for comment');
+    }
+  }
+
+  Future<List<Post>> getPostsByGame(int gameId) async {
+    ServiceResponse<MultipleContentAsDTO> response = await service
+        .sendRequestSafe<MultipleContentAsDTO, MultipleContentAsDTO>(
+      _getPostsByGame.replaceFirst('{id}', gameId.toString()),
+      null,
+      MultipleContentAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Post> posts = response.responseConverted!.posts!
+          .map((e) => e.content! as Post)
+          .toList();
+      return posts;
+    } else {
+      throw Exception('Failed to load posts by game');
     }
   }
 }

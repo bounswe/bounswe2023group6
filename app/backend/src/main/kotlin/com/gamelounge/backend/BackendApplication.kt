@@ -18,7 +18,7 @@ class BackendApplication (val userRepository: UserRepository){
 		return object : WebMvcConfigurer {
 			override fun addCorsMappings(registry: CorsRegistry) {
 				registry.addMapping("/**")
-					.allowedOrigins("http://localhost:3000", "http://game-lounge.com")
+					.allowedOrigins("http://localhost:3000", "http://game-lounge.com", "http://167.99.242.175")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowCredentials(true)
 					.allowedHeaders("*")
