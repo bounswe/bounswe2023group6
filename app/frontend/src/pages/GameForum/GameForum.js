@@ -115,7 +115,7 @@ const GameForum = () => {
                                 ))}
                             </select>
                             <select value={selectedGenre} onChange={handleGenreChange} className="p-2 text-neutral-100 border bg-cyan-600 hover:bg-cyan-800 rounded-md">
-                                <option value="">All</option>
+                                <option value="">All Genres</option>
                                 {predefinedGenres.map((genre) => (
                                     <option key={genre} value={genre}>{genre}</option>
                                 ))}
