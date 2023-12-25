@@ -62,3 +62,6 @@ export const reportPost = (postId, reportData, sessionId) => {
 export const getAllTags = () => {
 	return axiosInstance.get('/tags')
 }
+export const getRecommendedPosts = () => {
+	return axiosInstance.get(`/forum/posts/recommended`)
+}
