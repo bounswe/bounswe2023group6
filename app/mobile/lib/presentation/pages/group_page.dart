@@ -7,6 +7,7 @@ import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/data/services/post_service.dart';
@@ -28,7 +29,7 @@ class GroupPage extends StatefulWidget {
 
 class _GroupPageState extends State<GroupPage> {
   final LFGService lfgService = LFGService();
-  final PostService commentService = PostService();
+  final CommentService commentService = CommentService();
   final GameService gameService = GameService();
 
   late User currentUser;
@@ -48,7 +49,7 @@ class _GroupPageState extends State<GroupPage> {
   Future<MainContentState> loadlfg(int lfgId) async {
     LFG lfg = await lfgService.getLFG(lfgId);
     selectedLFG = lfg;
-    List<Comment> commentList = await commentService.getComments(lfgId);
+    List<Comment> commentList = await commentService.getCommentsForLfg(lfgId);
     selectedGame = await gameService.getGame(lfg.relatedGameId!);
 
     commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
@@ -60,8 +61,6 @@ class _GroupPageState extends State<GroupPage> {
 
     return MainContentState(lfg);
   }
-
-  // static late LFG lfg;
 
   @override
   Widget build(BuildContext context) {
@@ -493,7 +492,7 @@ class _GroupPageState extends State<GroupPage> {
                         int? parentId = lfgState.currentCommentParentId != 0
                             ? lfgState.currentCommentParentId
                             : null;
-                        Comment comment = await lfgService.createComment(
+                        Comment comment = await commentService.createCommentForLfg(
                             lfg.id, _commentController.text, parentId);
                         lfgState.addComment(comment);
                         _commentController.clear();

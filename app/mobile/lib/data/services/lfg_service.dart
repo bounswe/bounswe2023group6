@@ -19,7 +19,6 @@ class LFGService {
   static const String _getLFGs = "/lfg/all";
   static const String _getLikedUsers = "/lfg/likes";
   static const String _getDislikedUsers = "/lfg/dislikes";
-  static const String _getComments = "/lfg/comments";
 
   static List<LFG> lfgList = [
     LFG(
