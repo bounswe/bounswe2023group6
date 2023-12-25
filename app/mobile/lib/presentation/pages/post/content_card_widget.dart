@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/post_service.dart';
@@ -48,8 +49,8 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
     bool isReply = widget.isReply;
     Content? parentContent = widget.parentContent;
     connectedPostState = context.watch<MainContentState>();
-    bool isContentOfOriginalPoster = !isPost && content.ownerUserId ==
-        connectedPostState.mainContent.ownerUserId;
+    bool isContentOfOriginalPoster = !isPost &&
+        content.ownerUserId == connectedPostState.mainContent.ownerUserId;
 
     return Card(
       key: !isPost && !isReply ? content.globalKey : null,
@@ -78,10 +79,12 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             InkWell(
               onTap: () {
                 // TODO: Change render objects border color for parent comment
-                GlobalObjectKey parentContentGlobalKey = connectedPostState.mainContent.commentList.where(
-                  (element) => element.id == parentContent.id).first.globalKey;
-                Scrollable.ensureVisible(
-                    parentContentGlobalKey.currentContext!,
+                GlobalObjectKey parentContentGlobalKey = connectedPostState
+                    .mainContent.commentList
+                    .where((element) => element.id == parentContent.id)
+                    .first
+                    .globalKey;
+                Scrollable.ensureVisible(parentContentGlobalKey.currentContext!,
                     curve: Curves.easeInOut);
               },
               child: Align(
@@ -110,7 +113,13 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                         // show post category
                         MaterialButton(
                           onPressed: () {},
-                          child: Text((content as Post).category.toString().split('.').last.toUpperCase(),
+                          child: Text(
+                              (content as Post)
+                                  .category
+                                  .toString()
+                                  .split('.')
+                                  .last
+                                  .toUpperCase(),
                               style: const TextStyle(fontSize: 18)),
                         ),
                       ],
@@ -126,7 +135,12 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: AnnotatableTextWidget(text: content.content, contentId: content.id),
+            child: AnnotatableTextWidget(
+                text: content.content,
+                contentId: content.id,
+                contentContext: widget.isPost
+                    ? AnnotationContext.post
+                    : AnnotationContext.comment),
           ),
           const SizedBox(
             height: 5,
@@ -208,7 +222,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             value: ContentMoreOptions.report,
             child: Text('Report'),
           ),
-        if (!widget.isPost) 
+        if (!widget.isPost)
           const PopupMenuItem<ContentMoreOptions>(
             value: ContentMoreOptions.reply,
             child: Text('Reply'),
@@ -223,8 +237,10 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
   }
 
   Widget contentSocialSection(Content content) {
-    bool isLikedByCurrentUser = content.likeIds.contains(connectedPostState.currentUser.userId);
-    bool isDislikedByCurrentUser = content.dislikeIds.contains(connectedPostState.currentUser.userId);
+    bool isLikedByCurrentUser =
+        content.likeIds.contains(connectedPostState.currentUser.userId);
+    bool isDislikedByCurrentUser =
+        content.dislikeIds.contains(connectedPostState.currentUser.userId);
     return Column(
       children: [
         Row(
@@ -234,15 +250,19 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
               children: [
                 // show tags
                 if (content.tags != null)
-                  for (String tag in content.tags!.sublist(0, min(4, content.tags!.length)))
+                  for (String tag
+                      in content.tags!.sublist(0, min(4, content.tags!.length)))
                     Container(
                       margin: const EdgeInsets.only(right: 5),
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 2),
                       child: TextButton(
                         onPressed: () {},
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                          backgroundColor: Theme.of(context).primaryIconTheme.color,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 2),
+                          backgroundColor:
+                              Theme.of(context).primaryIconTheme.color,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -255,7 +275,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             Row(
               children: [
                 // comment button
-                if (content.type == ContentType.post) ... [
+                if (content.type == ContentType.post) ...[
                   IconButton(
                     icon: const Icon(Icons.comment_outlined),
                     onPressed: () {},
@@ -282,12 +302,14 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                     if (isLikedByCurrentUser) {
                       setState(() {
                         widget.content.likes--;
-                        widget.content.likeIds.remove(connectedPostState.currentUser.userId);
+                        widget.content.likeIds
+                            .remove(connectedPostState.currentUser.userId);
                       });
                     } else {
                       setState(() {
                         widget.content.likes++;
-                        widget.content.likeIds.add(connectedPostState.currentUser.userId);
+                        widget.content.likeIds
+                            .add(connectedPostState.currentUser.userId);
                       });
                     }
                   },
@@ -314,12 +336,14 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                     if (isDislikedByCurrentUser) {
                       setState(() {
                         widget.content.dislikes--;
-                        widget.content.dislikeIds.remove(connectedPostState.currentUser.userId);
+                        widget.content.dislikeIds
+                            .remove(connectedPostState.currentUser.userId);
                       });
                     } else {
                       setState(() {
                         widget.content.dislikes++;
-                        widget.content.dislikeIds.add(connectedPostState.currentUser.userId);
+                        widget.content.dislikeIds
+                            .add(connectedPostState.currentUser.userId);
                       });
                     }
                   },

@@ -55,5 +55,3 @@ The command "docker run -p 3000:3000 -d game-lounge" starts a Docker container f
 Please note that one needs to setup a simple .env file before running it as the the backend url is defined by it. It's enough to define REACT_APP_API_URL (either localhost:8080 or some remote url).
 
 
-
-

@@ -2,7 +2,7 @@ import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/dto/base_dto_object.dart';
 
 class AnnotationDTO extends BaseDTOObject<AnnotationDTO> {
-  Annotation? annotation;
+  BaseAnnotation? annotation;
 
   AnnotationDTO({
     this.annotation,
@@ -12,7 +12,7 @@ class AnnotationDTO extends BaseDTOObject<AnnotationDTO> {
   void validate() {}
 
   factory AnnotationDTO.fromJson(Map<String, dynamic> json) => AnnotationDTO(
-        annotation: Annotation.fromJson(json),
+        annotation: BaseAnnotation.fromJson(json),
       );
 
   @override
