@@ -6,22 +6,42 @@ import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import TextWithAnnotations from '../components/TextWithAnnotation'
 import CloseIcon from '@mui/icons-material/Close'
+import { createAnnotation, getAnnotationsByTarget } from '../services/AnnotationService'
+import { v4 as uuidv4 } from 'uuid'
 
 const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 	const isCurrentUserCreator = currentUser && post.creatorUser.username === currentUser.username
 	const navigate = useNavigate()
 	const params = useParams()
 
-	const [annotations, setAnnotations] = useState(JSON.parse(localStorage.getItem('annotations') || '[]'))
+	const [annotations, setAnnotations] = useState([])
 	const [showAnnotationButton, setShowAnnotationButton] = useState(false)
-	const [selectionRange, setSelectionRange] = useState({ start: 0, end: 0, text: '' })
+	const [selectionRange, setSelectionRange] = useState({ startIndex: 0, endIndex: 0, value: '' })
 	const [annotationText, setAnnotationText] = useState('')
 	const [showAnnotationPopup, setShowAnnotationPopup] = useState(false)
 	const postContentRef = useRef()
 
 	useEffect(() => {
-		localStorage.setItem('annotations', JSON.stringify(annotations))
-	}, [annotations])
+		const loadAnnotations = async () => {
+			try {
+				const response = await getAnnotationsByTarget(`http://167.99.242.175:8080/post/${post.postId}`)
+
+				const transformedAnnotations = response.data.map((annotation) => ({
+					startIndex: annotation.target.selector.start,
+					endIndex: annotation.target.selector.end,
+					value: annotation.body[0].value
+				}))
+
+				setAnnotations(transformedAnnotations)
+			} catch (error) {
+				console.error('Error loading annotations:', error)
+			}
+		}
+
+		if (post) {
+			loadAnnotations()
+		}
+	}, [post])
 
 	const handleTextSelect = () => {
 		const selection = window.getSelection()
@@ -31,12 +51,12 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 		const preSelectionRange = range.cloneRange()
 		preSelectionRange.selectNodeContents(postContentRef.current)
 		preSelectionRange.setEnd(range.startContainer, range.startOffset)
-		const start = preSelectionRange.toString().length - 3
+		const startIndex = preSelectionRange.toString().length - 3
 
-		const end = start + range.toString().length
+		const endIndex = startIndex + range.toString().length
 
 		if (range.toString().length > 0 && postContentRef.current.contains(range.startContainer)) {
-			setSelectionRange({ start, end, text: range.toString() })
+			setSelectionRange({ startIndex, endIndex, value: range.toString() })
 			setShowAnnotationButton(true)
 		} else {
 			setShowAnnotationButton(false)
@@ -53,19 +73,49 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 		setAnnotationText('')
 	}
 
-	const handleSubmitAnnotation = () => {
-		const newAnnotation = {
-			postUrl: window.location.href, // Save the current post URL
-			startIndex: selectionRange.start,
-			endIndex: selectionRange.end,
-			value: annotationText
+	const handleSubmitAnnotation = async () => {
+		const annotationUuid = uuidv4() // Generate UUID
+		const username = localStorage.getItem('username') // Fetch username from local storage
+
+		const annotationData = {
+			context: 'http://www.w3.org/ns/anno.jsonld',
+			id: annotationUuid, // Use generated UUID
+			type: 'Annotation',
+			motivation: ['commenting', 'annotating'],
+			creator: `http://167.99.242.175:8080/user/${username}`, // Use fetched username
+			created: new Date().toISOString(),
+			body: [
+				{
+					id: annotationUuid, // Use same UUID for body ID
+					type: 'TextualBody',
+					value: annotationText,
+					format: 'text/plain',
+					language: 'en',
+					purpose: 'commenting'
+				}
+			],
+			target: {
+				id: `http://167.99.242.175:8080/post/${post.postId}`,
+				format: 'text/html',
+				language: 'en',
+				selector: {
+					type: 'TextPositionSelector',
+					start: selectionRange.startIndex,
+					end: selectionRange.endIndex
+				}
+			}
 		}
-		console.log(newAnnotation)
-		console.log('Annotations: ', annotations)
-		setAnnotations((prevAnnotations) => [...prevAnnotations, newAnnotation])
-		console.log('Updated Annotations: ', annotations)
-		setShowAnnotationPopup(false)
-		setAnnotationText('')
+
+		try {
+			await createAnnotation(annotationData)
+			window.location.reload()
+			// setAnnotations((prevAnnotations) => [...prevAnnotations, annotationData])
+		} catch (error) {
+			console.error('Error creating annotation:', error)
+		} finally {
+			setShowAnnotationPopup(false)
+			setAnnotationText('')
+		}
 	}
 
 	const handleDeletePost = async (postId) => {
@@ -123,10 +173,10 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 						<CloseIcon />
 					</div>
 					<div className='mb-2'>
-						Selected Text: <strong>{selectionRange.text}</strong>
+						Selected Text: <strong>{selectionRange.value}</strong>
 					</div>
 					<div className='mb-2'>
-						Start: {selectionRange.start}, End: {selectionRange.end}
+						Start: {selectionRange.startIndex}, End: {selectionRange.endIndex}
 					</div>
 					<div>
 						<input

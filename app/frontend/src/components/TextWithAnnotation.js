@@ -9,7 +9,7 @@ const TextWithAnnotation = ({ text, annotations }) => {
 
 	sortedAnnotations.forEach((annotation, index) => {
 		const { startIndex, endIndex, value } = annotation
-		console.log(annotation, index)
+		console.log('--->', annotation, index)
 
 		parts.push(text.substring(lastIndex, startIndex))
 
