@@ -14,15 +14,33 @@ const LfgCard = ({ group, currentUser }) =>  {
         baseURL: `${process.env.REACT_APP_API_URL}`
     })
 
-    const isUserGroupMember = (user, group) => {
-        const userId = user.id;
-        const members = group.members;
-        const isMember = members.some(member => member.id === userId);
+    const [isMember, setIsMember] = React.useState(true);
 
-        return isMember;
+    const isUserGroupMember = async (user, group) => {
+        try {
+            const userId = user?.userId;
+            const members = group?.members;
+
+            if (!userId || !members) {
+                return false;
+            }
+
+            const isMember = members.some(member => member.userId === userId);
+            return isMember;
+        } catch (error) {
+            return false;
+        }
     };
 
-    const [isMember, setIsMember] = useState(isUserGroupMember(currentUser, group));
+    useEffect(() => {
+        const fetchIsMember = async () => {
+            const result = await isUserGroupMember(currentUser, group);
+            setIsMember(result);
+        };
+
+        fetchIsMember();
+    }, [currentUser, group]);
+
     const [isGroupFull, setIsGroupFull] = useState(false);
 
     useEffect(() => {
@@ -53,13 +71,10 @@ const LfgCard = ({ group, currentUser }) =>  {
             })
             .catch((error) => {
                 if (error.response) {
-                    // İstek yapıldı ve sunucu 2xx bir durum kodu döndü, ancak bir hata durumu içeriyordu
                     console.log("Error response from server:", error.response.data);
                 } else if (error.request) {
-                    // İstek yapıldı, ancak hiçbir yanıt alınmadı
                     console.log("No response received from server");
                 } else {
-                    // İstek yaparken bir hata oluştu
                     console.log("Error during request setup:", error.message);
                 }
             });
@@ -77,20 +92,17 @@ const LfgCard = ({ group, currentUser }) =>  {
                 console.log(123)
                 console.log(response);
                 if (response.status === 200) {
-                    setIsMember(true)
-                    console.log("joined group successfully")
+                    setIsMember(false)
+                    console.log("leaved group successfully")
                 }
                 window.location.reload();
             })
             .catch((error) => {
                 if (error.response) {
-                    // İstek yapıldı ve sunucu 2xx bir durum kodu döndü, ancak bir hata durumu içeriyordu
                     console.log("Error response from server:", error.response.data);
                 } else if (error.request) {
-                    // İstek yapıldı, ancak hiçbir yanıt alınmadı
                     console.log("No response received from server");
                 } else {
-                    // İstek yaparken bir hata oluştu
                     console.log("Error during request setup:", error.message);
                 }
             });
