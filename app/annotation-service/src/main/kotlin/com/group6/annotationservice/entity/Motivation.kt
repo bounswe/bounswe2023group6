@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 @Entity
 class Motivation(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     var value: String = ""
 )

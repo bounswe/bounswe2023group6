@@ -4,6 +4,8 @@ import jakarta.persistence.*
 import lombok.Data
 import lombok.NoArgsConstructor
 import java.time.LocalDateTime
+
+
 @Entity
 @NoArgsConstructor
 @Data
@@ -14,11 +16,20 @@ data class Annotation(
     val type: String = "Annotation",
     val created: LocalDateTime? = LocalDateTime.now(),
     val creator: String? = null,
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    @JoinColumn(name = "annotation_id")
+
+    @ManyToMany(cascade = [CascadeType.ALL])
     val motivation: List<Motivation>? = null, // i.e. listOf("commenting", "tagging")
-    @OneToMany(mappedBy = "annotation",cascade = [CascadeType.ALL], orphanRemoval = true)
+
+    @ManyToMany(cascade = [CascadeType.ALL])
     var body: List<Body>? = null,
-    @OneToMany(mappedBy = "annotation",cascade = [CascadeType.ALL], orphanRemoval = true)
-    var target: List<Target> = ArrayList()
+
+    @ManyToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "target_id")
+    var target: Target? = null,
+
+    @ManyToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "selector_id")
+    var selector: Selector? = null
+
+
 )
