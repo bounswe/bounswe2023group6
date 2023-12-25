@@ -23,6 +23,8 @@ class GameService {
   final BaseNetworkService service = BaseNetworkService();
 
   static const String _getGames = "/game";
+  static const String _getRecommendedGames = "/game/recommended";
+
   static List<Game> gameList = [
     Game(
       gameId: 1,
@@ -161,6 +163,28 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
           .map((e) => e.game!)
           .where((game) => game.status == "APPROVED")
           .toList();
+      return games;
+    } else {
+      throw Exception('Failed to load games');
+    }
+  }
+
+  Future<List<Game>> getRecommendedGames() async {
+    ServiceResponse<MultipleGameAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleGameAsDTO>(
+      _getRecommendedGames,
+      null,
+      MultipleGameAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Game> games = response.responseConverted!.games!.map((e) => e.game!)
+      .where((game) => game.status == "APPROVED")
+      .toList();
+      if (games.isEmpty) {
+        games = await getGames();
+      }
       return games;
     } else {
       throw Exception('Failed to load games');

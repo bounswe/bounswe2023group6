@@ -143,11 +143,18 @@ class _GameWikiPageState extends State<GameWikiPage>
 
   Future<Game> loadGame(int gameId) async {
     Game game = await gameService.getGame(gameId);
-    List<Post> postList = await postService.getPosts();
-    List<Game> similarGames = await gameService.getGames();
+    List<Post> postList = await postService.getPostsByGame(gameId);
+    if (game.similarGameIds.isEmpty) {
+      game.similarGameList = await gameService.getRecommendedGames();
+    } else {
+      List<Game> allGames = await gameService.getGames();
+      List<Game> similarGames = allGames
+          .where((element) => game.similarGameIds.contains(element.gameId))
+          .toList();
+      game.similarGameList = similarGames;
+    }
 
     game.relatedPosts = postList;
-    game.similarGameList = similarGames;
 
     return game;
   }
