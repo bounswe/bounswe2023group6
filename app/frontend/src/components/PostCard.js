@@ -28,7 +28,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 						{params.postId && (
 							<button
 								onClick={() => handleDeletePost(post.postId)}
-								className='btn btn-circle btn-sm bg-red-600 text-white hover:bg-red-800'
+								className='btn btn-sm bg-neutral-200 border-none hover:bg-neutral-300'
 								title='Delete Post'
 							>
 								🗑️

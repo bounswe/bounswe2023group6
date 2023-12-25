@@ -153,7 +153,7 @@ const Navbarx = () => {
 								isBordered
 								as='button'
 								className='transition-transform'
-								color='secondary'
+								color='default'
 								name='Jason Hughes'
 								size='sm'
 								src={userImage}
@@ -192,15 +192,15 @@ const Navbarx = () => {
 						</DropdownMenu>
 					</Dropdown>
 				) : windowWidth < 768 ? (
-					<Button color='primary' variant='shadow' size='md' onClick={navigateToLogin}>
+					<Button color='default' variant='faded' size='md' onClick={navigateToLogin}>
 						Log In
 					</Button>
 				) : (
 					<div className='flex'>
-						<Button color='primary' variant='shadow' size='md' onClick={navigateToLogin}>
+						<Button color='default' variant='faded' size='md' onClick={navigateToLogin}>
 							Log In
 						</Button>
-						<Button color='primary' variant='faded' size='md' style={{ marginLeft: 12 }} onClick={navigateToSignup}>
+						<Button color='default' variant='faded' size='md' style={{ marginLeft: 12 }} onClick={navigateToSignup}>
 							Sign Up
 						</Button>
 					</div>

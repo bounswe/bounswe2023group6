@@ -135,7 +135,7 @@ export default function HomePage() {
 		  <div className='flex w-full items-center justify-center mt-4'><h1><b>Games</b></h1></div>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
             <div>
-				{gamesData.map((game) => (
+				{gamesData.filter(game => game.status === 'APPROVED').map((game) => (
 					<Game key={game.gameId} game={game} />
 				))}
 			</div>

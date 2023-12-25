@@ -61,8 +61,8 @@ const AdminPanel = () => {
                   <div>Description: {game.description}</div>
                   <div>Player Number: {game.playerNumber}</div>
                   <div>Release Year: {game.releaseYear}</div>
-                  <div>Genre: {game.genre}</div>
-                  <div>Platform: {game.platform}</div>
+                  <div>Genre: {game.genres}</div>
+                  <div>Platform: {game.platforms}</div>
                   <div>Universe: {game.universe}</div>
                   <div>Mechanics: {game.mechanics}</div>
                   <div>Playtime: {game.playtime}</div>
