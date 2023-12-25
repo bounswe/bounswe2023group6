@@ -8,15 +8,16 @@ import { ForumPage } from './pages/ForumPage'
 import { PostPage } from './pages/PostPage'
 import { NextUIProvider } from '@nextui-org/react'
 import { GameForum } from './pages/GameForum'
-import { LfgPage } from "./pages/LfgPage";
-import Lfg from "./pages/LfgPage/Lfg";
+import { LfgPage } from './pages/LfgPage'
+import Lfg from './pages/LfgPage/Lfg'
 import { AdminPanel } from './pages/AdminPanel'
-
+import Search from './pages/Search/Search'
 const App = () => (
 	<NextUIProvider disableBaseline='true'>
 		<BrowserRouter>
 			<Routes>
 				<Route exact path='/' element={<HomePage />} />
+				<Route exact path='/search' element={<Search />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/users/:username' element={<ProfilePage />} />
 				<Route path='/forgot-password' element={<ForgotPassword />} />
@@ -36,4 +37,3 @@ const App = () => (
 )
 
 export default App
-
