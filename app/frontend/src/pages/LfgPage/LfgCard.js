@@ -34,11 +34,11 @@ const LfgCard = ({ group, currentUser }) =>  {
 
     const navigate = useNavigate()
 
-    const joinGroup = () => {
+    const joinGroup = async () => {
         console.log(group)
         console.log(isMember)
         axiosInstance.defaults.withCredentials = true;
-        axiosInstance.post(`/lfg/${group.lfgId}/join`,
+        await axiosInstance.post(`/lfg/${group.lfgId}/join`,
             {
             withCredentials: true
             })
@@ -65,11 +65,11 @@ const LfgCard = ({ group, currentUser }) =>  {
             });
     };
 
-    const leaveGroup = () => {
+    const leaveGroup = async () => {
         console.log(group)
         console.log(isMember)
         axiosInstance.defaults.withCredentials = true;
-        axiosInstance.post(`/lfg/${group.lfgId}/leave`,
+        await axiosInstance.post(`/lfg/${group.lfgId}/leave`,
             {
                 withCredentials: true
             })
