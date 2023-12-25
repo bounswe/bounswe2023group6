@@ -194,7 +194,13 @@ class _SearchWidgetState extends State<SearchWidget> {
           itemCount: games.length,
           itemBuilder: (BuildContext context, int index) {
             Game game = games[index];
-            return GameCard(game: game);
+            return InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, "/game",
+                    arguments: game.gameId);
+              },
+              child: GameCard(game: game)
+              );
           },
         );
       }
