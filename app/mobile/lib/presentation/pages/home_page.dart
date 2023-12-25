@@ -26,14 +26,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<Post>> loadPosts() async {
  
-    List<Post> postList = await postService.getPosts();
+    List<Post> postList = await postService.getRecommendedPosts();
 
     return postList;
   }
 
   Future<List<Game>> loadGames() async {
 
-    List<Game> gameList = await gameService.getGames();
+    List<Game> gameList = await gameService.getRecommendedGames();
 
     return gameList;
   }
