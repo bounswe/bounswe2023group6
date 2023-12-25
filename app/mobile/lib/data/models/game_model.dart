@@ -5,7 +5,7 @@ class Game {
   final int gameId;
   final String title;
   final String description;
-  
+
   String? developers;
   List<String>? genres;
   List<String>? platforms;
@@ -21,6 +21,7 @@ class Game {
   String? creationDate;
   final String gamePicture;
 
+  List<int> similarGameIds;
   List<Game> similarGameList;
   List<Post> relatedPosts;
   String? status;
@@ -42,6 +43,7 @@ class Game {
     this.creationDate,
     required this.gamePicture,
     this.developers,
+    this.similarGameIds = const [],
     this.similarGameList = const [],
     this.relatedPosts = const [],
     this.status
@@ -52,8 +54,12 @@ class Game {
       gameId: json['gameId'],
       title: json['title'],
       description: json['description'],
-      genres: json["genres"] != null ? List<String>.from(json["genres"].map((x) => x)) : [],
-      platforms: json["platforms"] != null ? List<String>.from(json["platforms"].map((x) => x)) : [],
+      genres: json["genres"] != null
+          ? List<String>.from(json["genres"].map((x) => x))
+          : [],
+      platforms: json["platforms"] != null
+          ? List<String>.from(json["platforms"].map((x) => x))
+          : [],
       playerNumber: json['playerNumber'],
       releaseYear: json['releaseYear'],
       universe: json['universe'],
@@ -64,7 +70,14 @@ class Game {
       averageRating: json['averageRating'],
       creationDate: json['creationDate'],
       gamePicture: json['gamePicture'],
-      status: json['status']
+      status: json['status'],
+      characters: json['characters'] != null
+          ? List<Character>.from(
+              json["characters"].map((x) => Character.fromJson(x)))
+          : [],
+      similarGameIds: json['similarGames'] != null
+          ? List<int>.from(json["similarGames"].map((x) => x))
+          : [],
     );
   }
 
@@ -76,6 +89,7 @@ class Game {
       'genres': genres,
       'platforms': platforms,
       'playerNumber': playerNumber,
+      'releaseYear': releaseYear,
       'universe': universe,
       'mechanics': mechanics,
       'playtime': playtime,
@@ -85,6 +99,8 @@ class Game {
       'creationDate': creationDate,
       'gamePicture': gamePicture,
       'status': status,
+      'characters': characters,
+      'similarGames': similarGameIds,
     };
   }
 }

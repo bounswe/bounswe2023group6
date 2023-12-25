@@ -25,6 +25,7 @@ class PostService {
   static PostService get instance => _instance;
 
   static const String _getPosts = "/forum/posts";
+  static const String _getRecommendedPosts = "/forum/posts/recommended";
   static const String _getPost = "/forum/posts";
   static const String _createPost = "/forum/posts";
   static const String _updatePost = "/forum/posts";
@@ -157,6 +158,29 @@ class PostService {
       return posts;
     } else {
       throw Exception('Failed to load posts');
+    }
+  }
+
+  Future<List<Post>> getRecommendedPosts() async {
+    ServiceResponse<MultipleContentAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
+      _getRecommendedPosts,
+      null,
+      MultipleContentAsDTO(),
+      'GET',
+    );
+    if (response.success) {
+      List<Post> posts = response.responseConverted!.posts!
+          .map((e) => e.content! as Post)
+          .toList();
+      
+      if (posts.isEmpty) {
+        posts = await getPosts();
+      }
+
+      return posts;
+    } else {
+      throw Exception('Failed to load recommended post');
     }
   }
 
