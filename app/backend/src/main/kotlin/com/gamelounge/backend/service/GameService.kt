@@ -1,7 +1,6 @@
 package com.gamelounge.backend.service
 
-import com.gamelounge.backend.constant.GameGenre
-import com.gamelounge.backend.constant.GamePlatform
+import com.gamelounge.backend.constant.*
 import com.gamelounge.backend.entity.*
 import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.middleware.SessionAuth
@@ -86,17 +85,19 @@ class GameService(
 
         // Convert platform strings to GamePlatform enum values
         val platforms = editedGame.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
-
+        val playernumber = NumberOfPlayers.valueOf(editedGame.playerNumber)
+        var universe = UniverseInfo.valueOf(editedGame.universe)
+        var gamemechanics = GameMechanics.valueOf(editedGame.mechanics)
         val requestEditingGame = RequestedEditingGame(
                 gameId = gameId,
                 title = editedGame.title,
                 description = editedGame.description,
                 genres = genres,
                 platforms = platforms,
-                playerNumber = editedGame.playerNumber,
+                playerNumber = playernumber,
                 releaseYear = editedGame.releaseYear,
-                universe = editedGame.universe,
-                mechanics = editedGame.mechanics,
+                universe = universe,
+                mechanics = gamemechanics,
                 playtime = editedGame.playtime,
         )
         //editedGameRepository.save(requestEditingGame) // save to get gameId for image name
