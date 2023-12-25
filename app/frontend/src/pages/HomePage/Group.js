@@ -1,11 +1,12 @@
 import React from 'react'
 import {Link} from "react-router-dom";
+import profileIcon from "./profile.jpg";
 
 const Group = ({ item }) => {
 	return (
 		<div className='card compact bg-neutral-200 text-neutral-800 shadow-xl m-2'>
 			<figure className='px-4 pt-4'>
-				<img src={item.profilePicture} alt='Group' className='rounded-lg h-20 w-20 object-cover' />
+				<img src={item.profilePicture || profileIcon} alt='Group' className='rounded-lg h-20 w-20 object-cover' />
 			</figure>
 			<div className='card-body'>
 				<h2 className='card-title text-neutral-700'>{item.title}</h2>
@@ -25,4 +26,4 @@ const Group = ({ item }) => {
 	)
 }
 
-export default Group
+           export default Group;
