@@ -18,7 +18,7 @@ const App = () => (
 			<Routes>
 				<Route exact path='/' element={<HomePage />} />
 				<Route path='/login' element={<Login />} />
-				<Route path='/profile-page' element={<ProfilePage />} />
+				<Route path='/users/:username' element={<ProfilePage />} />
 				<Route path='/forgot-password' element={<ForgotPassword />} />
 				<Route path='/signup' element={<Signup />} />
 				<Route path='/reset-password' element={<ResetPassword />} />
