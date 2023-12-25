@@ -1,5 +1,6 @@
 import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/lfg_service.dart';
 
 class LFG extends Content {
@@ -7,6 +8,7 @@ class LFG extends Content {
   String? requiredLanguage;
   bool? micCamRequirement;
   int? memberCapacity;
+  List<User>? members;
 
   LFG({
     required int id,
@@ -27,6 +29,7 @@ class LFG extends Content {
     this.requiredLanguage,
     this.micCamRequirement,
     this.memberCapacity,
+    this.members,
   }) : super(
           id: id,
           content: description,
@@ -67,7 +70,11 @@ class LFG extends Content {
         requiredPlatform: json['requiredPlatform'],
         requiredLanguage: json['requiredLanguage'],
         micCamRequirement: json['micCamRequirement'],
-        memberCapacity: json['memberCapacity']);
+        memberCapacity: json['memberCapacity'],
+        members: json["members"] != null
+            ? List<User>.from(json["members"].map((x) => User.fromJson(x)))
+            : null,
+        );
   }
 
   Map<String, dynamic> toJson() {
