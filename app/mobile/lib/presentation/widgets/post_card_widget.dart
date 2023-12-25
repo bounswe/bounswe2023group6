@@ -18,24 +18,11 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  late bool isLoggedIn;
-
-  @override
-  void initState() {
-    super.initState();
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (!isLoggedIn) {
+        if (!CacheManager().isUserLoggedInNotifier.value) {
           Navigator.pushNamed(context, '/login');
         } else {
           Navigator.pushNamed(context, '/post', arguments: widget.post.id)
@@ -63,7 +50,7 @@ class _PostCardState extends State<PostCard> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             userInformationSection(context, widget.post.ownerUsername,
                 widget.post.ownerProfileImage,
-                isLoggedIn: isLoggedIn),
+                isLoggedIn: CacheManager().isUserLoggedInNotifier.value),
             postContentSection(widget.post),
           ]),
         ),

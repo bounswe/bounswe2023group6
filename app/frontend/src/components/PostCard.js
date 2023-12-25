@@ -8,6 +8,7 @@ import TextWithAnnotations from '../components/TextWithAnnotation'
 import CloseIcon from '@mui/icons-material/Close'
 import { createAnnotation, getAnnotationsByTarget } from '../services/AnnotationService'
 import { v4 as uuidv4 } from 'uuid'
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 	const isCurrentUserCreator = currentUser && post.creatorUser.username === currentUser.username
@@ -139,7 +140,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 								className='btn btn-sm bg-neutral-200 border-none hover:bg-neutral-300'
 								title='Delete Post'
 							>
-								🗑️
+								<DeleteIcon sx={{ color: '#404040' }} />
 							</button>
 						)}
 					</>
@@ -150,7 +151,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 					</button>
 				)}
 			</div>
-			<div>
+			<div className='flex-col m-4'>
 				<h3 className='text-2xl font-bold text-[#b46161] hover:text-[#8c4646] p-2'>
 					<a href={`/posts/${post.postId}`} className='no-underline link'>
 						{post.title}
@@ -248,7 +249,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default PostCard
+export default PostCard;
