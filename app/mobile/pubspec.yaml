@@ -21,6 +21,8 @@ dependencies:
   flutter_phoenix: "^1.0.0"
   image_picker: ^0.8.4
   timeago: ^3.6.0
+  uuid: ^4.2.2
+
   multiselect_formfield: ^0.1.7
 
 

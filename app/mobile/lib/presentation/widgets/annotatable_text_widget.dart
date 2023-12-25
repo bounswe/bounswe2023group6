@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/annotation_model.dart';
-import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/annotation_service.dart';
 import 'package:mobile/utils/cache_manager.dart';
 
@@ -12,33 +11,21 @@ class AnnotatableTextWidget extends StatelessWidget {
 
   final String text;
   final int contentId;
+  final AnnotationContext contentContext;
 
-  AnnotatableTextWidget({Key? key, required this.text, required this.contentId})
+  final annotationTextController = TextEditingController();
+
+  AnnotatableTextWidget(
+      {Key? key,
+      required this.text,
+      required this.contentId,
+      required this.contentContext})
       : super(key: key);
 
-  Future<List<Annotation>> loadAnnotations() async {
-    // TODO: get annotations from the backend using contentId
-    // List<Annotation> annotations = await annotationService.getAnnotations(contentId);
-    List<Annotation> annotations = [
-      Annotation(
-        startIndex: 0,
-        endIndex: min(5, text.length),
-        authorUsername: "user1",
-        annotation: "This is an annotation",
-      ),
-      Annotation(
-        startIndex: 2,
-        endIndex: min(5, text.length),
-        authorUsername: "user2",
-        annotation: "This is another annotation",
-      ),
-      Annotation(
-        startIndex: min(8, text.length),
-        endIndex: min(13, text.length),
-        authorUsername: "user1",
-        annotation: "This is another annotation",
-      ),
-    ];
+  Future<List<TextAnnotation>> loadAnnotations() async {
+    List<TextAnnotation> annotations = await annotationService
+        .getAnnotationsByTargetId(contentContext, contentId)
+        .then((value) => value.whereType<TextAnnotation>().toList());
     return annotations;
   }
 
@@ -75,7 +62,7 @@ class AnnotatableTextWidget extends StatelessWidget {
   }
 
   Future<List<MultipleAnnotation>> loadAndMergeAnnotations() async {
-    List<Annotation> annotations = await loadAnnotations();
+    List<TextAnnotation> annotations = await loadAnnotations();
     annotations.sort((a, b) => a.startIndex.compareTo(b.startIndex));
     List<MultipleAnnotation> mergedAnnotations = [];
     int currentIndex = 0;
@@ -138,7 +125,7 @@ class AnnotatableTextWidget extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            for (Annotation annotation in mergedAnnotations.annotations)
+            for (TextAnnotation annotation in mergedAnnotations.annotations)
               showAnnotation(annotation)
           ],
         ),
@@ -167,7 +154,7 @@ class AnnotatableTextWidget extends StatelessWidget {
     );
   }
 
-  Widget showAnnotation(Annotation annotation) {
+  Widget showAnnotation(TextAnnotation annotation) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(8),
@@ -249,13 +236,19 @@ class AnnotatableTextWidget extends StatelessWidget {
       title: const Text("Make an annotation"),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       content: TextFormField(
-        key: GlobalObjectKey(UniqueKey()),
+        controller: annotationTextController,
         keyboardType: TextInputType.multiline,
         maxLength: 500,
         decoration: const InputDecoration(
             border: OutlineInputBorder(),
             hintText: "Enter your annotation here"),
         maxLines: 8,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Please enter an annotation";
+          }
+          return null;
+        },
       ),
       actions: [
         TextButton(
@@ -263,17 +256,17 @@ class AnnotatableTextWidget extends StatelessWidget {
           child: const Text("Cancel"),
         ),
         TextButton(
-          onPressed: () {
-            // TODO: get and send the annotation to the backend using contentId
-            // await annotationService.createAnnotation(
-            //   Annotation(
-            //     startIndex: startIndex,
-            //     endIndex: endIndex,
-            //     authorUsername: CacheManager().getUser().username,
-            //     annotation: highlightedText,
-            //   ),
-            // );
-            Navigator.pop(context);
+          onPressed: () async {
+            TextAnnotation annotation = TextAnnotation(
+              startIndex: startIndex,
+              endIndex: endIndex,
+              authorUsername: CacheManager().getUser().username,
+              annotation: annotationTextController.text,
+              contextId: contentId,
+              context: contentContext,
+            );
+            await annotationService.createAnnotation(annotation);
+            Navigator.of(context).pop("Annotation saved");
           },
           child: const Text("Submit"),
         ),
