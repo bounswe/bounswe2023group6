@@ -245,7 +245,7 @@ class _GroupPageState extends State<GroupPage> {
                           children: [
                             InkWell(
                               onTap: () {
-                                
+                                _dialogBuilder(context);
                               },
                               child: Icon(Icons.people)
                             ),
@@ -354,7 +354,7 @@ class _GroupPageState extends State<GroupPage> {
             break;
           case ContentMoreOptions.goToGamePage:
             print("go to game page ${lfg.relatedGameId}");
-            // Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
+            Navigator.pushNamed(context, '/game', arguments: lfg.relatedGameId);
             break;
           default:
             break;
@@ -543,4 +543,28 @@ class _GroupPageState extends State<GroupPage> {
           ContentCardWidget(content: comment, isReply: true),
         ]));
   }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Member List'),
+          content: Container(
+            height: 300.0, // Change as per your requirement
+            width: 300.0, // Change as per your requirement
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: selectedLFG.members!.length ,
+              itemBuilder: (BuildContext context, int index) {
+                return userInformationSection(context, selectedLFG.members![index].username, selectedLFG.members![index].profilePicture);
+              },
+            ),
+          ),
+        );
+      }
+    );
+  }
+
 }
