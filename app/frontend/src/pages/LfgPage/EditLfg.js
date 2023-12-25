@@ -20,20 +20,21 @@ import axios from 'axios'
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import {getAllGames} from "../../services/gameService";
+import EditIcon from "@mui/icons-material/Edit";
 
-export default function CreateLfg() {
-    const [open, setOpen] = useState(null)
+export default function EditLfg(props) {
+    const [open, setOpen] = useState(false)
     const { handleSubmit } = useForm()
-    const [title, setTitle] = useState(null)
-    const [description, setDescription] = useState(false)
-    const [requiredPlatform, setRequiredPlatform] = useState(null)
-    const [requiredLanguage, setRequiredLanguage] = useState(null)
-    const [micCamRequirement , setMicCamRequirement] = useState(false);
-    const [memberCapacity, setmemberCapacity] = useState(false)
+    const [title, setTitle] = useState(props.lfg.title)
+    const [description, setDescription] = useState(props.lfg.description)
+    const [requiredPlatform, setRequiredPlatform] = useState(props.lfg.requiredPlatform)
+    const [requiredLanguage, setRequiredLanguage] = useState(props.lfg.requiredLanguage)
+    const [micCamRequirement , setMicCamRequirement] = useState(props.lfg.micCamRequirement);
+    const [memberCapacity, setmemberCapacity] = useState(props.lfg.memberCapacity)
 //    const [gameId, setGameId] = useState(false)
     const [tags, setTags] = useState([]);
     const [currTag, setCurrTag] = useState("");
-    const [ setGames] = useState([]);
+//    const [games, setGames] = useState([]);
 
     const axiosInstance = axios.create({
         baseURL: `${process.env.REACT_APP_API_URL}`
@@ -41,16 +42,17 @@ export default function CreateLfg() {
 
     const handleClickOpen = () => {
         setOpen(true)
+        console.log(props.lfg)
+        console.log(props.lfg.title)
     }
 
     const handleClose = () => {
         setOpen(false)
-        clearData()
     }
 
     const onSubmit = () => {
         axiosInstance.defaults.withCredentials = true;
-        axiosInstance.post('/lfg', {
+        axiosInstance.put(`/lfg/${props.lfg.lfgId}`, {
             title,
             description,
             requiredPlatform,
@@ -73,15 +75,14 @@ export default function CreateLfg() {
             });
     };
 
-    const clearData = () => {
-        setTitle('')
-        setDescription('')
-        setRequiredPlatform('')
-        setRequiredLanguage('')
-        setMicCamRequirement(false)
-        setmemberCapacity('')
-        setTags([])
-    }
+    useEffect(() => {
+        setTitle(props.lfg.title);
+        setDescription(props.lfg.description);
+        setRequiredPlatform(props.lfg.requiredPlatform);
+        setRequiredLanguage(props.lfg.requiredLanguage);
+        setMicCamRequirement(props.lfg.micCamRequirement);
+        setmemberCapacity(props.lfg.memberCapacity);
+    }, [props.lfg]);
 
     const handleChange = (e) => {
         setCurrTag(e.target.value);
@@ -109,7 +110,8 @@ export default function CreateLfg() {
         const fetchGames = async () => {
             try {
                 const response = await getAllGames();
-                setGames(response.data)
+                console.log(response)
+                //setGames(response.data)
             } catch (error) {
                 console.error(error);
             }
@@ -123,9 +125,8 @@ export default function CreateLfg() {
 
     return (
         <div>
-            <Button variant='outlined' onClick={handleClickOpen}
-                    sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
-                Create Lfg
+            <Button onClick={handleClickOpen}>
+                <EditIcon sx={{ color: '#404040'}} />
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
@@ -139,15 +140,17 @@ export default function CreateLfg() {
                         label='Title'
                         required
                         fullWidth
+                        value={title}
                         margin='normal'
                         onChange={(event) => {
                             setTitle(event.target.value)
                         }}
                     />
                     <TextField
-                        label='Content'
+                        label='Description'
                         required
                         fullWidth
+                        value={description}
                         margin='normal'
                         multiline
                         minRows={4}
@@ -158,6 +161,7 @@ export default function CreateLfg() {
                     <TextField
                         label='Group Capacity'
                         required
+                        value={memberCapacity}
                         fullWidth
                         type='number'
                         margin='normal'
@@ -231,6 +235,7 @@ export default function CreateLfg() {
                     <FormControlLabel
                         control={
                             <Checkbox
+                                value={micCamRequirement}
                                 checked={micCamRequirement}
                                 onChange={handleCheckboxChange}
                             />
@@ -241,7 +246,7 @@ export default function CreateLfg() {
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button type='submit' onClick={handleSubmit(onSubmit)}>
-                        Create
+                        Edit
                     </Button>
                 </DialogActions>
             </Dialog>
