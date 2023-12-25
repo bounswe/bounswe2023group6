@@ -22,12 +22,12 @@ import Checkbox from "@mui/material/Checkbox";
 import {getAllGames} from "../../services/gameService";
 
 export default function CreateLfg() {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(null)
     const { handleSubmit } = useForm()
-    const [title, setTitle] = useState(false)
+    const [title, setTitle] = useState(null)
     const [description, setDescription] = useState(false)
-    const [requiredPlatform, setRequiredPlatform] = useState(false)
-    const [requiredLanguage, setRequiredLanguage] = useState(false)
+    const [requiredPlatform, setRequiredPlatform] = useState(null)
+    const [requiredLanguage, setRequiredLanguage] = useState(null)
     const [micCamRequirement , setMicCamRequirement] = useState(false);
     const [memberCapacity, setmemberCapacity] = useState(false)
 //    const [gameId, setGameId] = useState(false)
