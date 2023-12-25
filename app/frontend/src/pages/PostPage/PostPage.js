@@ -118,8 +118,9 @@ const PostPage = () => {
               />
             ))}
           </div>
-          <textarea 
-            className='w-full h-24 p-2 border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:border-gray-500'
+          <div className='p-4'>
+          <textarea
+            className='w-full h-24 p- border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:border-gray-500'
             placeholder='Add a comment...'
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -129,6 +130,7 @@ const PostPage = () => {
             className='w-20 h-10 p-2 bg-cyan-700 text-white rounded-lg shadow-md hover:bg-cyan-900 focus:outline-none'
             onClick={handleNewComment}
           >Send</button>
+          </div>
           </div>
         </div>
       </div>

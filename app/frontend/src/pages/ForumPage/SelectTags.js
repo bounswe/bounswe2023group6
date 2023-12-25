@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
@@ -8,6 +8,9 @@ import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
 
 const TagSelection = ({ tags, selectedTags, handleTagChange }) => {
+  const [showMore, setShowMore] = useState(false);
+  const maxTagsToShow = 5;
+
   const handleCheckboxChange = (event, tag) => {
     const updatedTags = event.target.checked
       ? [...selectedTags, tag]
@@ -16,7 +19,9 @@ const TagSelection = ({ tags, selectedTags, handleTagChange }) => {
     handleTagChange(updatedTags);
   };
 
-  const tagCheckboxes = tags.map((tag) => (
+  const visibleTags = showMore ? tags : tags.slice(0, maxTagsToShow);
+
+  const tagCheckboxes = visibleTags.map((tag) => (
     <FormControlLabel
       key={tag.name}
       control={
@@ -32,6 +37,12 @@ const TagSelection = ({ tags, selectedTags, handleTagChange }) => {
     />
   ));
 
+  const showMoreButton = tags.length > maxTagsToShow && (
+    <button className='mt-4 bg-neutral-300 p-2 rounded' onClick={() => setShowMore(!showMore)}>
+      {showMore ? 'Show Less' : 'Show More'}
+    </button>
+  );
+
   return (
     <Box sx={{ display: 'flex' }}>
       <FormControl sx={{ m: 2 }} component="fieldset" variant="standard">
@@ -39,6 +50,7 @@ const TagSelection = ({ tags, selectedTags, handleTagChange }) => {
         <FormGroup>
           {tagCheckboxes}
         </FormGroup>
+        {showMoreButton}
       </FormControl>
     </Box>
   );

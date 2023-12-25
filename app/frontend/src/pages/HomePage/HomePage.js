@@ -5,10 +5,8 @@ import Post from './Post'
 import Navbarx from '../../components/navbar/Navbar'
 import { getAllGames } from '../../services/gameService';
 import { getAllPosts } from '../../services/postService';
+import { getAllGroups } from '../../services/lfgService';
 import React, { useEffect, useState } from 'react';
-import hyrule from './hyrule.jpg';
-import victory_royale from './victory-royale.jpg';
-import rocket_league from './rocket-league.jpg';
 import kerimbahadir from './kerimbahadir.jpg';
 import zehrayildirim from './zehrayildirim.jpg';
 import mahmutdemir from './mahmutdemir.jpg';
@@ -18,6 +16,7 @@ import alikasap from './alikasap.jpg';
 export default function HomePage() {
 	const [gamesData, setGamesData] = useState([]);
 	const [postData, setPostData] = useState([]);
+	const [groupData, setGroupData] = useState([]);
 
 	useEffect(() => {
 		const fetchGames = async () => {
@@ -41,26 +40,18 @@ export default function HomePage() {
 		fetchPosts();
 	  }, []);
 
-	const groupData = [
-		{
-			image: hyrule,
-			header: '"Looking for a co-op adventure in Hyrule!"',
-			text: "Need a skilled squad for high-intensity chicken dinners! Who's in for some PUBG action? Let's conquer the battleground together! 🍗🔫",
-			players: '4/5'
-		},
-		{
-			image: victory_royale,
-			header: '"Searching for squadmates for some intense battle royale action!"',
-			text: "Building forts and taking names! Searching for fellow Fortnite warriors to join my squad. Let's get those Victory Royales! 🏰👑",
-			players: '4/5'
-		},
-		{
-			image: rocket_league,
-			header: 'Anyone for Rocket league',
-			text: "Ready to score some goals and pull off epic aerials? Looking for Rocket League teammates who can bring the heat on the field. Let's drive to victory! 🚗⚽",
-			players: '4/5'
-		}
-	]
+	useEffect(() => {
+    		const fetchGroups = async () => {
+    		try {
+    			const response = await getAllGroups();
+    			setGroupData(response.data);
+    		} catch (error) {
+    			console.log(error);
+    		}
+    		};
+
+    		fetchGroups();
+    	}, []);
 
 	const suggestionData = [
 		{
@@ -143,9 +134,9 @@ export default function HomePage() {
           <div className='flex flex-col w-1/3 ml-12 mr-12 pb-8'>
 		  <div className='flex w-full items-center justify-center mt-4'><h1><b>Groups</b></h1></div>
             {/* Take 1/2 width of the screen, flex elements in a column, add margin on the left and right */}
-            {groupData.map((item, key) => (
-              <Group item={item} key={key} />
-            ))}
+            {groupData.map((group) => (
+            					<Group key={group.lfgId} group={group} />
+            				))}
           </div>
 
 		  	<div className='flex flex-col w-1/3 ml-12 mr-12 pb-8'>

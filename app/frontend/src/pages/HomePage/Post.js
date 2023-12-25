@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import profileIcon from "./profile.jpg";
 
 const Post = ({ post }) => {
     return (
         <div className="card compact bg-neutral-200 text-neutral-800 shadow-xl m-2">
             <figure className="px-4 pt-4">
-                <img src={post.creatorUser.profilePicture} alt="Post" className="rounded-lg h-20 w-20 object-cover" />
+                <img src={post.creatorUser.profilePicture || profileIcon} alt="Post" className="rounded-lg h-20 w-20 object-cover" onError={(e) => {
+                   e.target.src = profileIcon;
+                   }}/>
             </figure>
             <div className="card-body">
                 <h2 className="card-title text-neutral-700">

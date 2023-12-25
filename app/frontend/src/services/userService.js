@@ -46,6 +46,18 @@ export const getCreatedGames = (sessionId) => {
   });
 };
 
+export const followUser = (sessionId, userId) => {
+  return axiosInstance.put(`/user/follow-user/${userId}`, {
+    		headers: { Cookie: `SESSIONID=${sessionId}` }
+    	});
+};
+
+export const unfollowUser = (sessionId, userId) => {
+  return axiosInstance.put(`/user/unfollow-user/${userId}`, {
+  		headers: { Cookie: `SESSIONID=${sessionId}` }
+  	});
+};
+
 export const getLikedCommentsByUserId = (userId) => {
   return axiosInstance.get(`/user/liked-comments/${userId}`);
 };
@@ -57,3 +69,9 @@ export const getLikedPostsByUserId = (userId) => {
 export const getCreatedPostsByUserId = (userId) => {
   return axiosInstance.get(`/user/created-posts/${userId}`);
 };
+
+export const getFollowings = (sessionId) => {
+	return axiosInstance.get('/user/get-followings', {
+		headers: { Cookie: `SESSIONID=${sessionId}` }
+	})
+}
