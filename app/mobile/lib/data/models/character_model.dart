@@ -16,7 +16,7 @@ class Character {
       characterId: json['characterId'],
       name: json['name'],
       description: json['description'],
-      gameId: json['gameId'],
+      gameId: json['gameID'],
     );
   }
 
@@ -25,7 +25,7 @@ class Character {
       'characterId': characterId,
       'title': name,
       'description': description,
-      'gameId': gameId,
+      'gameID': gameId,
     };
   }
 }
