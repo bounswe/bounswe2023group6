@@ -4,7 +4,7 @@ import EditPost from '../pages/ForumPage/EditPost'
 import { deletePost } from '../services/postService'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 	const isCurrentUserCreator = currentUser && post.creatorUser.username === currentUser.username ? true : false
@@ -32,7 +32,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 								className='btn btn-sm bg-neutral-200 border-none hover:bg-neutral-300'
 								title='Delete Post'
 							>
-		  					<DeleteIcon sx={{ color: '#404040' }} />
+								<DeleteIcon sx={{ color: '#404040' }} />
 							</button>
 						)}
 					</>
