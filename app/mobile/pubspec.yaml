@@ -23,6 +23,7 @@ dependencies:
   timeago: ^3.6.0
   uuid: ^4.2.2
 
+  multiselect_formfield: ^0.1.7
 
 
 

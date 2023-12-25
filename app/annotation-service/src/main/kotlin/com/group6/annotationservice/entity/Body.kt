@@ -2,9 +2,6 @@ package com.group6.annotationservice.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import com.group6.annotationservice.entity.Annotation
 
 @Entity
 data class Body(
@@ -16,7 +13,7 @@ data class Body(
     var format: String? = null, // e.g., "text/plain"
     var language: String? = null, // e.g., "en"
     var purpose: String? = null, // e.g., "commenting"
-    @ManyToOne
-    @JoinColumn(name = "annotation_id")
-    var annotation : Annotation = Annotation()
+//    @ManyToOne
+//    @JoinColumn(name = "annotation_id")
+//    var annotation : Annotation = Annotation()
 )

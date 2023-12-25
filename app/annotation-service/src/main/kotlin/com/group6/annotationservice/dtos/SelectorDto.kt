@@ -1,14 +1,18 @@
 package com.group6.annotationservice.dtos
 
-import lombok.AllArgsConstructor
-import lombok.Data
-import lombok.NoArgsConstructor
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-data class SelectorDto (
-    val type: String = "TextPositionSelector",
-    val startIndex: Int,  // Starting character position
-    val endIndex: Int     // Ending character position
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "type",
+    visible = true
+)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = TextPositionSelectorDto::class, name = "TextPositionSelector"),
+    JsonSubTypes.Type(value = FragmentSelectorDto::class, name = "FragmentSelector")
+)
+abstract class SelectorDto(
+    open val type: String = ""
 )

@@ -5,13 +5,13 @@ import 'package:mobile/presentation/pages/game_page_create.dart';
 import 'package:mobile/presentation/pages/game_wiki_page.dart';
 import 'package:mobile/presentation/pages/group_page.dart';
 import 'package:mobile/presentation/pages/lfg_page_create.dart';
+import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/pages/post/post_create_page.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/profile_page.dart';
 
 class CustomNavigator extends StatefulWidget {
-  CustomNavigator(
-      {super.key, required this.defaultPage});
+  CustomNavigator({super.key, required this.defaultPage});
   final GlobalKey<NavigatorState> defaultKey = GlobalObjectKey(UniqueKey());
   final Widget defaultPage;
 
@@ -43,6 +43,8 @@ class _CustomNavigatorState extends State<CustomNavigator> {
                   return const LFGPageCreate();
                 case "/group":
                   return GroupPage();
+                case "/login":
+                  return LoginPage();
                 default:
                   return widget.defaultPage;
               }
