@@ -67,6 +67,7 @@ class TextAnnotation extends BaseAnnotation {
   Map<String, dynamic> toJson() {
     // convert to json-ld format
     var annotationId = const Uuid().v4();
+    annotationId = "${NetworkConstants.BASE_LOCAL_URL}/annotation/text/$annotationId";
     return {
       "context": "http://www.w3.org/ns/anno.jsonld",
       "id": annotationId,
@@ -83,7 +84,7 @@ class TextAnnotation extends BaseAnnotation {
       ],
       "target": {
         "id":
-            "${NetworkConstants.BASE_PROD_URL}/${context.toString().split(".")[1]}/$contextId",
+            "${NetworkConstants.BASE_LOCAL_URL}/${context.toString().split(".")[1]}/$contextId",
         "type": "Text",
         "format": "text/html",
         "language": "en",
@@ -93,7 +94,7 @@ class TextAnnotation extends BaseAnnotation {
           "end": endIndex,
         },
       },
-      "creator": "${NetworkConstants.BASE_PROD_URL}/user/$authorUsername",
+      "creator": "${NetworkConstants.BASE_LOCAL_URL}/user/$authorUsername",
       "created": DateTime.now().toIso8601String(),
     };
   }
@@ -139,7 +140,7 @@ class ImageAnnotation extends BaseAnnotation {
   Map<String, dynamic> toJson() {
     // convert to json-ld format
     var annotationId = const Uuid().v4();
-    annotationId = "${NetworkConstants.BASE_PROD_URL}/image_$annotationId";
+    annotationId = "${NetworkConstants.BASE_LOCAL_URL}/annotation/image/$annotationId";
     return {
       "context": "http://www.w3.org/ns/anno.jsonld",
       "id": annotationId,
@@ -156,7 +157,7 @@ class ImageAnnotation extends BaseAnnotation {
       ],
       "target": {
         "id":
-            "${NetworkConstants.BASE_PROD_URL}/${context.toString().split(".")[1]}/$contextId",
+            "${NetworkConstants.BASE_LOCAL_URL}/${context.toString().split(".")[1]}/$contextId",
         "type": "Image",
         "format": "image/jpeg",
         "language": "en",
@@ -166,7 +167,7 @@ class ImageAnnotation extends BaseAnnotation {
           "value": "xywh=pixel:$x,$y,$width,$height",
         },
       },
-      "creator": "${NetworkConstants.BASE_PROD_URL}/user/$authorUsername",
+      "creator": "${NetworkConstants.BASE_LOCAL_URL}/user/$authorUsername",
       "created": DateTime.now().toIso8601String(),
     };
   }

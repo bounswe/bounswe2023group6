@@ -24,7 +24,7 @@ class AnnotationService {
   Future<List<BaseAnnotation>> getAnnotationsByTargetId(
       AnnotationContext context, int id) async {
     String targetId =
-        "${NetworkConstants.BASE_PROD_URL}/${context.toString().split(".")[1]}/$id";
+        "${NetworkConstants.BASE_LOCAL_URL}/${context.toString().split(".")[1]}/$id";
     GetAnnotationRequest request = GetAnnotationRequest(targetId: targetId);
 
     ServiceResponse<MultipleAnnotationDTO> response = await service
