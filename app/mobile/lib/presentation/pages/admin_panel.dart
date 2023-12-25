@@ -60,7 +60,7 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Admin Panel",showBackButton: false,),
+      appBar: CustomAppBar(title: "Admin Panel",showBackButton: true,),
       body: Column(
         children: [
           TabBar(
@@ -165,7 +165,7 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AdminPostReportPage(report: report!),
+                                    builder: (context) => AdminPostReportPage(report: report),
                                   ),
                                 );
                               },

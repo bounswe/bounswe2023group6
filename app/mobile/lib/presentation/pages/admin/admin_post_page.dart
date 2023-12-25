@@ -20,8 +20,22 @@ class AdminPostReportPage extends StatelessWidget {
       appBar: CustomAppBar(title: "Pending Game"),
       body: ListView(
         children: [
-          Text("Report Message:"),
-          Text(report.reason),
+          RichText(
+            text: TextSpan(
+            style: TextStyle(color: Colors.black),
+            children: <TextSpan>[
+              TextSpan(
+                text: "Report Message: ",
+                style:
+                    TextStyle(fontWeight: FontWeight.w600, fontSize: 16 ),
+              ),
+              TextSpan(
+                text: report.reason,
+                style:
+                    TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              ),                                  
+            ],
+          )), 
           PostCardAdmin(post: report.reportedPost!),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -30,23 +44,25 @@ class AdminPostReportPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                     bool success = await adminService.deletePost(report.reportedPost!.id);
-                     if (success) {
-                      Navigator.pop(context);
-                     }
-                  },
-                  child: Text("Delete"),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
                      bool success = await adminService.cancelPost(report.reportedPost!.id);
                      if (success) {
                       Navigator.pop(context);
                      }                  
                   },
-                  style: ElevatedButton.styleFrom(primary: Colors.red),
                   child: Text("Cancel"),
+                ),                
+                ElevatedButton(
+                  onPressed: () async {
+                     bool success = await adminService.deletePost(report.reportedPost!.id);
+                     if (success) {
+                      Navigator.pop(context);
+                     }
+                  },
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
+
+                  child: Text("Delete"),
                 ),
+
                 ElevatedButton(
                   onPressed: () async {
                      bool success = await adminService.banUserPost(report.reportedPost!.id);
