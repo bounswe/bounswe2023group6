@@ -3,6 +3,8 @@ import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/presentation/widgets/alert_widget.dart';
 import 'package:mobile/presentation/widgets/lfg_card_widget.dart';
+import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class GridViewState extends State {
   int countValue = 2;
@@ -12,6 +14,20 @@ class GridViewState extends State {
 
   static List<LFG> getImageDataList() {
     return LFGService.lfgList;
+  }
+
+  late bool isLoggedIn;
+
+  @override
+  void initState() {
+    super.initState();
+
+    try {
+      isLoggedIn = true;
+      CacheManager().getUser();
+    } catch (e) {
+      isLoggedIn = false;
+    }
   }
 
   changeMode() {
@@ -53,8 +69,12 @@ class GridViewState extends State {
           children: itemList
               .map((data) => GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, "/group",
-                      arguments: data.id);
+                    if (!isLoggedIn) {
+                      Navigator.pushNamed(context, '/login');
+                    } else {
+                      Navigator.pushNamed(context, "/group",
+                          arguments: data.id);
+                    }
                   },
                   child: LFGCard(lfg: data)))
               .toList(),
