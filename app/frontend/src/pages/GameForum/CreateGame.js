@@ -57,8 +57,8 @@ export default function CreateGame() {
 		document.getElementById('imageInput').click()
 	}
 
-	const predefinedGenres = ['Action', 'Adventure', 'Role-playing (RPG)', 'Simulation', 'Strategy', 'Sports', 'Horror']
-	const predefinedPlatforms = ['PC', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile']
+	const predefinedGenres = ['MOBA', 'FIGHTING', 'STRATEGY', 'SPORTS_AND_RACING', 'RPG', 'SHOOTER']
+	const predefinedPlatforms = ['PS', 'PlayStation', 'Xbox', 'Nintendo Switch', 'Mobile']
 
 	const [selectedGenres, setSelectedGenres] = useState([])
 	const [selectedPlatforms, setSelectedPlatforms] = useState([])
