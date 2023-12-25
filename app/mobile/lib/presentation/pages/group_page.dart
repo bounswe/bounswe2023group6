@@ -277,8 +277,7 @@ class _GroupPageState extends State<GroupPage> {
             // );
             break;
           case ContentMoreOptions.goToGamePage:
-            print("go to game page ${lfg.relatedGameId}");
-            // Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
+            Navigator.pushNamed(context, '/game', arguments: lfg.relatedGameId);
             break;
           default:
             break;
@@ -301,7 +300,7 @@ class _GroupPageState extends State<GroupPage> {
             value: ContentMoreOptions.report,
             child: Text('Report'),
           ),
-        if (lfg.relatedGameId != 0)
+        if (lfg.relatedGameId != null && lfg.relatedGameId != 0)
           const PopupMenuItem<ContentMoreOptions>(
             value: ContentMoreOptions.goToGamePage,
             child: Text('Go to game page'),
