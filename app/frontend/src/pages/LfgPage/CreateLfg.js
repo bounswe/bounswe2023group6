@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import {
     Dialog,
     DialogTitle,
@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import {getAllGames} from "../../services/gameService";
 
 export default function CreateLfg() {
     const [open, setOpen] = useState(false)
@@ -32,7 +33,7 @@ export default function CreateLfg() {
 //    const [gameId, setGameId] = useState(false)
     const [tags, setTags] = useState([]);
     const [currTag, setCurrTag] = useState("");
-
+    const [ setGames] = useState([]);
 
     const axiosInstance = axios.create({
         baseURL: `${process.env.REACT_APP_API_URL}`
@@ -103,6 +104,19 @@ export default function CreateLfg() {
     const handleCheckboxChange = () => {
         setMicCamRequirement(!micCamRequirement);
     };
+
+    useEffect(() => {
+        const fetchGames = async () => {
+            try {
+                const response = await getAllGames();
+                setGames(response.data)
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchGames();
+    }, []);
 
     const languages = ['TUR', 'EN']
     const platforms = ["XBOX", "COMPUTER", "PS", "ONBOARD", "EMPTY"]
