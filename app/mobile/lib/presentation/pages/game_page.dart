@@ -10,6 +10,7 @@ import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/game_grid_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class GamePage extends StatefulWidget {
   GamePage({Key? key}) : super(key: key);
@@ -38,12 +39,7 @@ class _GamePageState extends State<GamePage> {
       },
       key: _gridKey,
     );
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
+    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
   }
 
   @override

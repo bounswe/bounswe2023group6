@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PostCard extends StatefulWidget {
@@ -22,12 +23,7 @@ class _PostCardState extends State<PostCard> {
   @override
   void initState() {
     super.initState();
-    try {
-      CacheManager().getUser();
-      isLoggedIn = true;
-    } catch (e) {
-      isLoggedIn = false;
-    }
+    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
   }
 
   @override

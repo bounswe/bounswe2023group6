@@ -8,6 +8,7 @@ import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class ForumPage extends StatefulWidget {
   const ForumPage({super.key});
@@ -22,12 +23,7 @@ class _ForumPageState extends State<ForumPage> {
   @override
   void initState() {
     super.initState();
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
+    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
   }
 
   @override

@@ -16,6 +16,7 @@ import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class GameWiki extends StatefulWidget {
   const GameWiki({super.key});
@@ -30,12 +31,7 @@ class _GameWikiState extends State<GameWiki> {
   @override
   void initState() {
     super.initState();
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
+    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
   }
 
   @override

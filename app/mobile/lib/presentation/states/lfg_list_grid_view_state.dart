@@ -4,6 +4,7 @@ import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/presentation/widgets/alert_widget.dart';
 import 'package:mobile/presentation/widgets/lfg_card_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class GridViewState extends State {
   int countValue = 2;
@@ -21,12 +22,7 @@ class GridViewState extends State {
   void initState() {
     super.initState();
 
-    try {
-      CacheManager().getUser();
-      isLoggedIn = true;
-    } catch (e) {
-      isLoggedIn = false;
-    }
+    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
   }
 
   changeMode() {

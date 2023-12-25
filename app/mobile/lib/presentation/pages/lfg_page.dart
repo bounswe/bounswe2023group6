@@ -5,6 +5,7 @@ import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/lfg_grid_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class LFGPage extends StatefulWidget {
   LFGPage({Key? key}) : super(key: key);
@@ -33,12 +34,7 @@ class _LFGPageState extends State<LFGPage> {
       },
       key: _gridKey,
     );
-    try {
-      CacheManager().getUser();
-      isLoggedIn = true;
-    } catch (e) {
-      isLoggedIn = false;
-    }
+    isLoggedIn = SharedManager().checkString(SharedKeys.sessionId);
   }
 
   @override
