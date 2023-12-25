@@ -150,14 +150,16 @@ const LfgCard = ({ group, currentUser }) =>  {
                     </a>
                 </h3>
                 <p className='text-neutral-700 mb-4'>{group.description}</p>
-                <div className='border-b-2 border-t-2 border-neutral-400 pb-2 mt-4 opacity-75 mb-4 md:grid md:grid-cols-2 md:gap-4'>
+                <div className='border-b-2 border-t-2 border-neutral-400 pb-3 mt-4 opacity-75 mb-4 md:grid md:grid-cols-3 md:gap-4'>
                     <div>
-                        <p className='font-bold'>Game: {group.relatedGame}</p>
+                        <p className='font-bold'>Platform: {group.requiredPlatform}</p>
+                    </div>
+                    <div>
                         <p className='font-bold'>Language: {group.requiredLanguage}</p>
                     </div>
                     <div>
-                        <p className='font-bold'>Platform: {group.requiredPlatform}</p>
                         <p className='font-bold'>Mic/Cam: {group.micCamRequirement ? "yes" : "no"}</p>
+                        {false && <p className='font-bold'>Game: {group.relatedGame}</p>}
                     </div>
                 </div>
                 <div className='flex justify-between items-center'>

@@ -130,7 +130,7 @@ export default function EditLfg(props) {
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
-                    Create Lfg
+                    Edit Lfg
                     <IconButton edge='end' color='inherit' onClick={handleClose} sx={{ position: 'absolute', right: 8, top: 8 }}>
                         <CloseIcon />
                     </IconButton>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Navbarx from '../../components/navbar/Navbar';
-// import { getAllPosts } from '../../services/postService';
 import LfgCard from "./LfgCard";
 import {getUserInfoBySessionId} from "../../services/userService";
 import {getAllGroups} from "../../services/lfgService";
@@ -10,7 +9,6 @@ export default function LfgPage() {
 
     const [groups, setGroups] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-//    const [filteredPosts, setFilteredPosts] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
 
 
