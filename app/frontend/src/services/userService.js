@@ -70,14 +70,13 @@ export const getFollowings = (sessionId) => {
 }
 
 export const followUser = (sessionId, userId) => {
-  return axiosInstance.put(`/user/follow-user/${userId}`, {
-    		headers: { Cookie: `SESSIONID=${sessionId}` }
-    	});
-};
+	return axiosInstance.put(`/user/follow-user/${userId}`, {
+		headers: { Cookie: `SESSIONID=${sessionId}` }
+	})
+}
 
 export const unfollowUser = (sessionId, userId) => {
-  return axiosInstance.put(`/user/unfollow-user/${userId}`, {
-  		headers: { Cookie: `SESSIONID=${sessionId}` }
-  	});
-};
-
+	return axiosInstance.put(`/user/unfollow-user/${userId}`, {
+		headers: { Cookie: `SESSIONID=${sessionId}` }
+	})
+}

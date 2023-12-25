@@ -8,7 +8,7 @@ import TextWithAnnotations from '../components/TextWithAnnotation'
 import CloseIcon from '@mui/icons-material/Close'
 import { createAnnotation, getAnnotationsByTarget } from '../services/AnnotationService'
 import { v4 as uuidv4 } from 'uuid'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 	const isCurrentUserCreator = currentUser && post.creatorUser.username === currentUser.username
@@ -249,7 +249,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 				</div>
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default PostCard;
+export default PostCard
