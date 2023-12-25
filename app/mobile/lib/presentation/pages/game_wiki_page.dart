@@ -12,6 +12,7 @@ import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mobile/presentation/widgets/form_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/markdown_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
@@ -19,6 +20,7 @@ import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
 import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/utils/validation_utils.dart';
 
 class GameWiki extends StatefulWidget {
   const GameWiki({super.key});
@@ -134,6 +136,11 @@ class _GameWikiPageState extends State<GameWikiPage>
 
   static late Game game;
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController= TextEditingController();
+
+  final List<String> controllerNames = ['Name', 'Description'];
+
   Future<Game> loadGame(int gameId) async {
     Game game = await gameService.getGame(gameId);
     List<Post> postList = await postService.getPosts();
@@ -180,7 +187,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         },
                                       );
                                     },
-                                    child: Text("Report"),
+                                    child: Icon(Icons.warning),
                                   ),
                                 ),
                           Row(
@@ -441,6 +448,69 @@ class _GameWikiPageState extends State<GameWikiPage>
                         children: [
                           const Align(
                               alignment: Alignment.center,
+                              child: Text("Characters",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ))),
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () {
+                                  _dialogBuilder(context);
+                                },
+                                child:Icon(Icons.add),
+                              )),         
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 20),
+                            height: 75,
+                            child: ListView(
+                              // This next line does the trick.
+                              scrollDirection: Axis.vertical,
+                              children: [
+                                if (game.characters != null)
+                                for (var i = 0;
+                                    i < game.characters!.length;
+                                    i++)
+                                  Row(
+                                    children: [
+                                      RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: game.characters![i].name,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  TextSpan(
+                                    text: ": ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),                                  
+                                  TextSpan(
+                                    text: game.characters![i].description,
+                                  )
+                                ],
+                              )),                                    ],
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+                Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: SizedBox(
+                      width: 500,
+                      child: Column(
+                        children: [
+                          const Align(
+                              alignment: Alignment.center,
                               child: Text("Similar Games",
                                   style: TextStyle(
                                     fontSize: 18,
@@ -531,6 +601,71 @@ class _GameWikiPageState extends State<GameWikiPage>
           }
         });
   }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+
+    return showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Positioned(
+                  right: -40,
+                  top: -40,
+                  child: InkResponse(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.red,
+                      child: Icon(Icons.close),
+                    ),
+                  ),
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(hintText: 'Character Name'),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: TextFormField(
+                          minLines: 3,
+                          maxLines: 5,
+                          controller: descriptionController,
+                          decoration: InputDecoration(hintText: 'Character Description'),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: ElevatedButton(
+                          child: const Text('Submit'),
+                          onPressed: () {
+                            gameService.createCharacter(game.gameId, nameController.text, descriptionController.text);
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                            }
+                            Navigator.pop(context);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+      )
+    );
+  }
 }
 
 // class VerticalGameCard extends StatelessWidget {
@@ -565,3 +700,5 @@ class _GameWikiPageState extends State<GameWikiPage>
 //     );
 //   }
 // }
+
+

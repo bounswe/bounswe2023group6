@@ -44,7 +44,8 @@ class Game {
     this.developers,
     this.similarGameList = const [],
     this.relatedPosts = const [],
-    this.status
+    this.status,
+    this.characters,
   });
 
   factory Game.fromJson(Map<String, dynamic> json) {
@@ -64,7 +65,8 @@ class Game {
       averageRating: json['averageRating'],
       creationDate: json['creationDate'],
       gamePicture: json['gamePicture'],
-      status: json['status']
+      status: json['status'],
+      characters: json['characters'] != null ? List<Character>.from(json["characters"].map((x) => Character.fromJson(x))) : []
     );
   }
 
@@ -85,6 +87,7 @@ class Game {
       'creationDate': creationDate,
       'gamePicture': gamePicture,
       'status': status,
+      'characters': characters,
     };
   }
 }
