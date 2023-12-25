@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
+import 'package:mobile/data/services/lfg_service.dart';
+import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/game_page_create.dart';
 import 'package:mobile/presentation/pages/post/report_widget.dart';
@@ -12,6 +15,7 @@ import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mobile/presentation/widgets/guest_control_widget.dart';
+import 'package:mobile/presentation/widgets/lfg_card_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
@@ -76,6 +80,7 @@ class _GameWikiPageState extends State<GameWikiPage>
   final List<Game> similarGameList = GameService.getGameDataList();
   final GameService gameService = GameService();
   final PostService postService = PostService();
+  final LFGService lfgService = LFGService();
 
   late TabController tabController;
 
@@ -125,8 +130,13 @@ class _GameWikiPageState extends State<GameWikiPage>
           .toList();
       game.similarGameList = similarGames;
     }
+    List<LFG> allLfgs = await lfgService.getLFGs();
+    List<LFG> relatedLFGs = allLfgs
+        .where((element) => element.relatedGameId == game.gameId)
+        .toList();
 
     game.relatedPosts = postList;
+    game.relatedLFGs = relatedLFGs;
 
     return game;
   }
@@ -555,24 +565,31 @@ class _GameWikiPageState extends State<GameWikiPage>
                                       ],
                                     ),
                                   ),
-                                  const Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                      Center(
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: game.relatedLFGs.isNotEmpty
+                                    ? Column(
+                                        // This next line does the trick.
+                                        children: [
+                                          for (var i = 0;
+                                              i < game.relatedLFGs.length;
+                                              i++)
+                                            LFGCard(lfg: game.relatedLFGs[i]),
+                                        ],
+                                      )
+                                    : const Center(
                                           child: Text("Nothing to show",
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w500,
                                               ))),
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                    ],
-                                  )
+                                  ),
                                 ]),
                           ),
+                          const SizedBox(
+                            height: 20,
+                          ),                          
                         ],
                       )),
                 ),
