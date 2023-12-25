@@ -44,11 +44,7 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
   void initState() {
     super.initState();
     if (widget.selectedLFG != null) {
-<<<<<<< HEAD
-      title = "Update Game Page";
-=======
       title = "Update LFG Page";
->>>>>>> develop
       buttonLabel = "Update";
       _titleController.text = widget.selectedLFG!.title!;
       _descriptionController.text = widget.selectedLFG!.content!;
@@ -60,13 +56,10 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
     }
   }
 
-<<<<<<< HEAD
-=======
   Future<List<Game>> loadGameData() async {
     return await GameService().getGames();
   }
 
->>>>>>> develop
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -202,9 +195,6 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
               const SizedBox(height: 16),
               Button(
                 label: buttonLabel,
-<<<<<<< HEAD
-                onPressed: () async {},
-=======
                 onPressed: () async {
                   if (widget.selectedLFG == null) {
                     LFGService().createLFG(
@@ -221,7 +211,6 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
                   }
                   Navigator.of(context).pop("create");
                 },
->>>>>>> develop
               ),
             ]),
           ),
