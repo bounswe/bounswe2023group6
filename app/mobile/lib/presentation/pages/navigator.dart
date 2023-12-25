@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/presentation/pages/admin_panel.dart';
 import 'package:mobile/presentation/pages/forum_page.dart';
 import 'package:mobile/presentation/pages/game_page.dart';
 import 'package:mobile/presentation/pages/game_page_create.dart';
@@ -45,6 +46,8 @@ class _CustomNavigatorState extends State<CustomNavigator> {
                   return GroupPage();
                 case "/login":
                   return LoginPage();
+                case '/adminPanel':
+                  return const AdminPanel();
                 default:
                   return widget.defaultPage;
               }
