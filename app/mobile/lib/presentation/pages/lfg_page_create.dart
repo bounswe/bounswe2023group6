@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/constants/color_constants.dart';
+import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
 import 'package:mobile/presentation/widgets/tag_input.dart';
 
 class LFGPageCreate extends StatefulWidget {
-  const LFGPageCreate({Key? key}) : super(key: key);
+  final LFG? selectedLFG;
+  const LFGPageCreate({Key? key, this.selectedLFG}) : super(key: key);
 
   @override
   State<LFGPageCreate> createState() => _LFGCreatePageState();
@@ -14,6 +16,8 @@ class LFGPageCreate extends StatefulWidget {
 class _LFGCreatePageState extends State<LFGPageCreate> {
   final _descriptionController = TextEditingController();
   final _titleController = TextEditingController();
+  var title = "Create Game Page";
+  var buttonLabel = "Create";
   final List<String> _platformList = [
     "XBOX",
     "COMPUTER",
@@ -33,10 +37,26 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
   final _tagController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.selectedLFG != null) {
+      title = "Update Game Page";
+      buttonLabel = "Update";
+      _titleController.text = widget.selectedLFG!.title!;
+      _descriptionController.text = widget.selectedLFG!.content!;
+      _selectedPlatform = _platformList[0];
+      _selectedLanguage = _languageList[1];
+      micCamRequired = widget.selectedLFG!.micCamRequirement!;
+      _capacityController.text = widget.selectedLFG!.memberCapacity.toString();
+      _tags = widget.selectedLFG!.tags!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create LFG Page"),
+        title: Text(title),
         backgroundColor: ColorConstants.color3,
       ),
       body: SingleChildScrollView(
@@ -150,7 +170,7 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
               TagInput(tags: _tags, tagController: _tagController),
               const SizedBox(height: 16),
               Button(
-                label: "Create",
+                label: buttonLabel,
                 onPressed: () async {},
               ),
             ]),

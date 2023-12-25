@@ -234,12 +234,14 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
-                                      gameService.rateGame(game.gameId, rating.round());
+                                      gameService.rateGame(
+                                          game.gameId, rating.round());
                                     },
                                   ),
                                 ],
                               )),
-                              AnnotatableImageWidget(imageUrl: game.gamePicture),
+                              AnnotatableImageWidget(
+                                  imageUrl: game.gamePicture),
                             ],
                           ),
                         ],
