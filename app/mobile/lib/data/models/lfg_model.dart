@@ -51,7 +51,6 @@ class LFG extends Content {
   }
 
   factory LFG.fromJson(Map<String, dynamic> json) {
-    print(json);
     return LFG(
         id: json['lfgId'],
         title: json['title'],
