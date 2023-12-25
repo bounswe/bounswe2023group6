@@ -187,8 +187,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             connectedPostState.updateCommentParentId(content.id);
             break;
           case ContentMoreOptions.goToGamePage:
-            print("go to game page ${content.relatedGameId}");
-            // Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
+            Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
             break;
         }
       },
