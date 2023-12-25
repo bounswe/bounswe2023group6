@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
+import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
@@ -15,6 +16,8 @@ import 'package:mobile/presentation/widgets/markdown_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
+import 'package:mobile/utils/cache_manager.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class GameWiki extends StatefulWidget {
   const GameWiki({super.key});
@@ -24,7 +27,19 @@ class GameWiki extends StatefulWidget {
 }
 
 class _GameWikiState extends State<GameWiki> {
-  var isLoggedIn = true;
+  late bool isLoggedIn;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      isLoggedIn = true;
+      CacheManager().getUser();
+    } catch (e) {
+      isLoggedIn = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final int gameId = ModalRoute.of(context)!.settings.arguments as int;
@@ -63,7 +78,10 @@ class _GameWikiState extends State<GameWiki> {
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: const Icon(Icons.login),
+              child: const Icon(
+                Icons.login,
+                color: ColorConstants.buttonColor,
+              ),
             ),
     );
   }
@@ -234,12 +252,16 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     ),
                                     onRatingUpdate: (rating) {
                                       print(rating);
-                                      gameService.rateGame(game.gameId, rating.round());
+                                      gameService.rateGame(
+                                          game.gameId, rating.round());
                                     },
                                   ),
                                 ],
                               )),
-                              AnnotatableImageWidget(imageUrl: game.gamePicture),
+                              AnnotatableImageWidget(
+                                  imageUrl: game.gamePicture,
+                                  contentId: game.gameId,
+                                  contentContext: AnnotationContext.game),
                             ],
                           ),
                         ],

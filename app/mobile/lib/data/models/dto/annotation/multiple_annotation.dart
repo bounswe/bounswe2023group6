@@ -14,12 +14,12 @@ class MultipleAnnotationDTO extends BaseDTOObject<MultipleAnnotationDTO> {
   factory MultipleAnnotationDTO.fromJson(Map<String, dynamic> json) =>
       MultipleAnnotationDTO(
         annotations: List<AnnotationDTO>.from(
-            json["annotations"].map((x) => AnnotationDTO.fromJson(x))),
+            json["response"].map((x) => AnnotationDTO.fromJson(x))),
       );
 
   @override
   Map<String, dynamic> toJson() => {
-        "annotations": List<dynamic>.from(annotations!.map((x) => x.toJson())),
+        "response": List<dynamic>.from(annotations!.map((x) => x.toJson())),
       };
 
   @override

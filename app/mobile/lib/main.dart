@@ -70,7 +70,7 @@ class MainApp extends StatelessWidget {
       initialRoute: '/opening',
       // Define the routes for your app
       routes: {
-        '/opening': (context) =>  OpeningPage(),
+        '/opening': (context) => OpeningPage(),
         '/': (context) => const MainScreen(), // Home page
         '/auth': (context) => const AuthPageDemo(),
         '/registration': (context) => RegistrationPage(),

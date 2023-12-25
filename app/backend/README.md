@@ -53,4 +53,3 @@ docker run --detach -p 8080:8080 -e SPRING_DATASOURCE_URL="jdbc:postgresql://<yo
 ```
 
 This command runs the backend image that you previously built and allows it to accept requests on port 8080. Fill in the database details with the information you used when running the database container. Once the backend container is running, you can access your backend application via port 8080 on localhost.
-
