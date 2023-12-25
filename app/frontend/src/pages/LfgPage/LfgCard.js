@@ -1,16 +1,100 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReportIcon from "@mui/icons-material/Report";
 import {Button} from "@mui/material";
 import {useNavigate} from 'react-router-dom'
 import {deleteLfg} from "../../services/lfgService";
 import ClearIcon from '@mui/icons-material/Clear';
 import EditLfg from './EditLfg'
+import axios from 'axios'
 
 const LfgCard = ({ group, currentUser }) =>  {
 
     const isCurrentUserCreator = currentUser && group.user.username === currentUser.username ? true : false
+    const axiosInstance = axios.create({
+        baseURL: `${process.env.REACT_APP_API_URL}`
+    })
+
+    const isUserGroupMember = (user, group) => {
+        const userId = user.id;
+        const members = group.members;
+        const isMember = members.some(member => member.id === userId);
+
+        return isMember;
+    };
+
+    const [isMember, setIsMember] = useState(isUserGroupMember(currentUser, group));
+    const [isGroupFull, setIsGroupFull] = useState(false);
+
+    useEffect(() => {
+        const checkGroupFullness = () => {
+            setIsGroupFull(group.totalMembers === group.memberCapacity);
+        };
+        checkGroupFullness();
+    }, [group.totalMembers, group.members.length]);
+
     const navigate = useNavigate()
 
+    const joinGroup = () => {
+        console.log(group)
+        console.log(isMember)
+        axiosInstance.defaults.withCredentials = true;
+        axiosInstance.post(`/lfg/${group.lfgId}/join`,
+            {
+            withCredentials: true
+            })
+            .then((response) => {
+                console.log(123)
+                console.log(response);
+                if (response.status === 200) {
+                    setIsMember(true)
+                    console.log("joined group successfully")
+                }
+                window.location.reload();
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // İstek yapıldı ve sunucu 2xx bir durum kodu döndü, ancak bir hata durumu içeriyordu
+                    console.log("Error response from server:", error.response.data);
+                } else if (error.request) {
+                    // İstek yapıldı, ancak hiçbir yanıt alınmadı
+                    console.log("No response received from server");
+                } else {
+                    // İstek yaparken bir hata oluştu
+                    console.log("Error during request setup:", error.message);
+                }
+            });
+    };
+
+    const leaveGroup = () => {
+        console.log(group)
+        console.log(isMember)
+        axiosInstance.defaults.withCredentials = true;
+        axiosInstance.post(`/lfg/${group.lfgId}/leave`,
+            {
+                withCredentials: true
+            })
+            .then((response) => {
+                console.log(123)
+                console.log(response);
+                if (response.status === 200) {
+                    setIsMember(true)
+                    console.log("joined group successfully")
+                }
+                window.location.reload();
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // İstek yapıldı ve sunucu 2xx bir durum kodu döndü, ancak bir hata durumu içeriyordu
+                    console.log("Error response from server:", error.response.data);
+                } else if (error.request) {
+                    // İstek yapıldı, ancak hiçbir yanıt alınmadı
+                    console.log("No response received from server");
+                } else {
+                    // İstek yaparken bir hata oluştu
+                    console.log("Error during request setup:", error.message);
+                }
+            });
+    };
     const handleDeleteLfg = async (lfgId) => {
         try {
             await deleteLfg(lfgId)
@@ -30,10 +114,15 @@ const LfgCard = ({ group, currentUser }) =>  {
                 )}
                 {isCurrentUserCreator && (
                     <button
-                        onClick={() => handleDeleteLfg(group.lfgId)}
+                        onClick={() => {
+                            const isConfirmed = window.confirm('Are you sure you want to delete the lfg?');
+                            if (isConfirmed) {
+                                handleDeleteLfg(group.lfgId);
+                            }
+                        }}
                         title='Delete Lfg'
                     >
-                        <ClearIcon/>
+                        <ClearIcon />
                     </button>
                 )}
                 {!isCurrentUserCreator && (
@@ -49,19 +138,15 @@ const LfgCard = ({ group, currentUser }) =>  {
                     </a>
                 </h3>
                 <p className='text-neutral-700 mb-4'>{group.description}</p>
-                <div className=' border-b-2 border-neutral-400 pb-2 opacity-75 mb-4'>
-                    {group.relatedGame && (
-                        <p>Game: {group.relatedGame}</p>
-                    )}
-                    {group.requiredLanguage && (
-                        <p>Language: {group.requiredLanguage}</p>
-                    )}
-                    {group.requiredPlatform && (
-                        <p>Platform: {group.requiredPlatform}</p>
-                    )}
-                    {group.micCamRequirement && (
-                        <p>Mic/Cam: {group.micCamRequirement ? "yes" : "no"}</p>
-                    )}
+                <div className='border-b-2 border-t-2 border-neutral-400 pb-2 mt-4 opacity-75 mb-4 md:grid md:grid-cols-2 md:gap-4'>
+                    <div>
+                        <p className='font-bold'>Game: {group.relatedGame}</p>
+                        <p className='font-bold'>Language: {group.requiredLanguage}</p>
+                    </div>
+                    <div>
+                        <p className='font-bold'>Platform: {group.requiredPlatform}</p>
+                        <p className='font-bold'>Mic/Cam: {group.micCamRequirement ? "yes" : "no"}</p>
+                    </div>
                 </div>
                 <div className='flex justify-between items-center'>
                     <div className="flex items-center">
@@ -86,19 +171,27 @@ const LfgCard = ({ group, currentUser }) =>  {
                                 >
 									#{tag.name}
 								</span>
-                            ))}
-                        </div>
-                        <div className='mr-8 text-neutral-600'>
-                            1/{group.memberCapacity} Players
-                        </div>
-                        <Button variant='outlined'
-                                sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
-                            Join
-                        </Button>
+                        ))}
                     </div>
+                    <div className='mr-8 text-neutral-600'>
+                        {group.totalMembers}/{group.memberCapacity} Players
+                    </div>
+                    {!isMember && !isGroupFull && <Button variant='outlined' onClick={joinGroup}
+                            sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
+                        Join
+                    </Button>}
+                    {!isMember && isGroupFull && <Button variant='outlined'
+                                                          sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
+                        Full
+                    </Button>}
+                    {isMember && <Button variant='outlined' onClick={leaveGroup}
+                                          sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
+                        Leave
+                    </Button>}
                 </div>
             </div>
         </div>
-    )};
+    </div>
+)};
 
 export default LfgCard;
