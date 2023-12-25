@@ -39,7 +39,7 @@ class ContentCardWidget extends StatefulWidget {
 
 class _ContentCardWidgetState extends State<ContentCardWidget> {
   PostService postService = PostService();
-  late PostState connectedPostState;
+  late MainContentState connectedPostState;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +47,9 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
     bool isPost = widget.isPost;
     bool isReply = widget.isReply;
     Content? parentContent = widget.parentContent;
-    connectedPostState = context.watch<PostState>();
+    connectedPostState = context.watch<MainContentState>();
     bool isContentOfOriginalPoster = !isPost && content.ownerUserId ==
-        connectedPostState.post.ownerUserId;
+        connectedPostState.mainContent.ownerUserId;
 
     return Card(
       key: !isPost && !isReply ? content.globalKey : null,
@@ -78,7 +78,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             InkWell(
               onTap: () {
                 // TODO: Change render objects border color for parent comment
-                GlobalObjectKey parentContentGlobalKey = connectedPostState.post.commentList.where(
+                GlobalObjectKey parentContentGlobalKey = connectedPostState.mainContent.commentList.where(
                   (element) => element.id == parentContent.id).first.globalKey;
                 Scrollable.ensureVisible(
                     parentContentGlobalKey.currentContext!,
@@ -256,7 +256,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             Row(
               children: [
                 // comment button
-                if (content.type == ContentType.post)
+                if (content.type == ContentType.post) ... [
                   IconButton(
                     icon: const Icon(Icons.comment_outlined),
                     onPressed: () {},
@@ -265,6 +265,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                     width: 10,
                   ),
                   Text(content.comments.toString()),
+                ],
                 // upvote button
                 IconButton(
                   icon: Icon(

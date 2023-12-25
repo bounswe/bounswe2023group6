@@ -2,12 +2,9 @@ package com.gamelounge.backend.service
 
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToLFGDTO  
 import com.gamelounge.backend.model.DTO.LFGDTO
-import com.gamelounge.backend.exception.SessionNotFoundException  
 import com.gamelounge.backend.entity.Game
 import com.gamelounge.backend.entity.LFG
-import com.gamelounge.backend.exception.LFGNotFoundException
-import com.gamelounge.backend.exception.UnauthorizedLFGAccessException
-import com.gamelounge.backend.exception.UsernameNotFoundException
+import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.request.CreateLFGRequest
 import com.gamelounge.backend.model.request.UpdateLFGRequest
@@ -39,6 +36,8 @@ class LFGService(
             relatedGame = lfg.gameId?.let { gameService.getGame(it) },
             tags = tagService.createAndReturnTagsFromTagNames(lfg.tags) ?: emptyList()
         )
+        newLFG.members = newLFG.members.plus(user)
+        newLFG.totalMembers += 1
         return lfgRepository.save(newLFG)
     }
 
@@ -100,4 +99,54 @@ class LFGService(
     fun getLFGsByGame(game: Game): List<LFG>{
         return lfgRepository.findByRelatedGame(game)
     }
+    fun joinLFG(sessionId: UUID, lfgId: Long): LFG {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val lfg = getLFG(lfgId)
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
+
+        if (lfg.members.contains(user)) {
+            throw UnauthorizedLFGAccessException("User is already a member of LFG with ID: $lfgId")
+        }
+        if(lfg.totalMembers == lfg.memberCapacity){
+            throw LFGisFullException("LFG with ID: $lfgId is full")
+        }
+
+        lfg.members = lfg.members.plus(user)
+        lfg.totalMembers += 1
+
+        return lfgRepository.save(lfg)
+    }
+    fun leaveLFG(sessionId: UUID, lfgId: Long): LFG {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val lfg = getLFG(lfgId)
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
+
+        if (!lfg.members.contains(user)) {
+            throw LFGAlreadyLeftException("User is not a member of LFG with ID: $lfgId")
+        }
+
+        lfg.members = lfg.members.minus(user)
+        lfg.totalMembers -= 1
+
+        return lfgRepository.save(lfg)
+    }
+    fun kickUserFromLFG(sessionId: UUID, lfgId: Long, kickUserId: Long): LFG {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val lfg = getLFG(lfgId)
+        val user = userRepository.findById(userId).orElseThrow { UserNotFoundException("User not found") }
+        val kickUser = userRepository.findById(kickUserId).orElseThrow { UserNotFoundException("User not found") }
+
+        if (lfg.user?.userId != userId) {
+            throw UnauthorizedLFGAccessException("Unauthorized to kick user from LFG with ID: $lfgId")
+        }
+        if (!lfg.members.contains(kickUser)) {
+            throw LFGAlreadyLeftException("User is not a member of LFG with ID: $lfgId")
+        }
+
+        lfg.members = lfg.members.minus(kickUser)
+        lfg.totalMembers -= 1
+
+        return lfgRepository.save(lfg)
+    }
+
 }

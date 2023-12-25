@@ -1,5 +1,7 @@
 package com.gamelounge.backend.controller
 
+
+import com.gamelounge.backend.entity.UserGameRating
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.DTO.GameDTO
 import com.gamelounge.backend.model.request.CreateGameRequest
@@ -10,6 +12,7 @@ import com.gamelounge.backend.model.request.*
 import com.gamelounge.backend.model.response.ResponseMessage
 import com.gamelounge.backend.service.GameService
 import com.gamelounge.backend.util.ConverterDTO
+import io.swagger.v3.core.util.Json
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -67,6 +70,13 @@ class GameController(
         return ResponseEntity.ok(gameDTO)
     }
 
+    @GetMapping("/{id}/getRating")
+    fun getRating(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<UserGameRatingDTO> {
+        val userGameRating = gameService.getRating(sessionId, id)
+        val userGameRatingDTO = ConverterDTO.convertToUserInfoGameRatingDTO(userGameRating)
+        return ResponseEntity.ok(userGameRatingDTO)
+    }
+
     @GetMapping("/rated")
     fun getGamesRatedByUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<List<UserGameRatingDTO>> {
         val userGameRatingDTOs = gameService.getRatedGamesByUser(sessionId)
@@ -83,11 +93,18 @@ class GameController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createEditingRequest(@CookieValue("SESSIONID") sessionId: UUID,
                    @RequestPart("request") editedGame: CreateEditingRequest,
-                   @RequestPart("image") image: MultipartFile?,
+                   @RequestPart("image") editedImage: MultipartFile?,
                    @PathVariable id: Long
     ): ResponseEntity<ResponseMessage> {
-        gameService.createEditingRequest(sessionId, editedGame, image, id)
+        gameService.createEditingRequest(sessionId, editedGame, editedImage, id)
         return ResponseEntity.ok(ResponseMessage(message = "Editing game was requested successfully."))
+    }
+
+    @PostMapping("/update-similar-games")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun updateSimilarGamesFields(): ResponseEntity<ResponseMessage>{
+        gameService.updateSimilarGamesFields()
+        return ResponseEntity.ok(ResponseMessage("Games' similar games fields updated successfully!"))
     }
 
 }

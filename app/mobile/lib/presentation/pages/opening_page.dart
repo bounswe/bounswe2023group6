@@ -38,7 +38,7 @@ class _OpeningPageState extends State<OpeningPage> {
   @override
   Widget build(BuildContext context) {
 
-    if (username == '' || currentuser == null) {
+    if (username == '' || currentuser == null || username == 'admin') {
       return const AuthPageDemo();
     } 
     else {

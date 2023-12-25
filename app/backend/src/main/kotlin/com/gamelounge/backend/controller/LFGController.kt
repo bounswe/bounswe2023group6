@@ -54,4 +54,26 @@ class LFGController(private val lfgService: LFGService) {
         val LFGDTOs = lfgService.getRecommendedLFGs(sessionId)
         return ResponseEntity.ok(LFGDTOs)
     }
+
+    // join to lfg
+    @PostMapping("/{id}/join")
+    fun joinLFG(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<LFGDTO> {
+        val lfg = lfgService.joinLFG(sessionId, id)
+        val lfgDTO = ConverterDTO.convertToLFGDTO(lfg)
+        return ResponseEntity.ok(lfgDTO)
+    }
+    // leave lfg
+    @PostMapping("/{id}/leave")
+    fun leaveLFG(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long): ResponseEntity<LFGDTO> {
+        val lfg = lfgService.leaveLFG(sessionId, id)
+        val lfgDTO = ConverterDTO.convertToLFGDTO(lfg)
+        return ResponseEntity.ok(lfgDTO)
+    }
+    // kick user from lfg
+    @PostMapping("/{id}/kick/{kickUserId}")
+    fun kickUserFromLFG(@CookieValue("SESSIONID") sessionId: UUID, @PathVariable id: Long, @PathVariable kickUserId: Long): ResponseEntity<LFGDTO> {
+        val lfg = lfgService.kickUserFromLFG(sessionId, id, kickUserId)
+        val lfgDTO = ConverterDTO.convertToLFGDTO(lfg)
+        return ResponseEntity.ok(lfgDTO)
+    }
 }

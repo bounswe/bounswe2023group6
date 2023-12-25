@@ -1,5 +1,7 @@
 package com.gamelounge.backend.service
 
+import com.gamelounge.backend.entity.Game
+import com.gamelounge.backend.entity.GameStatus
 import com.gamelounge.backend.entity.User
 import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.middleware.SessionAuth
@@ -9,19 +11,13 @@ import com.gamelounge.backend.model.DTO.PostDTO
 import com.gamelounge.backend.model.DTO.UserDTO
 import com.gamelounge.backend.model.request.UpdateUserRequest
 import com.gamelounge.backend.model.response.GetUserInfoResponse
-import com.gamelounge.backend.repository.GameRepository
-import com.gamelounge.backend.repository.PostRepository
-import com.gamelounge.backend.repository.SessionRepository
-import com.gamelounge.backend.repository.UserRepository
-import com.gamelounge.backend.util.ConverterDTO
+import com.gamelounge.backend.repository.*
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToCommentDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToGameDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToPostDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToUserDTO
 import com.gamelounge.backend.util.ConverterDTO.convertBulkToTagDTO
 import com.gamelounge.backend.util.ConverterDTO.convertToUserDTO
-import jakarta.servlet.http.Cookie
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
@@ -35,7 +31,8 @@ class UserService(
         private val sessionAuth: SessionAuth,
         private val s3Service: S3Service,
         private val tagService: TagService,
-        private val accessService: AccessService
+        private val accessService: AccessService,
+        private val reportRepository: ReportRepository
 ) {
 
     fun getUserBySessionId(sessionId: UUID): UserDTO {
@@ -114,6 +111,7 @@ class UserService(
             user.profilePicture,
             user.about,
             user.isAdmin,
+            user.isDeleted,
             convertBulkToTagDTO(user.tags),
             user.title,
             user.company,
@@ -187,5 +185,138 @@ class UserService(
         user.isDeleted = true
         userRepository.save(user)
         sessionId.let { accessService.logout(it) }
+    }
+
+    fun banUserForGame(sessionId: UUID, gameId: Long): User {
+        val userIdTakenSession = sessionAuth.getUserIdFromSession(sessionId)
+        val sessionUser = userRepository.findById(userIdTakenSession).orElseThrow { UsernameNotFoundException("User not found") }
+
+        val game = gameRepository.findById(gameId).orElseThrow { GameNotFoundException("Game not found with ID: $gameId") }
+
+        if (sessionUser.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to ban user with ID: ${game.user.userId}")
+        }
+
+        val reportedGame = reportRepository.findByReportedGame(game)
+        val reportedGameFiltered = reportedGame.filter { it.reportingUser?.userId == game.user.userId }
+
+        val reportedUser = userRepository.findById(game.user.userId).orElseThrow { UsernameNotFoundException("User not found") }
+
+        if (!reportedGameFiltered.isNullOrEmpty()) {
+            reportedUser.isDeleted = true
+            reportedUser.isBanned = true
+            reportRepository.delete(reportedGameFiltered[0])
+        }
+
+        return userRepository.save(reportedUser)
+    }
+
+    fun deleteReportedGame(sessionId: UUID, gameId: Long): Game {
+        val userIdTakenSession = sessionAuth.getUserIdFromSession(sessionId)
+        val sessionUser = userRepository.findById(userIdTakenSession).orElseThrow { UsernameNotFoundException("User not found") }
+
+        val game = gameRepository.findById(gameId).orElseThrow { GameNotFoundException("Game not found with ID: $gameId") }
+
+        if (sessionUser.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to delete game with ID: ${gameId}")
+        }
+
+        val reportedGame = reportRepository.findByReportedGame(game)
+
+        val reportedGameFiltered = reportedGame.filter { it.reportingUser?.userId == game.user.userId }
+        if (!reportedGameFiltered.isNullOrEmpty()) {
+            reportRepository.delete(reportedGameFiltered[0])
+            game.isDeleted = true
+            return gameRepository.save(game)
+        }
+        return throw GameNotFoundException("Reported game not found with ID: $gameId")
+
+    }
+
+    fun cancelReportedGame(sessionId: UUID, gameId: Long) {
+        val userIdTakenSession = sessionAuth.getUserIdFromSession(sessionId)
+        val sessionUser = userRepository.findById(userIdTakenSession).orElseThrow { UsernameNotFoundException("User not found") }
+
+        val game = gameRepository.findById(gameId).orElseThrow { GameNotFoundException("Game not found with ID: $gameId") }
+
+        if (sessionUser.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to cancel game with ID: ${gameId}")
+        }
+
+        val reportedGame = reportRepository.findByReportedGame(game)
+
+        val reportedGameFiltered = reportedGame.filter { it.reportingUser?.userId == game.user.userId }
+        if (!reportedGameFiltered.isNullOrEmpty()) {
+            reportRepository.delete(reportedGameFiltered[0])
+        }else{
+            throw GameNotFoundException("Reported game not found with ID: $gameId")
+        }
+
+    }
+
+    fun deleteReportedPost(sessionId: UUID, postId: Long) {
+        val userIdTakenSession = sessionAuth.getUserIdFromSession(sessionId)
+        val sessionUser = userRepository.findById(userIdTakenSession).orElseThrow { UsernameNotFoundException("User not found") }
+
+        val post = postRepository.findById(postId).orElseThrow { PostNotFoundException("Post not found with ID: $postId") }
+
+        if (sessionUser.isAdmin != true) {
+            throw UnauthorizedPostAccessException("Unauthorized to delete post with ID: ${postId}")
+        }
+
+        val reportedPost = reportRepository.findByReportedPost(post)
+
+        val reportedPostFiltered = reportedPost.filter { it.reportingUser?.userId == post.user.userId }
+        if (!reportedPostFiltered.isNullOrEmpty()) {
+            reportRepository.delete(reportedPostFiltered[0])
+            postRepository.delete(post)
+        }else{
+            throw PostNotFoundException("Reported post not found with ID: $postId")
+        }
+    }
+
+    fun cancelReportedPost(sessionId: UUID, postId: Long) {
+        val userIdTakenSession = sessionAuth.getUserIdFromSession(sessionId)
+        val sessionUser = userRepository.findById(userIdTakenSession).orElseThrow { UsernameNotFoundException("User not found") }
+
+        val post = postRepository.findById(postId).orElseThrow { PostNotFoundException("Post not found with ID: $postId") }
+
+        if (sessionUser.isAdmin != true) {
+            throw UnauthorizedPostAccessException("Unauthorized to cancel post with ID: ${postId}")
+        }
+
+        val reportedPost = reportRepository.findByReportedPost(post)
+
+        val reportedPostFiltered = reportedPost.filter { it.reportingUser?.userId == post.user.userId }
+        if (!reportedPostFiltered.isNullOrEmpty()) {
+            reportRepository.delete(reportedPostFiltered[0])
+        }else{
+            throw PostNotFoundException("Reported post not found with ID: $postId")
+        }
+
+    }
+
+    fun banUserForPost(sessionId: UUID, postId: Long): User {
+        val userIdTakenSession = sessionAuth.getUserIdFromSession(sessionId)
+        val sessionUser = userRepository.findById(userIdTakenSession).orElseThrow { UsernameNotFoundException("User not found") }
+
+        val post = postRepository.findById(postId).orElseThrow { PostNotFoundException("Post not found with ID: $postId") }
+
+        if (sessionUser.isAdmin != true) {
+            throw UnauthorizedPostAccessException("Unauthorized to ban user with ID: ${post.user.userId}")
+        }
+
+        val reportedPost = reportRepository.findByReportedPost(post)
+        val reportedPostFiltered = reportedPost.filter { it.reportingUser?.userId == post.user.userId }
+
+        val reportedUser = userRepository.findById(post.user.userId).orElseThrow { UsernameNotFoundException("User not found") }
+
+        if (!reportedPostFiltered.isNullOrEmpty()) {
+            reportedUser.isDeleted = true
+            reportedUser.isBanned = true
+            reportRepository.delete(reportedPostFiltered[0])
+        }
+
+        return userRepository.save(reportedUser)
     }
 }

@@ -14,5 +14,7 @@ data class LFGDTO(
     var creationDate: Instant = Instant.now(),
     var user: UserDTO? = null,
     var relatedGame: GameDTO? = null,
-    var tags: List<TagDTO> = mutableListOf()
+    var tags: List<TagDTO> = mutableListOf(),
+    var totalMembers: Int = 0,
+    var members: List<UserDTO> = mutableListOf(),
 )

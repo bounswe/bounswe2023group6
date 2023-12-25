@@ -33,17 +33,24 @@ class Game(
 
         var title: String = "",
         var description: String = "",
+
+        @ElementCollection(targetClass = GameGenre::class)
         @Enumerated(EnumType.STRING)
-        var genre: GameGenre = GameGenre.EMPTY,
+        @CollectionTable(name = "game_genres", joinColumns = [JoinColumn(name = "gameId")])
+        var genres: MutableSet<GameGenre> = mutableSetOf(),
+
+        @ElementCollection(targetClass = GamePlatform::class)
         @Enumerated(EnumType.STRING)
-        var platform: GamePlatform = GamePlatform.EMPTY,
+        @CollectionTable(name = "game_platforms", joinColumns = [JoinColumn(name = "gameId")])
+        var platforms: MutableSet<GamePlatform> = mutableSetOf(),
+
         @Enumerated(EnumType.STRING)
-        var playerNumber: NumberOfPlayers = NumberOfPlayers.EMPTY,
+        var playerNumber: NumberOfPlayers = NumberOfPlayers.Empty,
         var releaseYear: Int = 0,
         @Enumerated(EnumType.STRING)
-        var universe: UniverseInfo = UniverseInfo.EMPTY,
+        var universe: UniverseInfo = UniverseInfo.Empty,
         @Enumerated(EnumType.STRING)
-        var mechanics: GameMechanics = GameMechanics.EMPTY,
+        var mechanics: GameMechanics = GameMechanics.Empty,
         var playtime: String = "",
         var totalRating: Int = 0,
         var countRating: Int = 0,
@@ -57,7 +64,7 @@ class Game(
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "userId")
-        val user: User? = null,
+        val user: User = User(),
 
         @OneToMany(mappedBy = "relatedGame")
         val lfgs: List<LFG> = mutableListOf(),

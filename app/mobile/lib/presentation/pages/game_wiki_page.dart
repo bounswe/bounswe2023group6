@@ -197,7 +197,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(game.genre ?? "-",
+                                      child: Text(game.genres![0] ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
@@ -287,7 +287,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w700),
                         ),
-                        if (game.platform != null)
+                        if (game.platforms != null)
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
@@ -302,7 +302,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   TextSpan(
-                                    text: game.platform!,
+                                    text: game.platforms![0],
                                   )
                                 ],
                               )),
