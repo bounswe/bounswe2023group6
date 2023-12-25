@@ -29,7 +29,7 @@ class PostCreateDTORequest extends BaseDTOObject<PostCreateDTORequest> {
       PostCreateDTORequest(
         title: json["title"],
         content: json["content"],
-        relatedGameId: json["relatedGameId"],
+        relatedGameId: json["gameId"],
         category: json["category"],
         tags: json["tags"] != null ? List<String>.from(json["tags"].map((x) => x)) : [],
       );
@@ -38,7 +38,7 @@ class PostCreateDTORequest extends BaseDTOObject<PostCreateDTORequest> {
   Map<String, dynamic> toJson() => {
         "title": title,
         "content": content,
-        "relatedGameId": relatedGameId,
+        "gameId": relatedGameId,
         "category": category,
         "tags": tags,
       };
