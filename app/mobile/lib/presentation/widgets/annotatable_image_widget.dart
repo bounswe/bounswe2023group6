@@ -4,45 +4,35 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/annotation_model.dart';
+import 'package:mobile/data/services/annotation_service.dart';
 import 'package:mobile/presentation/widgets/crop_image_widget.dart';
+import 'package:mobile/utils/cache_manager.dart';
 
 class AnnotatableImageWidget extends StatelessWidget {
-  final String imageUrl;
-  final double imageWidth = 200;
-  final double imageHeight = 200;
+  final AnnotationService annotationService = AnnotationService();
 
-  final List<ImageAnnotation> annotations = [
-    ImageAnnotation(
-      x: 10,
-      y: 10,
-      width: 100,
-      height: 50,
-      authorUsername: "user1",
-      annotation: "This is an annotation",
-    ),
-    ImageAnnotation(
-      x: 100,
-      y: 100,
-      width: 50,
-      height: 50,
-      authorUsername: "user2",
-      annotation: "This is another annotation",
-    ),
-    ImageAnnotation(
-      x: 30,
-      y: 30,
-      width: 50,
-      height: 50,
-      authorUsername: "user1",
-      annotation: "This is another annotation",
-    ),
-  ];
+  final String imageUrl;
+  final int contentId;
+  final AnnotationContext contentContext;
 
   AnnotatableImageWidget({
     Key? key,
     required this.imageUrl,
-    // required this.annotations,
+    required this.contentId,
+    required this.contentContext,
   }) : super(key: key);
+
+  final annotationTextController = TextEditingController();
+
+  final double imageWidth = 200;
+  final double imageHeight = 200;
+
+  Future<List<ImageAnnotation>> loadAnnotations() async {
+    List<ImageAnnotation> annotations = await annotationService
+        .getAnnotationsByTargetId(contentContext, contentId)
+        .then((value) => value.whereType<ImageAnnotation>().toList());
+    return annotations;
+  }
 
   Future<ui.Image> getImageAsUi(NetworkImage image) async {
     var completer = Completer<ImageInfo>();
@@ -69,11 +59,22 @@ class AnnotatableImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     NetworkImage image = NetworkImage(imageUrl);
 
-    return FutureBuilder(
-      future: getImageAsUi(image),
+    return FutureBuilder<List<Object>>(
+      future: Future.wait([
+        getImageAsUi(image),
+        loadAnnotations(),
+      ]),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Error"),
+              );
+            }
+            ui.Image uiImage = snapshot.data![0] as ui.Image;
+            List<ImageAnnotation> annotations =
+                snapshot.data![1] as List<ImageAnnotation>;
             return buildImageWithGestures(
               context,
               Column(
@@ -98,7 +99,8 @@ class AnnotatableImageWidget extends StatelessWidget {
                         )
                       : TextButton(
                           onPressed: () {
-                            showAnnotationsForImage(context, snapshot.data!);
+                            showAnnotationsForImage(
+                                context, uiImage, annotations);
                           },
                           child: const Text(
                             "Show Annotations",
@@ -111,7 +113,7 @@ class AnnotatableImageWidget extends StatelessWidget {
                         ),
                 ],
               ),
-              snapshot.data!,
+              uiImage,
             );
           default:
             return const Center(child: CircularProgressIndicator());
@@ -120,7 +122,8 @@ class AnnotatableImageWidget extends StatelessWidget {
     );
   }
 
-  void showAnnotationsForImage(BuildContext context, ui.Image image) {
+  void showAnnotationsForImage(
+      BuildContext context, ui.Image image, List<ImageAnnotation> annotations) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -236,19 +239,36 @@ class AnnotatableImageWidget extends StatelessWidget {
                 const SizedBox(height: 8),
                 TextFormField(
                   key: GlobalObjectKey(UniqueKey()),
+                  controller: annotationTextController,
                   keyboardType: TextInputType.multiline,
                   maxLength: 500,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Enter your annotation here"),
                   maxLines: 8,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter an annotation";
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
             actions: [
               TextButton(
-                onPressed: () {
-                  // TODO: Save annotation
+                onPressed: () async {
+                  ImageAnnotation imageAnnotation = ImageAnnotation(
+                    x: topLeft.dx,
+                    y: topLeft.dy,
+                    width: width,
+                    height: height,
+                    authorUsername: CacheManager().getUser().username,
+                    annotation: annotationTextController.text,
+                    contextId: contentId,
+                    context: contentContext,
+                  );
+                  await annotationService.createAnnotation(imageAnnotation);
                   Navigator.of(context).pop("Annotation saved");
                 },
                 child: const Text("Save Annotation"),

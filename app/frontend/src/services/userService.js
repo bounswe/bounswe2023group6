@@ -6,10 +6,15 @@ const axiosInstance = axios.create({
 
 axiosInstance.defaults.withCredentials = true
 
-export const getUserInfoBySessionId = (sessionId) => {
-	return axiosInstance.get('/user', {
-		headers: { Cookie: `SESSIONID=${sessionId}` }
-	})
+export const getUserInfoBySessionId = () => {
+	return axiosInstance.get(
+		'/user',
+		{},
+		{
+			withCredentials: true,
+			headers: { 'Content-Type': 'application/json' }
+		}
+	)
 }
 
 export const updateUserByUserId = (sessionId, userData) => {
@@ -44,4 +49,16 @@ export const getCreatedGames = (sessionId) => {
 	return axiosInstance.get('/user/created-games', {
 		headers: { Cookie: `SESSIONID=${sessionId}` }
 	})
+}
+
+export const getLikedCommentsByUserId = (userId) => {
+	return axiosInstance.get(`/user/liked-comments/${userId}`)
+}
+
+export const getLikedPostsByUserId = (userId) => {
+	return axiosInstance.get(`/user/liked-posts/${userId}`)
+}
+
+export const getCreatedPostsByUserId = (userId) => {
+	return axiosInstance.get(`/user/created-posts/${userId}`)
 }
