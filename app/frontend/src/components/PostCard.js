@@ -25,10 +25,18 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 
 	const handleTextSelect = () => {
 		const selection = window.getSelection()
-		if (selection.toString().length > 0 && postContentRef.current.contains(selection.anchorNode)) {
-			const start = Math.min(selection.anchorOffset, selection.focusOffset)
-			const end = Math.max(selection.anchorOffset, selection.focusOffset)
-			setSelectionRange({ start, end, text: selection.toString() })
+		if (selection.rangeCount === 0) return
+
+		const range = selection.getRangeAt(0)
+		const preSelectionRange = range.cloneRange()
+		preSelectionRange.selectNodeContents(postContentRef.current)
+		preSelectionRange.setEnd(range.startContainer, range.startOffset)
+		const start = preSelectionRange.toString().length - 3
+
+		const end = start + range.toString().length
+
+		if (range.toString().length > 0 && postContentRef.current.contains(range.startContainer)) {
+			setSelectionRange({ start, end, text: range.toString() })
 			setShowAnnotationButton(true)
 		} else {
 			setShowAnnotationButton(false)
@@ -47,11 +55,15 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 
 	const handleSubmitAnnotation = () => {
 		const newAnnotation = {
+			postUrl: window.location.href, // Save the current post URL
 			startIndex: selectionRange.start,
 			endIndex: selectionRange.end,
 			value: annotationText
 		}
-		setAnnotations([...annotations, newAnnotation])
+		console.log(newAnnotation)
+		console.log('Annotations: ', annotations)
+		setAnnotations((prevAnnotations) => [...prevAnnotations, newAnnotation])
+		console.log('Updated Annotations: ', annotations)
 		setShowAnnotationPopup(false)
 		setAnnotationText('')
 	}
