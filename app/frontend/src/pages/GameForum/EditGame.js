@@ -27,8 +27,8 @@ export default function EditGame(props) {
 	const [gameData, setGameData] = useState({
 		title: props.game.title,
 		description: props.game.description,
-		genre: props.game.genre,
-		platform: props.game.platform,
+		genres: props.game.genre,
+		platforms: props.game.platform,
 		playerNumber: props.game.playerNumber,
 		releaseYear: props.game.releaseYear,
 		universe: props.game.universe,
@@ -105,15 +105,16 @@ export default function EditGame(props) {
 		const postData = {
 			...gameData,
 
-			genre: selectedGenres.toString(),
-			platform: selectedPlatforms.toString(),
-			playerNumber: selectedPlayerNumber.toString(),
-			universe: selectedUniverseInfo.toString(),
+			genres: selectedGenres,
+			platforms: selectedPlatforms,
+			playerNumber: selectedPlayerNumber,
+			universe: selectedUniverseInfo,
 			image: selectedImage
 		}
 		delete postData.characters
-		const { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image } = postData
-		const request = { title, description, genre, platform, playerNumber, releaseYear, universe, mechanics, playtime, image }
+		const { title, description, genres, platforms, playerNumber, releaseYear, universe, mechanics, playtime, image } = postData
+		const gameId = props.game.gameId
+		const request = { gameId, title, description, genres, platforms, playerNumber, releaseYear, universe, mechanics, playtime, image }
 		const formDataToSend = new FormData()
 
 		formDataToSend.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
@@ -122,6 +123,7 @@ export default function EditGame(props) {
 			formDataToSend.append('image', file)
 		}
 		try {
+			axios.defaults.withCredentials = true
 			const response = await axios.post(`${api_url}/game/${props.game.gameId}`, formDataToSend, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
@@ -216,7 +218,7 @@ export default function EditGame(props) {
 									value={value}
 									onChange={(event) => handleChange(property, event.target.value)}
 								/>
-							) : property === 'genre' ? (
+							) : property === 'genres' ? (
 								<FormControl fullWidth margin='normal'>
 									<InputLabel id='genre-label'>Genres</InputLabel>
 									<Select
@@ -235,7 +237,7 @@ export default function EditGame(props) {
 										))}
 									</Select>
 								</FormControl>
-							) : property === 'platform' ? (
+							) : property === 'platforms' ? (
 								<FormControl fullWidth margin='normal'>
 									<InputLabel id='platform-label'>Platforms</InputLabel>
 									<Select
