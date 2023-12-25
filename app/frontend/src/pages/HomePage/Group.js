@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from "react-router-dom";
 
 const Group = ({ item }) => {
 	return (
@@ -13,8 +14,10 @@ const Group = ({ item }) => {
 					<span>
 						Players: {item.totalMembers}/{item.memberCapacity}
 					</span>
-					<button className='btn bg-[#b46161] border-[#b46161] text-neutral-100 hover:bg-[#8c4646] hover:border-[#8c4646] btn-sm'>
-						Join
+					<button className="btn bg-[#b46161] border-[#b46161] text-neutral-100 hover:bg-[#8c4646] hover:border-[#8c4646] btn-sm">
+						<Link to={`/lfg/${item.lfgId}`}>
+							See Lfg
+						</Link>
 					</button>
 				</div>
 			</div>
