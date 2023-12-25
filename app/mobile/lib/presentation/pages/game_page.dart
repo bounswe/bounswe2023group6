@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/constants/view_type.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/presentation/pages/login_page.dart';
 import 'package:mobile/presentation/states/game_list_grid_view_state.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/game_grid_widget.dart';
+import 'package:mobile/utils/cache_manager.dart';
 
 class GamePage extends StatefulWidget {
   GamePage({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late GridWidget gridWidget;
-  var isLoggedIn = true;
+  late bool isLoggedIn;
   late GlobalKey<GridViewState> _gridKey;
   bool isSettingsPressed = false; // Flag to track if settings are pressed
 
@@ -36,6 +38,12 @@ class _GamePageState extends State<GamePage> {
       },
       key: _gridKey,
     );
+    try {
+      isLoggedIn = true;
+      CacheManager().getUser();
+    } catch (e) {
+      isLoggedIn = false;
+    }
   }
 
   @override
@@ -88,7 +96,10 @@ class _GamePageState extends State<GamePage> {
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: const Icon(Icons.login),
+              child: const Icon(
+                Icons.login,
+                color: ColorConstants.buttonColor,
+              ),
             ),
     );
   }

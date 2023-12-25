@@ -4,6 +4,7 @@ import 'package:mobile/presentation/states/lfg_list_grid_view_state.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/lfg_grid_widget.dart';
+import 'package:mobile/utils/cache_manager.dart';
 
 class LFGPage extends StatefulWidget {
   LFGPage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class LFGPage extends StatefulWidget {
 
 class _LFGPageState extends State<LFGPage> {
   late GridWidget gridWidget;
-  var isLoggedIn = true;
+  late bool isLoggedIn;
   late GlobalKey<GridViewState> _gridKey;
   bool isSettingsPressed = false; // Flag to track if settings are pressed
 
@@ -32,6 +33,12 @@ class _LFGPageState extends State<LFGPage> {
       },
       key: _gridKey,
     );
+    try {
+      CacheManager().getUser();
+      isLoggedIn = true;
+    } catch (e) {
+      isLoggedIn = false;
+    }
   }
 
   @override
@@ -83,7 +90,10 @@ class _LFGPageState extends State<LFGPage> {
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: const Icon(Icons.login),
+              child: const Icon(
+                Icons.login,
+                color: ColorConstants.buttonColor,
+              ),
             ),
     );
   }

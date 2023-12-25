@@ -6,6 +6,7 @@ import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/user_model.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/post/content_card_widget.dart';
+import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +37,8 @@ class MainContentState extends ChangeNotifier {
   void addComment(Comment comment) {
     mainContent.commentList.add(comment);
     // Sort the comments by created date
-    mainContent.commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
+    mainContent.commentList
+        .sort((a, b) => b.createdDate.compareTo(a.createdDate));
     currentCommentParentId = 0;
 
     notifyListeners();
@@ -84,7 +86,8 @@ class PostPage extends StatelessWidget {
     final int postId = ModalRoute.of(context)!.settings.arguments as int;
     return FutureBuilder(
         future: loadPostData(postId),
-        builder: (BuildContext context, AsyncSnapshot<MainContentState> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<MainContentState> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
@@ -110,8 +113,8 @@ class PostPage extends StatelessWidget {
           Future.microtask(() => Navigator.of(context).pop("delete"));
         }
         return Scaffold(
-          appBar: AppBar(
-            title: Text(postState.mainContent.title!),
+          appBar: CustomAppBar(
+            title: postState.mainContent.title!,
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -133,8 +136,9 @@ class PostPage extends StatelessWidget {
                       content: comment,
                       parentContent: comment.parentContentId != null &&
                               comment.parentContentId != 0
-                          ? postState.mainContent.commentList.firstWhere((element) =>
-                              element.id == comment.parentContentId)
+                          ? postState.mainContent.commentList.firstWhere(
+                              (element) =>
+                                  element.id == comment.parentContentId)
                           : null),
               ],
             ),
@@ -165,7 +169,8 @@ class PostPage extends StatelessWidget {
                           child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            contentAsAReplySection(postState.mainContent.commentList
+                            contentAsAReplySection(postState
+                                .mainContent.commentList
                                 .firstWhere((element) =>
                                     element.id ==
                                     postState.currentCommentParentId)),

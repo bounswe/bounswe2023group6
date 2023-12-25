@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/post_model.dart';
+import 'package:mobile/utils/cache_manager.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final Post post;
 
   const PostCard({
@@ -12,22 +13,45 @@ class PostCard extends StatelessWidget {
   });
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  late bool isLoggedIn;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      CacheManager().getUser();
+      isLoggedIn = true;
+    } catch (e) {
+      isLoggedIn = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/post', arguments: post.id).then((value) {
-          if (value != null) {
-            if (value == "delete") {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Post deleted"),
-                ),
-              );
-              // refresh the current page
-              Navigator.pushReplacementNamed(context, '/');
+        if (!isLoggedIn) {
+          Navigator.pushNamed(context, '/login');
+        } else {
+          Navigator.pushNamed(context, '/post', arguments: widget.post.id)
+              .then((value) {
+            if (value != null) {
+              if (value == "delete") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Post deleted"),
+                  ),
+                );
+                // refresh the current page
+                Navigator.pushReplacementNamed(context, '/');
+              }
             }
-          }
-        });
+          });
+        }
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -36,9 +60,10 @@ class PostCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            userInformationSection(
-                context, post.ownerUsername, post.ownerProfileImage),
-            postContentSection(post),
+            userInformationSection(context, widget.post.ownerUsername,
+                widget.post.ownerProfileImage,
+                isLoggedIn: isLoggedIn),
+            postContentSection(widget.post),
           ]),
         ),
       ),
@@ -56,15 +81,15 @@ Widget postContentSection(Post post) {
             Align(
               alignment: Alignment.topLeft,
               child: Text(post.title!,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2),
             ),
-            Text(
-              timeago.format(post.createdDate), 
-              style: const TextStyle(fontSize: 12,color: Colors.grey),
-              overflow: TextOverflow.ellipsis,maxLines: 1
-            ),
+            Text(timeago.format(post.createdDate),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1),
           ],
         ),
         const SizedBox(
