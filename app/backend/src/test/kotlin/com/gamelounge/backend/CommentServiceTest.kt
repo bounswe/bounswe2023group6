@@ -6,33 +6,34 @@ import com.gamelounge.backend.exception.UnauthorizedCommentAccessException
 import com.gamelounge.backend.middleware.SessionAuth
 import com.gamelounge.backend.model.request.CreateCommentRequest
 import com.gamelounge.backend.model.request.UpdateCommentRequest
-import com.gamelounge.backend.repository.CommentRepository
-import com.gamelounge.backend.repository.PostRepository
-import com.gamelounge.backend.repository.ReportRepository
-import com.gamelounge.backend.repository.UserRepository
+import com.gamelounge.backend.repository.*
 import com.gamelounge.backend.service.CommentService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito
 import org.mockito.kotlin.*
 import java.time.Instant
 import java.util.*
 
 class CommentServiceTest {
-    private val commentRepository: CommentRepository = mock()
-    private val sessionAuth: SessionAuth = mock()
-    private val postRepository: PostRepository = mock()
-    private val userRepository: UserRepository = mock()
-    private val reportRepository: ReportRepository = mock()
-    private val objectMapper: ObjectMapper = mock()
+    private val commentRepository: CommentRepository = Mockito.mock()
+    private val sessionAuth: SessionAuth = Mockito.mock()
+    private val postRepository: PostRepository = Mockito.mock()
+    private val userRepository: UserRepository = Mockito.mock()
+    private val reportRepository: ReportRepository = Mockito.mock()
+    private val lfgRepository: LFGRepository = Mockito.mock()
+    private val objectMapper: ObjectMapper = Mockito.mock()
+
     private val commentService = CommentService(
-        commentRepository,
-        sessionAuth,
-        postRepository,
-        userRepository,
-        reportRepository,
-        objectMapper
+            commentRepository,
+            sessionAuth,
+            postRepository,
+            userRepository,
+            reportRepository,
+            lfgRepository,
+            objectMapper
     )
 
     @Test
