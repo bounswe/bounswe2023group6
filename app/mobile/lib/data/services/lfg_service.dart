@@ -122,10 +122,11 @@ class LFGService {
     if (NetworkConstants.useMockData) {
       return getLfgDataList();
     } else {
+
       ServiceResponse<MultipleLFGAsDTO> response =
           await service.sendRequestSafe<EmptyResponse, MultipleLFGAsDTO>(
         _getLFGs,
-        null,
+        EmptyResponse(),
         MultipleLFGAsDTO(),
         'GET',
       );

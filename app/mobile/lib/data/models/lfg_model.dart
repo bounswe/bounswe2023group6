@@ -58,8 +58,8 @@ class LFG extends Content {
         description: json['description'],
         ownerUserId: json["user"]["userId"],
         ownerUsername: json["user"]["username"],
-        ownerProfileImage: json["user"]["profilePicture"],
-        creationDate: json['creationDate'],
+        ownerProfileImage: json["user"]["profilePicture"] ?? "",
+        creationDate: DateTime.parse(json['creationDate']),
         tags: json["tags"] != null
             ? List<String>.from(json["tags"].map((x) => x["name"]))
             : [],
