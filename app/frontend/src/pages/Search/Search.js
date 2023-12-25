@@ -1,89 +1,44 @@
-import Suggestion from './Suggestion'
-import Game from './Game'
-import Group from './Group'
-import Post from './Post'
+import Game from '../HomePage/Game'
+import Group from '../HomePage/Group'
+import Post from '../HomePage/Post'
 import Navbarx from '../../components/navbar/Navbar'
-import { getAllGames, getRecommendedGames } from '../../services/gameService'
-import { getAllPosts, getRecommendedPosts } from '../../services/postService'
 import React, { useEffect, useState } from 'react'
-
-import kerimbahadir from './kerimbahadir.jpg'
-import zehrayildirim from './zehrayildirim.jpg'
-import mahmutdemir from './mahmutdemir.jpg'
-import alikasap from './alikasap.jpg'
-import { getRecommendedGroups, getAllGroups } from '../../services/lfgService'
-
-export default function HomePage() {
+import { useLocation } from 'react-router-dom'
+export default function Search() {
+	const location = useLocation()
+	const searchData = location.state && location.state.searchData
+	console.log(searchData)
 	const [gamesData, setGamesData] = useState([])
 	const [postData, setPostData] = useState([])
 	const [groupData, setGroupData] = useState([])
+
 	useEffect(() => {
 		const fetchGames = async () => {
 			try {
-				const response = await getRecommendedGames()
-				if (response.data.length != 0) {
-					setGamesData(response.data)
-				} else {
-					const allgames = await getAllGames()
-					setGamesData(allgames.data)
-				}
+				setGamesData(searchData.gameResults)
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		const fetchPosts = async () => {
+			try {
+				setPostData(searchData.postResults)
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		const fetchGroup = async () => {
+			try {
+				setGroupData(searchData.lfgResults)
 			} catch (error) {
 				console.log(error)
 			}
 		}
 
-		fetchGames()
-	}, [])
-
-	useEffect(() => {
-		const fetchPosts = async () => {
-			const response = await getRecommendedPosts()
-			if (response.data.length != 0) {
-				setPostData(response.data)
-			} else {
-				const allposts = await getAllPosts()
-				setPostData(allposts.data)
-			}
-		}
-
 		fetchPosts()
-	}, [])
-	useEffect(() => {
-		const fetchGroups = async () => {
-			const response = await getRecommendedGroups()
-			if (response.data.length != 0) {
-				setGroupData(response.data)
-			} else {
-				const allgroups = await getAllGroups()
-				setGroupData(allgroups.data)
-			}
-		}
-
-		fetchGroups()
-	}, [])
-
-	const suggestionData = [
-		{
-			image: kerimbahadir,
-			username: 'Kerim Bahadır',
-			tag: '#counterstrike #developer'
-		},
-		{
-			image: alikasap,
-			username: 'Ali Kasap',
-			tag: '#counterstrike #gamer #rpg'
-		},
-		{
-			image: zehrayildirim,
-			username: 'Zehra Yıldırım',
-			tag: '#counterstrike #dota2'
-		},
-		{
-			image: mahmutdemir,
-			username: 'Mahmut Demir',
-			tag: '#counterstrike #fighter'
-		}
-	]
+		fetchGames()
+		fetchGroup()
+	}, [searchData])
 
 	// const postData = [
 	// 	{
@@ -121,18 +76,7 @@ export default function HomePage() {
 				{/* </div> */}
 				<div className='flex flex-col gap-4 ml-12 mr-12'>
 					{/* Take 4/5 width of the screen, flex elements in a column, add gap between elements */}
-					<div className='flex w-full items-center justify-center mt-6'>
-						<h1>
-							<b>Suggestions</b>
-						</h1>
-					</div>
-					<div className='flex w-full justify-center'>
-						{/* In the full width you can take (i.e. 4/5), flex elements in a row, center them */}
 
-						{suggestionData.map((item, key) => (
-							<Suggestion item={item} key={key} />
-						))}
-					</div>
 					<div className='flex flex-row mx-4'>
 						{/* Flex elements in a row, add margin on the left and right */}
 						<div className='flex flex-col w-1/3 ml-12 mr-12 pb-8'>

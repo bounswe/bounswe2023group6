@@ -23,21 +23,21 @@ class Post extends Content {
     comments = 0,
     List<Comment> commentList = const [],
   }) : super(
-    createdDate: createdDate,
-    id: id,
-    content: content,
-    type: ContentType.post,
-    likes: likes,
-    dislikes: dislikes,
-    ownerUserId: ownerUserId,
-    ownerUsername: ownerUsername,
-    ownerProfileImage: ownerProfileImage,
-    commentList: commentList,
-    comments: comments,
-    title: title,
-    tags: tags,
-    relatedGameId: relatedGameId,
-  );
+          createdDate: createdDate,
+          id: id,
+          content: content,
+          type: ContentType.post,
+          likes: likes,
+          dislikes: dislikes,
+          ownerUserId: ownerUserId,
+          ownerUsername: ownerUsername,
+          ownerProfileImage: ownerProfileImage,
+          commentList: commentList,
+          comments: comments,
+          title: title,
+          tags: tags,
+          relatedGameId: relatedGameId,
+        );
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
@@ -63,10 +63,10 @@ class Post extends Content {
       tags: json.containsKey("tags")
           ? List<String>.from(json['tags'].map((x) => x["name"]))
           : [],
-      // relatedGameId: json.containsKey("relatedGameId")
-      // ? json['relatedGameId']
-      // : 0,
-      relatedGameId: json['relatedGameId'] ?? 0,
+      relatedGameId:
+          (json.containsKey('relatedGame') && json['relatedGame'] != null)
+              ? json['relatedGame']['gameId']
+              : null,
     );
   }
 

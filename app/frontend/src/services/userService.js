@@ -6,10 +6,15 @@ const axiosInstance = axios.create({
 
 axiosInstance.defaults.withCredentials = true
 
-export const getUserInfoBySessionId = (sessionId) => {
-	return axiosInstance.get('/user', {
-		headers: { Cookie: `SESSIONID=${sessionId}` }
-	})
+export const getUserInfoBySessionId = () => {
+	return axiosInstance.get(
+		'/user',
+		{},
+		{
+			withCredentials: true,
+			headers: { 'Content-Type': 'application/json' }
+		}
+	)
 }
 
 export const updateUserByUserId = (sessionId, userData) => {

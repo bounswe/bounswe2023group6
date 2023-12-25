@@ -25,6 +25,7 @@ class PostService {
   static PostService get instance => _instance;
 
   static const String _getPosts = "/forum/posts";
+  static const String _getRecommendedPosts = "/forum/posts/recommended";
   static const String _getPost = "/forum/posts";
   static const String _createPost = "/forum/posts";
   static const String _updatePost = "/forum/posts";
@@ -46,6 +47,8 @@ class PostService {
   static const String _getLikedUsersForComment = "/comments/{id}/upvotedUsers";
   static const String _getDislikedUsersForComment =
       "/comments/{id}/downvotedUsers";
+
+  static const String _getPostsByGame = "/forum/posts/game/{id}";
 
   Future<List<Post>> getPosts() async {
     if (NetworkConstants.useMockData) {
@@ -160,6 +163,29 @@ class PostService {
     }
   }
 
+  Future<List<Post>> getRecommendedPosts() async {
+    ServiceResponse<MultipleContentAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
+      _getRecommendedPosts,
+      null,
+      MultipleContentAsDTO(),
+      'GET',
+    );
+    if (response.success) {
+      List<Post> posts = response.responseConverted!.posts!
+          .map((e) => e.content! as Post)
+          .toList();
+      
+      if (posts.isEmpty) {
+        posts = await getPosts();
+      }
+
+      return posts;
+    } else {
+      throw Exception('Failed to load recommended post');
+    }
+  }
+
   Future<Post> getPost(int postId) async {
     if (NetworkConstants.useMockData) {
       List<Post> posts = await getPosts();
@@ -182,11 +208,11 @@ class PostService {
   }
 
   Future<Post> createPost(
-    String title, 
-    String content, 
-    int relatedGameId, 
+    String title,
+    String content,
+    int relatedGameId,
     String postCategory,
-    List<String> tags,  
+    List<String> tags,
   ) async {
     if (NetworkConstants.useMockData) {
       return Post(
@@ -209,7 +235,7 @@ class PostService {
       title: title,
       content: content,
       relatedGameId: relatedGameId,
-      category: postCategory, 
+      category: postCategory,
       tags: tags,
     );
     ServiceResponse<SingleContentDTO> response =
@@ -600,6 +626,25 @@ class PostService {
       return userIds;
     } else {
       throw Exception('Failed to load disliked users for comment');
+    }
+  }
+
+  Future<List<Post>> getPostsByGame(int gameId) async {
+    ServiceResponse<MultipleContentAsDTO> response = await service
+        .sendRequestSafe<MultipleContentAsDTO, MultipleContentAsDTO>(
+      _getPostsByGame.replaceFirst('{id}', gameId.toString()),
+      null,
+      MultipleContentAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<Post> posts = response.responseConverted!.posts!
+          .map((e) => e.content! as Post)
+          .toList();
+      return posts;
+    } else {
+      throw Exception('Failed to load posts by game');
     }
   }
 }

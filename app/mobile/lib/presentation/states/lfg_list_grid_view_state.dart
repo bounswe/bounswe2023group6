@@ -10,10 +10,26 @@ class GridViewState extends State {
   int countValue = 2;
   int aspectWidth = 2;
   int aspectHeight = 1;
-  List<LFG> itemList = getImageDataList();
+  final LFGService service = LFGService();
 
-  static List<LFG> getImageDataList() {
-    return LFGService.lfgList;
+  late bool isLoggedIn;
+
+  Future<List<LFG>> loadLFGs() async {
+    List<LFG> lfgList = await service.getLFGs();
+
+    return lfgList;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    try {
+      isLoggedIn = true;
+      CacheManager().getUser();
+    } catch (e) {
+      isLoggedIn = false;
+    }
   }
 
   late bool isLoggedIn;
@@ -58,8 +74,8 @@ class GridViewState extends State {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+/*
+  Widget build2(BuildContext context) {
     return Scaffold(
         body: Column(children: [
       Expanded(
@@ -81,5 +97,40 @@ class GridViewState extends State {
         ),
       )
     ]));
+  }
+*/
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: FutureBuilder(
+            future: Future.wait([loadLFGs()]),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                List<LFG> lfgs = snapshot.data![0];
+                return Column(children: [
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: countValue,
+                      childAspectRatio: (aspectWidth / aspectHeight),
+                      children: lfgs
+                          .map((data) => GestureDetector(
+                              onTap: () {
+                                if (!isLoggedIn) {
+                                  Navigator.pushNamed(context, '/login');
+                                } else {
+                                  Navigator.pushNamed(context, "/group",
+                                      arguments: data.id);
+                                }
+                              },
+                              child: LFGCard(lfg: data)))
+                          .toList(),
+                    ),
+                  )
+                ]);
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }));
   }
 }

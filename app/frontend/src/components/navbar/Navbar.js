@@ -19,7 +19,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../gamelounge.png'
-import {getUserInfoBySessionId} from "../../services/userService";
+import { getAllSearch } from '../../services/searchService.js'
+import { getUserInfoBySessionId } from "../../services/userService";
 const Navbarx = () => {
 	const api_url = process.env.REACT_APP_API_URL
 	const navigate = useNavigate()
@@ -95,23 +96,61 @@ const Navbarx = () => {
 	useEffect(() => {
 		const isAdmin = JSON.parse(localStorage.getItem('isAdmin'))
 		if (isAdmin) {
-		  setIsAdmin(true)
+			setIsAdmin(true)
 		}
-	  }, [])
+	}, [])
+	const [searchResults, setSearchResults] = useState([])
+	const [searchQuery, setSearchQuery] = useState('')
+	const navigateToSearch = (result) => {
+		// Use the 'navigate' function from 'react-router-dom' to navigate to the Search component
+		navigate('/search', { state: { searchData: result } })
+	}
+	const handleSearch = async () => {
+		try {
+			const response = await getAllSearch(searchQuery)
 
-	  useEffect(() => {
-              const fetchUserInfo = async () => {
-                  try {
-                      const response = await getUserInfoBySessionId();
-                      const userData = response.data;
-                      setCurrentUser(userData);
-                      console.log('Current User:', userData);
-                  } catch (error) {
-                      console.error('Error fetching user info:', error);
-                  }
-              };
-              fetchUserInfo();
-          }, []);
+			if (response.status === 200) {
+				setSearchResults(response.data)
+				console.log(searchResults)
+				navigateToSearch(response.data)
+			}
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
+	const handleInputChange = (e) => {
+		setSearchQuery(e.target.value)
+		// Trigger search when the user stops typing for 300 milliseconds
+	}
+
+	useEffect(() => {
+		const fetchUserInfo = async () => {
+			try {
+				const response = await getUserInfoBySessionId();
+				const userData = response.data;
+				setCurrentUser(userData);
+				console.log('Current User:', userData);
+			} catch (error) {
+				console.error('Error fetching user info:', error);
+			}
+		};
+		fetchUserInfo();
+	}, []);
+
+	useEffect(() => {
+		const fetchUserInfo = async () => {
+			try {
+				const response = await getUserInfoBySessionId();
+				const userData = response.data;
+				setCurrentUser(userData);
+				console.log('Current User:', userData);
+			} catch (error) {
+				console.error('Error fetching user info:', error);
+			}
+		};
+		fetchUserInfo();
+	}, []);
 
 	return (
 		<Navbar isBordered className='bg-black'>
@@ -143,7 +182,7 @@ const Navbarx = () => {
 					{isAdmin && (
 						<NavbarItem>
 							<Link href='/admin-panel' aria-current='page' className='text-[#fff4e0]'>
-							Admin Panel
+								Admin Panel
 							</Link>
 						</NavbarItem>
 					)}
@@ -161,6 +200,12 @@ const Navbarx = () => {
 					size='sm'
 					startContent={<SearchIcon size={18} />}
 					type='search'
+					onChange={handleInputChange}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							handleSearch()
+						}
+					}}
 				/>
 				{isLoggedIn ? (
 					<Dropdown placement='bottom-end' justify='end'>
@@ -194,6 +239,11 @@ const Navbarx = () => {
 										size='sm'
 										startContent={<SearchIcon size={18} />}
 										type='search'
+										onKeyDown={(e) => {
+											if (e.key === 'Enter') {
+												handleSearch()
+											}
+										}}
 									/>
 								</DropdownItem>
 							) : null}

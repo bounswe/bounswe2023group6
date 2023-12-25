@@ -24,6 +24,7 @@ dependencies:
   uuid: ^4.2.2
 
   multiselect_formfield: ^0.1.7
+  filter_list: ^1.0.2
 
 
 

@@ -211,6 +211,25 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 						<p className='text-neutral-600 text-xs'>{new Date(post.creationDate).toLocaleDateString()}</p>
 					</div>
 				</div>
+				<div className='flex justify-end'>
+					<div className='hidden md:flex flex flex-wrap pb-2 opacity-75 mb-4 ml-48'>
+						{post.tags.map((tag, index) => (
+							<span
+								key={index}
+								className='rounded-md bg-neutral-50 px-1 mr-1 mb-1'
+								style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+							>
+								#{tag.name}
+							</span>
+						))}
+					</div>
+					<div className='hidden md:flex inline-flex btn-xs rounded-md bg-neutral-500 px-2 py-1 text-xs font-medium text-neutral-50 ring-1 ring-inset ring-neutral-500/10 mr-2'>
+						{post.category}
+					</div>
+					<div className='hidden md:flex mr-2 ml-2 text-neutral-600 hover:text-neutral-900 link'>
+						<a href={`/posts/${post.postId}`}>{post.totalComments} Comments</a>
+					</div>
+				</div>
 				<div className='flex flex-row'>
 					<button
 						onClick={() => onUpvote(post.postId)}
