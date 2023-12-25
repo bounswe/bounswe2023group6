@@ -12,13 +12,13 @@ data class GameDTO(
         var gameId: Long = 0,
         var title: String = "",
         var description: String = "",
-        var genre: GameGenre = GameGenre.EMPTY,
-        var platform: GamePlatform = GamePlatform.EMPTY,
+        val genres: List<GameGenre>,
+        val platforms: List<GamePlatform>,
         var characters: List<CharacterDTO>,
-        var playerNumber: NumberOfPlayers = NumberOfPlayers.EMPTY,
+        var playerNumber: NumberOfPlayers = NumberOfPlayers.Empty,
         var releaseYear: Int = 0,
-        var universe: UniverseInfo = UniverseInfo.EMPTY,
-        var mechanics: GameMechanics = GameMechanics.EMPTY,
+        var universe: UniverseInfo = UniverseInfo.Empty,
+        var mechanics: GameMechanics = GameMechanics.Empty,
         var playtime: String = "",
         var totalRating: Int,
         var countRating: Int,
@@ -27,5 +27,6 @@ data class GameDTO(
         var tags: List<TagDTO>,
         var gamePicture: String? = null,
         var status: String = "",
-        var isDeleted: Boolean = false
+        var isDeleted: Boolean = false,
+        var similarGames: List<Long> = mutableListOf()
 )

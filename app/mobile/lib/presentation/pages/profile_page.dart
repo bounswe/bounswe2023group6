@@ -30,16 +30,18 @@ class _ProfilePageState extends State<ProfilePage> {
   bool refreshPage = false;
   bool isProfileOfCurrentUser = false;
   bool isEditingAboutMe = false;
+  bool isFollowing = false;
 
   Future<User> loadUser(String profileUsername) async {
-    if (pageInitialized) {
-      if (refreshPage) {
-        profileUser = await userService.getUser(profileUsername);
-        if (isProfileOfCurrentUser) {
-          // Update the user in the cache
-          await CacheManager().saveUser(profileUser);
-        }
-        await userService.getUserDetails(profileUser);
+    if (pageInitialized && !refreshPage) {
+      return profileUser;
+    }
+
+    if (refreshPage) {
+      profileUser = await userService.getUser(profileUsername);
+      if (isProfileOfCurrentUser) {
+        // Update the user in the cache
+        await CacheManager().saveUser(profileUser);
       }
     } else {
       if (currentUser.username == profileUsername) {
@@ -47,10 +49,20 @@ class _ProfilePageState extends State<ProfilePage> {
         isProfileOfCurrentUser = true;
       } else {
         profileUser = (await userService.getUser(profileUsername));
+        if (!profileUser.isProfileVisible) {
+          throw Exception("This profile is not visible");
+        }
       }
-      await userService.getUserDetails(profileUser);
     }
-    print("Profile picture: ${profileUser.profilePicture}");
+    await userService.getUserDetails(profileUser);
+    List<User> followings = await userService.getFollowings();
+    isFollowing = false;
+    for (User following in followings) {
+      if (following.username == profileUser.username) {
+        isFollowing = true;
+        break;
+      }
+    }
 
     pageInitialized = true;
     refreshPage = false;
@@ -67,7 +79,17 @@ class _ProfilePageState extends State<ProfilePage> {
               return const Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                return AlertDialog(
+                  title: const Text("Error"),
+                  content: const Text("This profile is not visible"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("OK"))
+                  ],
+                );
               } else {
                 return buildProfilePage(profileUser);
               }
@@ -94,21 +116,61 @@ class _ProfilePageState extends State<ProfilePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              DisplayAvatar(
-                  imageLink: user.profilePicture,
-                  onPressed:
-                      isProfileOfCurrentUser ? updateProfileAvatar : null,
-                  size: 50),
-              Text(
-                user.name ?? 'Name',
-                style: const TextStyle(fontSize: 15),
-                textAlign: TextAlign.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // put a sized box to center the avatar
+                  const Spacer(),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DisplayAvatar(
+                            imageLink: user.profilePicture,
+                            onPressed: isProfileOfCurrentUser
+                                ? updateProfileAvatar
+                                : null,
+                            size: 50),
+                        Text(
+                          user.name ?? 'Name',
+                          style: const TextStyle(fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          "@${user.username}",
+                          style: const TextStyle(fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
+                        if (user.title != null &&
+                            user.title != "" &&
+                            user.company != null &&
+                            user.company != "")
+                          Text(
+                            "${user.title} at ${user.company}",
+                            style: const TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center,
+                          ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        isProfileOfCurrentUser
+                            ? buildChangeVisibilityButton()
+                            : Container(),
+                        const SizedBox(height: 10),
+                        isProfileOfCurrentUser
+                            ? buildChangeProfileInformationButton()
+                            : Container(),
+                      ],
+                    ),
+                  )
+                ],
               ),
-              Text(
-                "@${user.username}",
-                style: const TextStyle(fontSize: 15),
-                textAlign: TextAlign.center,
-              ),
+              const SizedBox(height: 10),
+              buildTagSection(),
               const SizedBox(height: 10),
               buildFollowSection(),
               const SizedBox(height: 10),
@@ -151,7 +213,8 @@ class _ProfilePageState extends State<ProfilePage> {
               buildProfileSection(
                 "Created Posts",
                 user.createdPosts.isEmpty
-                    ? const Text("No Created Posts")
+                    ? const Text("No Created Posts",
+                        style: TextStyle(color: Colors.white))
                     : ListView(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -164,7 +227,8 @@ class _ProfilePageState extends State<ProfilePage> {
               buildProfileSection(
                 "Liked Posts",
                 user.likedPosts.isEmpty
-                    ? const Text("No Liked Posts")
+                    ? const Text("No Liked Posts",
+                        style: TextStyle(color: Colors.white))
                     : ListView(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -177,7 +241,8 @@ class _ProfilePageState extends State<ProfilePage> {
               buildProfileSection(
                 "Games",
                 user.likedGames.isEmpty
-                    ? const Text("No Games")
+                    ? const Text("No Liked Games",
+                        style: TextStyle(color: Colors.white))
                     : ListView(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -242,11 +307,14 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           if (!isProfileOfCurrentUser)
             TextButton(
-              onPressed: () {
-                // Add logic to follow the user
-                userService.followUser(profileUser.username);
+              onPressed: () async {
+                if (!isFollowing) {
+                  await userService.followUser(profileUser);
+                } else {
+                  await userService.unfollowUser(profileUser);
+                }
                 setState(() {
-                  profileUser.followers++;
+                  refreshPage = true;
                 });
               },
               child: Container(
@@ -258,14 +326,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: BorderRadius.circular(15),
                   color: ColorConstants.buttonColor,
                 ),
-                child: const Text(
-                  "Follow",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                  ),
-                ),
+                child: !isFollowing
+                    ? const Text(
+                        "Follow",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                      )
+                    : const Text(
+                        "Unfollow",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                      ),
               ),
             ),
           const SizedBox(height: 10),
@@ -305,6 +382,223 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       );
+
+  Widget buildChangeVisibilityButton() => TextButton(
+        onPressed: () async {
+          // Add logic to change visibility
+          profileUser.isProfileVisible = !profileUser.isProfileVisible;
+          await userService.updateUser(profileUser);
+          setState(() {
+            refreshPage = true;
+          });
+        },
+        child: Container(
+          width: 150,
+          height: 50,
+          padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            // make color dependent on visibility
+            color: profileUser.isProfileVisible
+                ? ColorConstants.color1
+                : ColorConstants.color2,
+          ),
+          child: Text(
+            profileUser.isProfileVisible
+                ? "Visibility: Public"
+                : "Visibility: Private",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      );
+
+  Widget buildChangeProfileInformationButton() => TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Change Profile Information"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller:
+                          TextEditingController(text: profileUser.title),
+                      decoration: const InputDecoration(
+                        labelText: "Title",
+                      ),
+                      onChanged: (String value) {
+                        profileUser.title = value;
+                      },
+                    ),
+                    TextField(
+                      controller:
+                          TextEditingController(text: profileUser.company),
+                      decoration: const InputDecoration(
+                        labelText: "Company",
+                      ),
+                      onChanged: (String value) {
+                        profileUser.company = value;
+                      },
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      await userService.updateUser(profileUser);
+                      setState(() {
+                        refreshPage = true;
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Save"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Container(
+          width: 150,
+          height: 45,
+          padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.blueAccent,
+          ),
+          child: const Text(
+            "Change Profile Information",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      );
+
+  Widget buildTagSection() => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          if (profileUser.tags.isNotEmpty)
+            Column(children: [
+              const Text(
+                "Tags",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (String tag in profileUser.tags)
+                    Container(
+                      width: 150,
+                      height: 30,
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 1, top: 5, bottom: 5),
+                      margin: const EdgeInsets.only(right: 10, bottom: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: ColorConstants.color1,
+                      ),
+                      child: Text(
+                        tag,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ]),
+          const SizedBox(height: 10),
+          if (isProfileOfCurrentUser) buildAddNewTagSection(),
+        ],
+      );
+
+  Widget buildAddNewTagSection() {
+    String newTag = "";
+    return TextButton(
+      onPressed: () {
+        // Add logic to add tags
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Add Tags"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: "Tag",
+                    ),
+                    onChanged: (String value) {
+                      newTag = value;
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    profileUser.tags.add(newTag);
+                    await userService.updateUser(profileUser);
+                    setState(() {
+                      refreshPage = true;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Save"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 150,
+        height: 30,
+        padding: const EdgeInsets.only(left: 15, right: 1, top: 5, bottom: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: ColorConstants.buttonColor,
+        ),
+        child: const Text(
+          "Add Tags",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget textAsButton(String text) => TextButton(
         onPressed: () {},

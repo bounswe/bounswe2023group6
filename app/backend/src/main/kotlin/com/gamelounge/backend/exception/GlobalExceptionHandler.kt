@@ -182,5 +182,36 @@ class GlobalExceptionHandler {
                 .body(mapOf("errorMessage" to exception.message))
     }
 
+    @ExceptionHandler(DuplicateGameException::class)
+    fun handleDuplicateGameException(exception: DuplicateGameException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(UnauthorizedReportsAccessException::class)
+    fun handleUnauthorizedReportsAccessException(exception: UnauthorizedReportsAccessException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(LFGAlreadyJoinedException::class)
+    fun handleLFGAlreadyJoinedException(exception: LFGAlreadyJoinedException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(LFGisFullException::class)
+    fun handleLFGisFullException(exception: LFGisFullException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+    @ExceptionHandler(LFGAlreadyLeftException::class)
+    fun handleLFGAlreadyLeftException(exception: LFGAlreadyLeftException): ResponseEntity<Map<String, String?>> {
+        logger.info(exception.message)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(mapOf("errorMessage" to exception.message))
+    }
+
 
 }

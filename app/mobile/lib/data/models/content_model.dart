@@ -17,7 +17,7 @@ class Content {
   final String ownerProfileImage;
 
   // final List<String>? annotations;
-  final List<String>? tags;
+  List<String>? tags;
   // final List<Report> reports;
   // final List<Content>? relatedContent;
   // final List<Content>? relatedGames;
@@ -34,7 +34,7 @@ class Content {
   List<int> commentIds = [];
 
   List<Comment> commentList = [];
-  int? parentContentId;
+  int? parentContentId; // for comment
 
   int? relatedGameId;
   String? title; // For post and lfg
@@ -81,14 +81,18 @@ class Content {
 // Content related widgets
 Widget userInformationSection(
     BuildContext context, String username, String profileImage,
-    {bool isContentOfOriginalPoster = false}) {
+    {bool isLoggedIn = true, bool isContentOfOriginalPoster = false}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       InkWell(
         onTap: () {
           // go to profile page
-          Navigator.pushNamed(context, '/profile', arguments: username);
+          if (!isLoggedIn) {
+            Navigator.pushNamed(context, '/login');
+          } else {
+            Navigator.pushNamed(context, '/profile', arguments: username);
+          }
         },
         child: Column(
           children: [
@@ -117,7 +121,11 @@ Widget userInformationSection(
                       child: Text('Original Poster',
                           style: TextStyle(
                               fontSize: 14,
-                              color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5))),
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!
+                                  .withOpacity(0.5))),
                     ),
                   )
                 : Container(),

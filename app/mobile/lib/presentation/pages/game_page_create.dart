@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/constants/color_constants.dart';
@@ -6,6 +8,7 @@ import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class GamePageCreate extends StatefulWidget {
   final Game? selectedGame;
@@ -32,56 +35,116 @@ class _GameCreatePageState extends State<GamePageCreate> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final List<String> _genreList = [
-"MOBA", "FIGHTING", "STRATEGY", "SPORTS_AND_RACING", "RPG", "SHOOTER", "EMPTY"
-  ];
-  String? _selectedGenre;
 
-  final List<String> _platformList = [
-"XBOX",
-    "COMPUTER",
-    "PS", // PlayStation
-    "ONBOARD",
-    "EMPTY"
+  List<dynamic>? genreList = [
+    {
+      "display": "RGP",
+      "value": "RGP",
+    },
+    {
+      "display": "Strategy",
+      "value": "Strategy",
+    },
+    {
+      "display": "Shooter",
+      "value": "Shooter",
+    },
+    {
+      "display": "Sports",
+      "value": "Sports",
+    },
+    {
+      "display": "Fighting",
+      "value": "Fighting",
+    },
+    {
+      "display": "MOBA",
+      "value": "MOBA",
+    },
+    {
+      "display": "Action",
+      "value": "Action",
+    },
+    {
+      "display": "Adventure",
+      "value": "Adventure",
+    },
+    {
+      "display": "Simulation",
+      "value": "Simulation",
+    },
+    {
+      "display": "Horror",
+      "value": "Horror",
+    },
+    {
+      "display": "Empty",
+      "value": "Empty",
+    },
   ];
-  String? _selectedPlatform;
+  List<dynamic>? platformList = [
+    {
+      "display": "XBOX",
+      "value": "XBOX",
+    },
+    {
+      "display": "Computer",
+      "value": "Computer",
+    },
+    {
+      "display": "PS",
+      "value": "PS",
+    },
+    {
+      "display": "Onboard",
+      "value": "Onboard",
+    },
+    {
+      "display": "Mobile",
+      "value": "Mobile",
+    },
+    {
+      "display": "Empty",
+      "value": "Empty",
+    }
+  ];
+  List<dynamic> _selectedPlatforms = [];
+  List<dynamic> _selectedGenres = [];
 
-  final _playerNumberController = TextEditingController();
   final _releaseYearController = TextEditingController();
 
-
   final List<String> _playerNumberList = [
-    "SINGLE",
-    "TEAMS",
-    "MULTIPLE",
+    "Single",
+    "Teams",
+    "Multiplayer",
     "MMO", // Massively Multiplayer Online
-    "EMPTY"
+    "Empty"
   ];
   String? _selectedPlayerNumber;
 
   final List<String> _universeList = [
-    "MEDIEVAL",
-    "FANTASY",
-    "SCIFI",
-    "CYBERPUNK",
-    "HISTORICAL",
-    "CONTEMPORARY",
-    "POST_APOCALYPTIC",
-    "ALTERNATE_REALITY",
-    "EMPTY"
+    "Medieval",
+    "Fantasy",
+    "SciFi",
+    "Cyberpunk",
+    "Historical",
+    "Contemporary",
+    "PostApocalyptic",
+    "AlternateReality",
+    "Empty"
   ];
 
   String? _selectedUniverse;
 
   final List<String> _gameMechanicsist = [
-    "TURN_BASED",
-    "CHANCE_BASED",
-    "EMPTY"
+    "TurnBased",
+    "ChangeBased",
+    "RealTime",
+    "Empty"
   ];
 
   String? _selectedGameMechanics;
 
-  final _mechanicsController = TextEditingController();
   final _playTimeController = TextEditingController();
 
   @override
@@ -92,18 +155,14 @@ class _GameCreatePageState extends State<GamePageCreate> {
       buttonLabel = "Update";
       _titleController.text = widget.selectedGame!.title;
       _descriptionController.text = widget.selectedGame!.description;
-      _selectedGenre = widget.selectedGame!.genre;
-      _selectedPlatform = widget.selectedGame!.platform;
+      _selectedGenres = widget.selectedGame!.genres!;
+      _selectedPlatforms = widget.selectedGame!.platforms!;
       _selectedPlayerNumber = widget.selectedGame!.playerNumber;
-      //_playerNumberController.text =
-      //    widget.selectedGame!.playerNumber.toString();
       _releaseYearController.text = widget.selectedGame!.releaseYear.toString();
       _selectedUniverse = widget.selectedGame!.universe;
-      //_mechanicsController.text = widget.selectedGame!.mechanics!;
       _selectedGameMechanics = widget.selectedGame!.mechanics;
       _playTimeController.text = widget.selectedGame!.playtime.toString();
       _image = File(widget.selectedGame!.gamePicture);
-      // Initialize other fields with selected game properties
     }
   }
 
@@ -147,51 +206,59 @@ class _GameCreatePageState extends State<GamePageCreate> {
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField(
-                value: _selectedGenre,
-                items: _genreList.map((genre) {
-                  return DropdownMenuItem(
-                    value: genre,
-                    child: Text(genre),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedGenre = value as String;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: "Genre",
+              MultiSelectFormField(
+                autovalidate: AutovalidateMode.disabled,
+                chipBackGroundColor: ColorConstants.color1,
+                chipLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                dialogTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+                checkBoxActiveColor: ColorConstants.color1,
+                checkBoxCheckColor: ColorConstants.color3,
+                dialogShapeBorder: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                title: const Text(
+                  "Select genres",
+                  style: TextStyle(fontSize: 16),
                 ),
-                validator: (value) {
-                  if (value == null) {
-                    return "Please select a genre";
-                  }
-                  return null;
+                dataSource: genreList,
+                textField: 'display',
+                valueField: 'value',
+                okButtonLabel: 'OK',
+                cancelButtonLabel: 'CANCEL',
+                hintWidget: const Text('Please choose one or more'),
+                initialValue: _selectedGenres,
+                onSaved: (value) {
+                  if (value == null) return;
+                  setState(() {
+                    _selectedGenres = value;
+                  });
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField(
-                value: _selectedPlatform,
-                items: _platformList.map((platform) {
-                  return DropdownMenuItem(
-                    value: platform,
-                    child: Text(platform),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedPlatform = value as String;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: "Platform",
+              MultiSelectFormField(
+                autovalidate: AutovalidateMode.disabled,
+                chipBackGroundColor: ColorConstants.color1,
+                chipLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                dialogTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+                checkBoxActiveColor: ColorConstants.color1,
+                checkBoxCheckColor: ColorConstants.color3,
+                dialogShapeBorder: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                title: const Text(
+                  "Select platforms",
+                  style: TextStyle(fontSize: 16),
                 ),
-                validator: (value) {
-                  if (value == null) {
-                    return "Please select a platform";
-                  }
-                  return null;
+                dataSource: platformList,
+                textField: 'display',
+                valueField: 'value',
+                okButtonLabel: 'OK',
+                cancelButtonLabel: 'CANCEL',
+                hintWidget: const Text('Please choose one or more'),
+                initialValue: _selectedPlatforms,
+                onSaved: (value) {
+                  if (value == null) return;
+                  setState(() {
+                    _selectedPlatforms = value;
+                  });
                 },
               ),
               const SizedBox(height: 16),
@@ -218,22 +285,6 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
-              // TextFormField(
-              //   controller: _playerNumberController,
-              //   keyboardType: TextInputType.number,
-              //   inputFormatters: <TextInputFormatter>[
-              //     FilteringTextInputFormatter.digitsOnly,
-              //   ],
-              //   decoration: const InputDecoration(
-              //     hintText: "Number of Players",
-              //   ),
-              //   validator: (value) {
-              //     if (value == null || value.isEmpty) {
-              //       return "Please enter number of players";
-              //     }
-              //     return null;
-              //   },
-              // ),
               TextFormField(
                 controller: _releaseYearController,
                 keyboardType: TextInputType.number,
@@ -298,18 +349,6 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
-              // TextFormField(
-              //   controller: _mechanicsController,
-              //   decoration: const InputDecoration(
-              //     hintText: "Mechanics",
-              //   ),
-              //   validator: (value) {
-              //     if (value == null || value.isEmpty) {
-              //       return "Please enter mechanics";
-              //     }
-              //     return null;
-              //   },
-              // ),
               TextFormField(
                 controller: _playTimeController,
                 keyboardType: TextInputType.number,
@@ -326,44 +365,43 @@ class _GameCreatePageState extends State<GamePageCreate> {
                   return null;
                 },
               ),
-              widget.selectedGame == null ?  Button(
-                onPressed: _pickImage,
-                label: "Choose Image",
-              ) : SizedBox(),
+              widget.selectedGame == null
+                  ? Button(
+                      onPressed: _pickImage,
+                      label: "Choose Image",
+                    )
+                  : SizedBox(),
               const SizedBox(height: 16),
               Button(
                 label: buttonLabel,
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     if (widget.selectedGame != null) {
-                      //update service will be implemented.
-                      GameService().updateGame(                        
-                        _titleController.text,
-                        _descriptionController.text,
-                        _selectedGenre,
-                        _selectedPlatform,
-                        _selectedPlayerNumber,
-                        _selectedGameMechanics,
-                        int.parse(_releaseYearController.text),
-                        _selectedUniverse,
-                        _playTimeController.text,
-                        widget.selectedGame!.gameId,);
+                      GameService().updateGameNew(
+                          _titleController.text,
+                          _descriptionController.text,
+                          _selectedGenres.cast<String>(),
+                          _selectedPlatforms.cast<String>(),
+                          _selectedPlayerNumber,
+                          _selectedGameMechanics,
+                          int.parse(_releaseYearController.text),
+                          _selectedUniverse,
+                          _playTimeController.text,
+                          widget.selectedGame!.gameId);
 
-                        Navigator.of(context).pop("create");
+                      Navigator.of(context).pop("create");
                     } else {
                       GameService().createGame(
                         _titleController.text,
                         _descriptionController.text,
-                        _selectedGenre,
-                        _selectedPlatform,
+                        _selectedGenres.cast<String>(),
+                        _selectedPlatforms.cast<String>(),
                         _selectedPlayerNumber,
                         _selectedGameMechanics,
-                        //_mechanicsController.text,
                         int.parse(_releaseYearController.text),
                         _selectedUniverse,
                         _playTimeController.text,
-                        _image, 
-                        // Pass the image path to your service method
+                        _image,
                       );
 
                       Navigator.of(context).pop("create");

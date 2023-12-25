@@ -8,8 +8,8 @@ import com.gamelounge.backend.constant.GameMechanics
 class UpdateGameRequest(
         val title: String,
         val description: String,
-        val genre: GameGenre,
-        val platform: GamePlatform,
+        val genres: List<String>,
+        val platforms: List<String>,
         val playerNumber: NumberOfPlayers,
         val releaseYear: Int,
         val universe: UniverseInfo,

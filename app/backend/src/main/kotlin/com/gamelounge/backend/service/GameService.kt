@@ -1,5 +1,7 @@
 package com.gamelounge.backend.service
 
+import com.gamelounge.backend.constant.GameGenre
+import com.gamelounge.backend.constant.GamePlatform
 import com.gamelounge.backend.entity.*
 import com.gamelounge.backend.exception.*
 import com.gamelounge.backend.middleware.SessionAuth
@@ -27,30 +29,40 @@ class GameService(
         private val userRepository: UserRepository,
         private val recommendationService: RecommendationService,
         private val reportRepository: ReportRepository,
-        val s3Service: S3Service
+        val s3Service: S3Service,
+        private val gameSimilarityService: GameSimilarityService
 ) {
     fun createGame(sessionId: UUID, game: CreateGameRequest, image: MultipartFile?): Game {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+
+        // Convert genre strings to GameGenre enum values
+        val genres = game.genres.map { GameGenre.valueOf(it) }.toMutableSet()
+
+        // Convert platform strings to GamePlatform enum values
+        val platforms = game.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
+
         val newGame = Game(
                 title = game.title,
                 description = game.description,
-                genre = game.genre,
-                platform = game.platform,
+                genres = genres,
+                platforms = platforms,
                 playerNumber = game.playerNumber,
                 releaseYear = game.releaseYear,
                 universe = game.universe,
                 mechanics = game.mechanics,
                 playtime = game.playtime,
                 user = user,
-                status = GameStatus.PENDING_APPROVAL
+                status = GameStatus.PENDING_APPROVAL,
         )
+        gameSimilarityService.updateSimilarGamesField(newGame)
         gameRepository.save(newGame) // save to get gameId for image name
         image?.let { saveImageInS3AndImageURLInDBForGame(image, newGame) }
+
         return gameRepository.save(newGame)
     }
 
-    fun createEditingRequest(sessionId: UUID, editedGame: CreateEditingRequest, image: MultipartFile?, gameId: Long): RequestedEditingGame {
+    fun createEditingRequest(sessionId: UUID, editedGame: CreateEditingRequest, editedImage: MultipartFile?, gameId: Long) {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val game = getGame(gameId)
@@ -69,21 +81,27 @@ class GameService(
             throw DuplicatedEditingRequestException("Not allowed to edit more than once")
         }
 
+        // Convert genre strings to GameGenre enum values
+        val genres = editedGame.genres.map { GameGenre.valueOf(it) }.toMutableSet()
+
+        // Convert platform strings to GamePlatform enum values
+        val platforms = editedGame.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
+
         val requestEditingGame = RequestedEditingGame(
                 gameId = gameId,
                 title = editedGame.title,
                 description = editedGame.description,
-                genre = editedGame.genre,
-                platform = editedGame.platform,
+                genres = genres,
+                platforms = platforms,
                 playerNumber = editedGame.playerNumber,
                 releaseYear = editedGame.releaseYear,
                 universe = editedGame.universe,
                 mechanics = editedGame.mechanics,
                 playtime = editedGame.playtime,
         )
-        editedGameRepository.save(requestEditingGame) // save to get gameId for image name
-        image?.let { saveImageInS3AndImageURLInDBForEditedGame(image, requestEditingGame) }
-        return editedGameRepository.save(requestEditingGame)
+        //editedGameRepository.save(requestEditingGame) // save to get gameId for image name
+        editedImage?.let { saveImageInS3AndImageURLInDBForEditedGame(editedImage, requestEditingGame) }
+        editedGameRepository.save(requestEditingGame)
     }
 
     private fun saveImageInS3AndImageURLInDBForGame(image: MultipartFile, game: Game) {
@@ -91,9 +109,9 @@ class GameService(
         gameRepository.save(game)
     }
 
-    private fun saveImageInS3AndImageURLInDBForEditedGame(image: MultipartFile, editedGame: RequestedEditingGame) {
-        editedGame.gamePicture = s3Service.uploadGamePictureAndReturnURL(image, editedGame.gameId)
-        editedGameRepository.save(editedGame)
+    private fun saveImageInS3AndImageURLInDBForEditedGame(editedImage: MultipartFile, editedGame: RequestedEditingGame) {
+        editedGame.gamePicture = s3Service.uploadEditedGamePictureAndReturnURL(editedImage, editedGame.gameId)
+        //editedGameRepository.save(editedGame)
     }
 
     fun getGame(gameId: Long): Game {
@@ -101,7 +119,11 @@ class GameService(
     }
 
     fun getEditingGame(editingGameId: Long): RequestedEditingGame {
-        return editedGameRepository.findById(editingGameId).orElseThrow { GameNotFoundException("Requested editing game not found with ID: $editingGameId") }
+        if (editedGameRepository.findByGameId(editingGameId).isEmpty()) {
+            throw GameNotFoundException("Game not found with GameId: $editingGameId")
+        }
+        return editedGameRepository.findByGameId(editingGameId).first()
+
     }
 
     fun updateGame(sessionId: UUID, gameId: Long, updatedGame: UpdateGameRequest): Game {
@@ -117,10 +139,16 @@ class GameService(
             throw DeletedGameException("Game with ID: $gameId is deleted")
         }
 
+        // Convert genre strings to GameGenre enum values
+        val genres = updatedGame.genres.map { GameGenre.valueOf(it) }.toMutableSet()
+
+        // Convert platform strings to GamePlatform enum values
+        val platforms = updatedGame.platforms.map { GamePlatform.valueOf(it) }.toMutableSet()
+
         game.title = updatedGame.title
         game.description = updatedGame.description
-        game.genre = updatedGame.genre
-        game.platform = updatedGame.platform
+        game.genres = genres
+        game.platforms = platforms
         game.playerNumber = updatedGame.playerNumber
         game.releaseYear = updatedGame.releaseYear
         game.universe = updatedGame.universe
@@ -147,7 +175,7 @@ class GameService(
     }
 
     fun getAllGames(): List<Game> {
-        return gameRepository.findAll().filter { !it.isDeleted }
+        return gameRepository.findAll().filter { !it.isDeleted && it.status == GameStatus.APPROVED }
     }
 
     fun getRatedGamesByUser(sessionId: UUID): List<UserGameRatingDTO> {
@@ -175,17 +203,43 @@ class GameService(
         //val alreadyRated = game.ratedUsers.contains(user)
         val alreadyRated = userGameRatingRepository.findByUserAndGame(user, game)
         if (alreadyRated.isNotEmpty()){
-            throw DuplicatedRatingGameException("Not allowed to rate more than once")
+            // change rate if already rated
+            val userGameRating = alreadyRated.first()
+            game.totalRating -= userGameRating.score
+            game.totalRating += score.toInt()
+            game.averageRating = game.totalRating.toDouble() / game.countRating.toDouble()
+            userGameRating.score = score.toInt()
+            userGameRatingRepository.save(userGameRating)
+            return gameRepository.save(game)
+        }else{
+            val userGameRating = UserGameRating(user = user, game = game, score = score.toInt())
+            //game.ratedUsers.add(user)
+            game.countRating += 1
+            game.totalRating += score.toInt()
+            game.averageRating = game.totalRating.toDouble() / game.countRating.toDouble()
+
+            userGameRatingRepository.save(userGameRating)
+            return gameRepository.save(game)
         }
 
-        val userGameRating = UserGameRating(user = user, game = game, score = score.toInt())
-        //game.ratedUsers.add(user)
-        game.countRating += 1
-        game.totalRating += score.toInt()
-        game.averageRating = game.totalRating.toDouble() / game.countRating.toDouble()
 
-        userGameRatingRepository.save(userGameRating)
-        return gameRepository.save(game)
+    }
+
+    fun getRating(sessionId: UUID, gameId: Long): UserGameRating {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        val game = getGame(gameId)
+
+        if (game.isDeleted) {
+            throw DeletedGameException("Game with ID: $gameId is deleted")
+        }
+
+        val alreadyRated = userGameRatingRepository.findByUserAndGame(user, game)
+        if (alreadyRated.isNotEmpty()){
+            return alreadyRated.first()
+        }else{
+            throw WrongRatingGameException("User with ID: $userId has not rated the game with ID: $gameId")
+        }
     }
 
     fun getPendingGames(sessionId: UUID): List<Game> {
@@ -202,7 +256,7 @@ class GameService(
     fun getEditedGames(sessionId: UUID): List<RequestedEditingGame> {
         val userId = sessionAuth.getUserIdFromSession(sessionId)
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
-        if (user.isAdmin != true) {
+        if (!user.isAdmin) {
             throw UnauthorizedGameAccessException("Unauthorized to get edited games")
         }
         val editedGames = editedGameRepository.findAll()
@@ -222,14 +276,14 @@ class GameService(
             throw DeletedGameException("Game with ID: ${game.gameId} is deleted")
         }
 
-        if (user.isAdmin != true) {
+        if (!user.isAdmin) {
             throw UnauthorizedGameAccessException("Unauthorized to approve editing game with ID: ${game.gameId}")
         }
 
         game.title = requestedEditingGame.title
         game.description = requestedEditingGame.description
-        game.genre = requestedEditingGame.genre
-        game.platform = requestedEditingGame.platform
+        game.genres = requestedEditingGame.genres.toHashSet()
+        game.platforms = requestedEditingGame.platforms.toHashSet()
         game.playerNumber = requestedEditingGame.playerNumber
         game.releaseYear = requestedEditingGame.releaseYear
         game.universe = requestedEditingGame.universe
@@ -325,6 +379,14 @@ class GameService(
         val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
         val game = getGame(gameId)
 
+        //check if report is not duplicated
+        val existedReport = reportRepository.findByReportedGame(game)
+        val alreadyReported = existedReport.filter { it.reportingUser?.userId == user.userId }
+
+        if (alreadyReported.isNotEmpty()) {
+            throw DuplicateGameException("Not allowed to report more than once")
+        }
+
         if (game.isDeleted) {
             throw DeletedGameException("Game with ID: ${game.gameId} is deleted")
         }
@@ -333,4 +395,18 @@ class GameService(
         reportRepository.save(newReport)
     }
 
+    fun getReportedGames(sessionId: UUID): List<Game> {
+        val userId = sessionAuth.getUserIdFromSession(sessionId)
+        val user = userRepository.findById(userId).orElseThrow { UsernameNotFoundException("User not found") }
+        if (user.isAdmin != true) {
+            throw UnauthorizedGameAccessException("Unauthorized to get reported games")
+        }
+        val reportedGames = reportRepository.findAll()
+        val reportedGameIds = reportedGames.map { it.reportedGame?.gameId }
+        return gameRepository.findAllById(reportedGameIds).filter { !it.isDeleted }
+    }
+
+    fun updateSimilarGamesFields(){
+        gameSimilarityService.updateAllSimilarGamesFields()
+    }
 }

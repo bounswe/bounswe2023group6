@@ -13,8 +13,11 @@ class User {
   String? name;
   String? surname;
   String? about;
-  String? title; 
+  String? title;
   String? company;
+  List<String> tags = [];
+
+  bool isProfileVisible = true;
 
   List<Post> likedPosts = [];
   List<Post> savedPosts = [];
@@ -42,6 +45,8 @@ class User {
     this.about,
     this.title,
     this.company,
+    this.isProfileVisible = true,
+    this.tags = const [],
     this.followers = 0,
     this.following = 0,
     this.followersList = const [],
@@ -58,8 +63,12 @@ class User {
       about: json['about'],
       title: json['title'] ?? '',
       company: json['company'] ?? '',
-      followers: json['followers'] ?? 0,
-      following: json['following'] ?? 0,
+      isProfileVisible: json['isVisible'] ?? true,
+      tags: json['tags'] != null 
+        ? json['tags'].cast<String>()
+        : [],
+      followers: json['followerCount'] ?? 0,
+      following: json['followingCount'] ?? 0,
       // followersList: json['followersList'] ?? [],
     );
   }
@@ -74,9 +83,11 @@ class User {
       'about': about,
       'title': title,
       'company': company,
-      'followers': followers,
-      'following': following,
-      'followersList': followersList,
+      'isVisible': isProfileVisible,
+      'tags': tags,
+      'followerCount': followers,
+      'followingCount': following,
+      // 'followersList': followersList,
     };
   }
 }

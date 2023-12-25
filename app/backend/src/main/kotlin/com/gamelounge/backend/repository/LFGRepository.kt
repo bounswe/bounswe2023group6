@@ -10,4 +10,5 @@ interface LFGRepository: JpaRepository<LFG, Long> {
 
     fun findByUser(user: User): List<LFG>
     fun findByRelatedGame(game: Game): List<LFG>
+    fun findByTitleContainingOrDescriptionContaining(title: String, description: String): List<LFG>
 }

@@ -46,9 +46,16 @@ class _LoginPageState extends State<LoginPage> {
 
       if (loggedIn) {
         // Navigate to the next screen or perform other actions for a successful login.
+        if (username == "admin") {
+          User user= (await UserService().getUser(username));
+          await cacheManager.saveUser(user);
+          Navigator.pushNamed(context, '/adminPanel');
+          return;
+        }
         updateSession(username);
         User user= (await UserService().getUser(username));
         await cacheManager.saveUser(user);
+
         Navigator.pushNamed(context, '/');
         return;
       } else {

@@ -8,7 +8,9 @@ import { ForumPage } from './pages/ForumPage'
 import { PostPage } from './pages/PostPage'
 import { NextUIProvider } from '@nextui-org/react'
 import { GameForum } from './pages/GameForum'
-import {LfgPage} from "./pages/LfgPage";
+import { LfgPage } from "./pages/LfgPage";
+import Lfg from "./pages/LfgPage/Lfg";
+import { AdminPanel } from './pages/AdminPanel'
 
 const App = () => (
 	<NextUIProvider disableBaseline='true'>
@@ -16,7 +18,7 @@ const App = () => (
 			<Routes>
 				<Route exact path='/' element={<HomePage />} />
 				<Route path='/login' element={<Login />} />
-				<Route path='/profile-page' element={<ProfilePage />} />
+				<Route path='/users/:username' element={<ProfilePage />} />
 				<Route path='/forgot-password' element={<ForgotPassword />} />
 				<Route path='/signup' element={<Signup />} />
 				<Route path='/reset-password' element={<ResetPassword />} />
@@ -25,11 +27,13 @@ const App = () => (
 				<Route path='/groups' element={<LfgPage />} />
 				<Route path='/game' element={<GameForum />} />
 				<Route path='/game/:gameId' element={<GamePage />} />
-
 				<Route path='/posts/:postId' element={<PostPage />} />
+				<Route path='/lfg/:lfgId' element={<Lfg />} />
+				<Route path='/admin-panel' element={<AdminPanel />} />
 			</Routes>
 		</BrowserRouter>
 	</NextUIProvider>
 )
 
 export default App
+

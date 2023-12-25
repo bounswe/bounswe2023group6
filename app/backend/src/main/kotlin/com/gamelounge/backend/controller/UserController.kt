@@ -54,11 +54,23 @@ class UserController (
         return userService.getCreatedPosts(userId)
     }
 
+    @GetMapping("/created-posts/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getCreatedPostsByUserId(@PathVariable userId: Long): List<PostDTO>{
+        return userService.getCreatedPosts(userId)
+    }
+
     @GetMapping("/created-games")
     @ResponseStatus(HttpStatus.OK)
     fun getCreatedGames(@CookieValue("SESSIONID") sessionId: UUID): List<GameDTO>{
         val userId = sessionAuth.getUserIdFromSession(sessionId)
 
+        return userService.getCreatedGames(userId)
+    }
+
+    @GetMapping("/created-games/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getCreatedGamesByUserId(@PathVariable userId: Long): List<GameDTO>{
         return userService.getCreatedGames(userId)
     }
 
@@ -70,11 +82,23 @@ class UserController (
         return userService.getLikedPosts(userId)
     }
 
+    @GetMapping("/liked-posts/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getLikedPostsByUserId(@PathVariable userId: Long): List<PostDTO>{
+        return userService.getLikedPosts(userId)
+    }
+
     @GetMapping("/liked-comments")
     @ResponseStatus(HttpStatus.OK)
     fun getLikedComments(@CookieValue("SESSIONID") sessionId: UUID): List<CommentDTO>{
         val userId = sessionAuth.getUserIdFromSession(sessionId)
 
+        return userService.getLikedComments(userId)
+    }
+
+    @GetMapping("/liked-comments/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun getLikedCommentsByUserId(@PathVariable userId: Long): List<CommentDTO>{
         return userService.getLikedComments(userId)
     }
 
@@ -116,31 +140,6 @@ class UserController (
     fun deleteUser(@CookieValue("SESSIONID") sessionId: UUID): ResponseEntity<ResponseMessage>{
         userService.deleteUser(sessionId)
         return ResponseEntity.ok(ResponseMessage(message = "User deleted successfully"))
-    }
-
-
-    @GetMapping("/created-posts/{username}")
-    @ResponseStatus(HttpStatus.OK)
-    fun getCreatedPosts(@PathVariable username: String): List<PostDTO>{
-        return userService.getCreatedPosts(username)
-    }
-
-    @GetMapping("/created-games/{username}")
-    @ResponseStatus(HttpStatus.OK)
-    fun getCreatedGames(@PathVariable username: String): List<GameDTO>{
-        return userService.getCreatedGames(username)
-    }
-
-    @GetMapping("/liked-posts/{username}")
-    @ResponseStatus(HttpStatus.OK)
-    fun getLikedPosts(@PathVariable username: String): List<PostDTO>{
-        return userService.getLikedPosts(username)
-    }
-
-    @GetMapping("/liked-comments/{username}")
-    @ResponseStatus(HttpStatus.OK)
-    fun getLikedComments(@PathVariable username: String): List<CommentDTO>{
-        return userService.getLikedComments(username)
     }
 
 }
