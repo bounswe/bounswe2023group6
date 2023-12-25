@@ -3,15 +3,15 @@ import Game from './Game'
 import Group from './Group'
 import Post from './Post'
 import Navbarx from '../../components/navbar/Navbar'
-import { getRecommendedGames } from '../../services/gameService'
-import { getRecommendedPosts } from '../../services/postService'
+import { getAllGames, getRecommendedGames } from '../../services/gameService'
+import { getAllPosts, getRecommendedPosts } from '../../services/postService'
 import React, { useEffect, useState } from 'react'
 
 import kerimbahadir from './kerimbahadir.jpg'
 import zehrayildirim from './zehrayildirim.jpg'
 import mahmutdemir from './mahmutdemir.jpg'
 import alikasap from './alikasap.jpg'
-import { getRecommendedGroups } from '../../services/lfgService'
+import { getRecommendedGroups, getAllGroups } from '../../services/lfgService'
 
 export default function HomePage() {
 	const [gamesData, setGamesData] = useState([])
@@ -21,7 +21,12 @@ export default function HomePage() {
 		const fetchGames = async () => {
 			try {
 				const response = await getRecommendedGames()
-				setGamesData(response.data)
+				if (response.data.length != 0) {
+					setGamesData(response.data)
+				} else {
+					const allgames = await getAllGames()
+					setGamesData(allgames.data)
+				}
 			} catch (error) {
 				console.log(error)
 			}
@@ -33,7 +38,12 @@ export default function HomePage() {
 	useEffect(() => {
 		const fetchPosts = async () => {
 			const response = await getRecommendedPosts()
-			setPostData(response.data)
+			if (response.data.length != 0) {
+				setPostData(response.data)
+			} else {
+				const allposts = await getAllPosts()
+				setPostData(allposts.data)
+			}
 		}
 
 		fetchPosts()
@@ -41,7 +51,12 @@ export default function HomePage() {
 	useEffect(() => {
 		const fetchGroups = async () => {
 			const response = await getRecommendedGroups()
-			setGroupData(response.data)
+			if (response.data.length != 0) {
+				setGroupData(response.data)
+			} else {
+				const allgroups = await getAllGroups()
+				setGroupData(allgroups.data)
+			}
 		}
 
 		fetchGroups()
