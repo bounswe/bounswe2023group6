@@ -39,13 +39,6 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
   @override
   void initState() {
     super.initState();
-    print(widget.selectedLFG!.title!);
-    print(widget.selectedLFG!.content!);
-    print(widget.selectedLFG!.requiredPlatform);
-    print(widget.selectedLFG!.requiredLanguage);
-    print(widget.selectedLFG!.micCamRequirement!);
-    print(widget.selectedLFG!.memberCapacity.toString());
-    print(widget.selectedLFG!.tags!);
     if (widget.selectedLFG != null) {
       title = "Update Game Page";
       buttonLabel = "Update";
