@@ -23,7 +23,6 @@ class AccessController(
 
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
-//
     fun register(
         @RequestPart("request") request: RegisterationRequest,
         @RequestPart("image") image: MultipartFile?
@@ -41,8 +40,12 @@ class AccessController(
         cookie.path = "/"
         response.addCookie(cookie)
 
+        val cookie2 = Cookie("SESSIONID", "$sessionId")
+        cookie2.path = "http://game-lounge.com"
+        response.addCookie(cookie2)
 
         response.setHeader("Access-Control-Allow-Credentials", "true")
+        response.setHeader("Access-Control-Allow-Origin", "*")
     }
 
     @PostMapping("/logout")
