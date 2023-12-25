@@ -15,11 +15,13 @@ class AnnotationController(
     private val annotationService: AnnotationService
 ) {
     @PostMapping("parse-selector")
+    @CrossOrigin(origins = ["*"])
     fun parseSelector(@RequestBody selector: SelectorDto): ResponseEntity<String> {
 
         return ResponseEntity.ok("test")
     }
     @PostMapping("/create")
+    @CrossOrigin(origins = ["*"])
     fun createAnnotation(@RequestBody annotationDto: AnnotationDto): ResponseEntity<AnnotationDto> {
 
         val responseAnnotation = DtoConverter
@@ -28,6 +30,7 @@ class AnnotationController(
     }
 
     @GetMapping("/{id}")
+    @CrossOrigin(origins = ["*"])
     fun getAnnotation(@PathVariable id: String): ResponseEntity<AnnotationDto> {
         val annotation = annotationService.getAnnotation(id) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
 
@@ -37,6 +40,7 @@ class AnnotationController(
     }
 
     @PostMapping("/get-annotations-by-target")
+    @CrossOrigin(origins = ["*"])
     fun getAnnotationsByTarget(@RequestBody request: GetAnnotationsByTargetIdRequest): ResponseEntity<List<AnnotationDto>> {
         val annotations = annotationService.getAnnotationsByTarget(request.targetId)
         val responseAnnotationList = annotations.map { DtoConverter.convertAnnotationToAnnotationDto(it) }
@@ -44,6 +48,7 @@ class AnnotationController(
     }
 
     @DeleteMapping("/{id}")
+    @CrossOrigin(origins = ["*"])
     fun deleteAnnotation(@PathVariable id: String): ResponseEntity<Void> {
         return if (annotationService.deleteAnnotation(id)) {
             ResponseEntity<Void>(HttpStatus.NO_CONTENT)
