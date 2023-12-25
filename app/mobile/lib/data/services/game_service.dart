@@ -32,8 +32,9 @@ class GameService {
       genres: ["Adventure, Role-playing(RPG)"],
       developers: "CD Projekt RED",
       releaseYear: 2015,
-      platforms:
-            [" Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S"],
+      platforms: [
+        " Xbox One, PlayStation 4, PlayStation 5, PC (Microsoft Windows), Nintendo Switch, Xbox Series X|S"
+      ],
       playerNumber: "Single Player",
       universe: "Fantasy",
       mechanics: "Third-person",
@@ -45,7 +46,7 @@ class GameService {
       title: "League of Legends",
       gamePicture:
           "https://cdn.ntvspor.net/047bed7cbad44a3dae8bdd7b643ab253.jpg?crop=158,0,782,624&w=800&h=800&mode=crop",
-        genres: ["MOBA", "Role-playing(RPG)", "Strategy"],
+      genres: ["MOBA", "Role-playing(RPG)", "Strategy"],
       developers: "Riot Games",
       releaseYear: 2009,
     ),
@@ -56,7 +57,7 @@ class GameService {
       title: "Call of Duty: WWII",
       gamePicture:
           "https://upload.wikimedia.org/wikipedia/tr/8/85/Call_of_Duty_WIII_Kapak_Resmi.jpg",
-        genres: ["Shooter"],
+      genres: ["Shooter"],
       developers: "Sledgehammer Games",
       releaseYear: 2017,
     ),
@@ -121,8 +122,9 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
       title: "Baldur's Gate 3",
       gamePicture:
           "https://image.api.playstation.com/vulcan/ap/rnd/202302/2321/ba706e54d68d10a0eb6ab7c36cdad9178c58b7fb7bb03d28.png",
-      genres:
-          ["Adventure, Role-playing (RPG), Strategy, Tactical, Turn-based strategy (TBS)"],
+      genres: [
+        "Adventure, Role-playing (RPG), Strategy, Tactical, Turn-based strategy (TBS)"
+      ],
       developers: "Larian Studios",
       releaseYear: 2020,
     ),
@@ -153,9 +155,10 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     );
 
     if (response.success) {
-      List<Game> games = response.responseConverted!.games!.map((e) => e.game!)
-      .where((game) => game.status == "APPROVED")
-      .toList();
+      List<Game> games = response.responseConverted!.games!
+          .map((e) => e.game!)
+          .where((game) => game.status == "APPROVED")
+          .toList();
       return games;
     } else {
       throw Exception('Failed to load games');
@@ -226,16 +229,17 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     String sessionID = manager.getString(SharedKeys.sessionId);
 
     String fileName = file!.path.split('/').last;
-    FormData formData = FormData.fromMap({
-     "request": await MultipartFile.fromString(
-      jsonEncode(gameCreateDTORequest.toJson()),
-      contentType: MediaType.parse('application/json'),
-    ),
-      "image": await MultipartFile.fromFile(file.path, filename: fileName),
-    },
-    ListFormat.multiCompatible,
+    FormData formData = FormData.fromMap(
+      {
+        "request": await MultipartFile.fromString(
+          jsonEncode(gameCreateDTORequest.toJson()),
+          contentType: MediaType.parse('application/json'),
+        ),
+        "image": await MultipartFile.fromFile(file.path, filename: fileName),
+      },
+      ListFormat.multiCompatible,
     );
-    
+
     Response response = await Dio().post(
       service.options.baseUrl + "/game",
       data: formData,
@@ -251,7 +255,7 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
   }
 
   Future<bool> rateGame(int gameid, int score) async {
-      final response =
+    final response =
         await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
       "/game/$gameid/rating/$score",
       null,
@@ -345,16 +349,17 @@ Celeste has left a lasting impact on the indie gaming scene, inspiring other dev
     }
     String sessionID = manager.getString(SharedKeys.sessionId);
 
-    FormData formData = FormData.fromMap({
-     "request": await MultipartFile.fromString(
-      jsonEncode(gameCreateDTORequest.toJson()),
-      contentType: MediaType.parse('application/json'),
-    ),
-      "image": null,
-    },
-    ListFormat.multiCompatible,
+    FormData formData = FormData.fromMap(
+      {
+        "request": await MultipartFile.fromString(
+          jsonEncode(gameCreateDTORequest.toJson()),
+          contentType: MediaType.parse('application/json'),
+        ),
+        "image": null,
+      },
+      ListFormat.multiCompatible,
     );
-    
+
     Response response = await Dio().post(
       service.options.baseUrl + "/game/$gameid",
       data: formData,
