@@ -46,6 +46,34 @@ class PostCard extends StatelessWidget {
   }
 }
 
+class PostCardAdmin extends StatelessWidget {
+  final Post post;
+
+  const PostCardAdmin({
+    super.key,
+    required this.post,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            userInformationSection(
+                context, post.ownerUsername, post.ownerProfileImage),
+            postContentSection(post),
+          ]),
+        ),
+      );
+
+  }
+}
+
+
 Widget postContentSection(Post post) {
   return Flexible(
     child: Column(

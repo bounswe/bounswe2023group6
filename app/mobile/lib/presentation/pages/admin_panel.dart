@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/report_model.dart';
 import 'package:mobile/data/services/admin_service.dart';
-import 'package:mobile/presentation/pages/admin_game_page.dart';
+import 'package:mobile/presentation/pages/admin/admin_game_page.dart';
+import 'package:mobile/presentation/pages/admin/admin_post_page.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
@@ -161,13 +162,18 @@ class _AdminPanelState extends State<AdminPanel> with SingleTickerProviderStateM
                           for (var report in postReportList)
                             GestureDetector(
                               onTap: () {
-                                // Open a new page with game information
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminPostReportPage(report: report!),
+                                  ),
+                                );
                               },
                               child: Card(
                                 child: Column(
                                   children: [
                                     Text(report.reason),
-                                    PostCard(post: report.reportedPost!,),
+                                    PostCardAdmin(post: report.reportedPost!,),
                                   ],
                                 )),
                             )
