@@ -15,17 +15,37 @@ const GamePage = () => {
 	const [similarGames, setSimilarGames] = useState([])
 
 	useEffect(() => {
-		const fetchGame = async () => {
-			try {
-				const response = await getGame(gameId)
-				setGame(response.data)
-				setSimilarGames(response.data.similarGames)
-			} catch (error) {
-				console.error(error)
-			}
-		}
-		fetchGame()
-	}, [gameId])
+        const fetchGame = async () => {
+            try {
+                const response = await getGame(gameId);
+                setGame(response.data);
+
+                const similarGamesIds = response.data.similarGames;
+                const gamesPromises = similarGamesIds.map(id => getGame(id));
+                const similarGamesResponses = await Promise.all(gamesPromises);
+
+                const uniqueAndApprovedSimilarGames = similarGamesResponses
+                    .map(response => response.data)
+                    .reduce((unique, game) => {
+                        const isUnique = !unique.some(g => g.gameId === game.gameId);
+                        const isApproved = game.status === "APPROVED";
+                        if (isUnique && isApproved) {
+                            unique.push(game);
+                        }
+                        return unique;
+                    }, []);
+
+                setSimilarGames(uniqueAndApprovedSimilarGames);
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (gameId) {
+            fetchGame();
+        }
+    }, [gameId]);
 
 	const handleRatingChange = (selectedRating) => {
 		setRating(selectedRating)
@@ -93,7 +113,7 @@ const GamePage = () => {
 													/>
 												))}
 											</div>
-											<button className='btn btn-primary w-1/2 mt-2' onClick={handleRateGame}>
+											<button className='btn btn-sm btn-primary w-1/2 mt-2' onClick={handleRateGame}>
 												Rate Game
 											</button>
 										</div>
@@ -139,8 +159,8 @@ const GamePage = () => {
 									<div className='h-full card compact bg-neutral-200 text-cyan-700 shadow-xl m-2 p-4'>
 										<h2 className='text-xl font-bold p-1'>Games You May Like:</h2>
 										{similarGames.map((game) => (
-											<li key={game.gameId} className='mb-2'>
-												<button onClick={() => navigate(`/game/${game.gameId}`)} className='text-neutral-700 mr-4'>
+											<li key={game} className='mb-2 mt-2'>
+												<button onClick={() => navigate(`/game/${game.gameId}`)} className='btn-sm text-neutral-100 bg-yellow-600 hover:bg-yellow-700 rounded mr-4'>
 													{game.title}
 												</button>
 											</li>
