@@ -58,8 +58,8 @@ class TextAnnotation extends BaseAnnotation {
       authorUsername: json['creator'].split('/').last,
       annotation: json['body'][0]['value'],
       contextId: int.parse(json['target']['id'].split('/').last),
-      context: AnnotationContext.values.firstWhere(
-          (element) => element.toString() == json['body'][0]['purpose']),
+      context: AnnotationContext.values.firstWhere((element) =>
+          element.toString().contains(json["target"]["id"].split("/")[3])),
     );
   }
 
@@ -67,7 +67,8 @@ class TextAnnotation extends BaseAnnotation {
   Map<String, dynamic> toJson() {
     // convert to json-ld format
     var annotationId = const Uuid().v4();
-    annotationId = "${NetworkConstants.BASE_LOCAL_URL}/annotation/text/$annotationId";
+    annotationId =
+        "${NetworkConstants.BASE_LOCAL_URL}/annotation/text/$annotationId";
     return {
       "context": "http://www.w3.org/ns/anno.jsonld",
       "id": annotationId,
@@ -79,7 +80,7 @@ class TextAnnotation extends BaseAnnotation {
           "value": annotation,
           "format": "text/plain",
           "language": "en",
-          "purpose": context.toString(),
+          "purpose": "commenting",
         },
       ],
       "target": {
@@ -124,10 +125,16 @@ class ImageAnnotation extends BaseAnnotation {
 
   factory ImageAnnotation.fromJson(Map<String, dynamic> json) {
     return ImageAnnotation(
-      x: double.parse(json['target']['selector']['value'].split('=')[1].split(',')[0].split(':')[1]),
-      y: double.parse(json['target']['selector']['value'].split('=')[1].split(',')[1]),
-      width: double.parse(json['target']['selector']['value'].split('=')[1].split(',')[2]),
-      height: double.parse(json['target']['selector']['value'].split('=')[1].split(',')[3]),
+      x: double.parse(json['target']['selector']['value']
+          .split('=')[1]
+          .split(',')[0]
+          .split(':')[1]),
+      y: double.parse(
+          json['target']['selector']['value'].split('=')[1].split(',')[1]),
+      width: double.parse(
+          json['target']['selector']['value'].split('=')[1].split(',')[2]),
+      height: double.parse(
+          json['target']['selector']['value'].split('=')[1].split(',')[3]),
       authorUsername: json['creator'].split('/').last,
       annotation: json['body'][0]['value'],
       contextId: int.parse(json['target']['id'].split('/').last),
@@ -140,7 +147,8 @@ class ImageAnnotation extends BaseAnnotation {
   Map<String, dynamic> toJson() {
     // convert to json-ld format
     var annotationId = const Uuid().v4();
-    annotationId = "${NetworkConstants.BASE_LOCAL_URL}/annotation/image/$annotationId";
+    annotationId =
+        "${NetworkConstants.BASE_LOCAL_URL}/annotation/image/$annotationId";
     return {
       "context": "http://www.w3.org/ns/anno.jsonld",
       "id": annotationId,
