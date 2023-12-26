@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/game_model.dart';
+import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/services/game_service.dart';
+import 'package:mobile/data/services/lfg_service.dart';
+import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/game_page_create.dart';
 import 'package:mobile/presentation/pages/post/report_widget.dart';
@@ -12,9 +15,11 @@ import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mobile/presentation/widgets/guest_control_widget.dart';
+import 'package:mobile/presentation/widgets/lfg_card_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
+import 'package:mobile/utils/cache_manager.dart';
 
 
 class GameWiki extends StatefulWidget {
@@ -76,6 +81,7 @@ class _GameWikiPageState extends State<GameWikiPage>
   final List<Game> similarGameList = GameService.getGameDataList();
   final GameService gameService = GameService();
   final PostService postService = PostService();
+  final LFGService lfgService = LFGService();
 
   late TabController tabController;
 
@@ -113,6 +119,11 @@ class _GameWikiPageState extends State<GameWikiPage>
 
   final List<String> controllerNames = ['Name', 'Description'];
 
+  static late List<String> platforms = [];
+  static late List<String> genres = [];
+
+  static late String genretoshow = "";
+
   Future<Game> loadGame(int gameId) async {
     Game game = await gameService.getGame(gameId);
     List<Post> postList = await postService.getPostsByGame(gameId);
@@ -125,8 +136,33 @@ class _GameWikiPageState extends State<GameWikiPage>
           .toList();
       game.similarGameList = similarGames;
     }
+    List<LFG> allLfgs = await lfgService.getLFGs();
+    List<LFG> relatedLFGs = allLfgs
+        .where((element) => element.relatedGameId == game.gameId)
+        .toList();
 
     game.relatedPosts = postList;
+    game.relatedLFGs = relatedLFGs;
+
+    platforms = [];
+
+    for(var i = 0; i < game.platforms!.length; i++) {
+      platforms.add(game.platforms![i]);
+      platforms.add(", ");
+    }
+
+    platforms.removeLast();
+
+    genres = [];
+
+    for(var i = 0; i < game.genres!.length; i++) {
+      genres.add(game.genres![i]);
+      genres.add(", ");
+    }
+
+    genres.removeLast();
+
+    genretoshow = genres.join("");
 
     return game;
   }
@@ -214,7 +250,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(game.genres![0] ?? "-",
+                                      child: Text(genres.join("") ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
@@ -322,9 +358,10 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
-                                  TextSpan(
-                                    text: game.platforms![0],
-                                  )
+                                  for (String platform in platforms)
+                                    TextSpan(
+                                      text: platform,
+                                    ),
                                 ],
                               )),
                             ),
@@ -555,24 +592,41 @@ class _GameWikiPageState extends State<GameWikiPage>
                                       ],
                                     ),
                                   ),
-                                  const Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                      Center(
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: game.relatedLFGs.isNotEmpty
+                                    ? Column(
+                                        // This next line does the trick.
+                                        children: [
+                                          for (var i = 0;
+                                              i < game.relatedLFGs.length;
+                                              i++)
+                                            InkWell(
+                                              onTap: () {
+                                              if (!CacheManager().isUserLoggedInNotifier.value) {
+                                                  Navigator.pushNamed(context, '/login');
+                                                } else {
+                                                  Navigator.pushNamed(context, "/group",
+                                                      arguments: game.relatedLFGs[i].id);
+                                                }
+                                              },
+                                              child: LFGCard(lfg: game.relatedLFGs[i])
+                                              ),
+                                        ],
+                                      )
+                                    : const Center(
                                           child: Text("Nothing to show",
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w500,
                                               ))),
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                    ],
-                                  )
+                                  ),
                                 ]),
                           ),
+                          const SizedBox(
+                            height: 20,
+                          ),                          
                         ],
                       )),
                 ),

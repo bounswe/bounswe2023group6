@@ -48,8 +48,8 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
       buttonLabel = "Update";
       _titleController.text = widget.selectedLFG!.title!;
       _descriptionController.text = widget.selectedLFG!.content!;
-      _selectedPlatform = _platformList[0];
-      _selectedLanguage = _languageList[1];
+      _selectedPlatform = widget.selectedLFG!.requiredPlatform!;
+      _selectedLanguage = widget.selectedLFG!.requiredLanguage!;
       micCamRequired = widget.selectedLFG!.micCamRequirement!;
       _capacityController.text = widget.selectedLFG!.memberCapacity.toString();
       _tags = widget.selectedLFG!.tags!;
@@ -208,6 +208,16 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
                         _tags);
                   } else {
                     //update
+                    LFGService().updateLFG(
+                        _titleController.text,
+                        _descriptionController.text,
+                        _selectedPlatform!,
+                        _selectedLanguage!,
+                        micCamRequired,
+                        int.parse(_capacityController.text),
+                        _selectedGame,
+                        _tags,
+                        widget.selectedLFG!.id);
                   }
                   Navigator.of(context).pop("create");
                 },

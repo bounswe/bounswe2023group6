@@ -224,7 +224,13 @@ class _SearchWidgetState extends State<SearchWidget> {
           itemCount: lfgs.length,
           itemBuilder: (BuildContext context, int index) {
             LFG lfg = lfgs[index];
-            return LFGCard(lfg: lfg);
+            return InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, "/group",
+                    arguments: lfg.id);
+              },
+              child: LFGCard(lfg: lfg),
+              );
           },
         );
       }

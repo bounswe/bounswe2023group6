@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/widgets/avatar_widget.dart';
 
@@ -67,13 +68,14 @@ class Content {
   });
 
   Future<void> loadContentSocialData() async {
-    PostService postService = PostService();
     if (type == ContentType.post) {
+      PostService postService = PostService();
       likeIds = await postService.getLikedUsersForPost(id);
       dislikeIds = await postService.getDislikedUsersForPost(id);
     } else {
-      likeIds = await postService.getLikedUsersForComment(id);
-      dislikeIds = await postService.getDislikedUsersForComment(id);
+      CommentService commentService = CommentService();
+      likeIds = await commentService.getLikedUsersForComment(id);
+      dislikeIds = await commentService.getDislikedUsersForComment(id);
     }
   }
 }

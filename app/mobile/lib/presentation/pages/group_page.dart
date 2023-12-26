@@ -7,6 +7,7 @@ import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/data/services/post_service.dart';
@@ -28,12 +29,13 @@ class GroupPage extends StatefulWidget {
 
 class _GroupPageState extends State<GroupPage> {
   final LFGService lfgService = LFGService();
-  final PostService commentService = PostService();
+  final CommentService commentService = CommentService();
   final GameService gameService = GameService();
 
   late User currentUser;
   final TextEditingController _commentController = TextEditingController();
   static late LFG selectedLFG;
+  late bool editable;
   static late Game selectedGame;
   @override
   void initState() {
@@ -48,7 +50,7 @@ class _GroupPageState extends State<GroupPage> {
   Future<MainContentState> loadlfg(int lfgId) async {
     LFG lfg = await lfgService.getLFG(lfgId);
     selectedLFG = lfg;
-    List<Comment> commentList = await commentService.getComments(lfgId);
+    List<Comment> commentList = await commentService.getCommentsForLfg(lfgId);
     selectedGame = await gameService.getGame(lfg.relatedGameId!);
 
     commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
@@ -60,8 +62,6 @@ class _GroupPageState extends State<GroupPage> {
 
     return MainContentState(lfg);
   }
-
-  // static late LFG lfg;
 
   @override
   Widget build(BuildContext context) {
@@ -121,22 +121,31 @@ class _GroupPageState extends State<GroupPage> {
           )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LFGPageCreate(
-                        selectedLFG: _GroupPageState.selectedLFG)),
-              ).then((value) {
-                if (value != null && value == "create") {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Game created"),
-                    ),
-                  );
-                  // refresh the current page
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              });
+              if (currentUser.userId ==
+                  _GroupPageState.selectedLFG.ownerUserId) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LFGPageCreate(
+                          selectedLFG: _GroupPageState.selectedLFG)),
+                ).then((value) {
+                  if (value != null && value == "create") {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Game created"),
+                      ),
+                    );
+                    // refresh the current page
+                    Navigator.pushReplacementNamed(context, '/');
+                  }
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("You cannot edit this lfg page!"),
+                  ),
+                );
+              }
             },
             child: const Icon(
               Icons.edit,
@@ -150,6 +159,8 @@ class _GroupPageState extends State<GroupPage> {
 
   Widget buildLFGCard(LFG lfg) {
 
+    bool isUserMember = lfg.members!.any((element) => element.userId == currentUser.userId,);
+    
     return Card(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -276,9 +287,13 @@ class _GroupPageState extends State<GroupPage> {
                               ))
                               ]),
                             ),
+                            if(!isUserMember)
                             InkWell(
-                              onTap: () {
-                                
+                              onTap: () async{
+                                await lfgService.joinLfg(lfg.id);
+                                setState(() {
+                                  
+                                });
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -292,9 +307,32 @@ class _GroupPageState extends State<GroupPage> {
                                 width: 80,
                                 height: 40,
                                 //color: Colors.amberAccent,
-                                child: const Center(child: Text("JOIN")),
+                                child: const Center(child: Text("Join")),
                               ),
-                            )
+                            ),
+                            if(isUserMember)
+                            InkWell(
+                              onTap: () async{
+                                await lfgService.leaveLfg(lfg.id);
+                                setState(() {
+                                  
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                width: 80,
+                                height: 40,
+                                //color: Colors.amberAccent,
+                                child: const Center(child: Text("Leave")),
+                              ),
+                            )                            
                           ],
                         ),
                         lfgSocialSection(lfg),
@@ -353,7 +391,6 @@ class _GroupPageState extends State<GroupPage> {
             // );
             break;
           case ContentMoreOptions.goToGamePage:
-            print("go to game page ${lfg.relatedGameId}");
             Navigator.pushNamed(context, '/game', arguments: lfg.relatedGameId);
             break;
           default:
@@ -377,7 +414,7 @@ class _GroupPageState extends State<GroupPage> {
             value: ContentMoreOptions.report,
             child: Text('Report'),
           ),
-        if (lfg.relatedGameId != 0)
+        if (lfg.relatedGameId != null && lfg.relatedGameId != 0)
           const PopupMenuItem<ContentMoreOptions>(
             value: ContentMoreOptions.goToGamePage,
             child: Text('Go to game page'),
@@ -494,7 +531,7 @@ class _GroupPageState extends State<GroupPage> {
                         int? parentId = lfgState.currentCommentParentId != 0
                             ? lfgState.currentCommentParentId
                             : null;
-                        Comment comment = await lfgService.createComment(
+                        Comment comment = await commentService.createCommentForLfg(
                             lfg.id, _commentController.text, parentId);
                         lfgState.addComment(comment);
                         _commentController.clear();

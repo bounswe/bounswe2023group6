@@ -18,6 +18,8 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import { useEffect } from 'react'
+import { getAllGames } from '../../services/gameService'
 //import { postChar } from '../../services/gameServise'
 
 export default function CreateGame() {
@@ -85,12 +87,28 @@ export default function CreateGame() {
 	]
 	const predefinedGameMechanics = ['TurnBased', 'ChangeBased', 'RealTime', 'Empty']
 
+	const [gamesData, setGamesData] = useState([])
+	useEffect(() => {
+		const fetchGames = async () => {
+			try {
+				const response = await getAllGames()
+				setGamesData(response.data)
+			} catch (error) {
+				console.log(error)
+			}
+		}
+
+		fetchGames()
+	}, [])
+
 	const [selectedGenres, setSelectedGenres] = useState([])
 	const [selectedPlatforms, setSelectedPlatforms] = useState([])
 	const [selectedPlayerNumber, setSelectedPlayerNumber] = useState('')
 	const [selectedUniverseInfo, setSelectedUniverseInfo] = useState('')
 	const [selectedGameMechanics, setSelectedGameMechanics] = useState('')
 	const [error, setError] = useState(null)
+	const [selectedGames, setSelectedGames] = useState([])
+
 
 	const handleClickOpen = () => {
 		if (!localStorage.getItem('username')) {
@@ -171,6 +189,7 @@ export default function CreateGame() {
 		})
 		setSelectedGenres([])
 		setSelectedPlatforms([])
+		setSelectedGames([])
 	}
 
 	const handleChange = (property, value) => {
@@ -179,6 +198,10 @@ export default function CreateGame() {
 
 	const handleGenresChange = (event) => {
 		setSelectedGenres(event.target.value)
+	}
+	const handleGamesChange = (event) => {
+		setSelectedGames(event.target.value)
+		console.log(event.target.value)
 	}
 
 	const handlePlatformsChange = (event) => {
@@ -219,6 +242,7 @@ export default function CreateGame() {
 			>
 				Create Game
 			</Button>
+
 			{error && <p className='text-red-500'>{error}</p>}
 
 			<Dialog open={open} onClose={handleClose} fullWidth>
@@ -377,6 +401,24 @@ export default function CreateGame() {
 							)}
 						</div>
 					))}
+					<FormControl fullWidth margin='normal'>
+						<InputLabel id='gSimilar Games'>Similar Games</InputLabel>
+						<Select
+							label='Similar Games'
+							multiple
+							value={selectedGames}
+							onChange={handleGamesChange}
+							input={<OutlinedInput label='Similar Games' />}
+							renderValue={(selected) => selected.join(', ')}
+						>
+							{gamesData.map((game) => (
+								<MenuItem key={game.title} value={game.title}>
+									<Checkbox checked={selectedGames.indexOf(game.title) > -1} />
+									<ListItemText primary={game.title} />
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>

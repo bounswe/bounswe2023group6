@@ -40,6 +40,12 @@ class AccessController(
         cookie.path = "/"
         response.addCookie(cookie)
 
+        // Manually construct the Set-Cookie header value
+        // val cookieValue = "SESSIONID=$sessionId; Path=/; SameSite=None; Secure"
+    
+        // Add the Set-Cookie header to the response
+        // response.addHeader("Set-Cookie", cookieValue)
+
         response.setHeader("Access-Control-Allow-Credentials", "true")
     }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
 import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 
@@ -67,7 +68,7 @@ class ReportWidget extends StatelessWidget {
               String description = _descriptionController.text;
               content.type == ContentType.post
                   ? PostService().reportPost(content.id, reason, description)
-                  : PostService().reportComment(content.id, reason, description);
+                  : CommentService().reportComment(content.id, reason, description);
               showDialog(
                 context: context,
                 builder: (context) {
