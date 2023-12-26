@@ -43,5 +43,5 @@ jobs:
         "docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-frontend:${{ github.run_number }} && \
          docker stop gamelounge-frontend || true && \
          docker rm gamelounge-frontend || true && \
-         docker run -d --name gamelounge-frontend -p 80:3000 -e REACT_APP_API_URL=http://${{ secrets.SERVER_IP }}:8080 ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-frontend:${{ github.run_number }}"
+         docker run -d --name gamelounge-frontend -p 3000:3000 -e REACT_APP_API_URL=http://${{ secrets.SERVER_IP }}:8080 ${{ secrets.DOCKERHUB_USERNAME }}/gamelounge-frontend:${{ github.run_number }}"
 

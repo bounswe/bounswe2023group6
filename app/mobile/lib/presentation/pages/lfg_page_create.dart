@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/constants/color_constants.dart';
+import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/lfg_model.dart';
+import 'package:mobile/data/services/game_service.dart';
+import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/presentation/widgets/button_widget.dart';
 import 'package:mobile/presentation/widgets/tag_input.dart';
 
@@ -16,7 +19,7 @@ class LFGPageCreate extends StatefulWidget {
 class _LFGCreatePageState extends State<LFGPageCreate> {
   final _descriptionController = TextEditingController();
   final _titleController = TextEditingController();
-  var title = "Create Game Page";
+  var title = "Create LFG Page";
   var buttonLabel = "Create";
   final List<String> _platformList = [
     "XBOX",
@@ -26,6 +29,7 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
     "EMPTY"
   ];
   String? _selectedPlatform;
+  int? _selectedGame;
   final List<String> _languageList = [
     "TUR",
     "EN",
@@ -40,20 +44,38 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
   void initState() {
     super.initState();
     if (widget.selectedLFG != null) {
-      title = "Update Game Page";
+      title = "Update LFG Page";
       buttonLabel = "Update";
       _titleController.text = widget.selectedLFG!.title!;
       _descriptionController.text = widget.selectedLFG!.content!;
-      _selectedPlatform = _platformList[0];
-      _selectedLanguage = _languageList[1];
+      _selectedPlatform = widget.selectedLFG!.requiredPlatform!;
+      _selectedLanguage = widget.selectedLFG!.requiredLanguage!;
       micCamRequired = widget.selectedLFG!.micCamRequirement!;
       _capacityController.text = widget.selectedLFG!.memberCapacity.toString();
       _tags = widget.selectedLFG!.tags!;
     }
   }
 
+  Future<List<Game>> loadGameData() async {
+    return await GameService().getGames();
+  }
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: loadGameData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return buildLFGCreatePage(context, snapshot.data as List<Game>);
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return const CircularProgressIndicator();
+      },
+    );
+  }
+
+  Widget buildLFGCreatePage(BuildContext context, List<Game> gameList) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -169,14 +191,73 @@ class _LFGCreatePageState extends State<LFGPageCreate> {
               ),
               TagInput(tags: _tags, tagController: _tagController),
               const SizedBox(height: 16),
+              buildGameDropdown(gameList),
+              const SizedBox(height: 16),
               Button(
                 label: buttonLabel,
-                onPressed: () async {},
+                onPressed: () async {
+                  if (widget.selectedLFG == null) {
+                    LFGService().createLFG(
+                        _titleController.text,
+                        _descriptionController.text,
+                        _selectedPlatform!,
+                        _selectedLanguage!,
+                        micCamRequired,
+                        int.parse(_capacityController.text),
+                        _selectedGame,
+                        _tags);
+                  } else {
+                    //update
+                    LFGService().updateLFG(
+                        _titleController.text,
+                        _descriptionController.text,
+                        _selectedPlatform!,
+                        _selectedLanguage!,
+                        micCamRequired,
+                        int.parse(_capacityController.text),
+                        _selectedGame,
+                        _tags,
+                        widget.selectedLFG!.id);
+                  }
+                  Navigator.of(context).pop("create");
+                },
               ),
             ]),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildGameDropdown(List<Game> gameList) {
+    return DropdownButtonFormField<int>(
+      value: _selectedGame,
+      decoration: const InputDecoration(
+        hintText: "Select a game",
+      ),
+      items: gameList.map((game) {
+        return DropdownMenuItem<int>(
+          value: game.gameId,
+          child: Row(
+            children: [
+              Image.network(game.gamePicture, width: 50, height: 50),
+              const SizedBox(width: 16),
+              Text(game.title),
+            ],
+          ),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedGame = value;
+        });
+      },
+      validator: (value) {
+        if (value == null) {
+          return "Please select a game";
+        }
+        return null;
+      },
     );
   }
 }

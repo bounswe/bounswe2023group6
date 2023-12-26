@@ -1,17 +1,24 @@
+import 'package:dio/dio.dart';
 import 'package:mobile/constants/network_constants.dart';
 import 'package:mobile/data/models/comment_model.dart';
+import 'package:mobile/data/models/dto/content/single_content_dto_response.dart';
+import 'package:mobile/data/models/dto/empty_response.dart';
+import 'package:mobile/data/models/dto/lfg/lfg_create_dto_request.dart';
+import 'package:mobile/data/models/dto/lfg/lfg_response.dart';
+import 'package:mobile/data/models/dto/lfg/mutliple_lfg_dto_request.dart';
 import 'package:mobile/data/models/lfg_model.dart';
+import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
+import 'package:mobile/utils/shared_manager.dart';
 
 class LFGService {
   static const String serverUrl = NetworkConstants.BASE_LOCAL_URL;
 
   final BaseNetworkService service = BaseNetworkService();
 
-  static const String _getLFGs = "/lfg";
+  static const String _getLFGs = "/lfg/all";
   static const String _getLikedUsers = "/lfg/likes";
   static const String _getDislikedUsers = "/lfg/dislikes";
-  static const String _getComments = "/lfg/comments";
 
   static List<LFG> lfgList = [
     LFG(
@@ -112,11 +119,45 @@ class LFGService {
   ];
 
   Future<List<LFG>> getLFGs() async {
-    return getLfgDataList();
+    if (NetworkConstants.useMockData) {
+      return getLfgDataList();
+    } else {
+      ServiceResponse<MultipleLFGAsDTO> response =
+          await service.sendRequestSafe<EmptyResponse, MultipleLFGAsDTO>(
+        _getLFGs,
+        EmptyResponse(),
+        MultipleLFGAsDTO(),
+        'GET',
+      );
+      if (response.success) {
+        List<LFG> lfgs =
+            response.responseConverted!.lfgs!.map((e) => e.lfg!).toList();
+        return lfgs;
+      } else {
+        throw Exception('Failed to load lfgs');
+      }
+    }
   }
 
   Future<LFG> getLFG(int lfgId) async {
-    return getLfgDataList()[lfgId - 1];
+    if (NetworkConstants.useMockData) {
+      return getLfgDataList()[lfgId - 1];
+    } 
+
+    ServiceResponse<LFGDTOResponse> response =
+        await service.sendRequestSafe<EmptyResponse, LFGDTOResponse>(
+      "/lfg/$lfgId",
+      null,
+      LFGDTOResponse(),
+      'GET',
+    );
+
+    if (response.success) {
+      LFG lfg = response.responseConverted!.lfg!;
+      return lfg;
+    } else {
+      throw Exception('Failed to load lfg');
+    }
   }
 
   Future<Comment> createComment(
@@ -148,5 +189,196 @@ class LFGService {
 
   static List<LFG> getLfgDataList() {
     return lfgList;
+  }
+
+  Future<bool> createLFG(
+    String title,
+    String description,
+    String requiredPlatform,
+    String requiredLanguage,
+    bool micCamRequirement,
+    int memberCapacity,
+    int? gameId,
+    List<String> tags,
+  ) async {
+    if (NetworkConstants.useMockData) {
+      lfgList.add(LFG(
+        creationDate: DateTime.now().subtract(const Duration(hours: 5)),
+        id: lfgList.length + 1,
+        title: title,
+        description: description,
+        requiredPlatform: requiredPlatform,
+        requiredLanguage: requiredLanguage,
+        micCamRequirement: micCamRequirement,
+        memberCapacity: memberCapacity,
+        tags: ["tag1"],
+        ownerUserId: 5,
+        ownerUsername: 'GamerXplorer',
+        ownerProfileImage: '',
+        likes: 23,
+        dislikes: 2,
+        relatedGameId: 5,
+        comments: 8,
+      ));
+      return true;
+    } else {
+      LFGCreateDTORequest request = LFGCreateDTORequest(
+        title: title,
+        description: description,
+        requiredPlatform: requiredPlatform,
+        requiredLanguage: requiredLanguage,
+        micCamRequirement: micCamRequirement,
+        memberCapacity: memberCapacity,
+        gameId: gameId,
+        tags: tags,
+      );
+
+      final response =
+          await service.sendRequestSafe<LFGCreateDTORequest, EmptyResponse>(
+        "/lfg",
+        request,
+        EmptyResponse(),
+        'POST',
+      );
+      if (response.success) {
+        return true;
+      } else {
+        throw Exception('Failed to create lfg.');
+      }
+    }
+  }
+
+  Future<bool> joinLfg(int lfgId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/join",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+  Future<bool> leaveLfg(int lfgId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/leave",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+  Future<bool> kickLfgUser(int lfgId, int userId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/kick/$userId",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+
+  static const String _getRecommendedLfgs = "/lfg/recommended";
+
+  Future<List<LFG>> getRecommendedLFGs() async {
+    ServiceResponse<MultipleLFGAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleLFGAsDTO>(
+      _getRecommendedLfgs,
+      EmptyResponse(),
+      MultipleLFGAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<LFG> lfgs =
+          response.responseConverted!.lfgs!.map((e) => e.lfg!).toList();
+      if (lfgs.isEmpty) {
+        lfgs = await getLFGs();
+      }
+      
+      return lfgs;
+    } else {
+      throw Exception('Failed to load lfgs');
+    }
+  }
+  
+
+  Future<bool> updateLFG(
+      String title,
+      String description,
+      String requiredPlatform,
+      String requiredLanguage,
+      bool micCamRequirement,
+      int memberCapacity,
+      int? gameId,
+      List<String> tags,
+      int id) async {
+    if (NetworkConstants.useMockData) {
+      lfgList.add(LFG(
+        creationDate: DateTime.now().subtract(const Duration(hours: 5)),
+        id: lfgList.length + 1,
+        title: title,
+        description: description,
+        requiredPlatform: requiredPlatform,
+        requiredLanguage: requiredLanguage,
+        micCamRequirement: micCamRequirement,
+        memberCapacity: memberCapacity,
+        tags: ["tag1"],
+        ownerUserId: 5,
+        ownerUsername: 'GamerXplorer',
+        ownerProfileImage: '',
+        likes: 23,
+        dislikes: 2,
+        relatedGameId: 5,
+        comments: 8,
+      ));
+      return true;
+    } else {
+      LFGCreateDTORequest request = LFGCreateDTORequest(
+        title: title,
+        description: description,
+        requiredPlatform: requiredPlatform,
+        requiredLanguage: requiredLanguage,
+        micCamRequirement: micCamRequirement,
+        memberCapacity: memberCapacity,
+        gameId: gameId,
+        tags: tags,
+      );
+
+      final response =
+          await service.sendRequestSafe<LFGCreateDTORequest, EmptyResponse>(
+        "/lfg/${id}",
+        request,
+        EmptyResponse(),
+        'PUT',
+      );
+      if (response.success) {
+        return true;
+      } else {
+        throw Exception('Failed to update lfg.');
+      }
+    }
   }
 }

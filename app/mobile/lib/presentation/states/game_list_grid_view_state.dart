@@ -64,24 +64,6 @@ class GridViewState extends State {
               } else {
                 return const CircularProgressIndicator();
               }
-            })
-
-        /*Column(children: [
-      Expanded(
-        child: GridView.count(
-          crossAxisCount: countValue,
-          childAspectRatio: (aspectWidth / aspectHeight),
-          children: itemList
-              .map((data) => GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/game",
-                        arguments: data.gameId);
-                  },
-                  child: GameCard(game: data)))
-              .toList(),
-        ),
-      )
-    ])*/
-        );
+            }));
   }
 }

@@ -25,6 +25,7 @@ class PostService {
   static PostService get instance => _instance;
 
   static const String _getPosts = "/forum/posts";
+  static const String _getRecommendedPosts = "/forum/posts/recommended";
   static const String _getPost = "/forum/posts";
   static const String _createPost = "/forum/posts";
   static const String _updatePost = "/forum/posts";
@@ -46,6 +47,8 @@ class PostService {
   static const String _getLikedUsersForComment = "/comments/{id}/upvotedUsers";
   static const String _getDislikedUsersForComment =
       "/comments/{id}/downvotedUsers";
+
+  static const String _getPostsByGame = "/forum/posts/game/{id}";
 
   Future<List<Post>> getPosts() async {
     if (NetworkConstants.useMockData) {
@@ -160,6 +163,29 @@ class PostService {
     }
   }
 
+  Future<List<Post>> getRecommendedPosts() async {
+    ServiceResponse<MultipleContentAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
+      _getRecommendedPosts,
+      null,
+      MultipleContentAsDTO(),
+      'GET',
+    );
+    if (response.success) {
+      List<Post> posts = response.responseConverted!.posts!
+          .map((e) => e.content! as Post)
+          .toList();
+      
+      if (posts.isEmpty) {
+        posts = await getPosts();
+      }
+
+      return posts;
+    } else {
+      throw Exception('Failed to load recommended post');
+    }
+  }
+
   Future<Post> getPost(int postId) async {
     if (NetworkConstants.useMockData) {
       List<Post> posts = await getPosts();
@@ -182,11 +208,11 @@ class PostService {
   }
 
   Future<Post> createPost(
-    String title, 
-    String content, 
-    int relatedGameId, 
+    String title,
+    String content,
+    int relatedGameId,
     String postCategory,
-    List<String> tags,  
+    List<String> tags,
   ) async {
     if (NetworkConstants.useMockData) {
       return Post(
@@ -209,7 +235,7 @@ class PostService {
       title: title,
       content: content,
       relatedGameId: relatedGameId,
-      category: postCategory, 
+      category: postCategory,
       tags: tags,
     );
     ServiceResponse<SingleContentDTO> response =
@@ -371,235 +397,22 @@ class PostService {
     }
   }
 
-  Future<List<Comment>> getComments(int relatedPostId) async {
-    if (NetworkConstants.useMockData) {
-      return [
-        Comment(
-          createdDate: DateTime.now(),
-          id: 1,
-          content: 'This is a comment',
-          ownerUserId: 1,
-          ownerUsername: 'user1',
-          ownerProfileImage: '',
-          likes: 1,
-          dislikes: 0,
-        ),
-        Comment(
-          createdDate: DateTime.now().subtract(const Duration(days: 1)),
-          id: 2,
-          content: 'This is another comment',
-          ownerUserId: 2,
-          ownerUsername: 'user2',
-          ownerProfileImage: '',
-          likes: 0,
-          dislikes: 1,
-        ),
-        Comment(
-          createdDate: DateTime.now().subtract(const Duration(days: 3)),
-          id: 3,
-          content: 'This is a third comment',
-          ownerUserId: 3,
-          ownerUsername: 'user3',
-          ownerProfileImage: '',
-          likes: 0,
-          dislikes: 0,
-        ),
-      ];
-    }
-
+  Future<List<Post>> getPostsByGame(int gameId) async {
     ServiceResponse<MultipleContentAsDTO> response = await service
         .sendRequestSafe<MultipleContentAsDTO, MultipleContentAsDTO>(
-      _getComments.replaceFirst('{id}', relatedPostId.toString()),
+      _getPostsByGame.replaceFirst('{id}', gameId.toString()),
       null,
       MultipleContentAsDTO(),
       'GET',
     );
 
     if (response.success) {
-      List<Comment> comments = response.responseConverted!.posts!
-          .map((e) => e.content! as Comment)
+      List<Post> posts = response.responseConverted!.posts!
+          .map((e) => e.content! as Post)
           .toList();
-      return comments;
+      return posts;
     } else {
-      throw Exception('Failed to load comments');
-    }
-  }
-
-  Future<Comment> createComment(
-      int relatedPostId, String commentContent, int? parentContentId) async {
-    if (NetworkConstants.useMockData) {
-      return Comment(
-        id: 1,
-        content: commentContent,
-        ownerUserId: 1,
-        ownerUsername: 'user1',
-        ownerProfileImage: '',
-        createdDate: DateTime.now(),
-        likes: 0,
-        dislikes: 0,
-      );
-    }
-
-    CommentCreateDTORequest commentAsContent = CommentCreateDTORequest(
-        content: commentContent, parentContentId: parentContentId);
-    ServiceResponse<SingleContentDTO> response = await service
-        .sendRequestSafe<CommentCreateDTORequest, SingleContentDTO>(
-      _createComment.replaceFirst('{id}', relatedPostId.toString()),
-      commentAsContent,
-      SingleContentDTO(),
-      'POST',
-    );
-    if (response.success) {
-      Comment createdComment = response.responseConverted!.content! as Comment;
-      return createdComment;
-    } else {
-      throw Exception('Failed to create comment');
-    }
-  }
-
-  Future<bool> updateComment(Content commentAsContent) async {
-    if (NetworkConstants.useMockData) {
-      return true;
-    }
-
-    SingleContentDTO commentAsContentDTO = SingleContentDTO(
-      content: commentAsContent,
-    );
-    final response =
-        await service.sendRequestSafe<SingleContentDTO, EmptyResponse>(
-      _updateComment.replaceFirst('{id}', commentAsContent.id.toString()),
-      commentAsContentDTO,
-      EmptyResponse(),
-      'PUT',
-    );
-    if (response.success) {
-      return true;
-    } else {
-      throw Exception('Failed to update comment');
-    }
-  }
-
-  Future<bool> deleteComment(int id) async {
-    if (NetworkConstants.useMockData) {
-      return true;
-    }
-
-    final response =
-        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
-      _deleteComment.replaceFirst('{id}', id.toString()),
-      null,
-      EmptyResponse(),
-      'DELETE',
-    );
-    if (response.success) {
-      return true;
-    } else {
-      throw Exception('Failed to delete comment');
-    }
-  }
-
-  Future<bool> reportComment(
-      int commentId, String reason, String description) async {
-    if (NetworkConstants.useMockData) {
-      return true;
-    }
-
-    PostReportDTORequest commentReportDTORequest = PostReportDTORequest(
-      reason: "$reason : $description",
-    );
-    final response =
-        await service.sendRequestSafe<PostReportDTORequest, EmptyResponse>(
-      _reportComment.replaceFirst('{id}', commentId.toString()),
-      commentReportDTORequest,
-      EmptyResponse(),
-      'POST',
-    );
-    if (response.success) {
-      return true;
-    } else {
-      throw Exception('Failed to report comment');
-    }
-  }
-
-  Future<bool> upvoteComment(int commentId) async {
-    if (NetworkConstants.useMockData) {
-      return true;
-    }
-
-    final response =
-        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
-      _upvoteComment.replaceFirst('{id}', commentId.toString()),
-      null,
-      EmptyResponse(),
-      'PUT',
-    );
-    if (response.success) {
-      return true;
-    } else {
-      throw Exception('Failed to upvote comment');
-    }
-  }
-
-  Future<bool> downvoteComment(int commentId) async {
-    if (NetworkConstants.useMockData) {
-      return true;
-    }
-
-    final response =
-        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
-      _downvoteComment.replaceFirst('{id}', commentId.toString()),
-      null,
-      EmptyResponse(),
-      'PUT',
-    );
-    if (response.success) {
-      return true;
-    } else {
-      throw Exception('Failed to downvote comment');
-    }
-  }
-
-  Future<List<int>> getLikedUsersForComment(int commentId) async {
-    if (NetworkConstants.useMockData) {
-      return [1, 2, 3];
-    }
-
-    ServiceResponse<MultipleUserAsDTO> response =
-        await service.sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
-      _getLikedUsersForComment.replaceFirst('{id}', commentId.toString()),
-      null,
-      MultipleUserAsDTO(),
-      'GET',
-    );
-    if (response.success) {
-      List<int> userIds = response.responseConverted!.users!
-          .map((e) => e.user!.userId)
-          .toList();
-      return userIds;
-    } else {
-      throw Exception('Failed to load liked users for comment');
-    }
-  }
-
-  Future<List<int>> getDislikedUsersForComment(int commentId) async {
-    if (NetworkConstants.useMockData) {
-      return [4, 5, 6];
-    }
-
-    ServiceResponse<MultipleUserAsDTO> response =
-        await service.sendRequestSafe<EmptyResponse, MultipleUserAsDTO>(
-      _getDislikedUsersForComment.replaceFirst('{id}', commentId.toString()),
-      null,
-      MultipleUserAsDTO(),
-      'GET',
-    );
-    if (response.success) {
-      List<int> userIds = response.responseConverted!.users!
-          .map((e) => e.user!.userId)
-          .toList();
-      return userIds;
-    } else {
-      throw Exception('Failed to load disliked users for comment');
+      throw Exception('Failed to load posts by game');
     }
   }
 }

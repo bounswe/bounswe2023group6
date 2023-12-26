@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/data/models/annotation_model.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/post_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/post/post_page.dart';
 import 'package:mobile/presentation/pages/post/report_widget.dart';
@@ -40,6 +41,7 @@ class ContentCardWidget extends StatefulWidget {
 
 class _ContentCardWidgetState extends State<ContentCardWidget> {
   PostService postService = PostService();
+  CommentService commentService = CommentService();
   late MainContentState connectedPostState;
 
   @override
@@ -169,7 +171,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
           case ContentMoreOptions.delete:
             content.type == ContentType.post
                 ? postService.deletePost(content.id)
-                : postService.deleteComment(content.id);
+                : commentService.deleteComment(content.id);
             showDialog(
               context: context,
               builder: (context) {
@@ -201,8 +203,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
             connectedPostState.updateCommentParentId(content.id);
             break;
           case ContentMoreOptions.goToGamePage:
-            print("go to game page ${content.relatedGameId}");
-            // Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
+            Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
             break;
         }
       },
@@ -298,7 +299,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                     if (content.type == ContentType.post) {
                       postService.upvotePost(content.id);
                     } else {
-                      postService.upvoteComment(content.id);
+                      commentService.upvoteComment(content.id);
                     }
                     if (isLikedByCurrentUser) {
                       setState(() {
@@ -332,7 +333,7 @@ class _ContentCardWidgetState extends State<ContentCardWidget> {
                     if (content.type == ContentType.post) {
                       postService.downvotePost(content.id);
                     } else {
-                      postService.downvoteComment(content.id);
+                      commentService.downvoteComment(content.id);
                     }
                     if (isDislikedByCurrentUser) {
                       setState(() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 
 Widget updateWidget(BuildContext context, {required Content content}) {
@@ -111,7 +112,7 @@ Widget _buildCommentUpdateWidget(BuildContext context, Content comment) {
         child: const Text("Update"),
         onPressed: () {
           comment.content = bodyController.text;
-          PostService().updateComment(comment);
+          CommentService().updateComment(comment);
           Navigator.of(context).pop();
         },
       ),

@@ -23,7 +23,6 @@ class AccessController(
 
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
-//
     fun register(
         @RequestPart("request") request: RegisterationRequest,
         @RequestPart("image") image: MultipartFile?
@@ -37,10 +36,15 @@ class AccessController(
     fun login(@RequestBody request: LoginRequest, response: HttpServletResponse){
         val sessionId = accessService.login(request.username, request.password)
 
-        val cookie = Cookie("SESSIONID", "$sessionId")
-        cookie.path = "/"
-        response.addCookie(cookie)
+        // val cookie = Cookie("SESSIONID", "$sessionId")
+        // cookie.path = "/"
+        // response.addCookie(cookie)
 
+        // Manually construct the Set-Cookie header value
+        val cookieValue = "SESSIONID=$sessionId; Path=/; SameSite=None; Secure"
+    
+        // Add the Set-Cookie header to the response
+        response.addHeader("Set-Cookie", cookieValue)
 
         response.setHeader("Access-Control-Allow-Credentials", "true")
     }

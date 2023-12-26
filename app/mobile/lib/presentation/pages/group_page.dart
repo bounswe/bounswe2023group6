@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/color_constants.dart';
 import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/content_model.dart';
+import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
+import 'package:mobile/data/services/game_service.dart';
 import 'package:mobile/data/services/lfg_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/lfg_page_create.dart';
@@ -26,10 +29,14 @@ class GroupPage extends StatefulWidget {
 
 class _GroupPageState extends State<GroupPage> {
   final LFGService lfgService = LFGService();
-  final PostService commentService = PostService();
+  final CommentService commentService = CommentService();
+  final GameService gameService = GameService();
+
   late User currentUser;
   final TextEditingController _commentController = TextEditingController();
   static late LFG selectedLFG;
+  late bool editable;
+  static late Game selectedGame;
   @override
   void initState() {
     super.initState();
@@ -43,7 +50,8 @@ class _GroupPageState extends State<GroupPage> {
   Future<MainContentState> loadlfg(int lfgId) async {
     LFG lfg = await lfgService.getLFG(lfgId);
     selectedLFG = lfg;
-    List<Comment> commentList = await commentService.getComments(lfgId);
+    List<Comment> commentList = await commentService.getCommentsForLfg(lfgId);
+    selectedGame = await gameService.getGame(lfg.relatedGameId!);
 
     commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
     await lfg.loadLfgSocialData();
@@ -54,8 +62,6 @@ class _GroupPageState extends State<GroupPage> {
 
     return MainContentState(lfg);
   }
-
-  // static late LFG lfg;
 
   @override
   Widget build(BuildContext context) {
@@ -115,22 +121,31 @@ class _GroupPageState extends State<GroupPage> {
           )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LFGPageCreate(
-                        selectedLFG: _GroupPageState.selectedLFG)),
-              ).then((value) {
-                if (value != null && value == "create") {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Game created"),
-                    ),
-                  );
-                  // refresh the current page
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              });
+              if (currentUser.userId ==
+                  _GroupPageState.selectedLFG.ownerUserId) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LFGPageCreate(
+                          selectedLFG: _GroupPageState.selectedLFG)),
+                ).then((value) {
+                  if (value != null && value == "create") {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Game created"),
+                      ),
+                    );
+                    // refresh the current page
+                    Navigator.pushReplacementNamed(context, '/');
+                  }
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("You cannot edit this lfg page!"),
+                  ),
+                );
+              }
             },
             child: const Icon(
               Icons.edit,
@@ -143,6 +158,9 @@ class _GroupPageState extends State<GroupPage> {
   }
 
   Widget buildLFGCard(LFG lfg) {
+
+    bool isUserMember = lfg.members!.any((element) => element.userId == currentUser.userId,);
+    
     return Card(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -169,41 +187,114 @@ class _GroupPageState extends State<GroupPage> {
                           ],
                         ),
                         Text(lfg.content),
-                        const Align(
+                        Align(
                             alignment: Alignment.centerLeft,
-                            child: Text("Game: ",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600))),
-                        const Align(
+                            child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Game: ",
+                                    style:
+                                        TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                  ),
+                                  TextSpan(
+                                    text: selectedGame.title,
+                                  )
+                                ],
+                              ))),
+                        Align(
                             alignment: Alignment.centerLeft,
-                            child: Text("Language: ",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600))),
-                        const Align(
+                            child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Language: ",
+                                    style:
+                                        TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                  ),
+                                  TextSpan(
+                                    text: lfg.requiredLanguage,
+                                  )
+                                ],
+                              ))),
+                        Align(
                             alignment: Alignment.centerLeft,
-                            child: Text("Platform: ",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600))),
-                        const Align(
+                            child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Platform: ",
+                                    style:
+                                        TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                  ),
+                                  TextSpan(
+                                    text: lfg.requiredPlatform,
+                                  )
+                                ],
+                              ))),
+                        Align(
                             alignment: Alignment.centerLeft,
-                            child: Text("Mic/Cam: ",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600))),
+                            child: RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Mic/Cam: ",
+                                    style:
+                                        TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
+                                  ),
+                                  TextSpan(
+                                    text: lfg.micCamRequirement.toString(),
+                                  )
+                                ],
+                              ))),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Icon(Icons.people),
+                            InkWell(
+                              onTap: () {
+                                _dialogBuilder(context);
+                              },
+                              child: Icon(Icons.people)
+                            ),
                             Container(
-                              child: const Column(children: [
-                                Text("Players"),
-                                Text("3/5"),
+                              child: Column(children: [
+                                Text("Players",style:
+                                        TextStyle(fontWeight: FontWeight.w600)),
+                                RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: lfg.members!.length.toString(),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  TextSpan(
+                                    text: "/",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),                                  
+                                  TextSpan(
+                                    text: lfg.memberCapacity.toString(),
+                                    style:
+                                      TextStyle(fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ))
                               ]),
                             ),
+                            if(!isUserMember)
                             InkWell(
+                              onTap: () async{
+                                await lfgService.joinLfg(lfg.id);
+                                setState(() {
+                                  
+                                });
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
@@ -213,12 +304,35 @@ class _GroupPageState extends State<GroupPage> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10)),
                                 ),
-                                width: 100,
+                                width: 80,
                                 height: 40,
                                 //color: Colors.amberAccent,
-                                child: const Center(child: Text("JOIN")),
+                                child: const Center(child: Text("Join")),
                               ),
-                            )
+                            ),
+                            if(isUserMember)
+                            InkWell(
+                              onTap: () async{
+                                await lfgService.leaveLfg(lfg.id);
+                                setState(() {
+                                  
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                width: 80,
+                                height: 40,
+                                //color: Colors.amberAccent,
+                                child: const Center(child: Text("Leave")),
+                              ),
+                            )                            
                           ],
                         ),
                         lfgSocialSection(lfg),
@@ -277,8 +391,7 @@ class _GroupPageState extends State<GroupPage> {
             // );
             break;
           case ContentMoreOptions.goToGamePage:
-            print("go to game page ${lfg.relatedGameId}");
-            // Navigator.pushNamed(context, '/game', arguments: content.relatedGameId);
+            Navigator.pushNamed(context, '/game', arguments: lfg.relatedGameId);
             break;
           default:
             break;
@@ -301,7 +414,7 @@ class _GroupPageState extends State<GroupPage> {
             value: ContentMoreOptions.report,
             child: Text('Report'),
           ),
-        if (lfg.relatedGameId != 0)
+        if (lfg.relatedGameId != null && lfg.relatedGameId != 0)
           const PopupMenuItem<ContentMoreOptions>(
             value: ContentMoreOptions.goToGamePage,
             child: Text('Go to game page'),
@@ -311,7 +424,7 @@ class _GroupPageState extends State<GroupPage> {
   }
 
   Widget lfgSocialSection(LFG lfg) {
-    lfg.tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
+    //lfg.tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
     return Column(
       children: [
         Row(
@@ -418,7 +531,7 @@ class _GroupPageState extends State<GroupPage> {
                         int? parentId = lfgState.currentCommentParentId != 0
                             ? lfgState.currentCommentParentId
                             : null;
-                        Comment comment = await lfgService.createComment(
+                        Comment comment = await commentService.createCommentForLfg(
                             lfg.id, _commentController.text, parentId);
                         lfgState.addComment(comment);
                         _commentController.clear();
@@ -467,4 +580,28 @@ class _GroupPageState extends State<GroupPage> {
           ContentCardWidget(content: comment, isReply: true),
         ]));
   }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Member List'),
+          content: Container(
+            height: 300.0, // Change as per your requirement
+            width: 300.0, // Change as per your requirement
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: selectedLFG.members!.length ,
+              itemBuilder: (BuildContext context, int index) {
+                return userInformationSection(context, selectedLFG.members![index].username, selectedLFG.members![index].profilePicture);
+              },
+            ),
+          ),
+        );
+      }
+    );
+  }
+
 }

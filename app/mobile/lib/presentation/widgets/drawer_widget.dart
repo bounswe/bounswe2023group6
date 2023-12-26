@@ -160,6 +160,16 @@ class LoggedDrawer extends StatelessWidget {
                   leading: Icon(Icons.settings_outlined),
                   title: Text('Settings'),
                 ),
+                if (username == "admin")
+                ListTile(
+                  leading: const Icon(Icons.logout_outlined),
+                  title: const Text('Admin Panel'),
+                  onTap:() {
+                    Navigator.pushNamed(
+                      context, 
+                      '/adminPanel',);
+                  },
+                ),
                 ListTile(
                   leading: const Icon(Icons.logout_outlined),
                   title: const Text('Log Out'),
