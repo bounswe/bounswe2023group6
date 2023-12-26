@@ -1,15 +1,13 @@
-import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/dto/content/multiple_content_dto_response.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
 import 'package:mobile/data/models/dto/game/multiple_game_dto_response.dart';
+import 'package:mobile/data/models/dto/lfg/mutliple_lfg_dto_request.dart';
 import 'package:mobile/data/models/dto/search/search_all_response.dart';
 import 'package:mobile/data/models/game_model.dart';
 import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/service_response.dart';
 import 'package:mobile/data/services/base_service.dart';
-import 'package:mobile/data/services/game_service.dart';
-import 'package:mobile/data/services/lfg_service.dart';
 
 class SearchService {
   BaseNetworkService service = BaseNetworkService();
@@ -37,9 +35,7 @@ class SearchService {
     if (response.success) {
       List<Post> posts = response.responseConverted!.posts!;
       List<Game> games = response.responseConverted!.games!;
-      // TODO: add lfgs later
-      // List<LFG> lfgs = response.responseConverted!.lfgs!;
-      List<LFG> lfgs = [];
+      List<LFG> lfgs = response.responseConverted!.lfgs!;
 
       return {
         'posts': posts,
@@ -90,17 +86,17 @@ class SearchService {
   }
 
   Future<List<LFG>> searchLFGs(String query) async {
-    ServiceResponse<MultipleContentAsDTO> response =
-        await service.sendRequestSafe<EmptyResponse, MultipleContentAsDTO>(
+    ServiceResponse<MultipleLFGAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleLFGAsDTO>(
       "$_searchUsers?query=$query",
       null,
-      MultipleContentAsDTO(),
+      MultipleLFGAsDTO(),
       'GET',
     );
 
     if (response.success) {
-      List<LFG> lfgs = response.responseConverted!.posts!
-          .map((e) => e.content! as LFG)
+      List<LFG> lfgs = response.responseConverted!.lfgs!
+          .map((e) => e.lfg!)
           .toList();
 
       return lfgs;

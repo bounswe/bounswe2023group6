@@ -4,6 +4,7 @@ import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/content_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 import 'package:mobile/data/models/user_model.dart';
+import 'package:mobile/data/services/comment_service.dart';
 import 'package:mobile/data/services/post_service.dart';
 import 'package:mobile/presentation/pages/post/content_card_widget.dart';
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
@@ -61,13 +62,14 @@ class MainContentState extends ChangeNotifier {
 
 class PostPage extends StatelessWidget {
   final PostService postService = PostService();
+  final CommentService commentService = CommentService();
 
   final TextEditingController _commentController = TextEditingController();
   PostPage({Key? key}) : super(key: key);
 
   Future<MainContentState> loadPostData(int postId) async {
     Post post = await postService.getPost(postId);
-    List<Comment> commentList = await postService.getComments(post.id);
+    List<Comment> commentList = await commentService.getCommentsForPost(post.id);
 
     // Sort the comments by created date
     commentList.sort((a, b) => b.createdDate.compareTo(a.createdDate));
@@ -206,7 +208,7 @@ class PostPage extends StatelessWidget {
                     int? parentId = postState.currentCommentParentId != 0
                         ? postState.currentCommentParentId
                         : null;
-                    Comment comment = await postService.createComment(
+                    Comment comment = await commentService.createCommentForPost(
                         post.id, _commentController.text, parentId);
                     postState.addComment(comment);
                     _commentController.clear();

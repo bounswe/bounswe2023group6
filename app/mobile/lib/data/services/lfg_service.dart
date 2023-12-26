@@ -19,7 +19,6 @@ class LFGService {
   static const String _getLFGs = "/lfg/all";
   static const String _getLikedUsers = "/lfg/likes";
   static const String _getDislikedUsers = "/lfg/dislikes";
-  static const String _getComments = "/lfg/comments";
 
   static List<LFG> lfgList = [
     LFG(
@@ -303,4 +302,29 @@ class LFGService {
 
   }
 
+
+  static const String _getRecommendedLfgs = "/lfg/recommended";
+
+  Future<List<LFG>> getRecommendedLFGs() async {
+    ServiceResponse<MultipleLFGAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleLFGAsDTO>(
+      _getRecommendedLfgs,
+      EmptyResponse(),
+      MultipleLFGAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<LFG> lfgs =
+          response.responseConverted!.lfgs!.map((e) => e.lfg!).toList();
+      if (lfgs.isEmpty) {
+        lfgs = await getLFGs();
+      }
+      
+      return lfgs;
+    } else {
+      throw Exception('Failed to load lfgs');
+    }
+  }
+  
 }
