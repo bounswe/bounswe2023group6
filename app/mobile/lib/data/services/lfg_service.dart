@@ -251,4 +251,56 @@ class LFGService {
       }
     }
   }
+
+  Future<bool> joinLfg(int lfgId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/join",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+  Future<bool> leaveLfg(int lfgId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/leave",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+  Future<bool> kickLfgUser(int lfgId, int userId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/kick/$userId",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
 }
