@@ -36,9 +36,15 @@ class AccessController(
     fun login(@RequestBody request: LoginRequest, response: HttpServletResponse){
         val sessionId = accessService.login(request.username, request.password)
 
-        val cookie = Cookie("SESSIONID", "$sessionId")
-        cookie.path = "/"
-        response.addCookie(cookie)
+        // val cookie = Cookie("SESSIONID", "$sessionId")
+        // cookie.path = "/"
+        // response.addCookie(cookie)
+
+        // Manually construct the Set-Cookie header value
+        val cookieValue = "SESSIONID=$sessionId; Path=/; SameSite=None"
+    
+        // Add the Set-Cookie header to the response
+        response.addHeader("Set-Cookie", cookieValue)
 
         response.setHeader("Access-Control-Allow-Credentials", "true")
     }
