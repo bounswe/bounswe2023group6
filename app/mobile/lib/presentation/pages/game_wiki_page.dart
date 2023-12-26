@@ -113,6 +113,11 @@ class _GameWikiPageState extends State<GameWikiPage>
 
   final List<String> controllerNames = ['Name', 'Description'];
 
+  static late List<String> platforms = [];
+  static late List<String> genres = [];
+
+  static late String genretoshow = "";
+
   Future<Game> loadGame(int gameId) async {
     Game game = await gameService.getGame(gameId);
     List<Post> postList = await postService.getPostsByGame(gameId);
@@ -127,6 +132,26 @@ class _GameWikiPageState extends State<GameWikiPage>
     }
 
     game.relatedPosts = postList;
+
+    platforms = [];
+
+    for(var i = 0; i < game.platforms!.length; i++) {
+      platforms.add(game.platforms![i]);
+      platforms.add(", ");
+    }
+
+    platforms.removeLast();
+
+    genres = [];
+
+    for(var i = 0; i < game.genres!.length; i++) {
+      genres.add(game.genres![i]);
+      genres.add(", ");
+    }
+
+    genres.removeLast();
+
+    genretoshow = genres.join("");
 
     return game;
   }
@@ -214,7 +239,7 @@ class _GameWikiPageState extends State<GameWikiPage>
                                               fontWeight: FontWeight.w600))),
                                   Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(game.genres![0] ?? "-",
+                                      child: Text(genres.join("") ?? "-",
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400))),
@@ -322,9 +347,10 @@ class _GameWikiPageState extends State<GameWikiPage>
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
-                                  TextSpan(
-                                    text: game.platforms![0],
-                                  )
+                                  for (String platform in platforms)
+                                    TextSpan(
+                                      text: platform,
+                                    ),
                                 ],
                               )),
                             ),
