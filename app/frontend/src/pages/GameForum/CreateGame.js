@@ -86,6 +86,7 @@ export default function CreateGame() {
 		'Empty'
 	]
 	const predefinedGameMechanics = ['TurnBased', 'ChangeBased', 'RealTime', 'Empty']
+
 	const [gamesData, setGamesData] = useState([])
 	useEffect(() => {
 		const fetchGames = async () => {
@@ -99,15 +100,23 @@ export default function CreateGame() {
 
 		fetchGames()
 	}, [])
+
 	const [selectedGenres, setSelectedGenres] = useState([])
 	const [selectedPlatforms, setSelectedPlatforms] = useState([])
 	const [selectedPlayerNumber, setSelectedPlayerNumber] = useState('')
 	const [selectedUniverseInfo, setSelectedUniverseInfo] = useState('')
 	const [selectedGameMechanics, setSelectedGameMechanics] = useState('')
+	const [error, setError] = useState(null)
 	const [selectedGames, setSelectedGames] = useState([])
 
+
 	const handleClickOpen = () => {
-		setOpen(true)
+		if (!localStorage.getItem('username')) {
+			setError('You must be logged in to create a game!')
+			setOpen(false)
+		} else {
+			setOpen(true)
+		}
 	}
 
 	const handleClose = () => {
@@ -161,6 +170,7 @@ export default function CreateGame() {
 		} catch (error) {
 			console.log(error)
 		}
+		handleClose()
 	}
 
 	const clearData = () => {
@@ -232,6 +242,9 @@ export default function CreateGame() {
 			>
 				Create Game
 			</Button>
+
+			{error && <p className='text-red-500'>{error}</p>}
+
 			<Dialog open={open} onClose={handleClose} fullWidth>
 				<DialogTitle>
 					Create Game

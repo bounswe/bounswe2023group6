@@ -4,8 +4,8 @@ import ReportIcon from '@mui/icons-material/Report'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteComment } from '../services/commentService'
 
-const CommentCard = ({ comment, onUpvote, onDownvote, currentUser }) => {
-	const isCurrentUserCreator = comment.creatorUser.username === currentUser.username
+const CommentCard = ({ comment, onUpvote, onDownvote }) => {
+	const isCurrentUserCreator = comment.creatorUser.username === localStorage.getItem('username')
 
 	const handleDeleteComment = async (commentId) => {
 		try {
