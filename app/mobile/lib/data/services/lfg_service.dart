@@ -4,6 +4,7 @@ import 'package:mobile/data/models/comment_model.dart';
 import 'package:mobile/data/models/dto/content/single_content_dto_response.dart';
 import 'package:mobile/data/models/dto/empty_response.dart';
 import 'package:mobile/data/models/dto/lfg/lfg_create_dto_request.dart';
+import 'package:mobile/data/models/dto/lfg/lfg_response.dart';
 import 'package:mobile/data/models/dto/lfg/mutliple_lfg_dto_request.dart';
 import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/service_response.dart';
@@ -18,7 +19,6 @@ class LFGService {
   static const String _getLFGs = "/lfg/all";
   static const String _getLikedUsers = "/lfg/likes";
   static const String _getDislikedUsers = "/lfg/dislikes";
-  static const String _getComments = "/lfg/comments";
 
   static List<LFG> lfgList = [
     LFG(
@@ -140,7 +140,24 @@ class LFGService {
   }
 
   Future<LFG> getLFG(int lfgId) async {
-    return getLfgDataList()[lfgId - 1];
+    if (NetworkConstants.useMockData) {
+      return getLfgDataList()[lfgId - 1];
+    } 
+
+    ServiceResponse<LFGDTOResponse> response =
+        await service.sendRequestSafe<EmptyResponse, LFGDTOResponse>(
+      "/lfg/$lfgId",
+      null,
+      LFGDTOResponse(),
+      'GET',
+    );
+
+    if (response.success) {
+      LFG lfg = response.responseConverted!.lfg!;
+      return lfg;
+    } else {
+      throw Exception('Failed to load lfg');
+    }
   }
 
   Future<Comment> createComment(
@@ -230,6 +247,83 @@ class LFGService {
       }
     }
   }
+
+  Future<bool> joinLfg(int lfgId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/join",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+  Future<bool> leaveLfg(int lfgId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/leave",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+  Future<bool> kickLfgUser(int lfgId, int userId) async {
+
+    final response =
+        await service.sendRequestSafe<EmptyResponse, EmptyResponse>(
+      "/lfg/$lfgId/kick/$userId",
+      null,
+      EmptyResponse(),
+      'POST',
+    );
+    if (response.success) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel post');
+    }
+
+  }
+
+
+  static const String _getRecommendedLfgs = "/lfg/recommended";
+
+  Future<List<LFG>> getRecommendedLFGs() async {
+    ServiceResponse<MultipleLFGAsDTO> response =
+        await service.sendRequestSafe<EmptyResponse, MultipleLFGAsDTO>(
+      _getRecommendedLfgs,
+      EmptyResponse(),
+      MultipleLFGAsDTO(),
+      'GET',
+    );
+
+    if (response.success) {
+      List<LFG> lfgs =
+          response.responseConverted!.lfgs!.map((e) => e.lfg!).toList();
+      if (lfgs.isEmpty) {
+        lfgs = await getLFGs();
+      }
+      
+      return lfgs;
+    } else {
+      throw Exception('Failed to load lfgs');
+    }
+  }
+  
 
   Future<bool> updateLFG(
       String title,

@@ -27,6 +27,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     compileOnly("org.projectlombok:lombok:1.18.24")
 
+    implementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 

@@ -12,24 +12,12 @@ class GridViewState extends State {
   int aspectHeight = 1;
   final LFGService service = LFGService();
 
-  late bool isLoggedIn;
+  late bool isLoggedIn = CacheManager().isUserLoggedInNotifier.value;
 
   Future<List<LFG>> loadLFGs() async {
     List<LFG> lfgList = await service.getLFGs();
 
     return lfgList;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
   }
 
   changeMode() {

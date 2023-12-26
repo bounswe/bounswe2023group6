@@ -18,24 +18,11 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  late bool isLoggedIn;
-
-  @override
-  void initState() {
-    super.initState();
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (!isLoggedIn) {
+        if (!CacheManager().isUserLoggedInNotifier.value) {
           Navigator.pushNamed(context, '/login');
         } else {
           Navigator.pushNamed(context, '/post', arguments: widget.post.id)
@@ -63,7 +50,7 @@ class _PostCardState extends State<PostCard> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             userInformationSection(context, widget.post.ownerUsername,
                 widget.post.ownerProfileImage,
-                isLoggedIn: isLoggedIn),
+                isLoggedIn: CacheManager().isUserLoggedInNotifier.value),
             postContentSection(widget.post),
           ]),
         ),
@@ -71,6 +58,34 @@ class _PostCardState extends State<PostCard> {
     );
   }
 }
+
+class PostCardAdmin extends StatelessWidget {
+  final Post post;
+
+  const PostCardAdmin({
+    super.key,
+    required this.post,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            userInformationSection(
+                context, post.ownerUsername, post.ownerProfileImage),
+            postContentSection(post),
+          ]),
+        ),
+      );
+
+  }
+}
+
 
 Widget postContentSection(Post post) {
   return Flexible(

@@ -1,4 +1,5 @@
 import 'package:mobile/data/models/character_model.dart';
+import 'package:mobile/data/models/lfg_model.dart';
 import 'package:mobile/data/models/post_model.dart';
 
 class Game {
@@ -24,6 +25,7 @@ class Game {
   List<int> similarGameIds;
   List<Game> similarGameList;
   List<Post> relatedPosts;
+  List<LFG> relatedLFGs;
   String? status;
 
   Game({
@@ -46,6 +48,7 @@ class Game {
     this.similarGameIds = const [],
     this.similarGameList = const [],
     this.relatedPosts = const [],
+    this.relatedLFGs = const [],
     this.status,
     this.characters,
   });

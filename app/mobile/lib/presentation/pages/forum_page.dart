@@ -8,6 +8,7 @@ import 'package:mobile/data/services/post_service.dart';
 
 import 'package:mobile/presentation/widgets/app_bar_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
+import 'package:mobile/presentation/widgets/guest_control_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:mobile/utils/cache_manager.dart';
 import 'package:filter_list/filter_list.dart';
@@ -20,19 +21,6 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
-  late bool isLoggedIn;
-
-  @override
-  void initState() {
-    super.initState();
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
-  }
-
   List<Game> allGames = [];
   List<Game> selected = [];
 
@@ -62,35 +50,26 @@ class _ForumPageState extends State<ForumPage> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          isLoggedIn
-              ? FloatingActionButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/create_post').then((value) {
-                      if (value != null && value == "create") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Post created"),
-                          ),
-                        );
-                        // refresh the current page
-                        Navigator.pushReplacementNamed(context, '/');
-                      }
-                    });
-                  },
-                  child: const Icon(
-                    Icons.add,
-                    color: ColorConstants.buttonColor,
-                  ),
-                )
-              : FloatingActionButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/login');
-                  },
-                  child: const Icon(
-                    Icons.login,
-                    color: ColorConstants.buttonColor,
-                  ),
-                ),
+          GuestControlWidget(
+              widgetToShowLoggedInUser: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/create_post').then((value) {
+                if (value != null && value == "create") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Post created"),
+                    ),
+                  );
+                  // refresh the current page
+                  Navigator.pushReplacementNamed(context, '/');
+                }
+              });
+            },
+            child: const Icon(
+              Icons.add,
+              color: ColorConstants.buttonColor,
+            ),
+          )),
           FloatingActionButton(
             onPressed: openPostFilterDialog,
             child: const Icon(

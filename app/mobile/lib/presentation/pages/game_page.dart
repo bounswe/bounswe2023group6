@@ -9,8 +9,8 @@ import 'package:mobile/presentation/widgets/button_widget.dart';
 import 'package:mobile/presentation/widgets/drawer_widget.dart';
 import 'package:mobile/presentation/widgets/game_card_widget.dart';
 import 'package:mobile/presentation/widgets/game_grid_widget.dart';
-import 'package:mobile/utils/cache_manager.dart';
-import 'package:mobile/utils/shared_manager.dart';
+import 'package:mobile/presentation/widgets/guest_control_widget.dart';
+
 
 class GamePage extends StatefulWidget {
   GamePage({Key? key}) : super(key: key);
@@ -21,7 +21,6 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late GridWidget gridWidget;
-  late bool isLoggedIn;
   late GlobalKey<GridViewState> _gridKey;
   bool isSettingsPressed = false; // Flag to track if settings are pressed
 
@@ -39,12 +38,6 @@ class _GamePageState extends State<GamePage> {
       },
       key: _gridKey,
     );
-    try {
-      isLoggedIn = true;
-      CacheManager().getUser();
-    } catch (e) {
-      isLoggedIn = false;
-    }
   }
 
   @override
@@ -73,35 +66,26 @@ class _GamePageState extends State<GamePage> {
           },
         ),
       ),
-      floatingActionButton: isLoggedIn
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/create_game_page').then((value) {
-                  if (value != null && value == "create") {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Post created"),
-                      ),
-                    );
-                    // refresh the current page
-                    Navigator.pushReplacementNamed(context, '/');
-                  }
-                });
-              },
-              child: const Icon(
-                Icons.add,
-                color: ColorConstants.buttonColor,
-              ),
-            )
-          : FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-              child: const Icon(
-                Icons.login,
-                color: ColorConstants.buttonColor,
-              ),
-            ),
+      floatingActionButton: GuestControlWidget(
+          widgetToShowLoggedInUser: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/create_game_page').then((value) {
+            if (value != null && value == "create") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Post created"),
+                ),
+              );
+              // refresh the current page
+              Navigator.pushReplacementNamed(context, '/');
+            }
+          });
+        },
+        child: const Icon(
+          Icons.add,
+          color: ColorConstants.buttonColor,
+        ),
+      )),
     );
   }
 }
