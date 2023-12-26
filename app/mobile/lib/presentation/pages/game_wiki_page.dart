@@ -19,6 +19,7 @@ import 'package:mobile/presentation/widgets/lfg_card_widget.dart';
 import 'package:mobile/presentation/widgets/post_card_widget.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:mobile/presentation/widgets/vertical_game_card_widget.dart';
+import 'package:mobile/utils/cache_manager.dart';
 
 
 class GameWiki extends StatefulWidget {
@@ -575,7 +576,17 @@ class _GameWikiPageState extends State<GameWikiPage>
                                           for (var i = 0;
                                               i < game.relatedLFGs.length;
                                               i++)
-                                            LFGCard(lfg: game.relatedLFGs[i]),
+                                            InkWell(
+                                              onTap: () {
+                                              if (!CacheManager().isUserLoggedInNotifier.value) {
+                                                  Navigator.pushNamed(context, '/login');
+                                                } else {
+                                                  Navigator.pushNamed(context, "/group",
+                                                      arguments: game.relatedLFGs[i].id);
+                                                }
+                                              },
+                                              child: LFGCard(lfg: game.relatedLFGs[i])
+                                              ),
                                         ],
                                       )
                                     : const Center(
