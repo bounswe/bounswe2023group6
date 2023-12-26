@@ -35,6 +35,7 @@ class _GroupPageState extends State<GroupPage> {
   late User currentUser;
   final TextEditingController _commentController = TextEditingController();
   static late LFG selectedLFG;
+  late bool editable;
   static late Game selectedGame;
   @override
   void initState() {
@@ -120,22 +121,31 @@ class _GroupPageState extends State<GroupPage> {
           )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LFGPageCreate(
-                        selectedLFG: _GroupPageState.selectedLFG)),
-              ).then((value) {
-                if (value != null && value == "create") {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Game created"),
-                    ),
-                  );
-                  // refresh the current page
-                  Navigator.pushReplacementNamed(context, '/');
-                }
-              });
+              if (currentUser.userId ==
+                  _GroupPageState.selectedLFG.ownerUserId) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LFGPageCreate(
+                          selectedLFG: _GroupPageState.selectedLFG)),
+                ).then((value) {
+                  if (value != null && value == "create") {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Game created"),
+                      ),
+                    );
+                    // refresh the current page
+                    Navigator.pushReplacementNamed(context, '/');
+                  }
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("You cannot edit this lfg page!"),
+                  ),
+                );
+              }
             },
             child: const Icon(
               Icons.edit,

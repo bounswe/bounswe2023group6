@@ -122,7 +122,6 @@ class LFGService {
     if (NetworkConstants.useMockData) {
       return getLfgDataList();
     } else {
-
       ServiceResponse<MultipleLFGAsDTO> response =
           await service.sendRequestSafe<EmptyResponse, MultipleLFGAsDTO>(
         _getLFGs,
@@ -234,8 +233,6 @@ class LFGService {
         tags: tags,
       );
 
-      Map<String, dynamic> jsonData = request.toJson();
-
       final response =
           await service.sendRequestSafe<LFGCreateDTORequest, EmptyResponse>(
         "/lfg",
@@ -327,4 +324,61 @@ class LFGService {
     }
   }
   
+
+  Future<bool> updateLFG(
+      String title,
+      String description,
+      String requiredPlatform,
+      String requiredLanguage,
+      bool micCamRequirement,
+      int memberCapacity,
+      int? gameId,
+      List<String> tags,
+      int id) async {
+    if (NetworkConstants.useMockData) {
+      lfgList.add(LFG(
+        creationDate: DateTime.now().subtract(const Duration(hours: 5)),
+        id: lfgList.length + 1,
+        title: title,
+        description: description,
+        requiredPlatform: requiredPlatform,
+        requiredLanguage: requiredLanguage,
+        micCamRequirement: micCamRequirement,
+        memberCapacity: memberCapacity,
+        tags: ["tag1"],
+        ownerUserId: 5,
+        ownerUsername: 'GamerXplorer',
+        ownerProfileImage: '',
+        likes: 23,
+        dislikes: 2,
+        relatedGameId: 5,
+        comments: 8,
+      ));
+      return true;
+    } else {
+      LFGCreateDTORequest request = LFGCreateDTORequest(
+        title: title,
+        description: description,
+        requiredPlatform: requiredPlatform,
+        requiredLanguage: requiredLanguage,
+        micCamRequirement: micCamRequirement,
+        memberCapacity: memberCapacity,
+        gameId: gameId,
+        tags: tags,
+      );
+
+      final response =
+          await service.sendRequestSafe<LFGCreateDTORequest, EmptyResponse>(
+        "/lfg/${id}",
+        request,
+        EmptyResponse(),
+        'PUT',
+      );
+      if (response.success) {
+        return true;
+      } else {
+        throw Exception('Failed to update lfg.');
+      }
+    }
+  }
 }
