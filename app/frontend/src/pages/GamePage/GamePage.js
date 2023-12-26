@@ -13,7 +13,6 @@ const GamePage = () => {
 	const [rating, setRating] = useState(null)
 	const [hasRated, setHasRated] = useState(false)
 	const [similarGames, setSimilarGames] = useState([])
-
 	useEffect(() => {
 		const fetchGame = async () => {
 			try {
@@ -25,7 +24,7 @@ const GamePage = () => {
 			}
 		}
 		fetchGame()
-	}, [gameId])
+	}, [gameId, hasRated])
 
 	const handleRatingChange = (selectedRating) => {
 		setRating(selectedRating)
