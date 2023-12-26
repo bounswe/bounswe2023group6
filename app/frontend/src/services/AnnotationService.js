@@ -2,8 +2,8 @@ import axios from 'axios'
 
 const axiosInstance = axios.create({
 	// baseURL: process.env.REACT_APP_API_URL
-	// baseURL: 'https://game-lounge.com:9091'
-	baseURL: 'http://167.99.242.175:8081/'
+	baseURL: 'https://game-lounge.com:9091'
+	// baseURL: 'http://167.99.242.175:8081/'
 })
 
 axiosInstance.defaults.withCredentials = true

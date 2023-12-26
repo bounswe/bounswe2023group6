@@ -25,7 +25,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 	useEffect(() => {
 		const loadAnnotations = async () => {
 			try {
-				const response = await getAnnotationsByTarget(`https://game-lounge.com:9090/post/${post.postId}`)
+				const response = await getAnnotationsByTarget(`http://167.99.242.175:8080/post/${post.postId}`)
 
 				const transformedAnnotations = response.data.map((annotation) => ({
 					startIndex: annotation.target.selector.start,
@@ -83,7 +83,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 			id: annotationUuid, // Use generated UUID
 			type: 'Annotation',
 			motivation: ['commenting', 'annotating'],
-			creator: `https://game-lounge.com:9090/user/${username}`, // Use fetched username
+			creator: `http://167.99.242.175:8080/user/${username}`, // Use fetched username
 			created: new Date().toISOString(),
 			body: [
 				{
@@ -96,7 +96,7 @@ const PostCard = ({ post, currentUser, onUpvote, onDownvote }) => {
 				}
 			],
 			target: {
-				id: `https://game-lounge.com:9090/post/${post.postId}`,
+				id: `http://167.99.242.175:8080/post/${post.postId}`,
 				format: 'text/html',
 				language: 'en',
 				selector: {
