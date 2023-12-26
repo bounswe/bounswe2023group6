@@ -13,7 +13,7 @@ class AnnotationServiceApplication {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry.addMapping("/**")
-                    .allowedOrigins("http://localhost:3000", "http://game-lounge.com", "http://167.99.242.175", "http://167.99.242.175:3000")
+                    .allowedOrigins("http://localhost:3000", "http://167.99.242.175", "http://167.99.242.175:3000", "http://game-lounge.com", "http://game-lounge.com:3000", "http://www.game-lounge.com", "http://www.game-lounge.com:3000", "https://game-lounge.com", "https://www.game-lounge.com")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowCredentials(true)
                     .allowedHeaders("*")
