@@ -15,25 +15,37 @@ const GamePage = () => {
 	const [similarGames, setSimilarGames] = useState([])
 
 	useEffect(() => {
-		const fetchGame = async () => {
-			try {
-				const response = await getGame(gameId)
-				setGame(response.data)
-				const similarGamesIds = response.data.similarGames;
-                const similarGamesDetails = await Promise.all(
-                similarGamesIds.map(async (id) => {
-                const similarGameResponse = await getGame(id);
-                return similarGameResponse.data;
-                  })
-                );
-                        setSimilarGames(similarGamesDetails);
+        const fetchGame = async () => {
+            try {
+                const response = await getGame(gameId);
+                setGame(response.data);
 
-			} catch (error) {
-				console.error(error)
-			}
-		}
-		fetchGame()
-	}, [gameId])
+                const similarGamesIds = response.data.similarGames;
+                const gamesPromises = similarGamesIds.map(id => getGame(id));
+                const similarGamesResponses = await Promise.all(gamesPromises);
+
+                const uniqueAndApprovedSimilarGames = similarGamesResponses
+                    .map(response => response.data)
+                    .reduce((unique, game) => {
+                        const isUnique = !unique.some(g => g.gameId === game.gameId);
+                        const isApproved = game.status === "APPROVED";
+                        if (isUnique && isApproved) {
+                            unique.push(game);
+                        }
+                        return unique;
+                    }, []);
+
+                setSimilarGames(uniqueAndApprovedSimilarGames);
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (gameId) {
+            fetchGame();
+        }
+    }, [gameId]);
 
 	const handleRatingChange = (selectedRating) => {
 		setRating(selectedRating)
