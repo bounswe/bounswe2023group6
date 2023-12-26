@@ -19,7 +19,15 @@ const GamePage = () => {
 			try {
 				const response = await getGame(gameId)
 				setGame(response.data)
-				setSimilarGames(response.data.similarGames)
+				const similarGamesIds = response.data.similarGames;
+                const similarGamesDetails = await Promise.all(
+                similarGamesIds.map(async (id) => {
+                const similarGameResponse = await getGame(id);
+                return similarGameResponse.data;
+                  })
+                );
+                        setSimilarGames(similarGamesDetails);
+
 			} catch (error) {
 				console.error(error)
 			}
@@ -93,7 +101,7 @@ const GamePage = () => {
 													/>
 												))}
 											</div>
-											<button className='btn btn-primary w-1/2 mt-2' onClick={handleRateGame}>
+											<button className='btn btn-sm btn-primary w-1/2 mt-2' onClick={handleRateGame}>
 												Rate Game
 											</button>
 										</div>
@@ -139,8 +147,8 @@ const GamePage = () => {
 									<div className='h-full card compact bg-neutral-200 text-cyan-700 shadow-xl m-2 p-4'>
 										<h2 className='text-xl font-bold p-1'>Games You May Like:</h2>
 										{similarGames.map((game) => (
-											<li key={game.gameId} className='mb-2'>
-												<button onClick={() => navigate(`/game/${game.gameId}`)} className='text-neutral-700 mr-4'>
+											<li key={game} className='mb-2 mt-2'>
+												<button onClick={() => navigate(`/game/${game.gameId}`)} className='btn-sm text-neutral-100 bg-yellow-600 hover:bg-yellow-700 rounded mr-4'>
 													{game.title}
 												</button>
 											</li>
