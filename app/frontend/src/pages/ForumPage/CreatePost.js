@@ -24,15 +24,21 @@ export default function CreatePost() {
 	const [title, setTitle] = useState(false)
 	const [content, setContent] = useState(false)
 	const [category, setCategory] = useState(false)
-	const [tags, setTags] = useState([]);
-	const [currTag, setCurrTag] = useState("");
+	const [tags, setTags] = useState([])
+	const [currTag, setCurrTag] = useState('')
+	const [error, setError] = useState(null)
 
 	const axiosInstance = axios.create({
 		baseURL: `${process.env.REACT_APP_API_URL}`
 	})
 
 	const handleClickOpen = () => {
-		setOpen(true)
+		if (localStorage.getItem('username') === null) {
+			setError('You must be logged in to create a post.')
+			setOpen(false)
+		} else {
+			setOpen(true)
+		}
 	}
 
 	const handleClose = () => {
@@ -40,27 +46,33 @@ export default function CreatePost() {
 		clearData()
 	}
 
-    const onSubmit = () => {
-        axiosInstance.defaults.withCredentials = true;
-        axiosInstance.post('/forum/posts', {
-            title,
-            content,
-            category,
-            tags: tags
-        }, {
-            withCredentials: true
-        })
-        .then((response) => {
-            console.log(response);
-            if (response.status === 200) {
-                handleClose();
-            }
-            window.location.reload();
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    };
+	const onSubmit = () => {
+		axiosInstance.defaults.withCredentials = true
+		axiosInstance
+			.post(
+				'/forum/posts',
+				{
+					title,
+					content,
+					category,
+					tags: tags
+				},
+				{
+					withCredentials: true
+				}
+			)
+			.then((response) => {
+				console.log(response)
+				if (response.status === 200) {
+					handleClose()
+				}
+				window.location.reload()
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+		handleClose()
+	}
 
 	const clearData = () => {
 		setTitle('')
@@ -70,31 +82,41 @@ export default function CreatePost() {
 	}
 
 	const handleChange = (e) => {
-		setCurrTag(e.target.value);
-	};
+		setCurrTag(e.target.value)
+	}
 
 	const handleDeleteTag = (item, index) => {
-		let arr = [...tags];
-		arr.splice(index, 1);
-		console.log(item);
-		setTags(arr);
-	};
+		let arr = [...tags]
+		arr.splice(index, 1)
+		console.log(item)
+		setTags(arr)
+	}
 
 	const handleKeyUp = (e) => {
 		if (e.keyCode === 13) {
-			setTags((oldState) => [...oldState, e.target.value]);
-			setCurrTag("");
+			setTags((oldState) => [...oldState, e.target.value])
+			setCurrTag('')
 		}
-	};
+	}
 
 	const categories = ['GUIDE', 'REVIEW', 'DISCUSSION']
 
 	return (
 		<div>
-			<Button variant='outlined' onClick={handleClickOpen}
-			 sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
+			<Button
+				variant='outlined'
+				onClick={handleClickOpen}
+				sx={{
+					color: 'white',
+					backgroundColor: '#b46161',
+					border: 'none',
+					boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)',
+					'&:hover': { backgroundColor: '#6e4141', border: 'none' }
+				}}
+			>
 				Create Post
 			</Button>
+			{error && <p className='text-red-500'>{error}</p>}
 			<Dialog open={open} onClose={handleClose}>
 				<DialogTitle>
 					Create Post
@@ -124,34 +146,25 @@ export default function CreatePost() {
 						}}
 					/>
 					<FormControl fullWidth margin='normal'>
-						<h3 style={{ display: "flex", alignItems: "flex-start" }}>Tags:</h3>
+						<h3 style={{ display: 'flex', alignItems: 'flex-start' }}>Tags:</h3>
 						<FormControl
 							sx={{
-								display: "flex",
-								alignItems: "center",
-								gap: "20px",
-								flexWrap: "wrap",
-								flexDirection: "row",
-								border: "2px solid lightgray",
+								display: 'flex',
+								alignItems: 'center',
+								gap: '20px',
+								flexWrap: 'wrap',
+								flexDirection: 'row',
+								border: '2px solid lightgray',
 								padding: 1,
-								borderRadius: "4px",
+								borderRadius: '4px'
 							}}
 						>
-							<div className={"container"}>
+							<div className={'container'}>
 								{tags.map((item, index) => (
-									<Chip
-										key={index}
-										size="small"
-										onDelete={() => handleDeleteTag(item, index)}
-										label={item}
-									/>
+									<Chip key={index} size='small' onDelete={() => handleDeleteTag(item, index)} label={item} />
 								))}
 							</div>
-							<Input fullWidth
-								value={currTag}
-								onChange={handleChange}
-								onKeyDown={handleKeyUp}
-							/>
+							<Input fullWidth value={currTag} onChange={handleChange} onKeyDown={handleKeyUp} />
 						</FormControl>
 					</FormControl>
 					<FormControl fullWidth margin='normal'>

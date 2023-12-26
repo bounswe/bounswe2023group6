@@ -57,21 +57,48 @@ export default function CreateGame() {
 		document.getElementById('imageInput').click()
 	}
 
-
-	const predefinedGenres = ['RGP', 'Strategy', 'Shooter', 'Sports', 'Fighting', 'MOBA', 'Action', 'Adventure', 'Simulation', 'Horror', 'Empty'];
-	const predefinedPlatforms = ['XBOX', 'Computer', 'PS', 'Onboard', 'Mobile', 'Empty'];
-	const predefinedPlayerNumber = ['Single', 'Teams', 'Multiplayer', 'MMO', 'Empty'];
-	const predefinedUniverseInfo = ['Medieval', 'Fantasy', 'SciFi', 'Cyberpunk', 'Historical', 'Contemporary', 'PostApocalyptic', 'AlternateReality', 'Empty'];
-	const predefinedGameMechanics = ['TurnBased', 'ChangeBased', 'RealTime', 'Empty'];
+	const predefinedGenres = [
+		'RGP',
+		'Strategy',
+		'Shooter',
+		'Sports',
+		'Fighting',
+		'MOBA',
+		'Action',
+		'Adventure',
+		'Simulation',
+		'Horror',
+		'Empty'
+	]
+	const predefinedPlatforms = ['XBOX', 'Computer', 'PS', 'Onboard', 'Mobile', 'Empty']
+	const predefinedPlayerNumber = ['Single', 'Teams', 'Multiplayer', 'MMO', 'Empty']
+	const predefinedUniverseInfo = [
+		'Medieval',
+		'Fantasy',
+		'SciFi',
+		'Cyberpunk',
+		'Historical',
+		'Contemporary',
+		'PostApocalyptic',
+		'AlternateReality',
+		'Empty'
+	]
+	const predefinedGameMechanics = ['TurnBased', 'ChangeBased', 'RealTime', 'Empty']
 
 	const [selectedGenres, setSelectedGenres] = useState([])
 	const [selectedPlatforms, setSelectedPlatforms] = useState([])
-	const [selectedPlayerNumber, setSelectedPlayerNumber] = useState('');
-	const [selectedUniverseInfo, setSelectedUniverseInfo] = useState('');
-	const [selectedGameMechanics, setSelectedGameMechanics] = useState('');
+	const [selectedPlayerNumber, setSelectedPlayerNumber] = useState('')
+	const [selectedUniverseInfo, setSelectedUniverseInfo] = useState('')
+	const [selectedGameMechanics, setSelectedGameMechanics] = useState('')
+	const [error, setError] = useState(null)
 
 	const handleClickOpen = () => {
-		setOpen(true)
+		if (!localStorage.getItem('username')) {
+			setError('You must be logged in to create a game!')
+			setOpen(false)
+		} else {
+			setOpen(true)
+		}
 	}
 
 	const handleClose = () => {
@@ -87,7 +114,7 @@ export default function CreateGame() {
 			platforms: selectedPlatforms,
 			playerNumber: selectedPlayerNumber,
 			universe: selectedUniverseInfo,
-    		mechanics: selectedGameMechanics,
+			mechanics: selectedGameMechanics,
 			image: selectedImage
 		}
 		// //	if (postData.characters.length != 0) {
@@ -106,7 +133,7 @@ export default function CreateGame() {
 		const request = { title, description, genres, platforms, playerNumber, releaseYear, universe, mechanics, playtime, image }
 		let formDataToSend = new FormData()
 
-        formDataToSend.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+		formDataToSend.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
 		if (selectedImage) {
 			const file = new File([selectedImage], 'image.png', { type: 'image/png' })
 			formDataToSend.append('image', file)
@@ -125,6 +152,7 @@ export default function CreateGame() {
 		} catch (error) {
 			console.log(error)
 		}
+		handleClose()
 	}
 
 	const clearData = () => {
@@ -158,16 +186,16 @@ export default function CreateGame() {
 	}
 
 	const handlePlayerNumberChange = (event) => {
-		setSelectedPlayerNumber(event.target.value);
-	};
+		setSelectedPlayerNumber(event.target.value)
+	}
 
 	const handleUniverseInfoChange = (event) => {
-		setSelectedUniverseInfo(event.target.value);
-	};
-	
+		setSelectedUniverseInfo(event.target.value)
+	}
+
 	const handleGameMechanicsChange = (event) => {
-		setSelectedGameMechanics(event.target.value);
-	};
+		setSelectedGameMechanics(event.target.value)
+	}
 
 	const handleAddCharacter = () => {
 		setGameData((prevData) => ({
@@ -178,10 +206,21 @@ export default function CreateGame() {
 
 	return (
 		<div>
-			<Button variant='outlined' onClick={handleClickOpen}
-            			 sx={{ color: 'white', backgroundColor: '#b46161', border: 'none', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)', '&:hover': { backgroundColor: '#6e4141', border: 'none'} }}>
-            				Create Game
-            			</Button>
+			<Button
+				variant='outlined'
+				onClick={handleClickOpen}
+				sx={{
+					color: 'white',
+					backgroundColor: '#b46161',
+					border: 'none',
+					boxShadow: '0 2px 4px rgba(0, 0, 0, 0.4)',
+					'&:hover': { backgroundColor: '#6e4141', border: 'none' }
+				}}
+			>
+				Create Game
+			</Button>
+			{error && <p className='text-red-500'>{error}</p>}
+
 			<Dialog open={open} onClose={handleClose} fullWidth>
 				<DialogTitle>
 					Create Game
@@ -253,11 +292,7 @@ export default function CreateGame() {
 							) : property === 'playerNumber' ? (
 								<FormControl fullWidth margin='normal'>
 									<InputLabel id='playerNumber-label'>Number of Players</InputLabel>
-									<Select
-										label='Number of Players'
-										value={selectedPlayerNumber}
-										onChange={handlePlayerNumberChange}
-									>
+									<Select label='Number of Players' value={selectedPlayerNumber} onChange={handlePlayerNumberChange}>
 										{predefinedPlayerNumber.map((playerNumber) => (
 											<MenuItem key={playerNumber} value={playerNumber}>
 												{playerNumber}
@@ -268,11 +303,7 @@ export default function CreateGame() {
 							) : property === 'universe' ? (
 								<FormControl fullWidth margin='normal'>
 									<InputLabel id='universeInfo-label'>Universe Info</InputLabel>
-									<Select
-										label='Universe Info'
-										value={selectedUniverseInfo}
-										onChange={handleUniverseInfoChange}
-									>
+									<Select label='Universe Info' value={selectedUniverseInfo} onChange={handleUniverseInfoChange}>
 										{predefinedUniverseInfo.map((universeInfo) => (
 											<MenuItem key={universeInfo} value={universeInfo}>
 												{universeInfo}
@@ -283,11 +314,7 @@ export default function CreateGame() {
 							) : property === 'mechanics' ? (
 								<FormControl fullWidth margin='normal'>
 									<InputLabel id='gameMechanics-label'>Game Mechanics</InputLabel>
-									<Select
-										label='Game Mechanics'
-										value={selectedGameMechanics}
-										onChange={handleGameMechanicsChange}
-									>
+									<Select label='Game Mechanics' value={selectedGameMechanics} onChange={handleGameMechanicsChange}>
 										{predefinedGameMechanics.map((gameMechanics) => (
 											<MenuItem key={gameMechanics} value={gameMechanics}>
 												{gameMechanics}
