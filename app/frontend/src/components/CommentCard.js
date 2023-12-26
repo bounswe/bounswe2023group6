@@ -1,5 +1,4 @@
 import React from 'react'
-import userlogo from '../user.jpg'
 import ReportIcon from '@mui/icons-material/Report'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteComment } from '../services/commentService'
@@ -35,10 +34,10 @@ const CommentCard = ({ comment, onUpvote, onDownvote }) => {
 					<div className='flex items-center'>
 						<div className='avatar'>
 							<div className='w-8 h-8 rounded-full'>
-								<img src={userlogo} alt='User' />
+								<img src={comment.creatorUser.profilePicture} alt='User' />
 							</div>
 						</div>
-						<div className='ml-2 text-[#B46060] font-bold'>{comment.creatorUserId}</div>
+						<div className='ml-2 text-[#B46060] font-bold'>{comment.creatorUser.username}</div>
 					</div>
 					<div className='flex'>
 						<button
